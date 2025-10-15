@@ -1,0 +1,31 @@
+{
+  "name": "unicorn-subscribe-backend",
+  "version": "1.0.0",
+  "description": "Unicorn Toy订阅后端服务",
+  "scripts": {
+    "start": "next start",
+    "dev": "next dev",
+    "build": "next build",
+    "netlify-build": "NETLIFY_NEXT_PLUGIN_FORCE=true next build"
+  },
+  "dependencies": {
+    "@mailchimp/mailchimp_marketing": "^3.0.80",
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "marked": "^15.0.7",
+    "next": "^13.4.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@netlify/plugin-nextjs": "^5.10.1",
+    "@types/node": "^18.15.11",
+    "@types/react": "^18.0.37",
+    "autoprefixer": "^10.4.14",
+    "postcss": "^8.4.23",
+    "tailwindcss": "^3.3.0",
+    "typescript": "^5.0.4"
+  }
+}
