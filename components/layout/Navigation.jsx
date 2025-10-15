@@ -26,7 +26,7 @@ export default function Navigation() {
             <Link href="/faq" className="nav-item text-black hover:text-[#7d9ed4] transition-colors">
               {language === 'en' ? 'FAQ' : '常见问题'}
             </Link>
-            <Link href="/shop" className="nav-item text-black hover:text-[#7d9ed4] transition-colors">
+            <Link href="/buy" className="nav-item text-black hover:text-[#7d9ed4] transition-colors">
               {language === 'en' ? 'Shop Now' : '立即购买'}
             </Link>
             <a href="mailto:support@unicorntoy.ai" target="_blank" className="text-black hover:text-[#7d9ed4] transition-colors">
@@ -74,7 +74,7 @@ export default function Navigation() {
             <Link href="/faq" className="text-black hover:text-[#7d9ed4] transition-colors whitespace-nowrap">
               {language === 'en' ? 'FAQ' : '常见问题'}
             </Link>
-            <Link href="/shop" className="text-black hover:text-[#7d9ed4] transition-colors whitespace-nowrap">
+            <Link href="/buy" className="text-black hover:text-[#7d9ed4] transition-colors whitespace-nowrap">
               {language === 'en' ? 'Shop Now' : '立即购买'}
             </Link>
             <a href="mailto:support@unicorntoy.ai" target="_blank" className="text-black hover:text-[#7d9ed4] transition-colors whitespace-nowrap">
