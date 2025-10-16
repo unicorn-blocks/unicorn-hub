@@ -23,7 +23,7 @@ export default function PaymentCancel() {
         'You decided to change your mind'
       ],
       nextSteps: 'What would you like to do?',
-      tryAgain: 'Try Payment Again',
+      tryAgain: 'Try Again',
       backToHome: 'Back to Home',
       emailError: 'Please provide a valid email address',
       subscribeSuccess: 'Thank you for subscribing!',
@@ -42,7 +42,7 @@ export default function PaymentCancel() {
         '您决定改变主意'
       ],
       nextSteps: '您想要做什么？',
-      tryAgain: '重新尝试支付',
+      tryAgain: '重新支付',
       backToHome: '返回首页',
       emailError: '请提供有效的电子邮箱地址',
       subscribeSuccess: '感谢您的订阅！',
@@ -152,17 +152,17 @@ export default function PaymentCancel() {
               {/* 操作按钮 */}
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <button
-                  onClick={() => router.push('/')}
-                  className="back-button duration-200"
-                >
-                  {t.backToHome}
-                </button>
-                
-                <button
                   onClick={() => router.push('/buy')}
                   className="primary-button duration-200"
                 >
                   {t.tryAgain}
+                </button>
+
+                <button
+                  onClick={() => router.push('/')}
+                  className="primary-button duration-200"
+                >
+                  {t.backToHome}
                 </button>
               </div>
             </div>
@@ -254,25 +254,6 @@ export default function PaymentCancel() {
         .primary-button:hover {
           background: linear-gradient(90deg, #72BCA3 0%, #9b90da 100%);
           transform: translateY(-1px);
-        }
-
-        .back-button {
-          padding: 0.75rem 2rem;
-          background: linear-gradient(90deg, #F7AEBF 0%, #9b90da 100%);
-          color: white;
-          border: none;
-          border-radius: 12px;
-          font-size: 0.95rem;
-          font-weight: 500;
-          cursor: pointer;
-          transition: all 0.3s ease;
-          opacity: 0.7;
-        }
-
-        .back-button:hover {
-          background: linear-gradient(90deg, #72BCA3 0%, #9b90da 100%);
-          transform: translateY(-1px);
-          opacity: 1;
         }
       `}</style>
     </>

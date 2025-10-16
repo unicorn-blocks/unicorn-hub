@@ -15,10 +15,10 @@ export default function PaymentSuccess() {
       title: 'Payment Successful!',
       subtitle: 'Thank you for your purchase',
       message: 'Your payment has been processed successfully. You will receive a confirmation email shortly.',
-      voucher: 'Your $40 discount voucher will be sent to your email when our product launches.',
+      voucher: 'Your $40 discount voucher has been sent to your email and will be available when our product launches.',
       nextSteps: 'What happens next?',
       steps: [
-        'Check your email for payment confirmation',
+        'Check your email for discount voucher',
         'Keep your email address updated',
         'We\'ll notify you when the product launches',
         'Use your $40 discount voucher at checkout'
@@ -33,10 +33,10 @@ export default function PaymentSuccess() {
       title: '支付成功！',
       subtitle: '感谢您的购买',
       message: '您的支付已成功处理。您将很快收到确认邮件。',
-      voucher: '当我们的产品发布时，您的40美元折扣券将发送到您的邮箱。',
+      voucher: '您的40美元折扣券已发送到您的邮箱，产品发布后即可使用。',
       nextSteps: '接下来会发生什么？',
       steps: [
-        '查看邮箱中的支付确认信息',
+        '查看邮箱中的折扣券',
         '保持邮箱地址更新',
         '产品发布时我们会通知您',
         '在结账时使用您的40美元折扣券'

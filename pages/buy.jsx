@@ -18,7 +18,6 @@ export default function BuyNow() {
       title: 'Buy Now - Unicorn Toy',
       pageTitle: 'Get Your Early Bird Discount',
       subtitle: 'Pay $10 now, get $40 off when we launch!',
-      description: 'Join our early supporters and secure your discount. You\'ll pay $10 today and receive a $40 discount voucher when our product launches. Total savings: $30 off the regular $140 price.',
       emailLabel: 'Enter your email address',
       emailPlaceholder: 'your.email@example.com',
       paymentMethodLabel: 'Choose Payment Method',
@@ -36,7 +35,7 @@ export default function BuyNow() {
       features: {
         title: 'What You Get',
         items: [
-          '$40 discount voucher (valid when product launches)',
+          '$40 discount voucher (valid at launch)',
           'Early access to product updates',
           'Priority customer support',
           'Exclusive early bird community access'
@@ -53,9 +52,8 @@ export default function BuyNow() {
     },
     zh: {
       title: '立即购买 - 独角兽玩具',
-      pageTitle: '获取早鸟折扣',
+      pageTitle: '享受早鸟折扣',
       subtitle: '现在支付10美元，产品发布时享受40美元折扣！',
-      description: '加入我们的早期支持者，确保您的折扣。您现在支付10美元，产品发布时将收到40美元折扣券。总节省：从常规140美元价格中节省30美元。',
       emailLabel: '输入您的电子邮箱地址',
       emailPlaceholder: 'your.email@example.com',
       paymentMethodLabel: '选择支付方式',
