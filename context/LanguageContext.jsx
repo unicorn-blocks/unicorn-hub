@@ -10,17 +10,23 @@ export function LanguageProvider({ children }) {
   
   // 首次加载时检查本地存储
   useEffect(() => {
-    const savedLanguage = localStorage.getItem('language');
-    if (savedLanguage) {
-      setLanguage(savedLanguage);
-    }
+    // const savedLanguage = localStorage.getItem('language');
+    // if (savedLanguage) {
+    //   setLanguage(savedLanguage);
+    // }
+    // 强制使用英文，无视本地存储中的任何偏好
+    localStorage.setItem('language', 'en');
+    setLanguage('en');
   }, []);
 
   // 切换语言的函数
   const toggleLanguage = () => {
-    const newLanguage = language === 'en' ? 'zh' : 'en';
-    setLanguage(newLanguage);
-    localStorage.setItem('language', newLanguage);
+    // const newLanguage = language === 'en' ? 'zh' : 'en';
+    // setLanguage(newLanguage);
+    // localStorage.setItem('language', newLanguage);
+    // 保持为英文，不执行真正的切换
+    setLanguage('en');
+    localStorage.setItem('language', 'en');
   };
 
   return (
