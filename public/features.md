@@ -18,7 +18,7 @@ My eyes aren't just watching — it’s celebrating **ALL** your creativity. Bui
 
 ## **Kids' Heartfelt Helper ❤️**
 
-I can see every state of their building blocks, giving them precise and engaging responses or instructions. 🧩 When things get tricky, I'm their go-to for tips and guidance. 🛠️👍
+I can see every state of their blocks, giving them precise and engaging responses or instructions. 🧩 When things get tricky, I'm their go-to for tips and guidance. 🛠️👍
 
 ![](./assets/ks_pic/搭火车.gif)
 

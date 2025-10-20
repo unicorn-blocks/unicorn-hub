@@ -104,7 +104,7 @@ export default async function handler(req, res) {
       currency: 'USD',
       language: requestLanguage || 'en',
       product_type: 'early_bird_discount',
-      description: 'Unicorn Toy Early Bird Discount - $10 for $40 voucher'
+      description: 'Unicorn Blocks Early Bird Discount - $10 for $40 voucher'
     };
     
     // 调用Flask后端API

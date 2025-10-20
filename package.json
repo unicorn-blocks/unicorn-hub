@@ -1,7 +1,7 @@
 {
   "name": "unicorn-subscribe-backend",
   "version": "1.0.0",
-  "description": "Unicorn Toy订阅后端服务",
+  "description": "Unicorn Blocks订阅后端服务",
   "scripts": {
     "start": "next start",
     "dev": "next dev",

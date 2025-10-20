@@ -188,7 +188,7 @@ export default function Faq() {
   };
 
   // 翻译页面标题
-  const pageTitle = language === 'zh' ? '常见问题 - 独角兽玩具' : 'Faq - Unicorn Toy';
+  const pageTitle = language === 'zh' ? '常见问题 - 独角兽玩具' : 'Faq - Unicorn Blocks';
   const loadingText = language === 'zh' ? '正在加载内容...' : 'Loading content...';
   const errorText = language === 'zh' ? '加载内容失败。请重试。' : 'Failed to load content. Please try again.';
   const contentsText = language === 'zh' ? '目录' : 'Contents';
@@ -270,33 +270,7 @@ export default function Faq() {
           z-index: -1;
         }
 
-        .nav-wrapper {
-          position: fixed;
-          width: 100%;
-          z-index: 100;
-          padding: 40px;
-          top: 0;
-          left: 0;
-        }
-
-        .nav-container {
-          max-width: 1530px;
-          width: 100%;
-          margin: 0 auto;
-          padding-left: 40px;
-          padding-right: 40px;
-          border-radius: 100px;
-          background-color: rgba(255, 255, 255, 0.9);
-          backdrop-filter: blur(20px);
-        }
-
-        .navbar {
-          font-family: 'Jost', sans-serif;
-        }
-
-        .nav-item {
-          margin-right: 24px;
-        }
+        /* 导航样式已移至全局样式文件 */
 
         .section-spacing {
           padding-top: 4rem;
@@ -355,6 +329,22 @@ export default function Faq() {
           line-height: 1.75;
           color: #4a4a4a;
           margin: 1.25rem 0;
+        }
+
+        /* Markdown 链接高亮提示（可点击） */
+        .feature-content a {
+          color: #7d9ed4;
+          text-decoration: underline;
+          text-underline-offset: 2px;
+          font-weight: 500;
+          transition: background 0.2s ease, color 0.2s ease;
+          border-radius: 6px;
+          padding: 0 2px;
+        }
+
+        .feature-content a:hover {
+          color: #5d84c6;
+          background: rgba(125, 158, 212, 0.12);
         }
 
         .feature-content ul {

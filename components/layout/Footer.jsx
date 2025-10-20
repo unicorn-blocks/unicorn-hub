@@ -64,7 +64,7 @@ export default function Footer({ onSubscribe }) {
               <img src="/assets/logo_horizontal_white_eng.svg" alt="Unicorn Logo" className="h-10" />
             </div>
             <p className="text-sm text-gray-600 mb-4">
-              <a href="mailto:support@unicorntoy.ai" className="hover:text-[#7d9ed4] transition-colors" target="_blank" rel="noopener">support@unicorntoy.ai</a>
+              <a href="mailto:support@unicornblocks.ai" className="hover:text-[#7d9ed4] transition-colors" target="_blank" rel="noopener">support@unicornblocks.ai</a>
             </p>
             <div className="flex gap-4">
               <a href="https://www.tiktok.com/@unicorntoyworld" className="text-gray-600 hover:text-[#7d9ed4]">
@@ -104,34 +104,6 @@ export default function Footer({ onSubscribe }) {
                 </Link>
               </li>
             </ul>
-          </div>
-
-          {/* Join Waitlist - 添加消息显示区域 */}
-          <div>
-            <h3 className="font-semibold mb-4">{t.joinWaitlist}</h3>
-            <form onSubmit={handleFooterSubmit} className="flex mb-2">
-              <input
-                type="email"
-                placeholder={t.enterEmail}
-                className="flex-1 px-4 py-2 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-[#7d9ed4]"
-                value={footerEmail}
-                onChange={(e) => setFooterEmail(e.target.value)}
-                required
-              />
-              <button 
-                type="submit" 
-                className="bg-[#9b90da] text-white px-3 py-2 rounded-r-md hover:bg-[#7d9ed4] transition-colors"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
-              </button>
-            </form>
-            
-            {/* 添加消息显示区域 */}
-            {footerStatus.message && (
-              <div className={footerStatus.type === 'success' ? 'footer-success-message' : 'footer-error-message'}>
-                {footerStatus.message}
-              </div>
-            )}
           </div>
         </div>
 

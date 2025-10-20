@@ -103,7 +103,7 @@ export default function PaymentSuccess() {
   return (
     <>
       <Head>
-        <title>{t.title} - Unicorn Toy</title>
+        <title>{t.title} - Unicorn Blocks</title>
         <meta charSet="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </Head>
@@ -187,33 +187,7 @@ export default function PaymentSuccess() {
           z-index: -1;
         }
 
-        .nav-wrapper {
-          position: fixed;
-          width: 100%;
-          z-index: 100;
-          padding: 40px;
-          top: 0;
-          left: 0;
-        }
-
-        .nav-container {
-          max-width: 1530px;
-          width: 100%;
-          margin: 0 auto;
-          padding-left: 40px;
-          padding-right: 40px;
-          border-radius: 100px;
-          background-color: rgba(255, 255, 255, 0.9);
-          backdrop-filter: blur(20px);
-        }
-
-        .navbar {
-          font-family: 'Jost', sans-serif;
-        }
-
-        .nav-item {
-          margin-right: 24px;
-        }
+        /* 导航样式已移至全局样式文件 */
 
         .section-spacing {
           padding-top: 4rem;
@@ -224,7 +198,7 @@ export default function PaymentSuccess() {
           display: flex;
           align-items: center;
           justify-content: center;
-          padding-top: 200px;
+          padding-top: 180px;
           padding-bottom: 100px;
         }
 

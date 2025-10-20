@@ -14,9 +14,9 @@ export default function ShopNew() {
   // 硬编码中英文内容
   const translations = {
     en: {
-      title: 'Subscribe - Unicorn Toy',
+      title: 'Subscribe - Unicorn Blocks',
       joinWaitlist: 'Join Our Waitlist',
-      beFirst: 'Be the first to know when Unicorn Toy becomes available!',
+      beFirst: 'Be the first to know when Unicorn Blocks becomes available!',
       enterEmail: 'Enter your email address',
       buttonText: 'Join Waitlist',
       processing: 'Processing...',
@@ -240,33 +240,7 @@ export default function ShopNew() {
           z-index: -1;
         }
 
-        .nav-wrapper {
-          position: fixed;
-          width: 100%;
-          z-index: 100;
-          padding: 40px;
-          top: 0;
-          left: 0;
-        }
-
-        .nav-container {
-          max-width: 1530px;
-          width: 100%;
-          margin: 0 auto;
-          padding-left: 40px;
-          padding-right: 40px;
-          border-radius: 100px;
-          background-color: rgba(255, 255, 255, 0.9);
-          backdrop-filter: blur(20px);
-        }
-
-        .navbar {
-          font-family: 'Jost', sans-serif;
-        }
-
-        .nav-item {
-          margin-right: 24px;
-        }
+        /* 导航样式已移至全局样式文件 */
 
         .subscribe-container {
           max-width: 600px;

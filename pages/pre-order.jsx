@@ -15,7 +15,7 @@ export default function BuyNow() {
   // 硬编码中英文内容
   const translations = {
     en: {
-      title: 'Buy Now - Unicorn Toy',
+      title: 'Buy Now - Unicorn Blocks',
       pageTitle: 'Get Your Early Bird Discount',
       subtitle: 'Pay $10 now, get $40 off when we launch!',
       emailLabel: 'Enter your email address',
@@ -493,33 +493,7 @@ export default function BuyNow() {
           z-index: -1;
         }
 
-        .nav-wrapper {
-          position: fixed;
-          width: 100%;
-          z-index: 100;
-          padding: 40px;
-          top: 0;
-          left: 0;
-        }
-
-        .nav-container {
-          max-width: 1530px;
-          width: 100%;
-          margin: 0 auto;
-          padding-left: 40px;
-          padding-right: 40px;
-          border-radius: 100px;
-          background-color: rgba(255, 255, 255, 0.9);
-          backdrop-filter: blur(20px);
-        }
-
-        .navbar {
-          font-family: 'Jost', sans-serif;
-        }
-
-        .nav-item {
-          margin-right: 24px;
-        }
+        /* 导航样式已移至全局样式文件 */
 
         .buy-container {
           max-width: 1400px;

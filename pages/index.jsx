@@ -11,10 +11,10 @@ export default function Home() {
   // 硬编码中英文内容
   const translations = {
     en: {
-      title: 'Unicorn Toy',
+      title: 'Unicorn Blocks',
       hero: {
         aiPowered: 'AI-powered',
-        unicorn: 'Unicorn toy',
+        unicorn: 'Unicorn Blocks',
         toy: '',
         makeYourDream: 'Make all dreams',
         comeTrue: 'come true'
@@ -130,9 +130,9 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Building blocks decoration */}
+        {/* Blocks decoration */}
         <div className="w-full overflow-hidden mb-4">
-          <img src="/assets/buildingblock.png" alt="Building Blocks" className="w-[110%] max-w-none mx-auto relative left-1/2 -translate-x-1/2" />
+          <img src="/assets/buildingblock.png" alt="Blocks" className="w-[110%] max-w-none mx-auto relative left-1/2 -translate-x-1/2" />
         </div>
 
         {/* Demo Video Section */}
@@ -147,7 +147,7 @@ export default function Home() {
                 <iframe 
                   className="absolute top-0 left-0 w-full h-full" 
                   src="https://www.youtube.com/embed/hUhocTvvQlA" 
-                  title="Unicorn Toy Demo Video"
+                  title="Unicorn Blocks Demo Video"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
                   allowFullScreen
                 ></iframe>
@@ -180,33 +180,7 @@ export default function Home() {
           z-index: -1;
         }
 
-        .nav-wrapper {
-          position: fixed;
-          width: 100%;
-          z-index: 100;
-          padding: 40px;
-          top: 0;
-          left: 0;
-        }
-
-        .nav-container {
-          max-width: 1530px;
-          width: 100%;
-          margin: 0 auto;
-          padding-left: 40px;
-          padding-right: 40px;
-          border-radius: 100px;
-          background-color: rgba(255, 255, 255, 0.9);
-          backdrop-filter: blur(20px);
-        }
-
-        .navbar {
-          font-family: 'Jost', sans-serif;
-        }
-
-        .nav-item {
-          margin-right: 24px;
-        }
+        /* 导航样式已移至全局样式文件 */
 
         .section-spacing {
           padding-top: 4rem;
@@ -217,7 +191,7 @@ export default function Home() {
           display: flex;
           align-items: center;
           justify-content: center;
-          padding-top: 200px;
+          padding-top: 180px;
           padding-bottom: 0;
         }
 

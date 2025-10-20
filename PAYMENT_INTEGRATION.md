@@ -80,7 +80,7 @@ Flask后端需要提供以下API端点：
   "currency": "USD",
   "language": "en" | "zh",
   "product_type": "early_bird_discount",
-  "description": "Unicorn Toy Early Bird Discount - $10 for $40 voucher"
+  "description": "Unicorn Blocks Early Bird Discount - $10 for $40 voucher"
 }
 ```
 
