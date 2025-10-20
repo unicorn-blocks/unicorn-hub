@@ -375,7 +375,7 @@ export default function BuyNow() {
           </div>
 
           {/* 上方：支付表单和价格明细 */}
-          <div className="grid lg:grid-cols-[1.1fr_0.9fr] gap-10 max-w-5xl mx-auto mb-10">
+          <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-6 lg:gap-10 max-w-5xl mx-auto mb-10">
             {/* 左侧：支付表单 */}
             <div className="payment-form-container surface-card">
               <form id="payment-form" onSubmit={handleSubmit} className="payment-form-content">
@@ -413,7 +413,7 @@ export default function BuyNow() {
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     {t.paymentMethodLabel}
                   </label>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <label className="payment-method-option">
                       <input 
                         type="radio" 
@@ -518,7 +518,7 @@ export default function BuyNow() {
                 <div className="w-16 h-1 bg-gradient-to-r from-[#7D9ED4] to-[#F7AEBF] mx-auto rounded-full"></div>
               </div>
               
-              <div className="grid md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {t.features.items.map((item, index) => (
                   <div key={index} className="flex items-center p-3 bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg border border-purple-200">
                     <span
@@ -1039,9 +1039,12 @@ export default function BuyNow() {
           border: 1px solid rgba(229,231,235,0.45); /* 与 surface-card 边框一致 */
           border-radius: 12px;
           overflow: hidden;
-          transition: border-color .18s ease;
+          transition: border-color .18s ease, box-shadow .18s ease;
         }
-        .faq-item:hover { border-color: rgba(229,231,235,0.55); }
+        .faq-item:hover { 
+          border-color: #e9d5ff; 
+          box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
         .faq-item.open { background: #ffffff; border-color: #e9d5ff; }
         .faq-item + .faq-item { margin-top: 0.5rem; }
         .faq-header {
