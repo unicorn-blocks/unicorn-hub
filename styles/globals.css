@@ -178,17 +178,17 @@ a {
 /* Pre-order 默认高亮与悬停强化 */
 .preorder-active {
   color: #ffffff !important; /* 白色文字更突出 */
-  background: linear-gradient(135deg, #7d9ed4 0%, #ff8a65 100%);
+  background: linear-gradient(135deg, #8BA8D4 0%, #F8B5C5 100%);
   border-radius: 12px;
   padding: 6px;
-  box-shadow: 0 4px 12px rgba(125, 158, 212, 0.4);
+  box-shadow: 0 4px 12px rgba(125, 158, 212, 0.3);
   font-weight: 600;
 }
 
 .preorder-active:hover {
   color: #ffffff !important;
-  background: linear-gradient(135deg, #6b8cc4 0%, #ff7043 100%);
-  box-shadow: 0 6px 16px rgba(255, 138, 101, 0.5);
+  background: linear-gradient(135deg, #7D9ED4 0%, #F7AEBF 100%);
+  box-shadow: 0 6px 16px rgba(125, 158, 212, 0.4);
   transform: translateY(-1px);
 }
 
