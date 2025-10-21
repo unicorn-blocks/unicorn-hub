@@ -175,21 +175,43 @@ a {
   width: 4px;
 }
 
-/* Pre-order 默认高亮与悬停强化 */
-.preorder-active {
-  color: #ffffff !important; /* 白色文字更突出 */
-  background: linear-gradient(135deg, #8BA8D4 0%, #F8B5C5 100%);
-  border-radius: 12px;
-  padding: 6px;
+/* Pre-order 按钮样式 - 简洁版本 */
+.preorder-button {
+  background: linear-gradient(135deg, #7D9ED4 0%, #F7AEBF 100%);
+  color: white;
+  padding: 8px 20px;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  border: none;
+  text-decoration: none;
+  display: inline-block;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 8px rgba(125, 158, 212, 0.2);
+}
+
+.preorder-button:hover {
+  background: linear-gradient(135deg, #6B8BC4 0%, #E67E8A 100%);
+  transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(125, 158, 212, 0.3);
+  color: white;
+  text-decoration: none;
+}
+
+/* 保留原有的文字渐变效果作为备用 */
+.preorder-text-gradient {
+  background: linear-gradient(135deg, #5B7BC7 0%, #E67E8A 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
   font-weight: 600;
 }
 
-.preorder-active:hover {
-  color: #ffffff !important;
-  background: linear-gradient(135deg, #7D9ED4 0%, #F7AEBF 100%);
-  box-shadow: 0 6px 16px rgba(125, 158, 212, 0.4);
-  transform: translateY(-1px);
+.preorder-text-gradient:hover {
+  background: linear-gradient(135deg, #4A6BB8 0%, #D65A6A 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 /* 动画效果 */
