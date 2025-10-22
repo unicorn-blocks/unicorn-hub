@@ -43,7 +43,7 @@ function getFlaskBackendUrl() {
 
 // 验证支付方式
 function isValidPaymentMethod(method) {
-  const validMethods = ['Paypal', 'Payoneer'];
+  const validMethods = ['PayPal', 'Payoneer', 'CreditCard'];
   return validMethods.includes(method);
 }
 
@@ -62,7 +62,18 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { email, paymentMethod, amount, language: requestLanguage } = req.body;
+    const { 
+      email, 
+      newsletter,
+      shipping,
+      paymentMethod, 
+      paypalOption,
+      cardDetails,
+      billingAddress,
+      amount, 
+      language: requestLanguage,
+      productType 
+    } = req.body;
     
     // 验证必需字段
     if (!email) {
@@ -99,13 +110,34 @@ export default async function handler(req, res) {
     // 准备发送给Flask后端的数据
     const paymentData = {
       email,
+      newsletter: newsletter || false,
+      shipping: shipping || {},
       payment_method: paymentMethod,
       amount: parseFloat(amount),
       currency: 'USD',
       language: requestLanguage || 'en',
-      product_type: 'early_bird_discount',
+      product_type: productType || 'early_bird_discount',
       description: 'Unicorn Blocks Early Bird Discount - $10 for $40 voucher'
     };
+
+    // 根据支付方式添加特定参数
+    if (paymentMethod === 'PayPal') {
+      paymentData.paypal_option = paypalOption || 'account';
+    } else if (paymentMethod === 'CreditCard') {
+      if (!cardDetails || !billingAddress) {
+        return res.status(400).json({
+          success: false,
+          message: 'Missing card details or billing address for credit card payment'
+        });
+      }
+      paymentData.card_details = {
+        number: cardDetails.number,
+        expiry: cardDetails.expiry,
+        cvv: cardDetails.cvv,
+        name: cardDetails.name
+      };
+      paymentData.billing_address = billingAddress;
+    }
     
     // 调用Flask后端API
     const flaskUrl = getFlaskBackendUrl();

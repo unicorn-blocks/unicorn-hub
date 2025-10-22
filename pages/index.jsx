@@ -16,8 +16,9 @@ export default function Home() {
         aiPowered: 'AI-powered',
         unicorn: 'Unicorn Blocks',
         toy: '',
-        makeYourDream: 'Make all dreams',
-        comeTrue: 'come true'
+        makeYourDream: 'A magical STEM world where',
+        kidsCreate: 'kids create',
+        parentsRelax: 'parents relax'
       },
       demo: {
         come: 'Come and watch our',
@@ -31,11 +32,12 @@ export default function Home() {
     zh: {
       title: '独角兽玩具',
       hero: {
-        aiPowered: 'AI',
-        unicorn: '独角兽玩具',
+        aiPowered: 'AI驱动的',
+        unicorn: '独角兽积木',
         toy: '',
-        makeYourDream: '让所有孩子的梦想',
-        comeTrue: '成真'
+        makeYourDream: '一个神奇的STEM世界，让',
+        kidsCreate: '孩子创造',
+        parentsRelax: '父母放松'
       },
       demo: {
         come: '来观看我们的',
@@ -124,7 +126,9 @@ export default function Home() {
               </div>
               <div className="text-[clamp(1.5rem,5vw,3.75rem)] font-bold mt-8 px-2 mx-auto">
                 <span className="text-gray-600 font-normal">{t.hero.makeYourDream} </span>
-                <span className="bg-gradient-to-r from-[#7D9ED4] to-[#F7AEBF] text-transparent bg-clip-text">{t.hero.comeTrue}</span>
+                <span className="bg-gradient-to-r from-[#7D9ED4] to-[#F7AEBF] text-transparent bg-clip-text">{t.hero.kidsCreate}</span>
+                <span className="text-gray-600 font-normal">, </span>
+                <span className="bg-gradient-to-r from-[#7D9ED4] to-[#F7AEBF] text-transparent bg-clip-text">{t.hero.parentsRelax}</span>
               </div>
             </div>
           </div>
