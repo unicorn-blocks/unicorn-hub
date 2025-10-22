@@ -351,7 +351,7 @@ export default function PreOrder() {
           width: 32px;
           height: 32px;
           margin-right: 0.375rem;
-          margin-top: 0.25rem;
+          margin-top: -0.125rem;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -607,14 +607,18 @@ export default function PreOrder() {
           }
           
           .feature-icon-container {
-            width: 20px;
-            height: 20px;
-            margin-right: 0.625rem;
+            width: 18px;
+            height: 18px;
+            margin-right: 0.4rem;
+            margin-top: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
           }
           
           .feature-icon {
-            width: 20px;
-            height: 20px;
+            width: 14px;
+            height: 14px;
           }
           
           .feature-text {
