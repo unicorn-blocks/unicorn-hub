@@ -14,10 +14,11 @@ export default function PreOrder() {
   const translations = {
     en: {
       title: 'VIP Preorder - Unicorn Blocks',
-      pageTitle: 'Get VIP Early Access — Secure Your $129 Price Today',
+      pageTitle: 'Get Limited VIP Access — Secure Your $129 Price Today',
       subtitle: 'Discover the future of creative play. Join our VIP community and be among the first to experience Unicorn Blocks.',
-      ctaButton: 'Reserve Now',
+      ctaButton: 'Claim My VIP Spot!',
       learnMoreButton: 'Learn More',
+      trustNote: '✔ Fully Refundable $10 Deposit · ✔ Limited to 500 Families · ✔ Safe Checkout',
       features: {
         title: "More Than a block,\nIt's a Creative Companion.",
         items: [
@@ -31,7 +32,7 @@ export default function PreOrder() {
         items: [
           {
             q: 'How does the VIP Reservation work?',
-            a: 'Step 1 Lock Your Price: Pay $10 now to secure the limited $129 VIP deal (Retail Price: $199). Step 2 Go behind-the-scenes: See exclusive updates, meet our team, and watch the creation process unfold. Step 3 Pay & Receive: We’ll notify you before shipping, then automatically charge the remaining $119 for priority delivery.'
+            a: 'Step 1. Lock Your Price: Pay **$10 now** to secure the limited **$129 VIP deal** (Retail Price: $199).\nStep 2. Go behind-the-scenes. **See** exclusive updates, **meet** our team, and **watch** the creation process unfold — all designed to **unlock limitless creativity**.\nStep 3. Pay & Receive: We\'ll notify you before shipping, then automatically charge the remaining **$119** for priority delivery.'
           },
           {
             q: 'What if I change my mind?',
@@ -39,19 +40,19 @@ export default function PreOrder() {
           },
           {
             q: 'Is the toy safe for children?',
-            a: 'Absolutely! Our building blocks include a camera that fosters creativity. However, it is disabled by default and requires explicit parental consent through our app to activate. You own all data, with the ability to view, manage, and permanently delete it at any time.'
+            a: '**Absolutely!** Our building blocks include a camera that fosters creativity. However, it is **disabled by default and requires explicit parental consent through our app to activate**. You own all data, with the ability to view, manage, and permanently delete it at any time.'
           },
           {
             q: 'What age group are Unicorn blocks suitable for?',
-            a: 'Ages 3-8. We personalize the fun! By setting your child\'s age, the system switches between story modes and difficulty levels to deliver an experience that\'s just right for them.'
+            a: '**Ages 3-8.** We personalize the fun! By setting your child\'s age, the system switches between story modes and difficulty levels to deliver an experience that\'s just right for them.'
           },
           {
             q: 'Can multiple children share one set?',
-            a: 'Yes, they can share! However, for the best experience, we recommend one per child. The AI bonds as a personal "best friend," and having their own set ensures each child gets a fully personalized creative journey.'
+            a: 'Yes, they can share! However, for the **best experience**, we recommend one per child. The AI bonds as a personal "best friend," and having their own set ensures each child gets a fully personalized creative journey.'
           },
           {
             q: 'When will I pay the remaining amount?',
-            a: 'We will send you a friendly email reminder about 14 days before shipping. You can then choose to pay the remaining $119 manually, or opt for automatic payment for a hands-free experience.'
+            a: 'We will send you a friendly email reminder about **14 days before shipping**. You can then choose to **pay the remaining $119 manually**, or opt for automatic payment for a hands-free experience.'
           },
           {
             q: 'When will I receive the product?',
@@ -62,10 +63,11 @@ export default function PreOrder() {
     },
     zh: {
       title: '预售VIP - 独角兽积木',
-      pageTitle: '获取VIP抢先体验 — 立即锁定$129优惠价',
+      pageTitle: '获取VIP限量体验 — 立即锁定$129优惠价',
       subtitle: '探索创意游戏的未来。加入我们的VIP社区，成为首批体验独角兽积木的用户。',
-      ctaButton: '立即预订',
+      ctaButton: '我要锁定VIP名额！',
       learnMoreButton: '了解更多',
+      trustNote: '✔ $10订金可随时全额退款 · ✔ 仅限500个家庭 · ✔ 安全支付',
       features: {
         title: '不是一块简单的积木，\n而是孩子的创意伙伴。',
         items: [
@@ -79,7 +81,7 @@ export default function PreOrder() {
         items: [
           {
             q: 'VIP 预订如何运作？',
-            a: '步骤1 锁定价格：现在支付$10，锁定限量$129 VIP优惠（零售价$199）。步骤2 幕后直达：获取独家进展、认识团队、见证创造过程。步骤3 支付并收货：发货前我们会通知你，并自动收取剩余$119，享受优先发货。'
+            a: '步骤1. 锁定价格：现在支付**$10**，锁定限量**$129 VIP优惠**（零售价$199）。\n步骤2. 幕后直达：**获取**独家进展、**认识**团队、**见证**创造过程——一切旨在**释放无限创意**。\n步骤3. 支付并收货：发货前我们会通知你，并自动收取剩余**$119**，享受优先发货。'
           },
           {
             q: '如果我改变主意怎么办？',
@@ -87,19 +89,19 @@ export default function PreOrder() {
           },
           {
             q: '这款玩具对儿童安全吗？',
-            a: '当然安全！积木内置的摄像头用于激发创造力，但默认关闭，需在家长App中明确授权后才会启用。数据完全归你所有，你可随时查看、管理并永久删除。'
+            a: '**当然安全！**积木内置的摄像头用于激发创造力，但**默认关闭，需在家长App中明确授权后才会启用**。数据完全归你所有，你可随时查看、管理并永久删除。'
           },
           {
             q: '适合多大年龄的孩子？',
-            a: '适合3-8岁。我们会根据你设置的年龄在故事模式与难度之间切换，为孩子提供恰到好处的体验。'
+            a: '**适合3-8岁**。我们会根据你设置的年龄在故事模式与难度之间切换，为孩子提供恰到好处的体验。'
           },
           {
             q: '多个孩子可以共用一套吗？',
-            a: '可以共用！但为了最佳体验，我们建议一人一套。AI会形成“挚友式”陪伴，独立使用能获得更个性化的创作旅程。'
+            a: '可以共用！但为了**最佳体验**，我们建议一人一套。AI会形成"挚友式"陪伴，独立使用能获得更个性化的创作旅程。'
           },
           {
             q: '何时支付剩余金额？',
-            a: '发货前约14天我们会发送温馨邮件提醒。你可以选择手动支付剩余$119，或开启自动支付，轻松无忧。'
+            a: '发货前约**14天**我们会发送温馨邮件提醒。你可以选择**手动支付剩余$119**，或开启自动支付，轻松无忧。'
           },
           {
             q: '我什么时候能收到产品？',
@@ -187,6 +189,11 @@ export default function PreOrder() {
                         {t.ctaButton}
                       </button>
                     </Link>
+                    
+                    {/* 信任提示 */}
+                    <div className="trust-indicators">
+                      <div className="trust-item">{t.trustNote}</div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -211,7 +218,22 @@ export default function PreOrder() {
                         <span className={`chevron ${open ? 'rotate' : ''}`}>⌄</span>
                       </button>
                       <div className="faq-content" style={{ maxHeight: open ? '300px' : '0px' }}>
-                        <div className="faq-a">{faqItem.a}</div>
+                        {faqItem.q.includes('VIP Reservation') || faqItem.q.includes('VIP 预订') ? (
+                          <div className="faq-a-steps">
+                            {faqItem.a.split('\n').map((step, index) => (
+                              <div key={index} className="step-line">
+                                <span className="step-number">{step.split('.')[0]}.</span>
+                                <span className="step-content" dangerouslySetInnerHTML={{
+                                  __html: step.split('.').slice(1).join('.').trim().replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                                }}></span>
+                              </div>
+                            ))}
+                          </div>
+                        ) : (
+                          <div className="faq-a" dangerouslySetInnerHTML={{
+                            __html: faqItem.a.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>')
+                          }}></div>
+                        )}
                       </div>
                     </div>
                   );
@@ -358,6 +380,22 @@ export default function PreOrder() {
         .action-buttons {
           margin-top: 1.75rem;
           margin-bottom: 0;
+        }
+
+        /* 信任提示样式 */
+        .trust-indicators {
+          margin-top: 1rem;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+
+        .trust-item {
+          font-size: 0.75rem;
+          color: #6b7280;
+          font-weight: 500;
+          text-align: center;
+          line-height: 1.4;
         }
 
         .primary-button {
@@ -787,6 +825,39 @@ export default function PreOrder() {
           color: #374151;
           font-size: 0.95rem;
           line-height: 1.6;
+          font-variant-numeric: tabular-nums;
+        }
+        
+        .faq-a strong {
+          font-weight: 600;
+          color: #1f2937;
+        }
+        
+        /* 步骤对齐样式 */
+        .faq-a-steps {
+          padding: 0 1.1rem 1rem 1.1rem;
+          color: #374151;
+          font-size: 0.95rem;
+          line-height: 1.6;
+        }
+        
+        .step-line {
+          display: flex;
+          margin-bottom: 0.5rem;
+        }
+        
+        .step-number {
+          min-width: 4em;
+          font-weight: 400;
+        }
+        
+        .step-content {
+          flex: 1;
+        }
+        
+        .step-content strong {
+          font-weight: 600;
+          color: #1f2937;
         }
       `}</style>
     </>

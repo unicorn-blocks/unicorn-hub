@@ -61,7 +61,7 @@ export default function Footer({ onSubscribe }) {
           {/* Logo and Contact */}
           <div>
             <div className="flex items-center gap-2 mb-4">
-              <img src="/assets/logo_horizontal_white_eng.svg" alt="Unicorn Logo" className="h-10" />
+              <img src="/assets/logo_horizontal_white_eng.svg" alt="Unicorn Logo" className="h-14" />
             </div>
             <p className="text-sm text-gray-600 mb-4">
               <a href="mailto:support@unicornblocks.ai" className="hover:text-[#7d9ed4] transition-colors" target="_blank" rel="noopener">support@unicornblocks.ai</a>
