@@ -14,17 +14,18 @@ export default function PreOrder() {
   const translations = {
     en: {
       title: 'VIP Preorder - Unicorn Blocks',
-      pageTitle: 'Get Limited VIP Access — Secure Your $129 Price Today',
-      subtitle: 'Discover the future of creative play. Join our VIP community and be among the first to experience Unicorn Blocks.',
+      pageTitle: 'Limited VIP Access — Just $129 (Retail $199)',
+      subtitle: 'Reserve yours with a $10 deposit — only 436 of 500 left!',
       ctaButton: 'Claim My VIP Spot!',
       learnMoreButton: 'Learn More',
-      trustNote: '✔ Fully Refundable $10 Deposit · ✔ Limited to 500 Families · ✔ Safe Checkout',
+      trustNote: '✔ Fully Refundable $10 Deposit · ✔ Safe Checkout',
       features: {
-        title: "More Than a block,\nIt's a Creative Companion.",
+        title: "Unicorn Blocks: Sparky First Adventure",
         items: [
-          "Inspires Creativity: Turns your child’s imagination into interactive play.",
-          'Smart Learning Through Fun: Guided by AI to spark curiosity and confidence.',
-          'The Gift of Focus — For You Both: Immersive play for their growing mind. Uninterrupted time for your peace of mind.'
+          "<strong>Ages 3-8: The Foundational Years for a Lifelong Love of Learning</strong> — Designed for curious young builders ready to explore creativity and STEM learning.",
+          '<strong>The Ultimate 5-in-1 Adventure Kit: Everything Needed to Begin</strong> — Includes AI block buddy Sparky, 4 themed power-ups to unlock new adventures, and 100+ blocks for limitless creations.',
+          '<strong>Creative STEM Adventures</strong> — Kids build rockets for fun, but they\'re really mastering engineering logic and creative problem-solving.',
+          '<strong>The Gift of Independent Play</strong> — Designed for kids\' deep, independent focus—giving you back 100+ minutes of predictable, peaceful time to recharge, every time they play.'
         ]
       },
       faq: {
@@ -63,17 +64,18 @@ export default function PreOrder() {
     },
     zh: {
       title: '预售VIP - 独角兽积木',
-      pageTitle: '获取VIP限量体验 — 立即锁定$129优惠价',
-      subtitle: '探索创意游戏的未来。加入我们的VIP社区，成为首批体验独角兽积木的用户。',
+      pageTitle: '限量VIP体验 — 仅需$129（零售价$199）',
+      subtitle: '$10订金预订 — 仅剩436个名额，共500个！',
       ctaButton: '我要锁定VIP名额！',
       learnMoreButton: '了解更多',
-      trustNote: '✔ $10订金可随时全额退款 · ✔ 仅限500个家庭 · ✔ 安全支付',
+      trustNote: '✔ $10订金可随时全额退款 · ✔ 安全支付',
       features: {
-        title: '不是一块简单的积木，\n而是孩子的创意伙伴。',
+        title: '独角兽积木：Sparky首次冒险',
         items: [
-          '激发创造力：把孩子的想象变成互动游戏。',
-          '寓教于乐更聪明：AI引导，点燃好奇心与自信心。',
-          '专注力的礼物：沉浸式玩法促进成长，也给你安心独处时间。'
+          '<strong>适合3-8岁：终身学习热爱的基础年龄段</strong> — 专为好奇的小小建造者设计，探索创意与STEM学习。',
+          '<strong>终极5合1冒险套装：开启所需的一切</strong> — 包含AI积木伙伴Sparky、4个主题强化道具解锁新冒险，以及100+积木创造无限可能。',
+          '<strong>创意STEM冒险</strong> — 孩子们为乐趣建造火箭，实际上正在掌握工程逻辑和创意问题解决能力。',
+          '<strong>独立游戏礼物</strong> — 专为孩子深度独立专注设计，每次游戏都给你100+分钟的可预测宁静时光来充电。'
         ]
       },
       faq: {
@@ -115,9 +117,10 @@ export default function PreOrder() {
   // 根据当前语言选择正确的翻译
   const t = translations[language] || translations.en;
   const featureIconUrls = [
-    '/assets/lightbulb-on-outline.svg', // creativity / inspiration
-    '/assets/robot-outline.svg', // smart learning
-    '/assets/target.svg' // focus
+    '/assets/pre-order/ages-learning.svg', // ages 3-8 / learning foundation
+    '/assets/pre-order/adventure-kit.svg', // 5-in-1 adventure kit
+    '/assets/pre-order/stem-education.svg', // creative STEM adventures
+    '/assets/pre-order/independent-play.svg' // independent play gift
   ];
   const toggleFaq = (idx) => {
     setExpandedFaqIndex((current) => {
@@ -149,14 +152,14 @@ export default function PreOrder() {
       <main className="min-h-screen pt-48 px-4 pb-24">
         <div className="buy-container">
           {/* 页面标题 */}
-          <div className="text-center mb-12 max-w-3xl mx-auto">
+          <div className="text-center mb-12 max-w-5xl mx-auto">
             <h1 className="text-4xl font-bold mb-3">{t.pageTitle}</h1>
             <p className="text-lg text-gray-600">{t.subtitle}</p>
           </div>
 
           {/* 主产品展示区域 */}
-          <div className="max-w-5xl mx-auto mb-16">
-            <div className="grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-8 items-center">
+          <div className="max-w-[66rem] mx-auto mb-16">
+            <div className="grid grid-cols-1 lg:grid-cols-[4fr_5fr] gap-7 items-center">
               
               {/* 左侧：产品轮播图 */}
               <div className="product-showcase">
@@ -177,7 +180,7 @@ export default function PreOrder() {
                             aria-hidden="true"
                           />
                         </div>
-                        <p className="feature-text">{item}</p>
+                        <p className="feature-text" dangerouslySetInnerHTML={{ __html: item }}></p>
                       </div>
                     ))}
                   </div>
@@ -202,7 +205,7 @@ export default function PreOrder() {
 
 
           {/* FAQ 区块 */}
-          <div className="max-w-5xl mx-auto mt-10">
+          <div className="max-w-[66rem] mx-auto mt-10">
             <div className="features-card glass-up surface-card">
               <div className="text-center mb-6">
                 <h3 className="text-2xl font-bold mb-2">{t.faq.title}</h3>
@@ -267,6 +270,28 @@ export default function PreOrder() {
           z-index: -1;
         }
 
+        /* 标题样式优化 */
+        h1 {
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+
+        @media (max-width: 768px) {
+          h1 {
+            white-space: normal;
+            font-size: 1.75rem !important;
+            line-height: 1.2;
+          }
+        }
+
+        @media (max-width: 480px) {
+          h1 {
+            font-size: 1.5rem !important;
+            line-height: 1.1;
+          }
+        }
+
         /* 导航样式已移至全局样式文件 */
 
         .buy-container {
@@ -281,6 +306,8 @@ export default function PreOrder() {
           align-items: center;
           justify-content: flex-start;
           padding: 2rem 0;
+          max-width: 480px;
+          width: 100%;
         }
 
         /* 移动端单列布局时居中 */
@@ -312,10 +339,10 @@ export default function PreOrder() {
         }
 
         .value-title {
-          font-size: 2rem;
-          font-weight: 800;
+          font-size: 1.625rem;
+          font-weight: 500;
           color: #111827;
-          margin-bottom: 2rem;
+          margin-bottom: 1.2rem;
           line-height: 1.2;
           letter-spacing: -0.02em;
           white-space: pre-line;
@@ -332,10 +359,9 @@ export default function PreOrder() {
         .feature-item {
           display: flex;
           align-items: flex-start;
-          margin-bottom: 1.75rem;
+          margin-bottom: 0.875rem;
           padding: 0;
           position: static;
-          padding-left: 0.375rem;
         }
 
         .feature-item::before {
@@ -371,10 +397,14 @@ export default function PreOrder() {
         .feature-text {
           flex: 1;
           color: #374151;
-          font-size: 1.1rem;
+          font-size: 1rem;
           line-height: 1.6;
           margin: 0;
-          font-weight: 500;
+          font-weight: 400;
+        }
+
+        .feature-text strong {
+          font-weight: 600;
         }
 
         .action-buttons {
@@ -384,7 +414,7 @@ export default function PreOrder() {
 
         /* 信任提示样式 */
         .trust-indicators {
-          margin-top: 1rem;
+          margin-top: 0.5rem;
           display: flex;
           justify-content: center;
           align-items: center;
@@ -403,7 +433,7 @@ export default function PreOrder() {
           background: linear-gradient(90deg, #F7AEBF 0%, #9b90da 100%);
           color: white;
           font-weight: 500;
-          padding: 1rem 2rem;
+          padding: 0.875rem 2rem;
           border-radius: 12px;
           border: none;
           font-size: 1rem;
@@ -480,14 +510,13 @@ export default function PreOrder() {
         /* 中等屏幕优化 - 在单列布局前先缩小 */
         @media (max-width: 1200px) {
           .value-title {
-            font-size: 1.75rem;
-            margin-bottom: 1.5rem;
+            font-size: 1.375rem;
+            margin-bottom: 1.25rem;
             line-height: 1.3;
           }
           
           .feature-item {
-            margin-bottom: 1.5rem;
-            padding-left: 0.375rem;
+            margin-bottom: 0.75rem;
           }
           
           .feature-icon-container {
@@ -502,7 +531,7 @@ export default function PreOrder() {
           }
           
           .feature-text {
-            font-size: 1rem;
+            font-size: 0.95rem;
             line-height: 1.5;
           }
           
@@ -511,7 +540,7 @@ export default function PreOrder() {
           }
           
           .primary-button {
-            padding: 0.875rem 1.5rem;
+            padding: 0.75rem 1.5rem;
             font-size: 0.9rem;
             border-radius: 12px;
           }
@@ -528,14 +557,13 @@ export default function PreOrder() {
           }
           
           .value-title {
-            font-size: 1.5rem;
-            margin-bottom: 1.25rem;
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
             line-height: 1.3;
           }
           
           .feature-item {
-            margin-bottom: 1.25rem;
-            padding-left: 0.375rem;
+            margin-bottom: 0.75rem;
           }
           
           .feature-icon-container {
@@ -550,7 +578,7 @@ export default function PreOrder() {
           }
           
           .feature-text {
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             line-height: 1.5;
           }
           
@@ -559,7 +587,7 @@ export default function PreOrder() {
           }
           
           .primary-button {
-            padding: 0.875rem 1.5rem;
+            padding: 0.75rem 1.5rem;
             font-size: 0.9rem;
             border-radius: 12px;
           }
@@ -575,12 +603,13 @@ export default function PreOrder() {
           }
           
           .value-title {
-            font-size: 1.75rem;
-            margin-bottom: 1.75rem;
+            font-size: 1.375rem;
+            margin-bottom: 1.25rem;
+            padding-left: 0;
           }
           
           .feature-item {
-            padding-left: 0.375rem;
+            padding-left: 0;
           }
           
           .feature-icon-container {
@@ -595,7 +624,7 @@ export default function PreOrder() {
           }
           
           .feature-text {
-            font-size: 1rem;
+            font-size: 0.9rem;
           }
           
           .features-list {
@@ -603,7 +632,7 @@ export default function PreOrder() {
           }
           
           .feature-item {
-            margin-bottom: 0.875rem;
+            margin-bottom: 0.5rem;
           }
           
           .feature-icon-container {
@@ -622,7 +651,7 @@ export default function PreOrder() {
           }
           
           .feature-text {
-            font-size: 0.8125rem;
+            font-size: 0.8rem;
           }
           
           .action-buttons {
@@ -630,7 +659,7 @@ export default function PreOrder() {
           }
           
           .primary-button {
-            padding: 0.75rem 1.5rem;
+            padding: 0.6875rem 1.5rem;
             font-size: 0.9rem;
             border-radius: 12px;
           }

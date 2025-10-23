@@ -337,7 +337,7 @@ export default function Checkout() {
       // Order summary
       orderSummary: 'Order Summary',
       productName: 'VIP Pre-order Reservation',
-      productDescription: '$10 deposit secures $129 VIP price',
+      productDescription: 'Sparky First Adventure',
       quantity: 'Quantity',
       subtotal: 'Subtotal',
       shipping: 'Shipping',
@@ -413,7 +413,7 @@ export default function Checkout() {
       // Order summary
       orderSummary: '订单摘要',
       productName: 'VIP预售预订',
-      productDescription: '$10订金锁定$129 VIP价格',
+      productDescription: 'Sparky 首次冒险',
       quantity: '数量',
       subtotal: '小计',
       shipping: '运费',
@@ -960,7 +960,7 @@ export default function Checkout() {
                             <span className="payment-method-name-plaud">PayPal</span>
                           </div>
                           <div className="payment-method-logo">
-                            <img src="/assets/paypal-logo.svg" alt="PayPal" />
+                            <img src="/assets/checkout/paypal-logo.svg" alt="PayPal" />
                           </div>
                         </div>
                       </label>
@@ -1158,7 +1158,7 @@ export default function Checkout() {
                             <span className="payment-method-name-plaud">Payoneer</span>
                           </div>
                           <div className="payment-method-logo">
-                            <img src="/assets/payoneer-logo.svg" alt="Payoneer" />
+                            <img src="/assets/checkout/payoneer-logo.svg" alt="Payoneer" />
                           </div>
                         </div>
                       </label>
@@ -1207,12 +1207,11 @@ export default function Checkout() {
                 {/* 产品信息 */}
                 <div className="product-item-clean">
                   <div className="product-image-clean">
-                    <div className="product-placeholder-clean">
-                      <svg viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                      </svg>
-                    </div>
-                    <div className="product-badge-clean">{quantity}</div>
+                    <img 
+                      src="/assets/checkout/sparky.jpg" 
+                      alt="Sparky First Adventure" 
+                      className="product-image"
+                    />
                   </div>
                   <div className="product-info-clean">
                     <div className="product-details-clean">
@@ -2289,39 +2288,14 @@ export default function Checkout() {
           flex-shrink: 0;
         }
 
-        .product-placeholder-clean {
+        .product-image {
           width: 70px;
           height: 70px;
-          background: linear-gradient(135deg, rgba(125, 158, 212, 0.1) 0%, rgba(247, 174, 191, 0.1) 100%);
           border-radius: 12px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          color: var(--color-muted);
+          object-fit: cover;
           border: 1px solid rgba(125, 158, 212, 0.2);
         }
 
-        .product-placeholder-clean svg {
-          width: 28px;
-          height: 28px;
-        }
-
-        .product-badge-clean {
-          position: absolute;
-          top: -6px;
-          right: -6px;
-          background: linear-gradient(135deg, #7D9ED4 0%, #F7AEBF 100%);
-          color: white;
-          border-radius: 50%;
-          width: 20px;
-          height: 20px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-size: 0.75rem;
-          font-weight: 600;
-          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-        }
 
         .product-info-clean {
           flex: 1;

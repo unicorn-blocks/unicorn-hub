@@ -155,7 +155,7 @@ const PaymentComponent = ({
                 <span className="payment-method-name">{t.paypal}</span>
               </div>
               <div className="payment-logos">
-                <img src="/assets/paypal-logo.svg" alt="PayPal" className="payment-logo" />
+                <img src="/assets/checkout/paypal-logo.svg" alt="PayPal" className="payment-logo" />
                 <span className="more-cards">+ Credit Cards</span>
               </div>
               <p className="payment-description">{t.paypalDescription}</p>
@@ -215,7 +215,7 @@ const PaymentComponent = ({
                 <span className="payment-method-name">{t.payoneer}</span>
               </div>
               <div className="payoneer-logo">
-                <img src="/assets/payoneer-logo.svg" alt="Payoneer" className="payment-logo" />
+                <img src="/assets/checkout/payoneer-logo.svg" alt="Payoneer" className="payment-logo" />
               </div>
               <p className="payment-description">{t.payoneerDescription}</p>
             </div>
@@ -248,7 +248,7 @@ const PaymentComponent = ({
           </div>
           <div className="paypal-powered">
             <span>{t.poweredBy}</span>
-            <img src="/assets/paypal-logo.svg" alt="PayPal" className="paypal-small-logo" />
+            <img src="/assets/checkout/paypal-logo.svg" alt="PayPal" className="paypal-small-logo" />
           </div>
         </div>
       )}

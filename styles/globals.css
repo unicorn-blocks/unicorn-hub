@@ -31,7 +31,7 @@ a {
   z-index: -1;
 }
 
-/* iOS 26 液态玻璃导航样式 */
+/* 液态玻璃导航样式 */
 .nav-wrapper {
   position: fixed;
   width: 100%;
@@ -40,6 +40,13 @@ a {
   top: 0;
   left: 0;
   /* 移除磨砂效果，保持完全透明 */
+}
+
+/* 宽屏幕的导航栏padding */
+@media (min-width: 1400px) {
+  .nav-wrapper {
+    padding: 20px 60px;
+  }
 }
 
 .nav-container {
