@@ -336,8 +336,8 @@ export default function Checkout() {
       
       // Order summary
       orderSummary: 'Order Summary',
-      productName: 'Early Bird Discount Voucher',
-      productDescription: 'VIP Pre-order Special - $10 for $40 voucher',
+      productName: 'VIP Pre-order Reservation',
+      productDescription: '$10 deposit secures $129 VIP price',
       quantity: 'Quantity',
       subtotal: 'Subtotal',
       shipping: 'Shipping',
@@ -412,8 +412,8 @@ export default function Checkout() {
       
       // Order summary
       orderSummary: '订单摘要',
-      productName: '早鸟折扣券',
-      productDescription: 'VIP预售特惠 - $10获取$40折扣券',
+      productName: 'VIP预售预订',
+      productDescription: '$10订金锁定$129 VIP价格',
       quantity: '数量',
       subtotal: '小计',
       shipping: '运费',
@@ -476,7 +476,7 @@ export default function Checkout() {
       paymentData,
       amount: 10,
       language,
-      productType: 'early_bird_discount'
+      productType: 'vip_preorder'
     };
     
     safeApiCall('/api/payment/confirm', {
@@ -1217,6 +1217,7 @@ export default function Checkout() {
                   <div className="product-info-clean">
                     <div className="product-details-clean">
                       <h3 className="product-name-clean">{t.productName}</h3>
+                      <p className="product-variant-clean">{t.productDescription}</p>
                       {/* 数量选择器 - 简洁版本 */}
                       <div className="quantity-selector-clean">
                         <button 
@@ -1242,7 +1243,7 @@ export default function Checkout() {
                         </button>
                       </div>
                     </div>
-                    <div className="product-price-clean">${(99 * quantity).toFixed(2)}</div>
+                    <div className="product-price-clean">${(10 * quantity).toFixed(2)}</div>
                   </div>
                 </div>
                 
@@ -1251,7 +1252,7 @@ export default function Checkout() {
                   <div className="discount-input-group-clean">
                     <input 
                       type="text" 
-                      placeholder="Discount code"
+                      placeholder={t.discountCode}
                       className="discount-input-clean"
                       disabled={isProcessing}
                     />
@@ -1260,7 +1261,7 @@ export default function Checkout() {
                       className="discount-apply-btn-clean"
                       disabled={isProcessing}
                     >
-                      Apply
+                      {t.applyDiscount}
                     </button>
                   </div>
                 </div>
@@ -1268,21 +1269,20 @@ export default function Checkout() {
                 {/* 价格明细 - 简洁版本 */}
                 <div className="price-breakdown-clean">
                   <div className="price-row-clean">
-                    <span className="price-label-clean">Subtotal</span>
-                    <span className="price-value-clean">${(99 * quantity).toFixed(2)}</span>
+                    <span className="price-label-clean">{t.subtotal}</span>
+                    <span className="price-value-clean">${(10 * quantity).toFixed(2)}</span>
                   </div>
                   <div className="price-row-clean">
                     <span className="price-label-clean">
-                      Shipping
+                      {t.shipping}
                       <span className="help-icon-small">?</span>
                     </span>
-                    <span className="price-value-clean shipping-pending-clean">FREE</span>
+                    <span className="price-value-clean shipping-pending-clean">{t.shippingPending}</span>
                   </div>
                   <div className="price-row-clean total-row-clean">
-                    <span className="price-label-clean">Total</span>
+                    <span className="price-label-clean">{t.total}</span>
                     <span className="price-value-clean total-price-clean">
-                      <span className="currency">USD</span>
-                      <span className="amount">${(99 * quantity).toFixed(2)}</span>
+                      {t.currency} ${(10 * quantity).toFixed(2)}
                     </span>
                   </div>
                 </div>
@@ -2290,8 +2290,8 @@ export default function Checkout() {
         }
 
         .product-placeholder-clean {
-          width: 60px;
-          height: 60px;
+          width: 70px;
+          height: 70px;
           background: linear-gradient(135deg, rgba(125, 158, 212, 0.1) 0%, rgba(247, 174, 191, 0.1) 100%);
           border-radius: 12px;
           display: flex;
@@ -2302,8 +2302,8 @@ export default function Checkout() {
         }
 
         .product-placeholder-clean svg {
-          width: 24px;
-          height: 24px;
+          width: 28px;
+          height: 28px;
         }
 
         .product-badge-clean {
@@ -2334,8 +2334,8 @@ export default function Checkout() {
           flex: 1;
           display: flex;
           flex-direction: column;
-          justify-content: space-between;
-          height: 60px;
+          justify-content: flex-start;
+          height: 70px;
         }
 
         .product-name-clean {
@@ -2364,8 +2364,8 @@ export default function Checkout() {
         }
 
         .quantity-btn-clean {
-          width: 28px;
-          height: 28px;
+          width: 26px;
+          height: 26px;
           border: none;
           background: #f9fafb;
           color: var(--color-secondary);
@@ -2390,7 +2390,7 @@ export default function Checkout() {
 
         .quantity-input-clean {
           width: 40px;
-          height: 28px;
+          height: 26px;
           border: none;
           text-align: center;
           font-weight: 600;
