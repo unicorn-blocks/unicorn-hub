@@ -159,7 +159,7 @@ export default function PreOrder() {
 
           {/* 主产品展示区域 */}
           <div className="max-w-[66rem] mx-auto mb-16">
-            <div className="grid grid-cols-1 lg:grid-cols-[4fr_5fr] gap-7 items-center">
+            <div className="grid grid-cols-1 lg:grid-cols-[5fr_6fr] gap-7 items-center">
               
               {/* 左侧：产品轮播图 */}
               <div className="product-showcase">

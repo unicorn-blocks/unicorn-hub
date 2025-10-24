@@ -283,6 +283,19 @@ export default function Home() {
           padding-bottom: 60px;
         }
 
+        /* 移动端调整标题上方间距 */
+        @media (max-width: 768px) {
+          .hero-section {
+            padding-top: 250px;
+          }
+        }
+
+        @media (max-width: 480px) {
+          .hero-section {
+            padding-top: 200px;
+          }
+        }
+
         /* 光效动画 */
         .light-effect {
           display: inline-block;

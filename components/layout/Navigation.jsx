@@ -24,6 +24,23 @@ export default function Navigation() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // 监听点击外部区域关闭菜单
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (isMenuOpen && !event.target.closest('.nav-container')) {
+        setIsMenuOpen(false);
+      }
+    };
+
+    if (isMenuOpen) {
+      document.addEventListener('click', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, [isMenuOpen]);
+
   return (
     <div className={`nav-wrapper ${isScrolled ? 'scrolled' : ''}`}>
       <div className="nav-container navbar">
@@ -78,7 +95,7 @@ export default function Navigation() {
         
         {/* 移动端下拉菜单 */}
         {isMenuOpen && (
-          <div className="nav-mobile-menu md:hidden py-4 flex flex-col space-y-4 absolute right-0 bg-white/90 backdrop-blur-xl rounded-2xl shadow-2xl p-6 mt-2 w-auto min-w-[220px] border border-white/20">
+          <div className="nav-mobile-menu md:hidden py-4 flex flex-col space-y-4 absolute right-0 rounded-2xl shadow-2xl p-6 mt-2 w-auto min-w-[220px]">
             <Link href="/pre-order" className="nav-mobile-item preorder-text-gradient transition-all duration-300 whitespace-nowrap font-medium" aria-label={language === 'en' ? 'Pre-order' : '预购'}>
               {language === 'en' ? 'Pre Order' : '预约购买'}
             </Link>

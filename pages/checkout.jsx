@@ -2389,10 +2389,14 @@ export default function Checkout() {
         .discount-input-group-clean {
           display: flex;
           gap: 0.5rem;
+          width: 100%;
+          min-width: 0; /* iOS Safari flexbox fix */
         }
 
         .discount-input-clean {
           flex: 1;
+          min-width: 0; /* iOS Safari flexbox fix */
+          width: 100%; /* iOS Safari width fix */
           padding: 0.875rem 1rem;
           border: 1.5px solid var(--color-border);
           border-radius: 8px;
@@ -2402,6 +2406,7 @@ export default function Checkout() {
           backdrop-filter: blur(8px);
           transition: all 0.3s ease;
           box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+          -webkit-appearance: none; /* iOS Safari input styling fix */
         }
 
         .discount-input-clean:focus {
@@ -2411,6 +2416,7 @@ export default function Checkout() {
         }
 
         .discount-apply-btn-clean {
+          flex-shrink: 0; /* iOS Safari flexbox fix */
           padding: 0.75rem 1.25rem;
           background: linear-gradient(90deg, #F7AEBF 0%, #9b90da 100%);
           color: white;
@@ -2422,6 +2428,7 @@ export default function Checkout() {
           transition: none;
           line-height: var(--line-height-normal);
           box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+          -webkit-appearance: none; /* iOS Safari button styling fix */
         }
 
         .discount-apply-btn-clean:hover:not(:disabled) {
