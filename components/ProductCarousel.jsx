@@ -183,7 +183,7 @@ export default function ProductCarousel() {
         .product-carousel {
           width: 100%;
           max-width: 600px;
-          margin: 0 0 0 auto;
+          margin: 0 0 .5rem auto;
         }
 
         .carousel-container {

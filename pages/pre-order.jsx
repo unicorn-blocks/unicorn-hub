@@ -26,10 +26,10 @@ export default function PreOrder() {
       features: {
         title: "Unicorn Blocks: Sparky First Adventure",
         items: [
-          "<strong>Ages 3-8: The Foundational Years for a Lifelong Love of Learning</strong> — Designed for curious young builders ready to explore creativity and STEM learning.",
-          '<strong>The Ultimate 5-in-1 Adventure Kit: Everything Needed to Begin</strong> — Includes AI block buddy Sparky, 4 themed power-ups to unlock new adventures, and 100+ blocks for limitless creations.',
-          '<strong>Creative STEM Adventures</strong> — Kids build rockets for fun, but they\'re really mastering engineering logic and creative problem-solving.',
-          '<strong>The Gift of Independent Play</strong> — Designed for kids\' deep, independent focus—giving you back 100+ minutes of predictable, peaceful time to recharge, every time they play.'
+          "<strong>Ages 3-8: The Foundational Years</strong><br/>For curious builders ready to explore creativity and STEM.",
+          '<strong>The 5-in-1 Adventure Kit</strong><br/>Everything to start. Includes Sparky, 4 themed power-ups, 4 magic blocks, and 100+ classic blocks.',
+          '<strong>STEM Learning</strong><br/>Kids build rockets for fun, mastering engineering & creative problem-solving.',
+          '<strong>The Gift of Independent Play</strong><br/>Gives you back 100+ minutes of peaceful time to recharge everytime they play.'
         ]
       },
       faq: {
@@ -80,10 +80,10 @@ export default function PreOrder() {
       features: {
         title: '独角兽积木：Sparky首次冒险',
         items: [
-          '<strong>适合3-8岁：终身学习热爱的基础年龄段</strong> — 专为好奇的小小建造者设计，探索创意与STEM学习。',
-          '<strong>终极5合1冒险套装：开启所需的一切</strong> — 包含AI积木伙伴Sparky、4个主题强化道具解锁新冒险，以及100+积木创造无限可能。',
-          '<strong>创意STEM冒险</strong> — 孩子们为乐趣建造火箭，实际上正在掌握工程逻辑和创意问题解决能力。',
-          '<strong>独立游戏礼物</strong> — 专为孩子深度独立专注设计，每次游戏都给你100+分钟的可预测宁静时光来充电。'
+          '<strong>适合3-8岁：基础年龄段</strong><br/>为好奇的建造者准备探索创意与STEM。',
+          '<strong>5合1冒险套装</strong><br/>开启所需的一切。包含Sparky、4个主题强化道具、4个魔法积木和100+经典积木。',
+          '<strong>STEM学习</strong><br/>孩子们为乐趣建造火箭，掌握工程学与创意问题解决。',
+          '<strong>独立游戏礼物</strong><br/>每次游戏都给你100+分钟宁静时光来充电。'
         ]
       },
       faq: {
@@ -331,17 +331,75 @@ export default function PreOrder() {
           width: 100%;
         }
 
+        /* 1200px以上屏幕的布局调整 */
+        @media (min-width: 1200px) {
+          .action-buttons {
+            margin-top: 0;
+          }
+          
+          .features-list {
+            flex: none;
+            display: block;
+            justify-content: initial;
+            margin-top: auto;
+            margin-bottom: auto;
+          }
+        }
+
+        /* 小于1200px时的布局调整 */
+        @media (max-width: 1199px) {
+          .value-title {
+            margin-bottom: 0.5rem;
+          }
+          
+          .action-buttons {
+            margin-top: 0;
+          }
+          
+          .features-list {
+            flex: none;
+            display: block;
+            justify-content: initial;
+            margin-top: auto;
+            margin-bottom: auto;
+          }
+        }
+
         /* 单列布局时居中 */
         @media (max-width: 1023px) {
           .product-showcase {
             justify-content: center;
             margin: 0 auto;
           }
+          
+          .product-info {
+            display: block;
+            height: auto;
+          }
+          
+          .value-proposition-card {
+            display: block;
+            flex: none;
+          }
+          
+          .features-list {
+            flex: none;
+            display: block;
+            justify-content: initial;
+            margin: 1.25rem 0;
+          }
+          
+          .action-buttons {
+            margin-top: 0;
+          }
         }
 
         .product-info {
-          padding: 1rem 0;
+          padding: 1rem 0 0 0;
           max-width: none;
+          display: flex;
+          flex-direction: column;
+          height: 100%;
         }
 
         /* 价值主张区域样式 - 纯文本无框版本 */
@@ -353,6 +411,10 @@ export default function PreOrder() {
           box-shadow: none;
           position: static;
           overflow: visible;
+          display: flex;
+          flex-direction: column;
+          flex: 1;
+          height: 100%;
         }
 
         .value-proposition-card::before,
@@ -378,7 +440,6 @@ export default function PreOrder() {
           width: 100%;
           height: 1px;
           background: #E5E7EB;
-          margin: 0.5rem 0;
         }
 
         .gradient-text {
@@ -390,7 +451,10 @@ export default function PreOrder() {
         }
 
         .features-list {
-          margin-bottom: 2rem;
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
         }
 
         .feature-item {
@@ -445,13 +509,18 @@ export default function PreOrder() {
         }
 
         .action-buttons {
-          margin-top: 1.75rem;
+          margin-top: auto;
           margin-bottom: 0;
+          display: flex;
+          flex-direction: column;
+        }
+        
+        .action-buttons a {
+          margin-bottom: 0.5rem;
         }
 
         /* 信任提示样式 */
         .trust-indicators {
-          margin-top: 0.5rem;
           display: flex;
           justify-content: center;
           align-items: center;
@@ -548,7 +617,7 @@ export default function PreOrder() {
         @media (max-width: 1200px) {
           .value-title {
             font-size: 1.375rem;
-            margin-bottom: 1.25rem;
+            margin-bottom: 1rem;
             line-height: 1.3;
           }
           
@@ -570,10 +639,6 @@ export default function PreOrder() {
           .feature-text {
             font-size: 0.95rem;
             line-height: 1.5;
-          }
-          
-          .action-buttons {
-            margin-top: 1.75rem;
           }
           
           .primary-button {
@@ -619,10 +684,6 @@ export default function PreOrder() {
             line-height: 1.5;
           }
           
-          .action-buttons {
-            margin-top: 1.5rem;
-          }
-          
           .primary-button {
             padding: 0.75rem 1.5rem;
             font-size: 0.9rem;
@@ -662,10 +723,6 @@ export default function PreOrder() {
           
           .feature-text {
             font-size: 0.9rem;
-          }
-          
-          .features-list {
-            margin-bottom: 1.5rem;
           }
           
           .feature-item {
