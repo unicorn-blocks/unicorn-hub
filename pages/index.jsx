@@ -200,9 +200,7 @@ export default function Home() {
               <div className="mb-16">
                 <p className="text-[clamp(1.4rem,4vw,2.2rem)] font-semibold text-gray-700 leading-tight">
                   <span className="text-gray-600">{t.hero.makeYourDream} </span>
-                  <span className="bg-gradient-to-r from-[#7D9ED4] to-[#F7AEBF] text-transparent bg-clip-text font-bold">{t.hero.kidsCreate}</span>
-                  <span className="light-effect mx-2"></span>
-                  <span className="bg-gradient-to-r from-[#F7AEBF] to-[#72BCA3] text-transparent bg-clip-text font-bold">{t.hero.parentsRelax}</span>
+                  <span className="bg-gradient-to-r from-[#7D9ED4] to-[#F7AEBF] text-transparent bg-clip-text font-bold">{t.hero.kidsCreate}, {t.hero.parentsRelax}</span>
                 </p>
               </div>
               
@@ -296,52 +294,6 @@ export default function Home() {
           }
         }
 
-        /* 光效动画 */
-        .light-effect {
-          display: inline-block;
-          width: 8px;
-          height: 8px;
-          background: radial-gradient(circle, rgba(125, 158, 212, 0.8) 0%, rgba(247, 174, 191, 0.6) 50%, transparent 100%);
-          border-radius: 50%;
-          animation: light-pulse 3s ease-in-out infinite;
-          position: relative;
-          vertical-align: middle;
-          margin-top: -2px;
-        }
-
-        .light-effect::before {
-          content: '';
-          position: absolute;
-          top: -4px;
-          left: -4px;
-          right: -4px;
-          bottom: -4px;
-          background: radial-gradient(circle, rgba(125, 158, 212, 0.3) 0%, transparent 70%);
-          border-radius: 50%;
-          animation: light-glow 3s ease-in-out infinite;
-        }
-
-        @keyframes light-pulse {
-          0%, 100% {
-            transform: scale(1);
-            opacity: 0.8;
-          }
-          50% {
-            transform: scale(1.5);
-            opacity: 1;
-          }
-        }
-
-        @keyframes light-glow {
-          0%, 100% {
-            transform: scale(1);
-            opacity: 0.3;
-          }
-          50% {
-            transform: scale(2);
-            opacity: 0.6;
-          }
-        }
 
         @media (min-width: 1920px) {
           .nav-container {

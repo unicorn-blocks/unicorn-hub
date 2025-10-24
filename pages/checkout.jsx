@@ -82,7 +82,7 @@ export default function Checkout() {
   const [state, setState] = useState('');
   const [zipCode, setZipCode] = useState('');
   const [phone, setPhone] = useState('');
-  const [paymentMethod, setPaymentMethod] = useState('paypal');
+  const [paymentMethod, setPaymentMethod] = useState('card');
   // 产品数量状态
   const [quantity, setQuantity] = useState(1);
   // 信用卡信息状态
@@ -296,7 +296,7 @@ export default function Checkout() {
     en: {
       title: 'Checkout - Unicorn Blocks',
       pageTitle: 'Complete Your VIP Reservation',
-      subtitle: 'Secure your spot with a $10 deposit. Pay the remaining $119 when we ship.',
+      subtitle: 'Secure your spot with a $10 deposit. Pay the remaining $119 before we ship.',
       
       // Contact section
       contact: 'Contact Information',
@@ -372,7 +372,7 @@ export default function Checkout() {
     zh: {
       title: '结账 - 独角兽积木',
       pageTitle: '完成您的VIP预订',
-      subtitle: '支付$10订金锁定名额。发货时支付剩余$119。',
+      subtitle: '支付$10订金锁定名额。发货前支付剩余$119。',
       
       // Contact section
       contact: '联系信息',
@@ -569,8 +569,10 @@ export default function Checkout() {
   const formatCardNumber = (value) => {
     // 移除所有非数字字符
     const numbers = value.replace(/\D/g, '');
+    // 限制为19位数字（支持所有信用卡类型）
+    const limitedNumbers = numbers.substring(0, 19);
     // 每4位添加一个空格
-    return numbers.replace(/(\d{4})(?=\d)/g, '$1 ');
+    return limitedNumbers.replace(/(\d{4})(?=\d)/g, '$1 ');
   };
 
   const formatExpiryDate = (value) => {
@@ -685,7 +687,7 @@ export default function Checkout() {
           </div>
 
           {/* 两列布局：左侧表单，右侧订单摘要 */}
-          <div className="grid grid-cols-1 lg:grid-cols-[4fr_3fr] gap-8 max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-[4fr_3fr] gap-8 max-w-6xl mx-auto pt-3">
             
             {/* 左侧：结账表单 */}
             <div className="checkout-form-container surface-card">
@@ -947,44 +949,6 @@ export default function Checkout() {
                     <div className="payment-option-plaud">
                       <input 
                         type="radio" 
-                        id="paypal" 
-                        name="paymentMethod" 
-                        value="paypal"
-                        checked={paymentMethod === 'paypal'}
-                        onChange={(e) => handlePaymentMethodChange(e.target.value)}
-                        className="payment-radio-plaud"
-                      />
-                      <label htmlFor="paypal" className="payment-label-plaud">
-                        <div className="payment-method-content">
-                          <div className="payment-method-info">
-                            <span className="payment-method-name-plaud">PayPal</span>
-                          </div>
-                          <div className="payment-method-logo">
-                            <img src="/assets/checkout/paypal-logo.svg" alt="PayPal" />
-                          </div>
-                        </div>
-                      </label>
-                      {/* PayPal抽屉内容 */}
-                      {paymentMethod === 'paypal' && (
-                        <div className="payment-drawer">
-                          <div className="drawer-icon">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                              <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
-                              <line x1="8" y1="21" x2="16" y2="21"/>
-                              <line x1="12" y1="17" x2="12" y2="21"/>
-                              <path d="M16 8l4 4-4 4"/>
-                            </svg>
-                          </div>
-                          <div className="drawer-text">
-                            After clicking 'Pay with PayPal', you will be redirected to PayPal to complete your purchase securely.
-                          </div>
-                        </div>
-                      )}
-                    </div>
-
-                    <div className="payment-option-plaud">
-                      <input 
-                        type="radio" 
                         id="card" 
                         name="paymentMethod" 
                         value="card"
@@ -1054,8 +1018,8 @@ export default function Checkout() {
                               type="text" 
                               id="cardNumber" 
                               className="form-input"
-                              placeholder="1234 5678 9012 3456"
-                              maxLength="19"
+                              placeholder="1234 5678 9012 3456 789"
+                              maxLength="23"
                               value={cardNumber}
                               onChange={handleCardNumberChange}
                               disabled={isProcessing}
@@ -1137,6 +1101,44 @@ export default function Checkout() {
                             <label htmlFor="useShippingAddress" className="checkbox-label">
                               Use shipping address as billing address
                             </label>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="payment-option-plaud">
+                      <input 
+                        type="radio" 
+                        id="paypal" 
+                        name="paymentMethod" 
+                        value="paypal"
+                        checked={paymentMethod === 'paypal'}
+                        onChange={(e) => handlePaymentMethodChange(e.target.value)}
+                        className="payment-radio-plaud"
+                      />
+                      <label htmlFor="paypal" className="payment-label-plaud">
+                        <div className="payment-method-content">
+                          <div className="payment-method-info">
+                            <span className="payment-method-name-plaud">PayPal</span>
+                          </div>
+                          <div className="payment-method-logo">
+                            <img src="/assets/checkout/paypal-logo.svg" alt="PayPal" />
+                          </div>
+                        </div>
+                      </label>
+                      {/* PayPal抽屉内容 */}
+                      {paymentMethod === 'paypal' && (
+                        <div className="payment-drawer">
+                          <div className="drawer-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                              <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+                              <line x1="8" y1="21" x2="16" y2="21"/>
+                              <line x1="12" y1="17" x2="12" y2="21"/>
+                              <path d="M16 8l4 4-4 4"/>
+                            </svg>
+                          </div>
+                          <div className="drawer-text">
+                            After clicking 'Pay with PayPal', you will be redirected to PayPal to complete your purchase securely.
                           </div>
                         </div>
                       )}
@@ -1246,24 +1248,26 @@ export default function Checkout() {
                   </div>
                 </div>
                 
-                {/* 折扣码输入 - 简洁版本 */}
-                <div className="discount-section-clean">
-                  <div className="discount-input-group-clean">
-                    <input 
-                      type="text" 
-                      placeholder={t.discountCode}
-                      className="discount-input-clean"
-                      disabled={isProcessing}
-                    />
-                    <button 
-                      type="button" 
-                      className="discount-apply-btn-clean"
-                      disabled={isProcessing}
-                    >
-                      {t.applyDiscount}
-                    </button>
+                {/* 折扣码输入 - 简洁版本 - 预订阶段不显示，正式付款时才显示 */}
+                {typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('type') === 'full' && (
+                  <div className="discount-section-clean">
+                    <div className="discount-input-group-clean">
+                      <input 
+                        type="text" 
+                        placeholder={t.discountCode}
+                        className="discount-input-clean"
+                        disabled={isProcessing}
+                      />
+                      <button 
+                        type="button" 
+                        className="discount-apply-btn-clean"
+                        disabled={isProcessing}
+                      >
+                        {t.applyDiscount}
+                      </button>
+                    </div>
                   </div>
-                </div>
+                )}
                   
                 {/* 价格明细 - 简洁版本 */}
                 <div className="price-breakdown-clean">

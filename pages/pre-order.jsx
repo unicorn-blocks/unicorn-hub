@@ -14,8 +14,12 @@ export default function PreOrder() {
   const translations = {
     en: {
       title: 'VIP Preorder - Unicorn Blocks',
-      pageTitle: 'Limited VIP Access — Just $129 (Retail $199)',
-      subtitle: 'Reserve yours with a $10 deposit — only 436 of 500 left!',
+      pageTitle: 'Limited VIP Spots — $129 (Retail $199)',
+      subtitle: {
+        prefix: 'Reserve yours with a',
+        deposit: '$10 deposit',
+        suffix: '— only 436 of 500 left!'
+      },
       ctaButton: 'Claim My VIP Spot!',
       learnMoreButton: 'Learn More',
       trustNote: '✔ Fully Refundable $10 Deposit · ✔ Safe Checkout',
@@ -64,8 +68,12 @@ export default function PreOrder() {
     },
     zh: {
       title: '预售VIP - 独角兽积木',
-      pageTitle: '限量VIP体验 — 仅需$129（零售价$199）',
-      subtitle: '$10订金预订 — 仅剩436个名额，共500个！',
+      pageTitle: '限量VIP名额 — $129（零售价$199）',
+      subtitle: {
+        prefix: '',
+        deposit: '$10订金',
+        suffix: '预订 — 仅剩436个名额，共500个！'
+      },
       ctaButton: '我要锁定VIP名额！',
       learnMoreButton: '了解更多',
       trustNote: '✔ $10订金可随时全额退款 · ✔ 安全支付',
@@ -153,13 +161,15 @@ export default function PreOrder() {
         <div className="buy-container">
           {/* 页面标题 */}
           <div className="text-center mb-12 max-w-5xl mx-auto">
-            <h1 className="text-4xl font-bold mb-3">{t.pageTitle}</h1>
-            <p className="text-lg text-gray-600">{t.subtitle}</p>
+            <h1 className="text-4xl font-bold mb-3" style={{ fontSize: '2.75rem' }}>{t.pageTitle}</h1>
+            <p className="text-lg text-gray-600">
+              {t.subtitle.prefix} <span className="gradient-text">{t.subtitle.deposit}</span> {t.subtitle.suffix}
+            </p>
           </div>
 
           {/* 主产品展示区域 */}
-          <div className="max-w-[66rem] mx-auto mb-16">
-            <div className="grid grid-cols-1 lg:grid-cols-[5fr_6fr] gap-7 items-center">
+          <div className="max-w-6xl mx-auto mb-16">
+            <div className="grid grid-cols-1 lg:grid-cols-[4fr_5fr] gap-8 items-start">
               
               {/* 左侧：产品轮播图 */}
               <div className="product-showcase">
@@ -170,6 +180,7 @@ export default function PreOrder() {
               <div className="product-info">
                 <div className="value-proposition-card">
                   <h3 className="value-title">{t.features.title}</h3>
+                  <div className="title-divider"></div>
                   <div className="features-list">
                     {t.features.items.map((item, index) => (
                       <div key={index} className="feature-item">
@@ -205,7 +216,7 @@ export default function PreOrder() {
 
 
           {/* FAQ 区块 */}
-          <div className="max-w-[66rem] mx-auto mt-10">
+          <div className="max-w-6xl mx-auto mt-10">
             <div className="features-card glass-up surface-card">
               <div className="text-center mb-6">
                 <h3 className="text-2xl font-bold mb-2">{t.faq.title}</h3>
@@ -275,20 +286,30 @@ export default function PreOrder() {
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
+          color: #1f2937;
+          font-weight: 800;
+          text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+          letter-spacing: -0.025em;
         }
 
         @media (max-width: 768px) {
           h1 {
             white-space: normal;
-            font-size: 1.75rem !important;
+            font-size: 2rem !important;
             line-height: 1.2;
+            font-weight: 800;
+            color: #111827;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
           }
         }
 
         @media (max-width: 480px) {
           h1 {
-            font-size: 1.5rem !important;
+            font-size: 1.75rem !important;
             line-height: 1.1;
+            font-weight: 800;
+            color: #111827;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
           }
         }
 
@@ -305,15 +326,16 @@ export default function PreOrder() {
           display: flex;
           align-items: center;
           justify-content: flex-start;
-          padding: 2rem 0;
-          max-width: 480px;
+          padding: 1rem 0;
+          max-width: 600px;
           width: 100%;
         }
 
-        /* 移动端单列布局时居中 */
-        @media (max-width: 1024px) {
+        /* 单列布局时居中 */
+        @media (max-width: 1023px) {
           .product-showcase {
             justify-content: center;
+            margin: 0 auto;
           }
         }
 
@@ -342,7 +364,7 @@ export default function PreOrder() {
           font-size: 1.625rem;
           font-weight: 500;
           color: #111827;
-          margin-bottom: 1.2rem;
+          margin-bottom: 0.8rem;
           line-height: 1.2;
           letter-spacing: -0.02em;
           white-space: pre-line;
@@ -350,6 +372,21 @@ export default function PreOrder() {
 
         .value-title::after {
           display: none;
+        }
+
+        .title-divider {
+          width: 100%;
+          height: 1px;
+          background: #E5E7EB;
+          margin: 0.5rem 0;
+        }
+
+        .gradient-text {
+          background: linear-gradient(135deg, #7D9ED4 0%, #F7AEBF 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+          font-weight: 600;
         }
 
         .features-list {
@@ -604,7 +641,7 @@ export default function PreOrder() {
           
           .value-title {
             font-size: 1.375rem;
-            margin-bottom: 1.25rem;
+            margin-bottom: 0.75rem;
             padding-left: 0;
           }
           

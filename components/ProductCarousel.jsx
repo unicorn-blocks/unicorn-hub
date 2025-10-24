@@ -182,7 +182,7 @@ export default function ProductCarousel() {
       <style jsx>{`
         .product-carousel {
           width: 100%;
-          max-width: 480px;
+          max-width: 600px;
           margin: 0 0 0 auto;
         }
 
