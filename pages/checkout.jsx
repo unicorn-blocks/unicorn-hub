@@ -296,7 +296,7 @@ export default function Checkout() {
     en: {
       title: 'Checkout - Unicorn Blocks',
       pageTitle: 'Complete Your VIP Reservation',
-      subtitle: 'Secure your spot with a $10 deposit. Pay the remaining $119 before we ship.',
+      subtitle: 'Secure your spot with a $5 deposit. Pay the remaining $124 before we ship.',
       
       // Contact section
       contact: 'Contact Information',
@@ -366,13 +366,13 @@ export default function Checkout() {
       connectionError: 'Connection error. Please try again.',
       
       // Pricing
-      price: '$10.00',
+      price: '$5.00',
       currency: 'USD'
     },
     zh: {
       title: '结账 - 独角兽积木',
       pageTitle: '完成您的VIP预订',
-      subtitle: '支付$10订金锁定名额。发货前支付剩余$119。',
+      subtitle: '支付$5订金锁定名额。发货前支付剩余$124。',
       
       // Contact section
       contact: '联系信息',
@@ -442,7 +442,7 @@ export default function Checkout() {
       connectionError: '连接错误，请重试。',
       
       // Pricing
-      price: '$10.00',
+      price: '$5.00',
       currency: 'USD'
     }
   };
@@ -451,57 +451,18 @@ export default function Checkout() {
   const t = translations[language] || translations.en;
   
   
-  // 处理支付成功
+  // 处理支付成功（PayPal返回后）
   const handlePaymentSuccess = (paymentData) => {
     setFormStatus({
       message: t.paymentSuccess,
       type: 'success'
     });
     
-    // 发送支付数据到后端确认
-    const orderData = {
-      email,
-      newsletter,
-      shipping: {
-        country,
-        firstName,
-        lastName,
-        address,
-        apartment,
-        city,
-        state,
-        zipCode,
-        phone
-      },
-      paymentData,
-      amount: 10,
-      language,
-      productType: 'vip_preorder'
-    };
-    
-    safeApiCall('/api/payment/confirm', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(orderData)
-    })
-    .then(response => response.json())
-    .then(data => {
-      if (data.success) {
-        // 重定向到成功页面
-        setTimeout(() => {
-          window.location.href = '/payment/success';
-        }, 2000);
-      }
-    })
-    .catch(error => {
-      console.error('Payment confirmation error:', error);
-      setFormStatus({
-        message: t.connectionError,
-        type: 'error'
-      });
-    });
+    // 重定向到成功页面（带上订单ID）
+    setTimeout(() => {
+      const orderId = paymentData.internal_order_id || paymentData.order_id;
+      window.location.href = `/payment/success?order_id=${orderId}`;
+    }, 2000);
   };
 
   // 处理支付错误
@@ -510,10 +471,11 @@ export default function Checkout() {
       message: error.message || t.paymentFailed,
       type: 'error'
     });
+    setIsProcessing(false);
   };
   
   
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     
     // Reset status
@@ -533,29 +495,118 @@ export default function Checkout() {
       return;
     }
     
-    // 表单验证通过，根据选择的支付方式处理
+    // 表单验证通过，调用支付API
     setIsProcessing(true);
     
-    // 模拟支付处理
-    setTimeout(() => {
-      handlePaymentSuccess({
-        method: paymentMethod,
-        transactionId: `${paymentMethod.toUpperCase()}-${Date.now()}`,
-        orderData: {
-          email,
-          firstName,
-          lastName,
-          address,
-          city,
-          state,
-          zipCode,
-          phone,
-          country,
-          paymentMethod
+    try {
+      // 准备支付数据
+      const paymentData = {
+        payment_type: 'pre_order', // 预购订单
+        payment_method: paymentMethod.toLowerCase(), // paypal, card, payoneer
+          amount: (5 * quantity).toFixed(2),
+        currency: 'USD',
+        customer: {
+          email: email,
+          firstName: firstName,
+          lastName: lastName
+        },
+        shipping: {
+          country: getCountryCode(country),
+          countryName: country,
+          firstName: firstName,
+          lastName: lastName,
+          address: address,
+          address2: apartment,
+          city: city,
+          state: state,
+          zipCode: zipCode,
+          phone: phone
+        },
+          items: [{
+            name: 'Unicorn Blocks VIP Pre-order',
+            description: '$5 deposit for $129 VIP price',
+            quantity: quantity.toString(),
+            unit_amount: {
+              currency_code: 'USD',
+              value: '5.00'
+            }
+          }],
+        language: language,
+        return_url: `${window.location.origin}/payment/success`,
+        cancel_url: `${window.location.origin}/payment/cancel`
+      };
+      
+      // 如果是信用卡支付，添加账单地址
+      if (paymentMethod === 'card') {
+        paymentData.billing_address = {
+          country: getCountryCode(country),
+          countryName: country,
+          firstName: firstName,
+          lastName: lastName,
+          address: address,
+          city: city,
+          state: state,
+          zipCode: zipCode
+        };
+        paymentData.card_details = {
+          number: cardNumber,
+          expiry: expiryDate,
+          cvv: cvv,
+          name: cardName
+        };
+      }
+      
+      // 调用支付API
+      const response = await safeApiCall('/api/payment', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(paymentData)
+      });
+      
+      const data = await response.json();
+      
+      if (data.success) {
+        // 如果是PayPal或Payoneer，重定向到支付页面
+        if (data.approval_url) {
+          window.location.href = data.approval_url;
+        } else {
+          // 信用卡支付成功，直接到成功页面
+          handlePaymentSuccess(data);
         }
+      } else {
+        setFormStatus({
+          message: data.message || t.paymentFailed,
+          type: 'error'
+        });
+        setIsProcessing(false);
+      }
+    } catch (error) {
+      console.error('Payment error:', error);
+      setFormStatus({
+        message: t.connectionError,
+        type: 'error'
       });
       setIsProcessing(false);
-    }, 1500);
+    }
+  };
+  
+  // 获取国家代码
+  const getCountryCode = (countryName) => {
+    const codes = {
+      'United States': 'US',
+      'Canada': 'CA',
+      'United Kingdom': 'GB',
+      'Australia': 'AU',
+      'Germany': 'DE',
+      'France': 'FR',
+      'China': 'CN',
+      'Japan': 'JP',
+      'India': 'IN',
+      'Brazil': 'BR'
+    };
+    return codes[countryName] || 'US';
   };
 
   // 处理支付方式选择
@@ -1244,7 +1295,7 @@ export default function Checkout() {
                         </button>
                       </div>
                     </div>
-                    <div className="product-price-clean">${(10 * quantity).toFixed(2)}</div>
+                    <div className="product-price-clean">${(5 * quantity).toFixed(2)}</div>
                   </div>
                 </div>
                 
@@ -1273,7 +1324,7 @@ export default function Checkout() {
                 <div className="price-breakdown-clean">
                   <div className="price-row-clean">
                     <span className="price-label-clean">{t.subtotal}</span>
-                    <span className="price-value-clean">${(10 * quantity).toFixed(2)}</span>
+                    <span className="price-value-clean">${(5 * quantity).toFixed(2)}</span>
                   </div>
                   <div className="price-row-clean">
                     <span className="price-label-clean">
@@ -1285,7 +1336,7 @@ export default function Checkout() {
                   <div className="price-row-clean total-row-clean">
                     <span className="price-label-clean">{t.total}</span>
                     <span className="price-value-clean total-price-clean">
-                      {t.currency} ${(10 * quantity).toFixed(2)}
+                      {t.currency} ${(5 * quantity).toFixed(2)}
                     </span>
                   </div>
                 </div>

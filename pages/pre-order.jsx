@@ -17,12 +17,12 @@ export default function PreOrder() {
       pageTitle: 'Limited VIP Spots — $129 (Retail $199)',
       subtitle: {
         prefix: 'Reserve yours with a',
-        deposit: '$10 deposit',
+        deposit: '$5 deposit',
         suffix: '— only 436 of 500 left!'
       },
-      ctaButton: 'Claim My VIP Spot!',
+      ctaButton: 'Reserve VIP Spot!',
       learnMoreButton: 'Learn More',
-      trustNote: '✔ Fully Refundable $10 Deposit · ✔ Safe Checkout',
+      trustNote: '✔ Fully Refundable $5 Deposit · ✔ Safe Checkout',
       features: {
         title: "Unicorn Blocks: Sparky First Adventure",
         items: [
@@ -37,11 +37,11 @@ export default function PreOrder() {
         items: [
           {
             q: 'How does the VIP Reservation work?',
-            a: 'Step 1. Lock Your Price: Pay **$10 now** to secure the limited **$129 VIP deal** (Retail Price: $199).\nStep 2. Go behind-the-scenes. **See** exclusive updates, **meet** our team, and **watch** the creation process unfold — all designed to **unlock limitless creativity**.\nStep 3. Pay & Receive: We\'ll notify you before shipping, then automatically charge the remaining **$119** for priority delivery.'
+            a: 'Step 1. Lock Your Price: Pay **$5 now** to secure the limited **$129 VIP deal** (Retail Price: $199).\nStep 2. Go behind-the-scenes. **See** exclusive updates, **meet** our team, and **watch** the creation process unfold — all designed to **unlock limitless creativity**.\nStep 3. Pay & Receive: We\'ll notify you before shipping, then automatically charge the remaining **$124** for priority delivery.'
           },
           {
             q: 'What if I change my mind?',
-            a: 'No worries! Your $10 deposit is fully refundable anytime before we ship your product — no questions asked.'
+            a: 'No worries! Your $5 deposit is fully refundable anytime before we ship your product — no questions asked.'
           },
           {
             q: 'Is the toy safe for children?',
@@ -57,7 +57,7 @@ export default function PreOrder() {
           },
           {
             q: 'When will I pay the remaining amount?',
-            a: 'We will send you a friendly email reminder about **14 days before shipping**. You can then choose to **pay the remaining $119 manually**, or opt for automatic payment for a hands-free experience.'
+            a: 'We will send you a friendly email reminder about **14 days before shipping**. You can then choose to **pay the remaining $124 manually**, or opt for automatic payment for a hands-free experience.'
           },
           {
             q: 'When will I receive the product?',
@@ -71,12 +71,12 @@ export default function PreOrder() {
       pageTitle: '限量VIP名额 — $129（零售价$199）',
       subtitle: {
         prefix: '',
-        deposit: '$10订金',
+        deposit: '$5订金',
         suffix: '预订 — 仅剩436个名额，共500个！'
       },
-      ctaButton: '我要锁定VIP名额！',
+      ctaButton: '预订VIP名额！',
       learnMoreButton: '了解更多',
-      trustNote: '✔ $10订金可随时全额退款 · ✔ 安全支付',
+      trustNote: '✔ $5订金可随时全额退款 · ✔ 安全支付',
       features: {
         title: '独角兽积木：Sparky首次冒险',
         items: [
@@ -91,11 +91,11 @@ export default function PreOrder() {
         items: [
           {
             q: 'VIP 预订如何运作？',
-            a: '步骤1. 锁定价格：现在支付**$10**，锁定限量**$129 VIP优惠**（零售价$199）。\n步骤2. 幕后直达：**获取**独家进展、**认识**团队、**见证**创造过程——一切旨在**释放无限创意**。\n步骤3. 支付并收货：发货前我们会通知你，并自动收取剩余**$119**，享受优先发货。'
+            a: '步骤1. 锁定价格：现在支付**$5**，锁定限量**$129 VIP优惠**（零售价$199）。\n步骤2. 幕后直达：**获取**独家进展、**认识**团队、**见证**创造过程——一切旨在**释放无限创意**。\n步骤3. 支付并收货：发货前我们会通知你，并自动收取剩余**$124**，享受优先发货。'
           },
           {
             q: '如果我改变主意怎么办？',
-            a: '不用担心！在我们发货前，你的$10订金可随时全额退款，无需理由。'
+            a: '不用担心！在我们发货前，你的$5订金可随时全额退款，无需理由。'
           },
           {
             q: '这款玩具对儿童安全吗？',
@@ -111,7 +111,7 @@ export default function PreOrder() {
           },
           {
             q: '何时支付剩余金额？',
-            a: '发货前约**14天**我们会发送温馨邮件提醒。你可以选择**手动支付剩余$119**，或开启自动支付，轻松无忧。'
+            a: '发货前约**14天**我们会发送温馨邮件提醒。你可以选择**手动支付剩余$124**，或开启自动支付，轻松无忧。'
           },
           {
             q: '我什么时候能收到产品？',
