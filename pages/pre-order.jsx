@@ -20,7 +20,7 @@ export default function PreOrder() {
         deposit: '$5 deposit',
         suffix: '— only 436 of 500 left!'
       },
-      ctaButton: 'Reserve VIP Spot!',
+      ctaButton: 'Claim My VIP Spot!',
       learnMoreButton: 'Learn More',
       trustNote: '✔ Fully Refundable $5 Deposit · ✔ Safe Checkout',
       features: {
@@ -74,7 +74,7 @@ export default function PreOrder() {
         deposit: '$5订金',
         suffix: '预订 — 仅剩436个名额，共500个！'
       },
-      ctaButton: '预订VIP名额！',
+      ctaButton: '我要锁定VIP名额！',
       learnMoreButton: '了解更多',
       trustNote: '✔ $5订金可随时全额退款 · ✔ 安全支付',
       features: {
