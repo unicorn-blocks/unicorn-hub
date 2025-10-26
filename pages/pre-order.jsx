@@ -262,7 +262,7 @@ export default function PreOrder() {
       <Footer />
 
       <style jsx global>{`
-        /* Basic styles */
+        /* ===== 基础样式 ===== */
         body {
           font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
           min-height: 100vh;
@@ -270,7 +270,7 @@ export default function PreOrder() {
           padding: 0;
           position: relative;
         }
-        
+
         .background-gradient {
           position: fixed;
           width: 100%;
@@ -281,7 +281,19 @@ export default function PreOrder() {
           z-index: -1;
         }
 
-        /* 标题样式优化 */
+        /* ===== 容器样式 ===== */
+        .buy-container {
+          max-width: 1400px;
+          margin: 0 auto;
+          padding: 0 2rem;
+        }
+
+        .section-spacing {
+          padding-top: 4rem;
+          padding-bottom: 4rem;
+        }
+
+        /* ===== 主标题样式 ===== */
         h1 {
           white-space: nowrap;
           overflow: hidden;
@@ -292,36 +304,7 @@ export default function PreOrder() {
           letter-spacing: -0.025em;
         }
 
-        @media (max-width: 768px) {
-          h1 {
-            white-space: normal;
-            font-size: 2rem !important;
-            line-height: 1.2;
-            font-weight: 800;
-            color: #111827;
-            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
-          }
-        }
-
-        @media (max-width: 480px) {
-          h1 {
-            font-size: 1.75rem !important;
-            line-height: 1.1;
-            font-weight: 800;
-            color: #111827;
-            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
-          }
-        }
-
-        /* 导航样式已移至全局样式文件 */
-
-        .buy-container {
-          max-width: 1400px;
-          margin: 0 auto;
-          padding: 0 2rem;
-        }
-
-        /* 产品展示区域样式 */
+        /* ===== 产品展示区域 ===== */
         .product-showcase {
           display: flex;
           align-items: center;
@@ -329,69 +312,6 @@ export default function PreOrder() {
           padding: 1rem 0;
           max-width: 600px;
           width: 100%;
-        }
-
-        /* 1200px以上屏幕的布局调整 */
-        @media (min-width: 1200px) {
-          .action-buttons {
-            margin-top: 0;
-          }
-          
-          .features-list {
-            flex: none;
-            display: block;
-            justify-content: initial;
-            margin-top: auto;
-            margin-bottom: auto;
-          }
-        }
-
-        /* 小于1200px时的布局调整 */
-        @media (max-width: 1199px) {
-          .value-title {
-            margin-bottom: 0.5rem;
-          }
-          
-          .action-buttons {
-            margin-top: 0;
-          }
-          
-          .features-list {
-            flex: none;
-            display: block;
-            justify-content: initial;
-            margin-top: auto;
-            margin-bottom: auto;
-          }
-        }
-
-        /* 单列布局时居中 */
-        @media (max-width: 1023px) {
-          .product-showcase {
-            justify-content: center;
-            margin: 0 auto;
-          }
-          
-          .product-info {
-            display: block;
-            height: auto;
-          }
-          
-          .value-proposition-card {
-            display: block;
-            flex: none;
-          }
-          
-          .features-list {
-            flex: none;
-            display: block;
-            justify-content: initial;
-            margin: 1.25rem 0;
-          }
-          
-          .action-buttons {
-            margin-top: 0;
-          }
         }
 
         .product-info {
@@ -402,7 +322,7 @@ export default function PreOrder() {
           height: 100%;
         }
 
-        /* 价值主张区域样式 - 纯文本无框版本 */
+        /* ===== 价值主张区域 ===== */
         .value-proposition-card {
           background: transparent;
           border: none;
@@ -450,6 +370,7 @@ export default function PreOrder() {
           font-weight: 600;
         }
 
+        /* ===== Features列表 ===== */
         .features-list {
           flex: 1;
           display: flex;
@@ -508,30 +429,16 @@ export default function PreOrder() {
           font-weight: 600;
         }
 
+        /* ===== 行动按钮区域 ===== */
         .action-buttons {
           margin-top: auto;
           margin-bottom: 0;
           display: flex;
           flex-direction: column;
         }
-        
+
         .action-buttons a {
           margin-bottom: 0.5rem;
-        }
-
-        /* 信任提示样式 */
-        .trust-indicators {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-        }
-
-        .trust-item {
-          font-size: 0.75rem;
-          color: #6b7280;
-          font-weight: 500;
-          text-align: center;
-          line-height: 1.4;
         }
 
         .primary-button {
@@ -547,6 +454,32 @@ export default function PreOrder() {
           transition: all 0.3s ease;
           position: relative;
           overflow: hidden;
+        }
+
+        .payment-button {
+          width: 100%;
+          padding: 1rem;
+          background: linear-gradient(90deg, #F7AEBF 0%, #9b90da 100%);
+          color: white;
+          border: none;
+          border-radius: 12px;
+          font-size: 1rem;
+          font-weight: 500;
+          cursor: pointer;
+          transition: all 0.3s ease;
+        }
+
+        .secondary-button {
+          width: 100%;
+          background: transparent;
+          color: #7D9ED4;
+          font-weight: 500;
+          padding: 0.875rem 1.5rem;
+          border-radius: 12px;
+          border: 1px solid #7D9ED4;
+          font-size: 0.875rem;
+          cursor: pointer;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .button-shine {
@@ -570,28 +503,11 @@ export default function PreOrder() {
           left: 120%;
         }
 
-        .primary-button:hover:not(:disabled) {
+        .primary-button:hover:not(:disabled),
+        .payment-button:hover:not(:disabled) {
           background: linear-gradient(90deg, #F7AEBF 0%, #9b90da 100%);
           transform: none;
           filter: none;
-        }
-
-        .primary-button:disabled {
-          opacity: 0.6;
-          cursor: not-allowed;
-        }
-
-        .secondary-button {
-          width: 100%;
-          background: transparent;
-          color: #7D9ED4;
-          font-weight: 500;
-          padding: 0.875rem 1.5rem;
-          border-radius: 12px;
-          border: 1px solid #7D9ED4;
-          font-size: 0.875rem;
-          cursor: pointer;
-          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .secondary-button:hover {
@@ -601,24 +517,197 @@ export default function PreOrder() {
           box-shadow: 0 4px 12px rgba(125, 158, 212, 0.3);
         }
 
+        .primary-button:disabled,
+        .payment-button:disabled {
+          opacity: 0.6;
+          cursor: not-allowed;
+        }
+
+        /* ===== 信任提示样式 ===== */
         .trust-indicators {
           display: flex;
+          justify-content: center;
+          align-items: center;
           flex-wrap: wrap;
           gap: 0.75rem;
         }
 
         .trust-item {
           font-size: 0.75rem;
-          color: #6B7280;
+          color: #6b7280;
           font-weight: 500;
+          text-align: center;
+          line-height: 1.4;
         }
 
-        /* 中等屏幕优化 - 在单列布局前先缩小 */
-        @media (max-width: 1200px) {
+        /* ===== 卡片样式 ===== */
+        .features-card,
+        .pricing-card {
+          background: rgba(255, 255, 255, 0.9);
+          backdrop-filter: blur(10px);
+          border-radius: 24px;
+          box-shadow: none;
+          padding: 2.5rem;
+        }
+
+        .glass-up {
+          background: rgba(255,255,255,0.8);
+          border: 1px solid rgba(255,255,255,0.5);
+          box-shadow: none;
+        }
+
+        .surface-card {
+          background: linear-gradient(180deg, rgba(255,255,255,0.92) 0%, rgba(255,255,255,0.86) 100%);
+          border: 1px solid rgba(229, 231, 235, 0.45);
+          box-shadow: none;
+        }
+
+        /* ===== FAQ样式 ===== */
+        .faq-item {
+          background: rgba(255,255,255,0.98);
+          border: 1px solid rgba(229,231,235,0.45);
+          border-radius: 12px;
+          overflow: hidden;
+          transition: border-color .18s ease, box-shadow .18s ease;
+        }
+
+        .faq-item:hover { 
+          border-color: #e9d5ff; 
+          box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+
+        .faq-item.open { 
+          background: #ffffff; 
+          border-color: #e9d5ff; 
+        }
+
+        .faq-item + .faq-item { 
+          margin-top: 0.5rem; 
+        }
+
+        .faq-header {
+          width: 100%;
+          background: transparent;
+          border: 0;
+          padding: 1rem 1.1rem;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          cursor: pointer;
+        }
+
+        .faq-q {
+          font-weight: 600;
+          color: #111827;
+          text-align: left;
+        }
+
+        .faq-item:hover .faq-q { 
+          color: #0f172a; 
+        }
+
+        .chevron {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          width: 20px;
+          height: 20px;
+          margin-left: 0.5rem;
+          font-size: 0;
+        }
+
+        .chevron::before {
+          content: '';
+          width: 14px;
+          height: 14px;
+          background: #9ca3af;
+          transition: transform .2s ease;
+          -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='currentColor'%3E%3Cpath fill-rule='evenodd' d='M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z' clip-rule='evenodd'/%3E%3C/svg%3E") center/14px 14px no-repeat;
+          mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='currentColor'%3E%3Cpath fill-rule='evenodd' d='M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z' clip-rule='evenodd'/%3E%3C/svg%3E") center/14px 14px no-repeat;
+        }
+
+        .chevron.rotate::before {
+          transform: rotate(180deg);
+        }
+
+        .faq-content {
+          transition: max-height .25s ease;
+        }
+
+        .faq-a {
+          padding: 0 1.1rem 1rem 1.1rem;
+          color: #374151;
+          font-size: 0.95rem;
+          line-height: 1.6;
+          font-variant-numeric: tabular-nums;
+        }
+
+        .faq-a strong {
+          font-weight: 600;
+          color: #1f2937;
+        }
+
+        .faq-a-steps {
+          padding: 0 1.1rem 1rem 1.1rem;
+          color: #374151;
+          font-size: 0.95rem;
+          line-height: 1.6;
+        }
+
+        .step-line {
+          display: flex;
+          margin-bottom: 0.5rem;
+        }
+
+        .step-number {
+          min-width: 4em;
+          font-weight: 400;
+        }
+
+        .step-content {
+          flex: 1;
+        }
+
+        .step-content strong {
+          font-weight: 600;
+          color: #1f2937;
+        }
+
+        /* ===== 响应式设计 ===== */
+
+        /* 1200px以上屏幕 - 使用margin auto实现垂直居中 */
+        @media (min-width: 1200px) {
+          .action-buttons {
+            margin-top: 0;
+          }
+          
+          .features-list {
+            flex: none;
+            display: block;
+            justify-content: initial;
+            margin-top: auto;
+            margin-bottom: auto;
+          }
+        }
+
+        /* 小于1200px屏幕 - 调整间距和垂直居中 */
+        @media (max-width: 1199px) {
           .value-title {
             font-size: 1.375rem;
             margin-bottom: 1rem;
             line-height: 1.3;
+          }
+          
+          .action-buttons {
+            margin-top: 0;
+          }
+          
+          .features-list {
+            flex: none;
+            display: block;
+            justify-content: initial;
+            margin-top: auto;
+            margin-bottom: auto;
           }
           
           .feature-item {
@@ -648,13 +737,25 @@ export default function PreOrder() {
           }
         }
 
-        /* 响应式调整 */
-        @media (max-width: 1024px) {
+        /* 小于1024px屏幕 - 单列布局 */
+        @media (max-width: 1023px) {
           .buy-container {
             padding: 0 1rem;
           }
           
+          .product-showcase {
+            justify-content: center;
+            margin: 0 auto;
+          }
+          
+          .product-info {
+            display: block;
+            height: auto;
+          }
+          
           .value-proposition-card {
+            display: block;
+            flex: none;
             padding: 0;
           }
           
@@ -662,6 +763,17 @@ export default function PreOrder() {
             font-size: 1.25rem;
             margin-bottom: 1rem;
             line-height: 1.3;
+          }
+          
+          .features-list {
+            flex: none;
+            display: block;
+            justify-content: initial;
+            margin: 1.25rem 0;
+          }
+          
+          .action-buttons {
+            margin-top: 0;
           }
           
           .feature-item {
@@ -691,7 +803,17 @@ export default function PreOrder() {
           }
         }
 
+        /* 小于768px屏幕 - 移动端优化 */
         @media (max-width: 768px) {
+          h1 {
+            white-space: normal;
+            font-size: 2rem !important;
+            line-height: 1.2;
+            font-weight: 800;
+            color: #111827;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+          }
+          
           .buy-container {
             padding: 0 1rem;
           }
@@ -708,24 +830,6 @@ export default function PreOrder() {
           
           .feature-item {
             padding-left: 0;
-          }
-          
-          .feature-icon-container {
-            width: 28px;
-            height: 28px;
-            margin-right: 0.375rem;
-          }
-          
-          .feature-icon {
-            width: 20px;
-            height: 20px;
-          }
-          
-          .feature-text {
-            font-size: 0.9rem;
-          }
-          
-          .feature-item {
             margin-bottom: 0.5rem;
           }
           
@@ -772,219 +876,15 @@ export default function PreOrder() {
           }
         }
 
-        .features-card {
-          background: rgba(255, 255, 255, 0.9);
-          backdrop-filter: blur(10px);
-          border-radius: 24px;
-          box-shadow: none;
-          padding: 2.5rem;
-        }
-
-        .glass-up {
-          background: rgba(255,255,255,0.8);
-          border: 1px solid rgba(255,255,255,0.5);
-          box-shadow: none;
-        }
-
-        /* 统一卡片底部样式：背景与边框 */
-        .surface-card {
-          background: linear-gradient(180deg, rgba(255,255,255,0.92) 0%, rgba(255,255,255,0.86) 100%);
-          border: 1px solid rgba(229, 231, 235, 0.45);
-          box-shadow: none;
-        }
-
-        .payment-button {
-          width: 100%;
-          padding: 1rem;
-          background: linear-gradient(90deg, #F7AEBF 0%, #9b90da 100%);
-          color: white;
-          border: none;
-          border-radius: 12px;
-          font-size: 1rem;
-          font-weight: 500;
-          cursor: pointer;
-          transition: all 0.3s ease;
-        }
-
-        .button-shine {
-          position: relative;
-          overflow: hidden;
-        }
-
-        .button-shine::after {
-          content: '';
-          position: absolute;
-          top: -50%;
-          left: -30%;
-          width: 50%;
-          height: 200%;
-          transform: rotate(25deg);
-          background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,.5) 50%, rgba(255,255,255,0) 100%);
-          transition: all .5s ease;
-        }
-
-        .button-shine:hover::after {
-          left: 120%;
-        }
-
-        .payment-button:hover:not(:disabled) {
-          background: linear-gradient(90deg, #F7AEBF 0%, #9b90da 100%);
-          transform: none;
-          filter: none;
-        }
-
-        .payment-button:disabled {
-          opacity: 0.6;
-          cursor: not-allowed;
-        }
-
-        .secondary-button {
-          width: 100%;
-          padding: 1rem;
-          background: transparent;
-          color: #7d9ed4;
-          border: 2px solid #7d9ed4;
-          border-radius: 12px;
-          font-size: 1rem;
-          font-weight: 500;
-          cursor: pointer;
-          transition: all 0.3s ease;
-        }
-
-        .secondary-button:hover {
-          background: #7d9ed4;
-          color: white;
-          transform: translateY(-1px);
-        }
-
-        .pricing-card, .features-card {
-          background: rgba(255, 255, 255, 0.9);
-          backdrop-filter: blur(10px);
-          border-radius: 24px;
-          box-shadow: none;
-          padding: 2.5rem;
-        }
-
-        .glass-up {
-          background: rgba(255,255,255,0.8);
-          border: 1px solid rgba(255,255,255,0.5);
-          box-shadow: none;
-        }
-
-        /* 统一卡片底部样式：背景与边框 */
-        .surface-card {
-          background: linear-gradient(180deg, rgba(255,255,255,0.92) 0%, rgba(255,255,255,0.86) 100%);
-          border: 1px solid rgba(229, 231, 235, 0.45);
-          box-shadow: none;
-        }
-
-        .section-spacing {
-          padding-top: 4rem;
-          padding-bottom: 4rem;
-        }
-
-        /* FAQ 手风琴 */
-        .feature-icon {
-          display: inline-block;
-          width: 20px;
-          height: 20px;
-          background: linear-gradient(90deg, #4F6FB1 0%, #E06A8A 100%);
-          -webkit-mask-size: cover;
-          -webkit-mask-repeat: no-repeat;
-          mask-size: cover;
-          mask-repeat: no-repeat;
-        }
-        .faq-item {
-          background: rgba(255,255,255,0.98); /* 与系统卡片一致的中性白 */
-          border: 1px solid rgba(229,231,235,0.45); /* 与 surface-card 边框一致 */
-          border-radius: 12px;
-          overflow: hidden;
-          transition: border-color .18s ease, box-shadow .18s ease;
-        }
-        .faq-item:hover { 
-          border-color: #e9d5ff; 
-          box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-        }
-        .faq-item.open { background: #ffffff; border-color: #e9d5ff; }
-        .faq-item + .faq-item { margin-top: 0.5rem; }
-        .faq-header {
-          width: 100%;
-          background: transparent;
-          border: 0;
-          padding: 1rem 1.1rem;
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          cursor: pointer;
-        }
-        .faq-q {
-          font-weight: 600;
-          color: #111827;
-          text-align: left;
-        }
-        .faq-item:hover .faq-q { color: #0f172a; }
-        .chevron {
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          width: 20px;
-          height: 20px;
-          margin-left: 0.5rem;
-          font-size: 0; /* 隐藏字符，使用伪元素绘制 */
-        }
-        .chevron::before {
-          content: '';
-          width: 14px;
-          height: 14px;
-          background: #9ca3af; /* 与整体灰度更统一 */
-          transition: transform .2s ease;
-          -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='currentColor'%3E%3Cpath fill-rule='evenodd' d='M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z' clip-rule='evenodd'/%3E%3C/svg%3E") center/14px 14px no-repeat;
-                  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='currentColor'%3E%3Cpath fill-rule='evenodd' d='M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z' clip-rule='evenodd'/%3E%3C/svg%3E") center/14px 14px no-repeat;
-        }
-        .chevron.rotate::before {
-          transform: rotate(180deg);
-        }
-        .faq-content {
-          transition: max-height .25s ease;
-        }
-        .faq-a {
-          padding: 0 1.1rem 1rem 1.1rem;
-          color: #374151;
-          font-size: 0.95rem;
-          line-height: 1.6;
-          font-variant-numeric: tabular-nums;
-        }
-        
-        .faq-a strong {
-          font-weight: 600;
-          color: #1f2937;
-        }
-        
-        /* 步骤对齐样式 */
-        .faq-a-steps {
-          padding: 0 1.1rem 1rem 1.1rem;
-          color: #374151;
-          font-size: 0.95rem;
-          line-height: 1.6;
-        }
-        
-        .step-line {
-          display: flex;
-          margin-bottom: 0.5rem;
-        }
-        
-        .step-number {
-          min-width: 4em;
-          font-weight: 400;
-        }
-        
-        .step-content {
-          flex: 1;
-        }
-        
-        .step-content strong {
-          font-weight: 600;
-          color: #1f2937;
+        /* 小于480px屏幕 - 小屏优化 */
+        @media (max-width: 480px) {
+          h1 {
+            font-size: 1.75rem !important;
+            line-height: 1.1;
+            font-weight: 800;
+            color: #111827;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+          }
         }
       `}</style>
     </>
