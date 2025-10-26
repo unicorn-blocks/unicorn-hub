@@ -17,8 +17,8 @@ We are a team of individuals working in high-tech firms, with educational backgr
 ## **When will the product be available?**  
 We’re in final testing and gearing up for mass production. Pre‑order now to unlock VIP perks, including priority shipping at launch.
 
-## **How can I join the pre-order?**  
-Visit the [pre‑order](/pre-order) page and pay $5 to unlock VIP status. You’ll instantly receive a $70 launch coupon via email, and VIPs enjoy first‑batch, priority shipping at launch.
+## **How can I reserve VIP spot?**  
+Visit the [Reserve VIP Spot](/reserve-vip-spot) page and pay $5 to unlock VIP status. You'll instantly receive a $70 launch coupon via email, and VIPs enjoy first‑batch, priority shipping at launch.
 
 ## **What age group is Unicorn Blocks suitable for?**  
 Our blocks are designed for children aged 3-8. Each block is crafted to ensure safety and fun, making it suitable for kids of all ages.  

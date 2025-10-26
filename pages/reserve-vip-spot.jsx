@@ -13,7 +13,7 @@ export default function PreOrder() {
   // 硬编码中英文内容
   const translations = {
     en: {
-      title: 'VIP Preorder - Unicorn Blocks',
+      title: 'Reserve VIP Spot - Unicorn Blocks',
       pageTitle: 'Limited VIP Spots — $129 (Retail $199)',
       subtitle: {
         prefix: 'Reserve yours with a',
@@ -67,7 +67,7 @@ export default function PreOrder() {
       }
     },
     zh: {
-      title: '预售VIP - 独角兽积木',
+      title: '预订VIP名额 - 独角兽积木',
       pageTitle: '限量VIP名额 — $129（零售价$199）',
       subtitle: {
         prefix: '',
@@ -125,10 +125,10 @@ export default function PreOrder() {
   // 根据当前语言选择正确的翻译
   const t = translations[language] || translations.en;
   const featureIconUrls = [
-    '/assets/pre-order/ages-learning.svg', // ages 3-8 / learning foundation
-    '/assets/pre-order/adventure-kit.svg', // 5-in-1 adventure kit
-    '/assets/pre-order/stem-education.svg', // creative STEM adventures
-    '/assets/pre-order/independent-play.svg' // independent play gift
+    '/assets/reserve-vip-spot/ages-learning.svg', // ages 3-8 / learning foundation
+    '/assets/reserve-vip-spot/adventure-kit.svg', // 5-in-1 adventure kit
+    '/assets/reserve-vip-spot/stem-education.svg', // creative STEM adventures
+    '/assets/reserve-vip-spot/independent-play.svg' // independent play gift
   ];
   const toggleFaq = (idx) => {
     setExpandedFaqIndex((current) => {
@@ -169,7 +169,7 @@ export default function PreOrder() {
 
           {/* 主产品展示区域 */}
           <div className="max-w-6xl mx-auto mb-16">
-            <div className="grid grid-cols-1 lg:grid-cols-[4fr_5fr] gap-8 items-start">
+            <div className="grid grid-cols-1 lg:grid-cols-[4fr_5fr] gap-8 items-stretch">
               
               {/* 左侧：产品轮播图 */}
               <div className="product-showcase">
@@ -179,32 +179,46 @@ export default function PreOrder() {
               {/* 右侧：产品价值主张 */}
               <div className="product-info">
                 <div className="value-proposition-card">
-                  <h3 className="value-title">{t.features.title}</h3>
-                  <div className="title-divider"></div>
-                  <div className="features-list">
-                    {t.features.items.map((item, index) => (
-                      <div key={index} className="feature-item">
-                        <div className="feature-icon-container">
-                          <span
-                            className="feature-icon"
-                            style={{ WebkitMaskImage: `url(${featureIconUrls[index] || featureIconUrls[0]})`, maskImage: `url(${featureIconUrls[index] || featureIconUrls[0]})` }}
-                            aria-hidden="true"
-                          />
-                        </div>
-                        <p className="feature-text" dangerouslySetInnerHTML={{ __html: item }}></p>
-                      </div>
-                    ))}
+                  <div className="card-section">
+                    <h3 className="value-title">{t.features.title}</h3>
                   </div>
+                  
+                  <div className="vertical-spacer"></div>
+                  
+                  <div className="card-section">
+                    <div className="title-divider"></div>
+                  </div>
+                  
+                  <div className="vertical-spacer"></div>
+                  
+                  <div className="card-section">
+                    <div className="features-list">
+                      {t.features.items.map((item, index) => (
+                        <div key={index} className="feature-item">
+                          <div className="feature-icon-container">
+                            <span
+                              className="feature-icon"
+                              style={{ WebkitMaskImage: `url(${featureIconUrls[index] || featureIconUrls[0]})`, maskImage: `url(${featureIconUrls[index] || featureIconUrls[0]})` }}
+                              aria-hidden="true"
+                            />
+                          </div>
+                          <p className="feature-text" dangerouslySetInnerHTML={{ __html: item }}></p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  
+                  <div className="vertical-spacer"></div>
 
-                  {/* 行动按钮区域 */}
-                  <div className="action-buttons">
+                  {/* 行动按钮 */}
+                  <div className="card-section">
                     <Link href="/checkout">
                       <button className="primary-button button-shine">
                         {t.ctaButton}
                       </button>
                     </Link>
                     
-                    {/* 信任提示 */}
+                    {/* 信任提示 - 绝对定位 */}
                     <div className="trust-indicators">
                       <div className="trust-item">{t.trustNote}</div>
                     </div>
@@ -307,19 +321,28 @@ export default function PreOrder() {
         /* ===== 产品展示区域 ===== */
         .product-showcase {
           display: flex;
-          align-items: center;
+          align-items: stretch;
           justify-content: flex-start;
           padding: 1rem 0;
           max-width: 600px;
           width: 100%;
         }
+        
+        .product-showcase .product-carousel {
+          width: 100%;
+          height: 100%;
+          display: flex;
+          flex-direction: column;
+        }
 
         .product-info {
-          padding: 1rem 0 0 0;
+          padding: 1rem 0;
           max-width: none;
           display: flex;
           flex-direction: column;
           height: 100%;
+          min-height: 100%;
+          box-sizing: border-box;
         }
 
         /* ===== 价值主张区域 ===== */
@@ -329,24 +352,37 @@ export default function PreOrder() {
           border-radius: 0;
           padding: 0;
           box-shadow: none;
-          position: static;
+          position: relative;
           overflow: visible;
           display: flex;
           flex-direction: column;
           flex: 1;
-          height: 100%;
+          min-height: 0;
         }
 
         .value-proposition-card::before,
         .value-proposition-card::after {
           display: none;
         }
+        
+        .card-section {
+          flex-shrink: 0;
+        }
+        
+        .card-section:last-child {
+          position: relative;
+        }
+        
+        .vertical-spacer {
+          flex: 1;
+          min-height: 0;
+        }
 
         .value-title {
           font-size: 1.625rem;
           font-weight: 500;
           color: #111827;
-          margin-bottom: 0.8rem;
+          margin-bottom: 0;
           line-height: 1.2;
           letter-spacing: -0.02em;
           white-space: pre-line;
@@ -360,6 +396,7 @@ export default function PreOrder() {
           width: 100%;
           height: 1px;
           background: #E5E7EB;
+          margin-bottom: 0;
         }
 
         .gradient-text {
@@ -372,16 +409,14 @@ export default function PreOrder() {
 
         /* ===== Features列表 ===== */
         .features-list {
-          flex: 1;
           display: flex;
           flex-direction: column;
-          justify-content: center;
         }
 
         .feature-item {
           display: flex;
           align-items: flex-start;
-          margin-bottom: 0.875rem;
+          margin-bottom: 1.25rem;
           padding: 0;
           position: static;
         }
@@ -429,18 +464,7 @@ export default function PreOrder() {
           font-weight: 600;
         }
 
-        /* ===== 行动按钮区域 ===== */
-        .action-buttons {
-          margin-top: auto;
-          margin-bottom: 0;
-          display: flex;
-          flex-direction: column;
-        }
-
-        .action-buttons a {
-          margin-bottom: 0.5rem;
-        }
-
+        /* ===== 行动按钮 ===== */
         .primary-button {
           width: 100%;
           background: linear-gradient(90deg, #F7AEBF 0%, #9b90da 100%);
@@ -525,11 +549,17 @@ export default function PreOrder() {
 
         /* ===== 信任提示样式 ===== */
         .trust-indicators {
+          position: absolute;
+          top: 100%;
+          left: 0;
+          right: 0;
           display: flex;
           justify-content: center;
           align-items: center;
           flex-wrap: wrap;
           gap: 0.75rem;
+          height: 1rem;
+          margin-top: 0.5rem;
         }
 
         .trust-item {
@@ -675,39 +705,32 @@ export default function PreOrder() {
 
         /* ===== 响应式设计 ===== */
 
-        /* 1200px以上屏幕 - 使用margin auto实现垂直居中 */
-        @media (min-width: 1200px) {
-          .action-buttons {
-            margin-top: 0;
+        /* 1024px以上屏幕 - 启用等距布局 */
+        @media (min-width: 1024px) {
+          .vertical-spacer {
+            flex: 1;
+            min-height: 0;
           }
           
-          .features-list {
-            flex: none;
-            display: block;
-            justify-content: initial;
-            margin-top: auto;
-            margin-bottom: auto;
+          .product-info {
+            height: 100%;
+            min-height: 100%;
+          }
+        }
+        
+        /* 1200px以上屏幕 - 微调 */
+        @media (min-width: 1200px) {
+          .vertical-spacer {
+            flex: 1;
+            min-height: 0;
           }
         }
 
-        /* 小于1200px屏幕 - 调整间距和垂直居中 */
+        /* 小于1200px屏幕 - 调整字体 */
         @media (max-width: 1199px) {
           .value-title {
             font-size: 1.375rem;
-            margin-bottom: 1rem;
             line-height: 1.3;
-          }
-          
-          .action-buttons {
-            margin-top: 0;
-          }
-          
-          .features-list {
-            flex: none;
-            display: block;
-            justify-content: initial;
-            margin-top: auto;
-            margin-bottom: auto;
           }
           
           .feature-item {
@@ -749,31 +772,36 @@ export default function PreOrder() {
           }
           
           .product-info {
-            display: block;
+            display: flex;
             height: auto;
+            padding: 0;
           }
           
           .value-proposition-card {
-            display: block;
+            display: flex;
+            flex-direction: column;
             flex: none;
             padding: 0;
           }
           
+          .card-section:last-child {
+            position: static;
+          }
+          
           .value-title {
             font-size: 1.25rem;
-            margin-bottom: 1rem;
             line-height: 1.3;
           }
           
-          .features-list {
+          .vertical-spacer {
             flex: none;
-            display: block;
-            justify-content: initial;
-            margin: 1.25rem 0;
+            height: 1.25rem;
           }
           
-          .action-buttons {
-            margin-top: 0;
+          .trust-indicators {
+            position: static;
+            margin-top: 0.5rem;
+            height: auto;
           }
           
           .feature-item {
@@ -818,14 +846,32 @@ export default function PreOrder() {
             padding: 0 1rem;
           }
           
+          .product-info {
+            padding: 0;
+          }
+          
           .value-proposition-card {
             padding: 0;
           }
           
+          .card-section:last-child {
+            position: static;
+          }
+          
           .value-title {
             font-size: 1.375rem;
-            margin-bottom: 0.75rem;
             padding-left: 0;
+          }
+          
+          .vertical-spacer {
+            flex: none;
+            height: 0.875rem;
+          }
+          
+          .trust-indicators {
+            position: static;
+            margin-top: 0.5rem;
+            height: auto;
           }
           
           .feature-item {
@@ -850,10 +896,6 @@ export default function PreOrder() {
           
           .feature-text {
             font-size: 0.8rem;
-          }
-          
-          .action-buttons {
-            margin-bottom: 1.25rem;
           }
           
           .primary-button {

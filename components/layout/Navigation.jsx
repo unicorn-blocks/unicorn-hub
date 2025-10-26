@@ -64,7 +64,7 @@ export default function Navigation() {
           
           {/* 预购按钮（替代语言切换） */}
           <Link 
-            href="/pre-order"
+            href="/reserve-vip-spot"
             className="nav-item preorder-text-gradient transition-all duration-300 mr-4 focus:outline-none"
             aria-label={language === 'en' ? 'Reserve VIP Spot' : '预订VIP名额'}
           >
@@ -96,9 +96,6 @@ export default function Navigation() {
         {/* 移动端下拉菜单 */}
         {isMenuOpen && (
           <div className="nav-mobile-menu md:hidden py-4 flex flex-col space-y-4 absolute right-0 rounded-2xl shadow-2xl p-6 mt-2 w-auto min-w-[220px]">
-            <Link href="/pre-order" className="nav-mobile-item preorder-text-gradient transition-all duration-300 whitespace-nowrap font-medium" aria-label={language === 'en' ? 'Reserve VIP Spot' : '预订VIP名额'}>
-              {language === 'en' ? 'Reserve VIP Spot' : '预订VIP名额'}
-            </Link>
             <Link href="/features" className={`nav-mobile-item transition-all duration-300 whitespace-nowrap font-medium ${router.pathname === '/features' ? 'text-[#7d9ed4] nav-mobile-active' : 'text-gray-700 hover:text-[#7d9ed4]'}`}>
               {language === 'en' ? 'Features' : '功能特点'}
             </Link>

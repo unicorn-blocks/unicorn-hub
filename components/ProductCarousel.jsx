@@ -4,8 +4,8 @@ export default function ProductCarousel() {
   const [currentImage, setCurrentImage] = useState(0);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const images = [
-    '/assets/pre-order/toy-1.jpg',
-    '/assets/pre-order/toy-2.jpg'
+    '/assets/reserve-vip-spot/toy-1.jpg',
+    '/assets/reserve-vip-spot/toy-2.jpg'
   ];
 
 
@@ -183,7 +183,6 @@ export default function ProductCarousel() {
         .product-carousel {
           width: 100%;
           max-width: 600px;
-          margin: 0 0 .5rem auto;
         }
 
         .carousel-container {

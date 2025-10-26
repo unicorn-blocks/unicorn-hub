@@ -12,7 +12,7 @@ export default function Home() {
   const translations = {
     en: {
       title: 'Unicorn Blocks - AI-Powered STEM Building Toys for Kids',
-      description: 'Discover Unicorn Blocks, the revolutionary AI-powered STEM building toys that spark creativity in kids while giving parents peace of mind. Watch our demo video and pre-order today!',
+      description: 'Discover Unicorn Blocks, the revolutionary AI-powered STEM building toys that spark creativity in kids while giving parents peace of mind. Watch our demo video and reserve VIP spot today!',
       keywords: 'AI toys, STEM toys, building blocks, educational toys, kids toys, unicorn blocks, smart toys, interactive toys, learning toys, creative toys',
       hero: {
         aiPowered: 'AI-powered',
@@ -33,7 +33,7 @@ export default function Home() {
     },
     zh: {
       title: '独角兽积木 - AI驱动的STEM益智积木玩具',
-      description: '探索独角兽积木，革命性的AI驱动STEM积木玩具，激发孩子创造力，让父母安心。观看我们的演示视频，立即预订！',
+      description: '探索独角兽积木，革命性的AI驱动STEM积木玩具，激发孩子创造力，让父母安心。观看我们的演示视频，立即预订VIP名额！',
       keywords: 'AI玩具, STEM玩具, 积木玩具, 教育玩具, 儿童玩具, 独角兽积木, 智能玩具, 互动玩具, 学习玩具, 创意玩具',
       hero: {
         aiPowered: 'AI驱动的',
@@ -160,7 +160,7 @@ export default function Home() {
                 "@type": "Offer",
                 "availability": "https://schema.org/PreOrder",
                 "priceCurrency": "USD",
-                "url": "https://unicornblocks.ai/pre-order"
+                "url": "https://unicornblocks.ai/reserve-vip-spot"
               },
               "aggregateRating": {
                 "@type": "AggregateRating",

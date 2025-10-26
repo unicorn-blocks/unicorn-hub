@@ -336,7 +336,7 @@ export default function Checkout() {
       
       // Order summary
       orderSummary: 'Order Summary',
-      productName: 'VIP Pre-order Reservation',
+      productName: 'VIP Spot Reservation',
       productDescription: 'Sparky First Adventure',
       quantity: 'Quantity',
       subtotal: 'Subtotal',
@@ -412,7 +412,7 @@ export default function Checkout() {
       
       // Order summary
       orderSummary: '订单摘要',
-      productName: 'VIP预售预订',
+      productName: 'VIP名额预订',
       productDescription: 'Sparky 首次冒险',
       quantity: '数量',
       subtotal: '小计',
@@ -523,7 +523,7 @@ export default function Checkout() {
           phone: phone
         },
           items: [{
-            name: 'Unicorn Blocks VIP Pre-order',
+            name: 'Unicorn Blocks VIP Spot Reservation',
             description: '$5 deposit for $129 VIP price',
             quantity: quantity.toString(),
             unit_amount: {

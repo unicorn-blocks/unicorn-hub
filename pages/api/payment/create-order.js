@@ -29,7 +29,7 @@ export default async function handler(req, res) {
           currency_code: currency || 'USD',
           value: amount.toString()
         },
-        description: 'Unicorn Blocks VIP Pre-order - $5 deposit for $129 VIP price'
+        description: 'Unicorn Blocks VIP Spot Reservation - $5 deposit for $129 VIP price'
       }],
       application_context: {
         return_url: `${req.headers.origin || 'http://localhost:3000'}/payment/success`,

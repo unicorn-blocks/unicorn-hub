@@ -188,7 +188,7 @@ a {
   width: 4px;
 }
 
-/* Pre-order 按钮样式 - 简洁版本 */
+/* VIP Spot Reservation 按钮样式 - 简洁版本 */
 .preorder-button {
   background: linear-gradient(135deg, #7D9ED4 0%, #F7AEBF 100%);
   color: white;
@@ -259,7 +259,7 @@ a {
   }
 }
 
-/* Pre-order 按钮使用与语言切换按钮相同的样式 */
+/* VIP Spot Reservation 按钮使用与语言切换按钮相同的样式 */
 
 /* 超小屏幕适配 */
 @media (max-width: 480px) {

@@ -159,7 +159,7 @@ export default async function handler(req, res) {
     // 构建商品列表
         const finalItems = items || [{
           name: finalPaymentType === 'pre_order' 
-            ? 'Unicorn Blocks VIP Pre-order' 
+            ? 'Unicorn Blocks VIP Spot Reservation' 
             : 'Unicorn Blocks',
           description: finalPaymentType === 'pre_order'
             ? '$5 deposit for $129 VIP price'
