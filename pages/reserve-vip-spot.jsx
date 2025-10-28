@@ -61,7 +61,7 @@ export default function PreOrder() {
           },
           {
             q: 'When will I receive the product?',
-            a: 'Great innovation takes time. Our estimated ship date is mid-2026. By joining us now, you\'re not just pre-ordering — you\'re becoming an insider on our journey to create something extraordinary. You\'ll receive exclusive behind-the-scenes updates as we bring this product to life.'
+            a: 'Great innovation takes time. Our estimated ship date is mid-2026. By joining us now, you\'re not just reserve-vip-spoting — you\'re becoming an insider on our journey to create something extraordinary. You\'ll receive exclusive behind-the-scenes updates as we bring this product to life.'
           }
         ]
       }

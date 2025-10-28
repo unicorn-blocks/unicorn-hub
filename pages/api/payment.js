@@ -1,6 +1,6 @@
 // Next.js API Route - /api/payment
 // 处理支付请求，与后端API集成
-// 版本: 2.0 - 支持pre-order和regular_payment
+// 版本: 2.0 - 支持reserve_vip_spot和regular_payment
 
 // 多语言消息
 const messages = {
@@ -47,7 +47,7 @@ const messages = {
 // 获取后端API URL
 function getBackendApiUrl() {
   // 从环境变量获取后端URL，如果没有则使用默认值
-  return process.env.NEXT_PUBLIC_BACKEND_URL || process.env.BACKEND_URL || 'http://localhost:5000';
+  return process.env.FLASK_BACKEND_URL || process.env.BACKEND_URL || 'http://localhost:5000';
 }
 
 // 验证支付方式
@@ -58,7 +58,7 @@ function isValidPaymentMethod(method) {
 
 // 验证支付类型
 function isValidPaymentType(type) {
-  const validTypes = ['pre_order', 'regular_payment'];
+  const validTypes = ['reserve_vip_spot', 'regular_payment'];
   return validTypes.includes(type);
 }
 
@@ -80,6 +80,7 @@ export default async function handler(req, res) {
     const { 
       payment_type,     // 新增：pre_order 或 regular_payment
       payment_method,   // paypal, card, payoneer
+      payment_source,   // 信用卡支付的卡信息
       amount, 
       currency,
       customer,         // { email, firstName, lastName }
@@ -97,7 +98,7 @@ export default async function handler(req, res) {
     } = req.body;
     
     // 兼容旧版本API
-    const finalPaymentType = payment_type || (productType === 'early_bird_discount' ? 'pre_order' : 'regular_payment');
+    const finalPaymentType = payment_type || (productType === 'early_bird_discount' ? 'reserve_vip_spot' : 'regular_payment');
     const finalPaymentMethod = (payment_method || paymentMethod || '').toLowerCase();
     const finalCustomer = customer || { 
       email: email, 
@@ -157,13 +158,13 @@ export default async function handler(req, res) {
     }
     
     // 构建商品列表
-        const finalItems = items || [{
-          name: finalPaymentType === 'pre_order' 
-            ? 'Unicorn Blocks VIP Spot Reservation' 
-            : 'Unicorn Blocks',
-          description: finalPaymentType === 'pre_order'
-            ? '$5 deposit for $129 VIP price'
-            : 'Unicorn Blocks Purchase',
+    const finalItems = items || [{
+      name: finalPaymentType === 'reserve_vip_spot' 
+        ? 'Unicorn Blocks VIP Spot Reservation' 
+        : 'Unicorn Blocks',
+      description: finalPaymentType === 'reserve_vip_spot'
+        ? '$5 deposit for $129 VIP price (Retail: $199)'
+        : 'Unicorn Blocks Purchase',
       quantity: '1',
       unit_amount: {
         currency_code: currency || 'USD',
@@ -177,14 +178,26 @@ export default async function handler(req, res) {
     const backendUrl = getBackendApiUrl();
     const baseUrl = return_url ? new URL(return_url).origin : (req.headers.origin || 'http://localhost:3000');
     
-    // 准备发送给后端的数据
+    // 清理shipping数据，移除后端不识别的字段
+    const cleanedShipping = shipping ? {
+      country: shipping.country || shipping.countryName,
+      countryName: shipping.country || shipping.countryName,
+      firstName: shipping.firstName,
+      lastName: shipping.lastName,
+      address: shipping.address,
+      city: shipping.city,
+      state: shipping.state,
+      zipCode: shipping.zipCode,
+      phone: shipping.phone
+    } : null;
+    
+    // 准备发送给后端的数据（只包含后端认可的字段）
     const paymentData = {
       payment_type: finalPaymentType,
       amount: amount.toString(),
       currency: currency || 'USD',
       customer: finalCustomer,
-      shipping: shipping,
-      items: finalItems,
+      shipping: cleanedShipping,
       language: requestLanguage || 'en',
       return_url: return_url || `${baseUrl}/payment/success`,
       cancel_url: cancel_url || `${baseUrl}/payment/cancel`
@@ -195,9 +208,38 @@ export default async function handler(req, res) {
       paymentData.coupon_code = coupon_code;
     }
     
-    // 如果是信用卡支付，添加账单地址
-    if (finalPaymentMethod === 'card' && billing_address) {
-      paymentData.billing_address = billing_address;
+    // 如果是信用卡支付，添加payment_source并转换格式
+    if (finalPaymentMethod === 'card') {
+      if (!payment_source) {
+        return res.status(400).json({
+          success: false,
+          message: 'payment_source is required for card payments'
+        });
+      }
+      
+      // 转换payment_source格式为PayPal期望的格式
+      let formattedPaymentSource = payment_source;
+      
+      if (payment_source?.card) {
+        const card = payment_source.card;
+        
+        // PayPal要求expiry格式为 "YYYY-MM"，而前端发送的是 exp_month 和 exp_year
+        formattedPaymentSource = {
+          card: {
+            number: card.number,
+            expiry: card.expiry || `${card.exp_year}-${card.exp_month.padStart(2, '0')}`, // 转换为 "YYYY-MM"
+            security_code: card.security_code || card.cvv,
+            name: card.name,
+            billing_address: card.billing_address
+          }
+        };
+      }
+      
+      paymentData.payment_source = formattedPaymentSource;
+      
+      // 调试：打印转换后的格式
+      console.log('Original payment_source:', JSON.stringify(payment_source, null, 2));
+      console.log('Formatted payment_source:', JSON.stringify(formattedPaymentSource, null, 2));
     }
     
     // 根据支付方式调用不同的后端端点
@@ -221,13 +263,20 @@ export default async function handler(req, res) {
         });
     }
     
-    // 调用后端API
+    // 调试：打印发送给后端的完整数据
+    console.log('Sending to backend:', `${backendUrl}${endpoint}`);
+    console.log('Payment data:', JSON.stringify(paymentData, null, 2));
+    
+    // 调用后端API，通过headers传递重定向URL
     const response = await fetch(`${backendUrl}${endpoint}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
-        'X-API-Version': '2.0'
+        'X-API-Version': '2.0',
+        'X-Return-URL': return_url || `${baseUrl}/payment/success`,
+        'X-Cancel-URL': cancel_url || `${baseUrl}/payment/cancel`,
+        'X-Frontend-Origin': baseUrl
       },
       body: JSON.stringify(paymentData)
     });

@@ -501,9 +501,9 @@ export default function Checkout() {
     try {
       // 准备支付数据
       const paymentData = {
-        payment_type: 'pre_order', // 预购订单
+        payment_type: 'reserve_vip_spot', // VIP预订
         payment_method: paymentMethod.toLowerCase(), // paypal, card, payoneer
-          amount: (5 * quantity).toFixed(2),
+        amount: (5 * quantity).toFixed(2),
         currency: 'USD',
         customer: {
           email: email,
@@ -536,23 +536,24 @@ export default function Checkout() {
         cancel_url: `${window.location.origin}/payment/cancel`
       };
       
-      // 如果是信用卡支付，添加账单地址
+      // 如果是信用卡支付，构建payment_source对象
       if (paymentMethod === 'card') {
-        paymentData.billing_address = {
-          country: getCountryCode(country),
-          countryName: country,
-          firstName: firstName,
-          lastName: lastName,
-          address: address,
-          city: city,
-          state: state,
-          zipCode: zipCode
-        };
-        paymentData.card_details = {
-          number: cardNumber,
-          expiry: expiryDate,
-          cvv: cvv,
-          name: cardName
+        const expiryParts = expiryDate.split('/');
+        paymentData.payment_source = {
+          card: {
+            number: cardNumber.replace(/\s/g, ''),
+            exp_month: expiryParts[0] || '',
+            exp_year: expiryParts[1] ? '20' + expiryParts[1] : '',
+            security_code: cvv,
+            name: cardName.toUpperCase(),
+            billing_address: {
+              address_line_1: address,
+              admin_area_2: city,
+              admin_area_1: state,
+              postal_code: zipCode,
+              country_code: getCountryCode(country)
+            }
+          }
         };
       }
       
@@ -1383,7 +1384,7 @@ export default function Checkout() {
 
 
       <style jsx global>{`
-        /* Basic styles - 保持与pre-order页面相同的风格 */
+        /* Basic styles - 保持与reserve-vip-spot页面相同的风格 */
         body {
           font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
           min-height: 100vh;
@@ -1453,7 +1454,7 @@ export default function Checkout() {
           padding: 0 2rem;
         }
 
-        /* 左侧表单样式 - 与pre-order页面保持一致的卡片风格 */
+        /* 左侧表单样式 - 与reserve-vip-spot页面保持一致的卡片风格 */
         .checkout-form-container {
           background: linear-gradient(180deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.88) 100%);
           backdrop-filter: blur(12px);
@@ -1726,7 +1727,7 @@ export default function Checkout() {
           margin-bottom: 1rem;
         }
 
-        /* 提交按钮 - 使用与pre-order相同的样式 */
+        /* 提交按钮 - 使用与reserve-vip-spot相同的样式 */
         .primary-button {
           width: 100%;
           background: linear-gradient(90deg, #F7AEBF 0%, #9b90da 100%);
@@ -2561,7 +2562,7 @@ export default function Checkout() {
           color: var(--color-primary);
         }
 
-        /* 右侧订单摘要样式 - 使用与pre-order相同的卡片风格 */
+        /* 右侧订单摘要样式 - 使用与reserve-vip-spot相同的卡片风格 */
         .order-summary-container {
           background: linear-gradient(180deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.88) 100%);
           backdrop-filter: blur(12px);
@@ -2834,7 +2835,7 @@ export default function Checkout() {
         }
 
 
-        /* 统一卡片底部样式：背景与边框 - 与pre-order页面保持一致 */
+        /* 统一卡片底部样式：背景与边框 - 与reserve-vip-spot页面保持一致 */
         .surface-card {
           background: linear-gradient(180deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.88) 100%);
           border: 1px solid rgba(255, 255, 255, 0.2);
