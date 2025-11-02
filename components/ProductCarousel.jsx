@@ -57,7 +57,6 @@ export default function ProductCarousel() {
             src={images[currentImage]}
             alt={`Product image ${currentImage + 1}`}
             className="carousel-image"
-            loading="lazy"
             decoding="async"
           />
           
@@ -149,7 +148,6 @@ export default function ProductCarousel() {
               src={images[currentImage]}
               alt={`Product image ${currentImage + 1}`}
               className="fullscreen-image"
-              loading="lazy"
               decoding="async"
             />
             

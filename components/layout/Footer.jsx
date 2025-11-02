@@ -61,7 +61,7 @@ export default function Footer({ onSubscribe }) {
           {/* Logo and Contact */}
           <div>
             <div className="flex items-center gap-2 mb-4">
-              <img src="/assets/logo_horizontal_white_eng.svg" alt="Unicorn Logo" className="h-14" loading="lazy" decoding="async" />
+              <img src="/assets/logo_horizontal_white_eng.svg" alt="Unicorn Logo" className="h-14" decoding="async" />
             </div>
             <p className="text-sm text-gray-600 mb-4">
               <a href="mailto:support@unicornblocks.ai" className="hover:text-[#7d9ed4] transition-colors" target="_blank" rel="noopener">support@unicornblocks.ai</a>
@@ -110,7 +110,7 @@ export default function Footer({ onSubscribe }) {
         <div className="mt-12 pt-6 border-t border-gray-200 flex flex-col md:flex-row justify-between items-center">
           <div className="flex items-center mb-4 md:mb-0">
             <span className="text-sm text-gray-600 mr-2">{t.productOf}</span>
-            <img src="/assets/logo_horizontal_white_eng.svg" alt="Unicorn Logo" className="h-6" loading="lazy" decoding="async" />
+            <img src="/assets/logo_horizontal_white_eng.svg" alt="Unicorn Logo" className="h-6" decoding="async" />
           </div>
           <p className="text-sm text-gray-600">{t.allRightsReserved}</p>
         </div>

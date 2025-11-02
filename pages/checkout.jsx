@@ -910,9 +910,9 @@ export default function Checkout() {
                           </div>
                           <div className="payment-method-logo">
                             <div className="card-logos-mini">
-                              <img src="/assets/checkout/visa.svg" alt="Visa" className="card-icon-main" loading="lazy" decoding="async" />
-                              <img src="/assets/checkout/mastercard.svg" alt="Mastercard" className="card-icon-main" loading="lazy" decoding="async" />
-                              <img src="/assets/checkout/amex.svg" alt="American Express" className="card-icon-main" loading="lazy" decoding="async" />
+                              <img src="/assets/checkout/visa.svg" alt="Visa" className="card-icon-main" decoding="async" />
+                              <img src="/assets/checkout/mastercard.svg" alt="Mastercard" className="card-icon-main" decoding="async" />
+                              <img src="/assets/checkout/amex.svg" alt="American Express" className="card-icon-main" decoding="async" />
                               <div className="more-cards-container">
                                 <button 
                                   type="button"
@@ -931,19 +931,19 @@ export default function Checkout() {
                                   >
                                     <div className="more-cards-grid">
                                       <div className="card-icon-item">
-                                        <img src="/assets/checkout/jcb.svg" alt="JCB" className="card-icon-svg" loading="lazy" decoding="async" />
+                                        <img src="/assets/checkout/jcb.svg" alt="JCB" className="card-icon-svg" decoding="async" />
                                       </div>
                                       <div className="card-icon-item">
-                                        <img src="/assets/checkout/unionpay.svg" alt="UnionPay" className="card-icon-svg" loading="lazy" decoding="async" />
+                                        <img src="/assets/checkout/unionpay.svg" alt="UnionPay" className="card-icon-svg" decoding="async" />
                                       </div>
                                       <div className="card-icon-item">
-                                        <img src="/assets/checkout/diners.svg" alt="Diners Club" className="card-icon-svg" loading="lazy" decoding="async" />
+                                        <img src="/assets/checkout/diners.svg" alt="Diners Club" className="card-icon-svg" decoding="async" />
                                       </div>
                                       <div className="card-icon-item">
-                                        <img src="/assets/checkout/discover.svg" alt="Discover" className="card-icon-svg" loading="lazy" decoding="async" />
+                                        <img src="/assets/checkout/discover.svg" alt="Discover" className="card-icon-svg" decoding="async" />
                                       </div>
                                       <div className="card-icon-item">
-                                        <img src="/assets/checkout/maestro.svg" alt="Maestro" className="card-icon-svg" loading="lazy" decoding="async" />
+                                        <img src="/assets/checkout/maestro.svg" alt="Maestro" className="card-icon-svg" decoding="async" />
                                       </div>
                                     </div>
                                   </div>
@@ -1180,7 +1180,7 @@ export default function Checkout() {
                             <span className="payment-method-name-plaud">PayPal</span>
                           </div>
                           <div className="payment-method-logo">
-                            <img src="/assets/checkout/paypal-logo.svg" alt="PayPal" loading="lazy" decoding="async" />
+                            <img src="/assets/checkout/paypal-logo.svg" alt="PayPal" decoding="async" />
                           </div>
                         </div>
                       </label>
@@ -1218,7 +1218,7 @@ export default function Checkout() {
                             <span className="payment-method-name-plaud">Payoneer</span>
                           </div>
                           <div className="payment-method-logo">
-                            <img src="/assets/checkout/payoneer-logo.svg" alt="Payoneer" loading="lazy" decoding="async" />
+                            <img src="/assets/checkout/payoneer-logo.svg" alt="Payoneer" decoding="async" />
                           </div>
                         </div>
                       </label>
@@ -1271,7 +1271,6 @@ export default function Checkout() {
                       src="/assets/checkout/sparky.jpg" 
                       alt="Sparky First Adventure" 
                       className="product-image"
-                      loading="lazy"
                       decoding="async"
                     />
                   </div>
