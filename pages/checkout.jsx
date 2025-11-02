@@ -4,68 +4,7 @@ import { safeApiCall } from '../lib/api';
 import Navigation from '../components/layout/Navigation';
 import Footer from '../components/layout/Footer';
 import { useLanguage } from '../context/LanguageContext';
-
-// 国家和州/省数据
-const countryStateData = {
-  'United States': [
-    'Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware',
-    'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky',
-    'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi',
-    'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico',
-    'New York', 'North Carolina', 'North Dakota', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania',
-    'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont',
-    'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'
-  ],
-  'Canada': [
-    'Alberta', 'British Columbia', 'Manitoba', 'New Brunswick', 'Newfoundland and Labrador',
-    'Northwest Territories', 'Nova Scotia', 'Nunavut', 'Ontario', 'Prince Edward Island',
-    'Quebec', 'Saskatchewan', 'Yukon'
-  ],
-  'United Kingdom': [
-    'England', 'Scotland', 'Wales', 'Northern Ireland'
-  ],
-  'Australia': [
-    'Australian Capital Territory', 'New South Wales', 'Northern Territory', 'Queensland',
-    'South Australia', 'Tasmania', 'Victoria', 'Western Australia'
-  ],
-  'Germany': [
-    'Baden-Württemberg', 'Bavaria', 'Berlin', 'Brandenburg', 'Bremen', 'Hamburg', 'Hesse',
-    'Lower Saxony', 'Mecklenburg-Vorpommern', 'North Rhine-Westphalia', 'Rhineland-Palatinate',
-    'Saarland', 'Saxony', 'Saxony-Anhalt', 'Schleswig-Holstein', 'Thuringia'
-  ],
-  'France': [
-    'Auvergne-Rhône-Alpes', 'Bourgogne-Franche-Comté', 'Brittany', 'Centre-Val de Loire',
-    'Corsica', 'Grand Est', 'Hauts-de-France', 'Île-de-France', 'Normandy', 'Nouvelle-Aquitaine',
-    'Occitanie', 'Pays de la Loire', 'Provence-Alpes-Côte d\'Azur'
-  ],
-  'China': [
-    'Beijing', 'Shanghai', 'Tianjin', 'Chongqing', 'Guangdong', 'Jiangsu', 'Shandong', 'Zhejiang',
-    'Henan', 'Sichuan', 'Hubei', 'Fujian', 'Hunan', 'Anhui', 'Hebei', 'Liaoning', 'Jiangxi',
-    'Yunnan', 'Guangxi', 'Shanxi', 'Guizhou', 'Heilongjiang', 'Jilin', 'Gansu', 'Hainan',
-    'Ningxia', 'Qinghai', 'Xinjiang', 'Tibet', 'Inner Mongolia', 'Hong Kong', 'Macau'
-  ],
-  'Japan': [
-    'Hokkaido', 'Aomori', 'Iwate', 'Miyagi', 'Akita', 'Yamagata', 'Fukushima', 'Ibaraki',
-    'Tochigi', 'Gunma', 'Saitama', 'Chiba', 'Tokyo', 'Kanagawa', 'Niigata', 'Toyama',
-    'Ishikawa', 'Fukui', 'Yamanashi', 'Nagano', 'Gifu', 'Shizuoka', 'Aichi', 'Mie',
-    'Shiga', 'Kyoto', 'Osaka', 'Hyogo', 'Nara', 'Wakayama', 'Tottori', 'Shimane',
-    'Okayama', 'Hiroshima', 'Yamaguchi', 'Tokushima', 'Kagawa', 'Ehime', 'Kochi',
-    'Fukuoka', 'Saga', 'Nagasaki', 'Kumamoto', 'Oita', 'Miyazaki', 'Kagoshima', 'Okinawa'
-  ],
-  'India': [
-    'Andhra Pradesh', 'Arunachal Pradesh', 'Assam', 'Bihar', 'Chhattisgarh', 'Goa', 'Gujarat',
-    'Haryana', 'Himachal Pradesh', 'Jharkhand', 'Karnataka', 'Kerala', 'Madhya Pradesh',
-    'Maharashtra', 'Manipur', 'Meghalaya', 'Mizoram', 'Nagaland', 'Odisha', 'Punjab',
-    'Rajasthan', 'Sikkim', 'Tamil Nadu', 'Telangana', 'Tripura', 'Uttar Pradesh',
-    'Uttarakhand', 'West Bengal', 'Delhi', 'Jammu and Kashmir', 'Ladakh'
-  ],
-  'Brazil': [
-    'Acre', 'Alagoas', 'Amapá', 'Amazonas', 'Bahia', 'Ceará', 'Distrito Federal', 'Espírito Santo',
-    'Goiás', 'Maranhão', 'Mato Grosso', 'Mato Grosso do Sul', 'Minas Gerais', 'Pará', 'Paraíba',
-    'Paraná', 'Pernambuco', 'Piauí', 'Rio de Janeiro', 'Rio Grande do Norte', 'Rio Grande do Sul',
-    'Rondônia', 'Roraima', 'Santa Catarina', 'São Paulo', 'Sergipe', 'Tocantins'
-  ]
-};
+import { COUNTRIES, COUNTRY_CODES, COUNTRY_STATES } from '../lib/countryRegions';
 
 export default function Checkout() {
   const { language } = useLanguage();
@@ -94,6 +33,16 @@ export default function Checkout() {
   const [showMoreCards, setShowMoreCards] = useState(false);
   // Security code提示状态
   const [showSecurityCodeTooltip, setShowSecurityCodeTooltip] = useState(false);
+  // 账单地址状态
+  const [useShippingAsBilling, setUseShippingAsBilling] = useState(true);
+  const [billingCountry, setBillingCountry] = useState('');
+  const [billingFirstName, setBillingFirstName] = useState('');
+  const [billingLastName, setBillingLastName] = useState('');
+  const [billingAddress, setBillingAddress] = useState('');
+  const [billingApartment, setBillingApartment] = useState('');
+  const [billingCity, setBillingCity] = useState('');
+  const [billingState, setBillingState] = useState('');
+  const [billingZipCode, setBillingZipCode] = useState('');
   // UI状态
   const [isProcessing, setIsProcessing] = useState(false);
   const [formStatus, setFormStatus] = useState({ message: '', type: '' });
@@ -101,7 +50,7 @@ export default function Checkout() {
   
   // 获取当前选中国家的州/省列表
   const getStatesForCountry = (selectedCountry) => {
-    return countryStateData[selectedCountry] || [];
+    return COUNTRY_STATES[selectedCountry] || [];
   };
 
   // 处理国家变化
@@ -153,18 +102,12 @@ export default function Checkout() {
         }
         break;
       case 'zipCode':
-        if (!value) {
-          newErrors.zipCode = language === 'en' ? 'ZIP/Postal code is required' : '请输入邮政编码';
-        } else {
-          delete newErrors.zipCode;
-        }
+        // 邮编是可选的，不验证
+        delete newErrors.zipCode;
         break;
       case 'phone':
-        if (!value) {
-          newErrors.phone = language === 'en' ? 'Phone number is required' : '请输入电话号码';
-        } else {
-          delete newErrors.phone;
-        }
+        // 电话是可选的，不验证
+        delete newErrors.phone;
         break;
       case 'country':
         if (!value) {
@@ -196,11 +139,13 @@ export default function Checkout() {
       { name: 'lastName', value: lastName },
       { name: 'address', value: address },
       { name: 'city', value: city },
-      { name: 'country', value: country },
-      { name: 'state', value: state },
-      { name: 'zipCode', value: zipCode },
-      { name: 'phone', value: phone }
+      { name: 'country', value: country }
     ];
+    
+    // 只有当国家有州/省列表时才验证 state
+    if (getStatesForCountry(country).length > 0) {
+      fieldsToValidate.push({ name: 'state', value: state });
+    }
     
     const newErrors = {};
     let isValid = true;
@@ -254,18 +199,6 @@ export default function Checkout() {
             isValid = false;
           }
           break;
-        case 'zipCode':
-          if (!value) {
-            newErrors.zipCode = language === 'en' ? 'ZIP/Postal code is required' : '请输入邮政编码';
-            isValid = false;
-          }
-          break;
-        case 'phone':
-          if (!value) {
-            newErrors.phone = language === 'en' ? 'Phone number is required' : '请输入电话号码';
-            isValid = false;
-          }
-          break;
         default:
           break;
       }
@@ -301,28 +234,28 @@ export default function Checkout() {
       // Contact section
       contact: 'Contact Information',
       emailLabel: 'Email Address',
-      emailPlaceholder: 'your.email@example.com',
+      emailPlaceholder: 'Email',
       newsletterLabel: 'Email me with news and offers',
       
       // Delivery section
       delivery: 'Delivery Information',
       countryLabel: 'Country/Region',
       firstNameLabel: 'First Name',
-      firstNamePlaceholder: 'Enter your first name',
+      firstNamePlaceholder: 'First name',
       lastNameLabel: 'Last Name',
-      lastNamePlaceholder: 'Enter your last name',
+      lastNamePlaceholder: 'Last name',
       addressLabel: 'Address',
-      addressPlaceholder: 'Enter your address',
+      addressPlaceholder: 'Address',
       apartmentLabel: 'Apartment, suite, etc. (optional)',
-      apartmentPlaceholder: 'Enter apartment, suite, etc.',
+      apartmentPlaceholder: 'Apartment, suite, etc. (optional)',
       cityLabel: 'City',
-      cityPlaceholder: 'Enter your city',
+      cityPlaceholder: 'City',
       stateLabel: 'State/Province',
-      statePlaceholder: 'Select state/province',
+      statePlaceholder: 'State/Province',
       zipLabel: 'ZIP/Postal Code',
-      zipPlaceholder: 'Enter ZIP/postal code',
+      zipPlaceholder: 'Postal code (optional)',
       phoneLabel: 'Phone Number',
-      phonePlaceholder: 'Enter your phone number',
+      phonePlaceholder: 'Phone (optional)',
       
       // Payment section
       payment: 'Payment',
@@ -377,28 +310,28 @@ export default function Checkout() {
       // Contact section
       contact: '联系信息',
       emailLabel: '邮箱地址',
-      emailPlaceholder: 'your.email@example.com',
+      emailPlaceholder: '邮箱',
       newsletterLabel: '通过邮件接收新闻和优惠信息',
       
       // Delivery section
       delivery: '配送信息',
       countryLabel: '国家/地区',
       firstNameLabel: '名字',
-      firstNamePlaceholder: '输入您的名字',
+      firstNamePlaceholder: '名字',
       lastNameLabel: '姓氏',
-      lastNamePlaceholder: '输入您的姓氏',
+      lastNamePlaceholder: '姓氏',
       addressLabel: '地址',
-      addressPlaceholder: '输入您的地址',
+      addressPlaceholder: '地址',
       apartmentLabel: '公寓、套房等（可选）',
-      apartmentPlaceholder: '输入公寓、套房等',
+      apartmentPlaceholder: '公寓、套房等（可选）',
       cityLabel: '城市',
-      cityPlaceholder: '输入您的城市',
+      cityPlaceholder: '城市',
       stateLabel: '州/省',
-      statePlaceholder: '选择州/省',
+      statePlaceholder: '州/省',
       zipLabel: '邮编',
-      zipPlaceholder: '输入邮编',
+      zipPlaceholder: '邮编（可选）',
       phoneLabel: '电话号码',
-      phonePlaceholder: '输入您的电话号码',
+      phonePlaceholder: '电话（可选）',
       
       // Payment section
       payment: '支付',
@@ -499,6 +432,29 @@ export default function Checkout() {
     setIsProcessing(true);
     
     try {
+      // 决定使用哪个地址作为账单地址
+      const finalBillingAddress = useShippingAsBilling ? {
+        country: getCountryCode(country),
+        countryName: country,
+        firstName: firstName,
+        lastName: lastName,
+        address: address,
+        address2: apartment,
+        city: city,
+        state: state,
+        zipCode: zipCode
+      } : {
+        country: getCountryCode(billingCountry),
+        countryName: billingCountry,
+        firstName: billingFirstName,
+        lastName: billingLastName,
+        address: billingAddress,
+        address2: billingApartment,
+        city: billingCity,
+        state: billingState,
+        zipCode: billingZipCode
+      };
+      
       // 准备支付数据
       const paymentData = {
         payment_type: 'reserve_vip_spot', // VIP预订
@@ -522,15 +478,16 @@ export default function Checkout() {
           zipCode: zipCode,
           phone: phone
         },
-          items: [{
-            name: 'Unicorn Blocks VIP Spot Reservation',
-            description: '$5 deposit for $129 VIP price',
-            quantity: quantity.toString(),
-            unit_amount: {
-              currency_code: 'USD',
-              value: '5.00'
-            }
-          }],
+        billing_address: finalBillingAddress,
+        items: [{
+          name: 'Unicorn Blocks VIP Spot Reservation',
+          description: '$5 deposit for $129 VIP price',
+          quantity: quantity.toString(),
+          unit_amount: {
+            currency_code: 'USD',
+            value: '5.00'
+          }
+        }],
         language: language,
         return_url: `${window.location.origin}/payment/success`,
         cancel_url: `${window.location.origin}/payment/cancel`
@@ -539,6 +496,21 @@ export default function Checkout() {
       // 如果是信用卡支付，构建payment_source对象
       if (paymentMethod === 'card') {
         const expiryParts = expiryDate.split('/');
+        // PayPal格式的账单地址
+        const paypalBillingAddress = useShippingAsBilling ? {
+          address_line_1: address,
+          admin_area_2: city,
+          admin_area_1: state,
+          postal_code: zipCode,
+          country_code: getCountryCode(country)
+        } : {
+          address_line_1: billingAddress,
+          admin_area_2: billingCity,
+          admin_area_1: billingState,
+          postal_code: billingZipCode,
+          country_code: getCountryCode(billingCountry)
+        };
+        
         paymentData.payment_source = {
           card: {
             number: cardNumber.replace(/\s/g, ''),
@@ -546,13 +518,7 @@ export default function Checkout() {
             exp_year: expiryParts[1] ? '20' + expiryParts[1] : '',
             security_code: cvv,
             name: cardName.toUpperCase(),
-            billing_address: {
-              address_line_1: address,
-              admin_area_2: city,
-              admin_area_1: state,
-              postal_code: zipCode,
-              country_code: getCountryCode(country)
-            }
+            billing_address: paypalBillingAddress
           }
         };
       }
@@ -595,19 +561,7 @@ export default function Checkout() {
   
   // 获取国家代码
   const getCountryCode = (countryName) => {
-    const codes = {
-      'United States': 'US',
-      'Canada': 'CA',
-      'United Kingdom': 'GB',
-      'Australia': 'AU',
-      'Germany': 'DE',
-      'France': 'FR',
-      'China': 'CN',
-      'Japan': 'JP',
-      'India': 'IN',
-      'Brazil': 'BR'
-    };
-    return codes[countryName] || 'US';
+    return COUNTRY_CODES[countryName] || 'US';
   };
 
   // 处理支付方式选择
@@ -750,23 +704,22 @@ export default function Checkout() {
                   <h2 className="section-title">{t.contact}</h2>
                   
                   <div className="form-field">
-                    <label htmlFor="email" className="field-label">{t.emailLabel}</label>
-                  <input 
-                    type="email" 
-                    id="email" 
-                    className={`form-input ${errors.email ? 'error' : ''}`}
-                    value={email}
-                    onChange={(e) => {
-                      setEmail(e.target.value);
-                      validateField('email', e.target.value);
-                    }}
-                    onBlur={(e) => validateField('email', e.target.value)}
-                    placeholder={t.emailPlaceholder}
-                    disabled={isProcessing}
-                    noValidate
-                  />
-                  <ErrorMessage field="email" />
-                </div>
+                    <input 
+                      type="email" 
+                      id="email" 
+                      className={`form-input ${errors.email ? 'error' : ''}`}
+                      value={email}
+                      onChange={(e) => {
+                        setEmail(e.target.value);
+                        validateField('email', e.target.value);
+                      }}
+                      onBlur={(e) => validateField('email', e.target.value)}
+                      placeholder={t.emailPlaceholder}
+                      disabled={isProcessing}
+                      noValidate
+                    />
+                    <ErrorMessage field="email" />
+                  </div>
 
                   <div className="checkbox-field">
                     <label className="checkbox-label">
@@ -777,7 +730,7 @@ export default function Checkout() {
                         disabled={isProcessing}
                       />
                       <span className="checkbox-text">{t.newsletterLabel}</span>
-                  </label>
+                    </label>
                   </div>
                 </div>
 
@@ -786,7 +739,6 @@ export default function Checkout() {
                   <h2 className="section-title">{t.delivery}</h2>
                   
                   <div className="form-field">
-                    <label htmlFor="country" className="field-label">{t.countryLabel}</label>
                     <select 
                       id="country" 
                       className={`form-select ${errors.country ? 'error' : ''}`}
@@ -798,61 +750,19 @@ export default function Checkout() {
                       onBlur={(e) => validateField('country', e.target.value)}
                       disabled={isProcessing}
                     >
-                      <option value="">{language === 'en' ? 'Select Country/Region' : '选择国家/地区'}</option>
-                      <option value="Argentina">Argentina</option>
-                      <option value="Australia">Australia</option>
-                      <option value="Austria">Austria</option>
-                      <option value="Belgium">Belgium</option>
-                      <option value="Brazil">Brazil</option>
-                      <option value="Canada">Canada</option>
-                      <option value="Chile">Chile</option>
-                      <option value="China">China</option>
-                      <option value="Czech Republic">Czech Republic</option>
-                      <option value="Denmark">Denmark</option>
-                      <option value="Finland">Finland</option>
-                      <option value="France">France</option>
-                      <option value="Germany">Germany</option>
-                      <option value="Hong Kong">Hong Kong</option>
-                      <option value="Hungary">Hungary</option>
-                      <option value="Iceland">Iceland</option>
-                      <option value="India">India</option>
-                      <option value="Indonesia">Indonesia</option>
-                      <option value="Ireland">Ireland</option>
-                      <option value="Israel">Israel</option>
-                      <option value="Italy">Italy</option>
-                      <option value="Japan">Japan</option>
-                      <option value="Luxembourg">Luxembourg</option>
-                      <option value="Malaysia">Malaysia</option>
-                      <option value="Mexico">Mexico</option>
-                      <option value="Netherlands">Netherlands</option>
-                      <option value="New Zealand">New Zealand</option>
-                      <option value="Norway">Norway</option>
-                      <option value="Other">Other</option>
-                      <option value="Philippines">Philippines</option>
-                      <option value="Poland">Poland</option>
-                      <option value="Portugal">Portugal</option>
-                      <option value="Russia">Russia</option>
-                      <option value="Saudi Arabia">Saudi Arabia</option>
-                      <option value="Singapore">Singapore</option>
-                      <option value="South Africa">South Africa</option>
-                      <option value="South Korea">South Korea</option>
-                      <option value="Spain">Spain</option>
-                      <option value="Sweden">Sweden</option>
-                      <option value="Switzerland">Switzerland</option>
-                      <option value="Taiwan">Taiwan</option>
-                      <option value="Thailand">Thailand</option>
-                      <option value="Turkey">Turkey</option>
-                      <option value="United Arab Emirates">United Arab Emirates</option>
-                      <option value="United Kingdom">United Kingdom</option>
-                      <option value="United States">United States</option>
-                      <option value="Vietnam">Vietnam</option>
+                      <option value="">{language === 'en' ? 'Country/Region' : '国家/地区'}</option>
+                      {COUNTRIES.map((country) => (
+                        <option key={country.code} value={country.name}>
+                          {language === 'zh' ? country.nameZh : country.name}
+                        </option>
+                      ))}
+                      <option value="Other">{language === 'zh' ? '其他' : 'Other'}</option>
                     </select>
                     <ErrorMessage field="country" />
                   </div>
                   
                   <div className="form-row">
                     <div className="form-field">
-                      <label htmlFor="firstName" className="field-label">{t.firstNameLabel}</label>
                       <input 
                         type="text" 
                         id="firstName" 
@@ -869,7 +779,6 @@ export default function Checkout() {
                       <ErrorMessage field="firstName" />
                     </div>
                     <div className="form-field">
-                      <label htmlFor="lastName" className="field-label">{t.lastNameLabel}</label>
                       <input 
                         type="text" 
                         id="lastName" 
@@ -888,7 +797,6 @@ export default function Checkout() {
                   </div>
                   
                   <div className="form-field">
-                    <label htmlFor="address" className="field-label">{t.addressLabel}</label>
                     <input 
                       type="text" 
                       id="address" 
@@ -906,7 +814,6 @@ export default function Checkout() {
                   </div>
                   
                   <div className="form-field">
-                    <label htmlFor="apartment" className="field-label">{t.apartmentLabel}</label>
                     <input 
                       type="text" 
                       id="apartment" 
@@ -920,7 +827,6 @@ export default function Checkout() {
                   
                   <div className="form-row">
                     <div className="form-field">
-                      <label htmlFor="city" className="field-label">{t.cityLabel}</label>
                       <input 
                         type="text" 
                         id="city" 
@@ -936,61 +842,50 @@ export default function Checkout() {
                       />
                       <ErrorMessage field="city" />
                     </div>
+                    {getStatesForCountry(country).length > 0 && (
+                      <div className="form-field">
+                        <select 
+                          id="state" 
+                          className={`form-select ${errors.state ? 'error' : ''}`}
+                          value={state}
+                          onChange={(e) => {
+                            setState(e.target.value);
+                            validateField('state', e.target.value);
+                          }}
+                          onBlur={(e) => validateField('state', e.target.value)}
+                          disabled={isProcessing}
+                        >
+                          <option value="">{t.statePlaceholder}</option>
+                          {getStatesForCountry(country).map((stateName) => (
+                            <option key={stateName} value={stateName}>{stateName}</option>
+                          ))}
+                        </select>
+                        <ErrorMessage field="state" />
+                      </div>
+                    )}
                     <div className="form-field">
-                      <label htmlFor="state" className="field-label">{t.stateLabel}</label>
-                      <select 
-                        id="state" 
-                        className={`form-select ${errors.state ? 'error' : ''}`}
-                        value={state}
-                        onChange={(e) => {
-                          setState(e.target.value);
-                          validateField('state', e.target.value);
-                        }}
-                        onBlur={(e) => validateField('state', e.target.value)}
-                        disabled={isProcessing}
-                      >
-                        <option value="">{t.statePlaceholder}</option>
-                        {getStatesForCountry(country).map((stateName) => (
-                          <option key={stateName} value={stateName}>{stateName}</option>
-                        ))}
-                      </select>
-                      <ErrorMessage field="state" />
-                    </div>
-                    <div className="form-field">
-                      <label htmlFor="zipCode" className="field-label">{t.zipLabel}</label>
                       <input 
                         type="text" 
                         id="zipCode" 
-                        className={`form-input ${errors.zipCode ? 'error' : ''}`}
+                        className="form-input"
                         value={zipCode}
-                        onChange={(e) => {
-                          setZipCode(e.target.value);
-                          validateField('zipCode', e.target.value);
-                        }}
-                        onBlur={(e) => validateField('zipCode', e.target.value)}
+                        onChange={(e) => setZipCode(e.target.value)}
                         placeholder={t.zipPlaceholder}
                         disabled={isProcessing}
                       />
-                      <ErrorMessage field="zipCode" />
                     </div>
                   </div>
                   
                   <div className="form-field">
-                    <label htmlFor="phone" className="field-label">{t.phoneLabel}</label>
                     <input 
                       type="tel" 
                       id="phone" 
-                      className={`form-input ${errors.phone ? 'error' : ''}`}
+                      className="form-input"
                       value={phone}
-                      onChange={(e) => {
-                        setPhone(e.target.value);
-                        validateField('phone', e.target.value);
-                      }}
-                      onBlur={(e) => validateField('phone', e.target.value)}
+                      onChange={(e) => setPhone(e.target.value)}
                       placeholder={t.phonePlaceholder}
                       disabled={isProcessing}
                     />
-                    <ErrorMessage field="phone" />
                   </div>
                 </div>
 
@@ -1062,15 +957,11 @@ export default function Checkout() {
                       {paymentMethod === 'card' && (
                         <div className="card-input-fields">
                           <div className="form-field">
-                            <label htmlFor="cardNumber" className="field-label">
-                              Card number
-                              <span className="security-icon">🔒</span>
-                            </label>
                             <input 
                               type="text" 
                               id="cardNumber" 
                               className="form-input"
-                              placeholder="1234 5678 9012 3456 789"
+                              placeholder={language === 'en' ? 'Card number' : '卡号'}
                               maxLength="23"
                               value={cardNumber}
                               onChange={handleCardNumberChange}
@@ -1080,79 +971,194 @@ export default function Checkout() {
                           
                           <div className="form-row">
                             <div className="form-field">
-                              <label htmlFor="expiryDate" className="field-label">Expiration date (MM / YY)</label>
                               <input 
                                 type="text" 
                                 id="expiryDate" 
                                 className="form-input"
-                                placeholder="MM / YY"
+                                placeholder={language === 'en' ? 'Expiration date (MM / YY)' : '有效期 (MM / YY)'}
                                 maxLength="5"
                                 value={expiryDate}
                                 onChange={handleExpiryDateChange}
                                 disabled={isProcessing}
                               />
                             </div>
-                            <div className="form-field">
-                              <label htmlFor="cvv" className="field-label">
-                                Security code
-                                <span className="help-icon-container">
-                                  <span 
-                                    className="help-icon"
-                                    onMouseEnter={() => setShowSecurityCodeTooltip(true)}
-                                    onMouseLeave={() => setShowSecurityCodeTooltip(false)}
-                                  >
-                                    ?
-                                  </span>
-                                  {showSecurityCodeTooltip && (
-                                    <div 
-                                      className="security-code-tooltip"
-                                      onMouseEnter={() => setShowSecurityCodeTooltip(true)}
-                                      onMouseLeave={() => setShowSecurityCodeTooltip(false)}
-                                    >
-                                      {language === 'en' 
-                                        ? '3-digit security code usually found on the back of your card. American Express cards have a 4-digit code located on the front.'
-                                        : '3位安全码通常位于卡片背面。美国运通卡的安全码是4位数字，位于卡片正面。'
-                                      }
-                                    </div>
-                                  )}
-                                </span>
-                              </label>
+                            <div className="form-field cvv-field-wrapper">
                               <input 
                                 type="text" 
                                 id="cvv" 
                                 className="form-input"
-                                placeholder="123"
+                                placeholder={language === 'en' ? 'Security code' : '安全码'}
                                 maxLength="4"
                                 value={cvv}
                                 onChange={(e) => setCvv(e.target.value.replace(/\D/g, ''))}
                                 disabled={isProcessing}
                               />
+                              <span className="cvv-help-icon-container">
+                                <span 
+                                  className="cvv-help-icon"
+                                  onMouseEnter={() => setShowSecurityCodeTooltip(true)}
+                                  onMouseLeave={() => setShowSecurityCodeTooltip(false)}
+                                >
+                                  ?
+                                </span>
+                                {showSecurityCodeTooltip && (
+                                  <div 
+                                    className="security-code-tooltip"
+                                    onMouseEnter={() => setShowSecurityCodeTooltip(true)}
+                                    onMouseLeave={() => setShowSecurityCodeTooltip(false)}
+                                  >
+                                    {language === 'en' 
+                                      ? '3-digit security code usually found on the back of your card. American Express cards have a 4-digit code located on the front.'
+                                      : '3位安全码通常位于卡片背面。美国运通卡的安全码是4位数字，位于卡片正面。'
+                                    }
+                                  </div>
+                                )}
+                              </span>
                             </div>
                           </div>
                           
                           <div className="form-field">
-                            <label htmlFor="cardName" className="field-label">Name on card</label>
                             <input 
                               type="text" 
                               id="cardName" 
                               className="form-input"
-                              placeholder="John Doe"
+                              placeholder={language === 'en' ? 'Name on card' : '持卡人姓名'}
                               value={cardName}
                               onChange={(e) => setCardName(e.target.value)}
                               disabled={isProcessing}
                             />
                           </div>
                           
-                          <div className="billing-address-checkbox">
-                            <input 
-                              type="checkbox" 
-                              id="useShippingAddress" 
-                              className="checkbox-input"
-                              defaultChecked
-                            />
-                            <label htmlFor="useShippingAddress" className="checkbox-label">
-                              Use shipping address as billing address
-                            </label>
+                          <div className="billing-address-section">
+                            <div className="billing-address-checkbox">
+                              <input 
+                                type="checkbox" 
+                                id="useShippingAddress" 
+                                className="checkbox-input"
+                                checked={useShippingAsBilling}
+                                onChange={(e) => setUseShippingAsBilling(e.target.checked)}
+                              />
+                              <label htmlFor="useShippingAddress" className="checkbox-label">
+                                {language === 'en' ? 'Use shipping address as billing address' : '使用收货地址作为账单地址'}
+                              </label>
+                            </div>
+                            
+                            {/* 账单地址输入字段 - 当不使用收货地址时显示 */}
+                            {!useShippingAsBilling && (
+                              <div className="billing-address-fields">
+                                <h3 className="billing-section-title">{language === 'en' ? 'Billing address' : '账单地址'}</h3>
+                                <div className="form-field">
+                                  <select 
+                                    id="billingCountry" 
+                                    className="form-select"
+                                    value={billingCountry}
+                                    onChange={(e) => {
+                                      setBillingCountry(e.target.value);
+                                      setBillingState(''); // 重置州/省
+                                    }}
+                                    disabled={isProcessing}
+                                  >
+                                    <option value="">{language === 'en' ? 'Country/Region' : '国家/地区'}</option>
+                                    {COUNTRIES.map((country) => (
+                                      <option key={country.code} value={country.name}>
+                                        {language === 'zh' ? country.nameZh : country.name}
+                                      </option>
+                                    ))}
+                                    <option value="Other">{language === 'zh' ? '其他' : 'Other'}</option>
+                                  </select>
+                                </div>
+                                
+                                <div className="form-row">
+                                  <div className="form-field">
+                                    <input 
+                                      type="text" 
+                                      id="billingFirstName" 
+                                      className="form-input"
+                                      placeholder={language === 'en' ? 'First name' : '名字'}
+                                      value={billingFirstName}
+                                      onChange={(e) => setBillingFirstName(e.target.value)}
+                                      disabled={isProcessing}
+                                    />
+                                  </div>
+                                  <div className="form-field">
+                                    <input 
+                                      type="text" 
+                                      id="billingLastName" 
+                                      className="form-input"
+                                      placeholder={language === 'en' ? 'Last name' : '姓氏'}
+                                      value={billingLastName}
+                                      onChange={(e) => setBillingLastName(e.target.value)}
+                                      disabled={isProcessing}
+                                    />
+                                  </div>
+                                </div>
+                                
+                                <div className="form-field">
+                                  <input 
+                                    type="text" 
+                                    id="billingAddress" 
+                                    className="form-input"
+                                    placeholder={language === 'en' ? 'Address' : '地址'}
+                                    value={billingAddress}
+                                    onChange={(e) => setBillingAddress(e.target.value)}
+                                    disabled={isProcessing}
+                                  />
+                                </div>
+                                
+                                <div className="form-field">
+                                  <input 
+                                    type="text" 
+                                    id="billingApartment" 
+                                    className="form-input"
+                                    placeholder={language === 'en' ? 'Apartment, suite, etc. (optional)' : '公寓、套房等（可选）'}
+                                    value={billingApartment}
+                                    onChange={(e) => setBillingApartment(e.target.value)}
+                                    disabled={isProcessing}
+                                  />
+                                </div>
+                                
+                                <div className="form-row">
+                                  <div className="form-field">
+                                    <input 
+                                      type="text" 
+                                      id="billingCity" 
+                                      className="form-input"
+                                      placeholder={language === 'en' ? 'City' : '城市'}
+                                      value={billingCity}
+                                      onChange={(e) => setBillingCity(e.target.value)}
+                                      disabled={isProcessing}
+                                    />
+                                  </div>
+                                  {getStatesForCountry(billingCountry).length > 0 && (
+                                    <div className="form-field">
+                                      <select 
+                                        id="billingState" 
+                                        className="form-select"
+                                        value={billingState}
+                                        onChange={(e) => setBillingState(e.target.value)}
+                                        disabled={isProcessing}
+                                      >
+                                        <option value="">{language === 'en' ? 'State' : '州/省'}</option>
+                                        {getStatesForCountry(billingCountry).map((stateName) => (
+                                          <option key={stateName} value={stateName}>{stateName}</option>
+                                        ))}
+                                      </select>
+                                    </div>
+                                  )}
+                                  <div className="form-field">
+                                    <input 
+                                      type="text" 
+                                      id="billingZipCode" 
+                                      className="form-input"
+                                      placeholder={language === 'en' ? 'Postal code (optional)' : '邮编（可选）'}
+                                      value={billingZipCode}
+                                      onChange={(e) => setBillingZipCode(e.target.value)}
+                                      disabled={isProcessing}
+                                    />
+                                  </div>
+                                </div>
+                              </div>
+                            )}
                           </div>
                         </div>
                       )}
@@ -1245,7 +1251,7 @@ export default function Checkout() {
                 {/* 提交按钮 */}
                 <button 
                   type="submit" 
-                    className="primary-button button-shine"
+                    className="primary-button button-shine checkout-button"
                   disabled={isProcessing}
                 >
                     {isProcessing ? t.processing : `Pay with ${paymentMethod === 'paypal' ? 'PayPal' : paymentMethod === 'card' ? 'Credit Card' : 'Payoneer'}`}
@@ -1475,15 +1481,11 @@ export default function Checkout() {
           gap: 2rem;
         }
 
-        .form-section {
-          margin-bottom: 2rem;
-        }
-
         .section-title {
           font-size: var(--font-size-h2);
           font-weight: var(--font-weight-semibold);
           color: var(--color-primary);
-          margin: 0 0 1rem 0;
+          margin: 1rem 0 1.2rem 0;
           padding-bottom: 0.75rem;
           border-bottom: 2px solid #f3f4f6;
           position: relative;
@@ -1508,6 +1510,11 @@ export default function Checkout() {
           display: grid;
           grid-template-columns: 1fr 1fr;
           gap: 1rem;
+          margin-bottom: 1rem;
+        }
+
+        .form-row .form-field {
+          margin-bottom: 0;
         }
 
         .form-row .form-field:nth-child(3) {
@@ -1727,7 +1734,7 @@ export default function Checkout() {
           margin-bottom: 1rem;
         }
 
-        /* 提交按钮 - 使用与reserve-vip-spot相同的样式 */
+        /* 提交按钮 */
         .primary-button {
           width: 100%;
           background: linear-gradient(90deg, #F7AEBF 0%, #9b90da 100%);
@@ -1774,6 +1781,11 @@ export default function Checkout() {
         .primary-button:disabled {
           opacity: 0.6;
           cursor: not-allowed;
+        }
+
+        .checkout-button {
+          margin-top: 2rem;
+          margin-bottom: 1rem;
         }
 
         /* 支付方式选择样式 - 参考Plaud设计 */
@@ -2228,11 +2240,9 @@ export default function Checkout() {
         /* Security code tooltip样式 */
         .security-code-tooltip {
           position: absolute;
-          bottom: 100%;
-          left: 50%;
-          transform: translateX(-50%);
-          margin-bottom: 0.5rem;
-          background: rgba(0, 0, 0, 0.7);
+          bottom: calc(100% + 8px);
+          right: -20px;
+          background: rgba(0, 0, 0, 0.9);
           backdrop-filter: blur(25px);
           -webkit-backdrop-filter: blur(25px);
           border-radius: 12px;
@@ -2241,9 +2251,7 @@ export default function Checkout() {
           z-index: 1000;
           animation: fadeInUp 0.2s ease-out;
           pointer-events: auto;
-          width: auto;
-          min-width: 320px;
-          max-width: 400px;
+          width: 280px;
           font-size: 0.75rem;
           line-height: 1.4;
           color: white;
@@ -2254,20 +2262,19 @@ export default function Checkout() {
           content: '';
           position: absolute;
           top: 100%;
-          left: 50%;
-          transform: translateX(-50%);
-          border: 4px solid transparent;
-          border-top-color: rgba(0, 0, 0, 0.7);
+          right: 24px;
+          border: 6px solid transparent;
+          border-top-color: rgba(0, 0, 0, 0.9);
         }
 
         @keyframes fadeInUp {
           from {
             opacity: 0;
-            transform: translateX(-50%) translateY(4px);
+            transform: translateY(4px);
           }
           to {
             opacity: 1;
-            transform: translateX(-50%) translateY(0);
+            transform: translateY(0);
           }
         }
 
@@ -2312,23 +2319,98 @@ export default function Checkout() {
           display: inline-block;
         }
 
-        .billing-address-checkbox {
+        .cvv-field-wrapper {
+          position: relative;
+        }
+
+        .cvv-field-wrapper .form-input {
+          padding-right: 2.5rem;
+        }
+
+        .cvv-help-icon-container {
+          position: absolute;
+          right: 12px;
+          top: 50%;
+          transform: translateY(-50%);
+          display: inline-block;
+          z-index: 10;
+        }
+
+        .cvv-help-icon {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          width: 16px;
+          height: 16px;
+          border-radius: 50%;
+          background: #e5e7eb;
+          color: var(--color-tertiary);
+          font-size: 11px;
+          font-weight: 600;
+          cursor: help;
+          transition: all 0.2s ease;
+        }
+
+        .cvv-help-icon:hover {
+          background: var(--color-brand);
+          color: white;
+        }
+
+        .billing-address-section {
           margin-top: 1rem;
+        }
+
+        .billing-address-checkbox {
           display: flex;
           align-items: center;
           gap: 0.5rem;
+          padding: 0.75rem 0;
         }
 
         .checkbox-input {
           width: 16px;
           height: 16px;
           accent-color: var(--color-brand);
+          cursor: pointer;
         }
 
         .checkbox-label {
           font-size: 0.875rem;
           color: var(--color-secondary);
           cursor: pointer;
+          user-select: none;
+        }
+
+        .billing-address-fields {
+          margin-top: 0.75rem;
+          animation: slideDown 0.2s ease-out;
+        }
+
+        .billing-section-title {
+          font-size: 0.875rem;
+          font-weight: 600;
+          color: var(--color-primary);
+          margin: 0 0 1rem 0;
+        }
+
+        .billing-address-fields .form-field {
+          margin-bottom: 1rem;
+        }
+
+        .billing-address-fields .form-field:last-child {
+          margin-bottom: 0;
+        }
+
+        .billing-address-fields .form-row {
+          margin-bottom: 0;
+        }
+
+        .billing-address-fields .form-row .form-field {
+          margin-bottom: 0;
+        }
+
+        .billing-address-fields .form-row + .form-field {
+          margin-top: 1rem;
         }
 
         /* 简洁版订单摘要样式 - 参考截图设计 */
@@ -2581,7 +2663,7 @@ export default function Checkout() {
           font-size: var(--font-size-h2);
           font-weight: var(--font-weight-semibold);
           color: var(--color-primary);
-          margin: 0 0 1.5rem 0;
+          margin: 1rem 0 1.2rem 0;
           padding-bottom: 0.75rem;
           border-bottom: 2px solid #f3f4f6;
           position: relative;
