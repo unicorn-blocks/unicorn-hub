@@ -214,7 +214,9 @@ export default function Home() {
             <img 
               src="/assets/buildingblock.png" 
               alt="Blocks" 
-              className="w-[110%] max-w-none mx-auto relative left-1/2 -translate-x-1/2 transform hover:scale-105 transition-transform duration-700 ease-out" 
+              className="w-[110%] max-w-none mx-auto relative left-1/2 -translate-x-1/2 transform hover:scale-105 transition-transform duration-700 ease-out"
+              loading="lazy"
+              decoding="async"
             />
           </div>
           {/* 积木上方的装饰光效 */}

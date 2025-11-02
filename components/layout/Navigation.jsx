@@ -46,7 +46,7 @@ export default function Navigation() {
       <div className="nav-container navbar">
         <div className="flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2 nav-logo">
-            <img src="/assets/logo_horizontal_white_eng.svg" alt="Unicorn Logo" className="h-12" />
+            <img src="/assets/logo_horizontal_white_eng.svg" alt="Unicorn Logo" className="h-12" loading="eager" decoding="async" />
           </Link>
           
           {/* 桌面端导航 */}

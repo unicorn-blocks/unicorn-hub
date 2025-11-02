@@ -57,6 +57,8 @@ export default function ProductCarousel() {
             src={images[currentImage]}
             alt={`Product image ${currentImage + 1}`}
             className="carousel-image"
+            loading="lazy"
+            decoding="async"
           />
           
           {/* 全屏查看按钮 */}
@@ -147,6 +149,8 @@ export default function ProductCarousel() {
               src={images[currentImage]}
               alt={`Product image ${currentImage + 1}`}
               className="fullscreen-image"
+              loading="lazy"
+              decoding="async"
             />
             
             {/* 全屏底部导航栏 */}
