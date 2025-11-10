@@ -19,13 +19,13 @@ class MyDocument extends Document {
           <link rel="manifest" href="/site.webmanifest" />
           
           {/* Google Analytics */}
-          <script async src="https://www.googletagmanager.com/gtag/js?id=G-C4JG7ZWZ5E"></script>
+          <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y8SZH3MM6L"></script>
           <script dangerouslySetInnerHTML={{
             __html: `
               window.dataLayer = window.dataLayer || [];
               function gtag(){dataLayer.push(arguments);}
               gtag('js', new Date());
-              gtag('config', 'G-C4JG7ZWZ5E');
+              gtag('config', 'G-Y8SZH3MM6L');
             `
           }} />
         </Head>
