@@ -54,15 +54,39 @@ export default function Footer({ onSubscribe }) {
     }
   };
 
+  const footerTranslations = {
+    en: {
+      joinMagicList: 'Join the Magic List',
+      enterEmail: 'Enter your email',
+      subscribe: 'Subscribe',
+      tagline: 'Inspiring the next generation of creators through magical, screen-free play.',
+      terms: 'Terms & Conditions',
+      privacy: 'Privacy Policy'
+    },
+    zh: {
+      joinMagicList: '加入魔法列表',
+      enterEmail: '输入您的邮箱',
+      subscribe: '订阅',
+      tagline: '通过神奇的、无屏幕的游戏激励下一代创造者。',
+      terms: '条款与条件',
+      privacy: '隐私政策'
+    }
+  };
+  
+  const footerT = footerTranslations[language === 'zh' ? 'zh' : 'en'];
+
   return (
-    <footer className="bg-white section-spacing">
+    <footer className="py-12 md:py-16 relative z-50">
       <div className="container mx-auto px-4">
-        <div className="grid md:grid-cols-3 gap-8">
+        <div className="grid md:grid-cols-3 gap-8 mb-12">
           {/* Logo and Contact */}
           <div>
             <div className="flex items-center gap-2 mb-4">
               <img src="/assets/logo_horizontal_white_eng.svg" alt="Unicorn Logo" className="h-14" decoding="async" />
             </div>
+            <p className="text-sm text-gray-600 mb-4 leading-relaxed">
+              {footerT.tagline}
+            </p>
             <p className="text-sm text-gray-600 mb-4">
               <a href="mailto:support@unicornblocks.ai" className="hover:text-[#7d9ed4] transition-colors" target="_blank" rel="noopener">support@unicornblocks.ai</a>
             </p>
@@ -105,14 +129,53 @@ export default function Footer({ onSubscribe }) {
               </li>
             </ul>
           </div>
+
+          {/* Join the Magic List */}
+          <div>
+            <h3 className="font-semibold mb-4">{footerT.joinMagicList}</h3>
+            <form onSubmit={handleFooterSubmit} className="space-y-3">
+              <input
+                type="email"
+                value={footerEmail}
+                onChange={(e) => setFooterEmail(e.target.value)}
+                placeholder={footerT.enterEmail}
+                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#7d9ed4] focus:border-transparent text-sm"
+              />
+              <button
+                type="submit"
+                className="w-full bg-gradient-to-r from-[#7D9ED4] to-[#F7AEBF] text-white px-6 py-3 rounded-lg font-semibold hover:shadow-lg transition-all transform hover:scale-105 flex items-center justify-center gap-2"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+                {footerT.subscribe}
+              </button>
+              {footerStatus.message && (
+                <div className={`text-sm text-center ${
+                  footerStatus.type === 'success' ? 'text-green-600' : 'text-red-600'
+                }`}>
+                  {footerStatus.message}
+                </div>
+              )}
+            </form>
+          </div>
         </div>
 
-        <div className="mt-12 pt-6 border-t border-gray-200 flex flex-col md:flex-row justify-between items-center">
-          <div className="flex items-center mb-4 md:mb-0">
+        <div className="mt-12 pt-6 border-t border-gray-200 flex flex-col md:flex-row justify-between items-center gap-4">
+          <div className="flex items-center">
             <span className="text-sm text-gray-600 mr-2">{t.productOf}</span>
             <img src="/assets/logo_horizontal_white_eng.svg" alt="Unicorn Logo" className="h-6" decoding="async" />
           </div>
           <p className="text-sm text-gray-600">{t.allRightsReserved}</p>
+          <div className="flex gap-4 text-sm">
+            <Link href="/terms" className="text-gray-600 hover:text-[#7d9ed4] transition-colors">
+              {footerT.terms}
+            </Link>
+            <span className="text-gray-300">|</span>
+            <Link href="/privacy" className="text-gray-600 hover:text-[#7d9ed4] transition-colors">
+              {footerT.privacy}
+            </Link>
+          </div>
         </div>
       </div>
       
