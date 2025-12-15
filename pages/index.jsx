@@ -367,39 +367,86 @@ export default function Home() {
         <Navigation />
 
         <section className="hero-block">
-          <div className="hero-curve" aria-hidden="true" />
-          <div className="hero-container">
-            <div className="hero-grid">
-              <div className="hero-visual">
+          <div className="hero-backdrop" aria-hidden="true">
+            <div className="hero-sun" />
+            <div className="hero-cloud cloud-1" />
+            <div className="hero-cloud cloud-2" />
+            <div className="hero-cloud cloud-3" />
+            <div className="hero-dash dash-1" />
+            <div className="hero-dash dash-2" />
+            <div className="hero-dash dash-3" />
+            <div className="hero-float float-rocket" />
+            <div className="hero-float float-plane" />
+            <div className="hero-float float-ship" />
+            <div className="hero-float float-block" />
+          </div>
+
+          <div className="hero-shell">
+            <div className="hero-eyebrow">Unikit Blocks</div>
+            <div className="hero-heading">
+              <h1>
+                <span className="hero-title-primary">{copy.hero.title.primary}</span>
+                <span className="hero-title-accent">{copy.hero.title.accent}</span>
+              </h1>
+              <p className="hero-description">{copy.hero.description}</p>
+            </div>
+
+            <div className="hero-badge-row">
+              {copy.hero.badges.map((badge) => (
+                <div className="hero-badge" key={badge.label}>
+                  <span role="img" aria-hidden="true">
+                    {badge.icon}
+                  </span>
+                  <span>{badge.label}</span>
+                </div>
+              ))}
+            </div>
+
+            <div className="hero-stage">
+              <div className="sparky-stage">
                 <div className="speech-bubble">{copy.hero.speechBubble}</div>
-                <div className="hero-character">
-                  <Image
-                    src="/assets/checkout/sparky.jpg"
-                    alt="Sparky block buddy"
-                    width={640}
-                    height={640}
-                    priority
+                <div className="sparky-figure" role="img" aria-label="Sparky block buddy illustration">
+                  <div className="sparky-ears">
+                    <span className="ear ear-left" />
+                    <span className="ear ear-right" />
+                  </div>
+                  <div className="sparky-head">
+                    <div className="eye eye-left" />
+                    <div className="eye eye-right" />
+                    <div className="cheek cheek-left" />
+                    <div className="cheek cheek-right" />
+                    <div className="nose" />
+                    <div className="mouth" />
+                  </div>
+                  <div className="sparky-neck" />
+                  <div className="sparky-body">
+                    <div className="body-panel" />
+                    <div className="arm arm-left" />
+                    <div className="arm arm-right" />
+                    <div className="leg leg-left" />
+                    <div className="leg leg-right" />
+                  </div>
+                  <div className="sparky-base">
+                    <span className="base-star" />
+                    <span className="base-block block-1" />
+                    <span className="base-block block-2" />
+                    <span className="base-block block-3" />
+                  </div>
+                </div>
+                <div className="sparky-shadow" aria-hidden="true" />
+                <svg className="hero-swoosh" viewBox="0 0 460 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    d="M7 123.5C71 93.3333 230 -2.2995 346 6.70046C431.316 13.4132 430 118.5 453 154.5"
+                    stroke="#EAA7A1"
+                    strokeWidth="7"
+                    strokeLinecap="round"
+                    strokeDasharray="14 18"
                   />
-                  <div className="hero-shadow" aria-hidden="true" />
-                </div>
+                </svg>
               </div>
-              <div className="hero-copy">
-                <h1>
-                  <span className="hero-title-primary">{copy.hero.title.primary}</span>
-                  <span className="hero-title-accent">{copy.hero.title.accent}</span>
-                </h1>
-                <p className="hero-description">{copy.hero.description}</p>
-                <div className="hero-badges">
-                  {copy.hero.badges.map((badge) => (
-                    <div className="hero-badge" key={badge.label}>
-                      <span role="img" aria-hidden="true">
-                        {badge.icon}
-                      </span>
-                      <span>{badge.label}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
+              <button className="hero-cta" type="button">
+                Notify me when launch
+              </button>
             </div>
           </div>
         </section>
@@ -659,116 +706,484 @@ export default function Home() {
         .hero-block {
           position: relative;
           margin-top: calc(var(--nav-height) * -1);
-          padding: calc(100px + var(--nav-height)) 0 140px;
-          background: linear-gradient(180deg, #bfcbff 0%, #fff4d3 70%, #fffaf2 100%);
+          padding: calc(var(--nav-height) + 48px) 0 140px;
+          background: linear-gradient(180deg, #ffe6a5 0%, #e7f3ff 55%, #f6f7ff 100%);
           overflow: hidden;
         }
 
-        .hero-curve {
+        .hero-backdrop {
           position: absolute;
-          inset: auto auto -120px -120px;
-          width: 520px;
-          height: 520px;
-          border: 6px solid #f2c14f;
-          border-radius: 60% 40% 60% 40% / 40% 60% 40% 60%;
-          opacity: 0.6;
+          inset: -160px 0 0 0;
+          pointer-events: none;
+          z-index: 0;
         }
 
-        .hero-container {
+        .hero-sun {
+          position: absolute;
+          top: -220px;
+          left: 50%;
+          width: 820px;
+          height: 820px;
+          transform: translateX(-50%);
+          background: radial-gradient(circle, rgba(255, 223, 142, 0.72) 0%, rgba(255, 223, 142, 0) 65%);
+          filter: blur(10px);
+        }
+
+        .hero-cloud {
+          position: absolute;
+          background: #fdfaf5;
+          box-shadow: 40px 18px 0 4px #fdfaf5, 100px 12px 0 0 #fdfaf5, 150px 24px 0 -4px #fdfaf5;
+          width: 180px;
+          height: 70px;
+          border-radius: 50px;
+          opacity: 0.78;
+        }
+
+        .cloud-1 {
+          top: 80px;
+          left: 7%;
+          transform: scale(0.9) rotate(-3deg);
+        }
+
+        .cloud-2 {
+          top: 120px;
+          right: 8%;
+          transform: scale(0.8) rotate(4deg);
+        }
+
+        .cloud-3 {
+          top: 240px;
+          right: 18%;
+          transform: scale(0.7);
+          opacity: 0.65;
+        }
+
+        .hero-dash {
+          position: absolute;
+          width: 220px;
+          height: 14px;
+          background: repeating-linear-gradient(90deg, #13234d 0 22px, transparent 22px 34px);
+          opacity: 0.16;
+        }
+
+        .dash-1 {
+          top: 260px;
+          left: 6%;
+          transform: rotate(-6deg);
+        }
+
+        .dash-2 {
+          top: 340px;
+          right: 10%;
+          transform: rotate(8deg);
+        }
+
+        .dash-3 {
+          top: 420px;
+          left: 18%;
+          transform: rotate(3deg);
+        }
+
+        .hero-float {
+          position: absolute;
+          width: 72px;
+          height: 72px;
+          border-radius: 18px;
+          background: linear-gradient(145deg, #fff, #f4f1ff);
+          box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
+          display: grid;
+          place-items: center;
+          font-size: 28px;
+          color: #111827;
+        }
+
+        .hero-float::after {
+          content: '🧱';
+        }
+
+        .float-rocket {
+          top: 190px;
+          left: 28%;
+          transform: rotate(-12deg);
+        }
+
+        .float-rocket::after {
+          content: '🚀';
+        }
+
+        .float-plane {
+          top: 230px;
+          right: 24%;
+          transform: rotate(6deg);
+        }
+
+        .float-plane::after {
+          content: '✈️';
+        }
+
+        .float-ship {
+          top: 360px;
+          left: 12%;
+          transform: rotate(-6deg);
+        }
+
+        .float-ship::after {
+          content: '⛵️';
+        }
+
+        .float-block {
+          top: 410px;
+          right: 18%;
+          transform: rotate(8deg);
+        }
+
+        .float-block::after {
+          content: '🎨';
+        }
+
+        .hero-shell {
           width: 100%;
           max-width: 1200px;
           margin: 0 auto;
           padding: 0 24px;
           position: relative;
+          z-index: 1;
+          text-align: center;
         }
 
-        .hero-grid {
-          display: grid;
-          grid-template-columns: repeat(2, minmax(0, 1fr));
-          gap: 48px;
+        .hero-eyebrow {
+          display: inline-flex;
           align-items: center;
-        }
-
-        .hero-visual {
-          position: relative;
-          display: flex;
-          justify-content: center;
-        }
-
-        .speech-bubble {
-          position: absolute;
-          top: -40px;
-          left: 20px;
-          background: #7d6cf5;
-          color: #fff;
-          padding: 12px 24px;
+          gap: 10px;
+          padding: 10px 18px;
+          background: rgba(255, 255, 255, 0.9);
           border-radius: 999px;
-          font-weight: 600;
-          font-size: 1rem;
-          box-shadow: 0 15px 25px rgba(125, 108, 245, 0.3);
+          font-size: 0.95rem;
+          font-weight: 700;
+          letter-spacing: 0.08em;
+          color: #13234d;
+          box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+          text-transform: uppercase;
         }
 
-        .hero-character {
-          position: relative;
-          background: #fffdf7;
-          border-radius: 38px;
-          padding: 24px;
-          box-shadow: 0 30px 60px rgba(0, 0, 0, 0.1);
-        }
-
-        .hero-character img {
-          border-radius: 24px;
-          object-fit: cover;
-        }
-
-        .hero-shadow {
-          position: absolute;
-          inset: auto 30px -30px 30px;
-          height: 60px;
-          filter: blur(40px);
-          background: rgba(17, 24, 39, 0.25);
-          border-radius: 50%;
-        }
-
-        .hero-copy h1 {
-          font-size: clamp(2.8rem, 4.8vw, 5rem);
-          line-height: 1.02;
-          margin-bottom: 12px;
+        .hero-heading h1 {
+          margin: 18px 0 10px;
+          font-size: clamp(3.1rem, 5vw, 4.8rem);
+          line-height: 1.05;
         }
 
         .hero-title-primary {
           display: block;
-          color: #0f3e9d;
+          color: #1f2c4f;
           font-weight: 800;
         }
 
         .hero-title-accent {
           display: block;
-          color: #ffb534;
+          color: #f7ad3b;
           font-weight: 800;
         }
 
         .hero-description {
-          font-size: 1.25rem;
-          margin-bottom: 24px;
-          color: #374151;
+          margin: 6px auto 18px;
+          max-width: 720px;
+          font-size: 1.15rem;
+          line-height: 1.6;
+          color: #1f2c4f;
+          font-weight: 500;
         }
 
-        .hero-badges {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 16px;
+        .hero-badge-row {
+          display: inline-flex;
+          align-items: center;
+          gap: 14px;
+          padding: 14px 18px;
+          background: rgba(255, 255, 255, 0.85);
+          border-radius: 20px;
+          box-shadow: 0 14px 40px rgba(0, 0, 0, 0.08);
         }
 
         .hero-badge {
-          background: #fff;
-          padding: 12px 20px;
+          display: inline-flex;
+          align-items: center;
+          gap: 10px;
+          padding: 12px 18px;
+          border-radius: 16px;
+          background: #ffffff;
+          font-weight: 700;
+          color: #1f2c4f;
+          box-shadow: 0 8px 18px rgba(0, 0, 0, 0.06);
+        }
+
+        .hero-stage {
+          margin-top: 30px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 26px;
+        }
+
+        .sparky-stage {
+          position: relative;
+          width: min(760px, 96vw);
+          padding: 70px 70px 110px;
+          background: linear-gradient(180deg, #fefdf9 0%, #fff7e4 35%, #f2f7ff 100%);
+          border-radius: 44px;
+          box-shadow: 0 28px 70px rgba(0, 0, 0, 0.12);
+          overflow: visible;
+        }
+
+        .speech-bubble {
+          position: absolute;
+          top: 32px;
+          left: 60px;
+          background: #7787f4;
+          color: #fff;
+          padding: 12px 22px;
           border-radius: 999px;
+          font-weight: 700;
+          box-shadow: 0 16px 30px rgba(119, 135, 244, 0.35);
+        }
+
+        .sparky-figure {
+          position: relative;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 10px;
+          transform: translateY(10px);
+        }
+
+        .sparky-ears {
+          position: relative;
+          width: 280px;
+          height: 36px;
+        }
+
+        .ear {
+          position: absolute;
+          top: 0;
+          width: 70px;
+          height: 36px;
+          background: #11121b;
+          border-radius: 12px 12px 6px 6px;
+          box-shadow: inset 0 -8px #2b2f3c;
+        }
+
+        .ear-left {
+          left: 40px;
+        }
+
+        .ear-right {
+          right: 40px;
+        }
+
+        .sparky-head {
+          position: relative;
+          width: 310px;
+          height: 230px;
+          background: #ffffff;
+          border-radius: 28px;
+          box-shadow: 0 18px 0 #eae9ef, 0 30px 55px rgba(0, 0, 0, 0.12);
+        }
+
+        .eye {
+          position: absolute;
+          top: 78px;
+          width: 54px;
+          height: 60px;
+          background: #11121b;
+          border-radius: 14px;
+        }
+
+        .eye-left {
+          left: 76px;
+        }
+
+        .eye-right {
+          right: 76px;
+        }
+
+        .cheek {
+          position: absolute;
+          bottom: 62px;
+          width: 44px;
+          height: 20px;
+          background: #ffc7c1;
+          border-radius: 999px;
+        }
+
+        .cheek-left {
+          left: 62px;
+        }
+
+        .cheek-right {
+          right: 62px;
+        }
+
+        .nose {
+          position: absolute;
+          top: 128px;
+          left: 50%;
+          width: 30px;
+          height: 26px;
+          transform: translateX(-50%);
+          background: #11121b;
+          border-radius: 6px;
+        }
+
+        .mouth {
+          position: absolute;
+          bottom: 38px;
+          left: 50%;
+          width: 48px;
+          height: 22px;
+          transform: translateX(-50%);
+          background: #11121b;
+          border-radius: 0 0 14px 14px;
+          box-shadow: inset 0 -6px #2c2f3d;
+        }
+
+        .sparky-neck {
+          width: 120px;
+          height: 32px;
+          background: #2a2e3a;
+          border-radius: 12px;
+          margin-top: -8px;
+          box-shadow: 0 10px 18px rgba(0, 0, 0, 0.12);
+        }
+
+        .sparky-body {
+          position: relative;
+          width: 250px;
+          height: 210px;
+          background: #1b1e28;
+          border-radius: 20px;
+          box-shadow: 0 18px 30px rgba(0, 0, 0, 0.16);
+        }
+
+        .body-panel {
+          position: absolute;
+          inset: 24px 48px 72px;
+          background: linear-gradient(180deg, #e5e7ff 0%, #ffffff 100%);
+          border-radius: 16px;
+          box-shadow: inset 0 -10px 0 #d1d6f8;
+        }
+
+        .arm {
+          position: absolute;
+          top: 82px;
+          width: 52px;
+          height: 52px;
+          background: #ffd05b;
+          border-radius: 14px;
+          box-shadow: inset 0 -10px #f3b531;
+        }
+
+        .arm-left {
+          left: -34px;
+        }
+
+        .arm-right {
+          right: -34px;
+        }
+
+        .leg {
+          position: absolute;
+          bottom: -16px;
+          width: 64px;
+          height: 54px;
+          background: #11121b;
+          border-radius: 0 0 14px 14px;
+          box-shadow: inset 0 -10px #2b2f3b;
+        }
+
+        .leg-left {
+          left: 52px;
+        }
+
+        .leg-right {
+          right: 52px;
+        }
+
+        .sparky-base {
+          position: relative;
+          margin-top: 24px;
+          width: 340px;
+          height: 86px;
+          background: linear-gradient(180deg, #ffe59c 0%, #f7c241 100%);
+          border-radius: 28px;
+          box-shadow: 0 14px 28px rgba(0, 0, 0, 0.14);
           display: flex;
           align-items: center;
-          gap: 8px;
-          font-weight: 600;
+          justify-content: center;
+          gap: 10px;
+        }
+
+        .base-star {
+          position: relative;
+          width: 72px;
+          height: 72px;
+          background: #ffffff;
+          clip-path: polygon(50% 0%, 63% 36%, 100% 36%, 70% 58%, 80% 94%, 50% 72%, 20% 94%, 30% 58%, 0 36%, 37% 36%);
           box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .base-block {
+          width: 54px;
+          height: 54px;
+          border-radius: 14px;
+          box-shadow: inset 0 -8px rgba(0, 0, 0, 0.1);
+        }
+
+        .block-1 {
+          background: linear-gradient(145deg, #e6e0ff, #c8c0ff);
+        }
+
+        .block-2 {
+          background: linear-gradient(145deg, #fdd5d0, #f8b5ac);
+        }
+
+        .block-3 {
+          background: linear-gradient(145deg, #cbe7ff, #a8d2ff);
+        }
+
+        .sparky-shadow {
+          position: absolute;
+          inset: auto 70px 42px 70px;
+          height: 32px;
+          background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.25) 0%, rgba(0, 0, 0, 0) 70%);
+          filter: blur(14px);
+        }
+
+        .hero-swoosh {
+          position: absolute;
+          bottom: -16px;
+          left: 18px;
+          width: 360px;
+          opacity: 0.7;
+        }
+
+        .hero-cta {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          padding: 16px 28px;
+          border-radius: 16px;
+          background: linear-gradient(180deg, #ffe07a 0%, #ffbe3c 100%);
+          color: #1f2c4f;
+          font-weight: 800;
+          font-size: 1rem;
+          text-transform: uppercase;
+          letter-spacing: 0.03em;
+          border: 2px solid #f5b02c;
+          box-shadow: 0 16px 32px rgba(255, 190, 60, 0.35);
+          transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .hero-cta:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 20px 40px rgba(255, 190, 60, 0.45);
         }
 
         .steps-section {
@@ -1573,7 +1988,6 @@ export default function Home() {
         }
 
         @media (max-width: 1024px) {
-          .hero-grid,
           .kit-layout,
           .story-panels,
           .privacy-grid,
@@ -1581,6 +1995,24 @@ export default function Home() {
           .steps-grid,
           .timeline-points {
             grid-template-columns: repeat(2, minmax(0, 1fr));
+          }
+
+          .hero-block {
+            padding: calc(var(--nav-height) + 30px) 0 110px;
+          }
+
+          .hero-badge-row {
+            flex-wrap: wrap;
+            justify-content: center;
+          }
+
+          .sparky-stage {
+            padding: 60px 46px 96px;
+          }
+
+          .speech-bubble {
+            left: 28px;
+            top: 26px;
           }
 
           .kit-layout {
@@ -1624,7 +2056,6 @@ export default function Home() {
             padding-top: var(--nav-height);
           }
 
-          .hero-grid,
           .kit-layout,
           .story-panels,
           .privacy-grid,
@@ -1632,6 +2063,64 @@ export default function Home() {
           .steps-grid,
           .timeline-points {
             grid-template-columns: minmax(0, 1fr);
+          }
+
+          .hero-block {
+            padding: calc(var(--nav-height) + 12px) 0 90px;
+          }
+
+          .hero-shell {
+            padding: 0 18px;
+          }
+
+          .hero-heading h1 {
+            font-size: clamp(2.6rem, 8vw, 3.6rem);
+          }
+
+          .hero-description {
+            font-size: 1.05rem;
+          }
+
+          .hero-badge-row {
+            flex-direction: column;
+            gap: 10px;
+          }
+
+          .hero-float {
+            display: none;
+          }
+
+          .sparky-stage {
+            padding: 48px 32px 82px;
+            border-radius: 32px;
+          }
+
+          .speech-bubble {
+            position: relative;
+            left: auto;
+            top: auto;
+            margin-bottom: 14px;
+            display: inline-block;
+          }
+
+          .sparky-head {
+            width: 260px;
+            height: 200px;
+          }
+
+          .sparky-body {
+            width: 220px;
+            height: 190px;
+          }
+
+          .sparky-base {
+            width: 280px;
+            height: 76px;
+          }
+
+          .hero-cta {
+            width: 100%;
+            max-width: 320px;
           }
 
           .kit-panel {
@@ -1668,18 +2157,6 @@ export default function Home() {
           .story-milestones {
             grid-template-columns: minmax(0, 1fr);
             gap: 24px;
-          }
-
-          .speech-bubble {
-            position: relative;
-            left: auto;
-            top: auto;
-            margin-bottom: 16px;
-            display: inline-block;
-          }
-
-          .hero-block {
-            padding: 120px 0 80px;
           }
 
           .timeline-line {
