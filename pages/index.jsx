@@ -14,7 +14,7 @@ export default function Home() {
   const translations = {
     en: {
       meta: {
-        title: 'Not Just Stacking, Creating! | Unicorn Blocks',
+        title: ' Creating! | Unicorn Blocks',
         description:
           'Meet Sparky, the magical block buddy that turns every build into a story. Spark creativity, unlock STEAM skills, and keep playtime screen-free with uncompromising privacy.',
         keywords:
