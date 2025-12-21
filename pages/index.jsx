@@ -14,7 +14,7 @@ export default function Home() {
   const translations = {
     en: {
       meta: {
-        title: ' Creating! | Unicorn Blocks',
+        title: 'Not Just Stacking, Creating! | Unicorn Blocks',
         description:
           'Meet Sparky, the magical block buddy that turns every build into a story. Spark creativity, unlock STEAM skills, and keep playtime screen-free with uncompromising privacy.',
         keywords:
@@ -26,10 +26,12 @@ export default function Home() {
           accent: 'Creating!'
         },
         description:
-          'Meet Sparky: The Magical Block Buddy that turns every build into a story.',
+          'Meet Sparky：The magical block buddy',
+        descriptionLine2:
+          'who turns every build into a story',
         badges: [
-          { label: "Sparky's First Adventure Age 3-8", icon: '🎒' },
-          { label: 'Compatible with LEGO®', icon: '🧱' }
+          { label: 'Compatible with LEGO®', icon: '/assets/image/Vector_17_1381.png' },
+          { label: "For Age 3-8", icon: '/assets/image/Vector_17_1385.png' }
         ],
         speechBubble: "Hi! I'm Sparky!"
       },
@@ -84,14 +86,14 @@ export default function Home() {
             title: 'The Magic Hats: 4x Magical Theme Hats',
             highlights: [
               'Themes — Magic, Knight, Princess, Vehicle, Animal, Flowers, Fantasy, Buildings.',
-              'Creative Journey — Packed with 30+ stories per hat! Start with 6 guided stories, then unlock Creator Mode for infinite challenges!'
+              'Creative Journey — Packed with 30+ stories per hat! Start with 6 Guided Stories to learn the basics, then unlock "Creator Mode" for infnite challenges!'
             ]
           },
           {
             title: 'The Magic Blocks: 4x Light-Up Magical Blocks',
             highlights: [
               'Theme Matched — Each block pairs specifically with one Magic Hat.',
-              'The Magical Prize — Unlocks upon reaching Creator Mode to light up infinite creations!'
+              'The Magical Prize — Unlocks upon reaching "Creator Mode"—use this glowing magical block to light up your own infnite creations!'
             ]
           },
           {
@@ -179,7 +181,7 @@ export default function Home() {
           {
             title: 'The Science',
             description:
-              'Collaborating with Top Minds. We partnered with engineers and researchers from UPenn, Purdue, and other top universities to craft a play experience that is joyful, positive, and parent-approved.'
+              'Collaborating with Top Minds. We partnered with engineers and researchers from UPenn, Purdue, and other top universities to craft a play experience that is joyful and positive, ensuring kids love every moment of the adventure.'
           }
         ],
         milestones: [
@@ -252,9 +254,30 @@ export default function Home() {
     const lead = parts.shift().trim();
     const rest = parts.join('—').trim();
 
+    // 需要设置为 #6C6767 的文字
+    const specialTexts = [
+      'Story Sparks Creation', 
+      'Magic Window', 
+      'Smart Brain', 
+      'Privacy Button', 
+      '7-Hour Playtime',
+      'Themes',
+      'Creative Journey',
+      'Theme Matched',
+      'Magical Prize',
+      'Limitless Play',
+      'Kid-Proof'
+    ];
+    const isSpecial = specialTexts.some(special => lead.includes(special));
+
+    // 处理换行：将 rest 中的换行符替换为换行+3个空格
+    const processedRest = rest.split('\n').map((line, index) => 
+      index === 0 ? line : `   ${line}`
+    ).join('\n');
+
     return (
       <>
-        <strong>{lead} —</strong> {rest}
+        <strong style={{ color: isSpecial ? '#6C6767' : '#2f2d65' }}>·  {lead} --</strong> <span className="kit-text-rest">{processedRest}</span>
       </>
     );
   };
@@ -367,86 +390,94 @@ export default function Home() {
         <Navigation />
 
         <section className="hero-block">
-          <div className="hero-backdrop" aria-hidden="true">
-            <div className="hero-sun" />
-            <div className="hero-cloud cloud-1" />
-            <div className="hero-cloud cloud-2" />
-            <div className="hero-cloud cloud-3" />
-            <div className="hero-dash dash-1" />
-            <div className="hero-dash dash-2" />
-            <div className="hero-dash dash-3" />
-            <div className="hero-float float-rocket" />
-            <div className="hero-float float-plane" />
-            <div className="hero-float float-ship" />
-            <div className="hero-float float-block" />
+          <div className="hero-top-bar">
+            <Image
+              src="/assets/image/Rectangle_17_1389.png"
+              alt="Unicorn Blocks Logo"
+              width={60}
+              height={60}
+              className="hero-logo"
+            />
+            <span className="hero-brand-text">Unicorn Blocks</span>
           </div>
+          <div className="hero-backdrop" aria-hidden="true">
+            <Image
+              src="/assets/image/8e907cfa4c8d829cac77709d26f232866e8bbbcc.png"
+              alt=""
+              fill
+              className="hero-background-image"
+              priority
+              style={{ objectFit: 'cover' }}
+            />
+          </div>
+          <div className="hero-ellipse" />
 
           <div className="hero-shell">
-            <div className="hero-eyebrow">Unikit Blocks</div>
+            <div className="hero-eyebrow" style={{ visibility: 'hidden', height: '0', margin: '0', padding: '0' }}>UNICORN Blocks</div>
             <div className="hero-heading">
               <h1>
                 <span className="hero-title-primary">{copy.hero.title.primary}</span>
                 <span className="hero-title-accent">{copy.hero.title.accent}</span>
               </h1>
-              <p className="hero-description">{copy.hero.description}</p>
+              <div className="hero-description-wrapper">
+                <p className="hero-description">{copy.hero.description}</p>
+                <p className="hero-description hero-description-line2">{copy.hero.descriptionLine2}</p>
+              </div>
             </div>
 
             <div className="hero-badge-row">
-              {copy.hero.badges.map((badge) => (
-                <div className="hero-badge" key={badge.label}>
-                  <span role="img" aria-hidden="true">
-                    {badge.icon}
-                  </span>
-                  <span>{badge.label}</span>
-                </div>
+              {copy.hero.badges.map((badge, index) => (
+                <>
+                  <div className="hero-badge" key={badge.label}>
+                    <Image
+                      src={badge.icon}
+                      alt=""
+                      width={20}
+                      height={20}
+                      className="hero-badge-icon"
+                    />
+                    <span className="hero-badge-text">
+                      {badge.label.includes('LEGO') ? (
+                        <>
+                          Compatible with LEGO<span style={{ fontSize: 'inherit', verticalAlign: 'baseline' }}>®</span>
+                        </>
+                      ) : (
+                        badge.label
+                      )}
+                    </span>
+                  </div>
+                  {index < copy.hero.badges.length - 1 && (
+                    <span className="hero-badge-separator">|</span>
+                  )}
+                </>
               ))}
             </div>
+          </div>
 
-            <div className="hero-stage">
-              <div className="sparky-stage">
-                <div className="speech-bubble">{copy.hero.speechBubble}</div>
-                <div className="sparky-figure" role="img" aria-label="Sparky block buddy illustration">
-                  <div className="sparky-ears">
-                    <span className="ear ear-left" />
-                    <span className="ear ear-right" />
-                  </div>
-                  <div className="sparky-head">
-                    <div className="eye eye-left" />
-                    <div className="eye eye-right" />
-                    <div className="cheek cheek-left" />
-                    <div className="cheek cheek-right" />
-                    <div className="nose" />
-                    <div className="mouth" />
-                  </div>
-                  <div className="sparky-neck" />
-                  <div className="sparky-body">
-                    <div className="body-panel" />
-                    <div className="arm arm-left" />
-                    <div className="arm arm-right" />
-                    <div className="leg leg-left" />
-                    <div className="leg leg-right" />
-                  </div>
-                  <div className="sparky-base">
-                    <span className="base-star" />
-                    <span className="base-block block-1" />
-                    <span className="base-block block-2" />
-                    <span className="base-block block-3" />
-                  </div>
-                </div>
-                <div className="sparky-shadow" aria-hidden="true" />
-                <svg className="hero-swoosh" viewBox="0 0 460 160" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path
-                    d="M7 123.5C71 93.3333 230 -2.2995 346 6.70046C431.316 13.4132 430 118.5 453 154.5"
-                    stroke="#EAA7A1"
-                    strokeWidth="7"
-                    strokeLinecap="round"
-                    strokeDasharray="14 18"
-                  />
-                </svg>
-              </div>
-              <button className="hero-cta" type="button">
-                Notify me when launch
-              </button>
+          <div className="hero-transitions">
+            <div className="hero-transition hero-transition-yellow">
+              <Image
+                src="/assets/image/Vector_17_1367.png"
+                alt=""
+                fill
+                style={{ objectFit: 'cover', objectPosition: 'top center' }}
+              />
+            </div>
+            <div className="hero-transition hero-transition-purple">
+              <Image
+                src="/assets/image/Vector_17_1368.png"
+                alt=""
+                fill
+                style={{ objectFit: 'cover', objectPosition: 'top center' }}
+              />
+            </div>
+            <div className="hero-transition hero-transition-blue">
+              <Image
+                src="/assets/image/Vector_17_1369.png"
+                alt=""
+                fill
+                style={{ objectFit: 'cover', objectPosition: 'top center' }}
+              />
             </div>
           </div>
         </section>
@@ -458,27 +489,41 @@ export default function Home() {
               <p>{copy.steps.subheading}</p>
             </div>
             <div className="steps-grid">
-              {copy.steps.cards.map((card, index) => (
-                <div className={`step-item ${index < copy.steps.cards.length - 1 ? 'has-connector' : ''}`} key={card.title}>
-                  <div className="step-card" style={{ backgroundColor: card.background }}>
-                    <div className="step-image">
-                      <Image src={card.image} alt={card.title} width={320} height={220} />
-                    </div>
-                    <div className="step-body">
-                      <h3>{card.title}</h3>
-                      <p>{card.description}</p>
-                    </div>
+              {/* 第一组 */}
+              <div className="step-item">
+                <div className="step-card step-card-image-only">
+                  <div className="step-image-full">
+                    <Image src="/assets/ima/组合 721.png" alt="" fill className="step-image-full-item" />
                   </div>
-                  {index < copy.steps.cards.length - 1 && (
-                    <div className="step-connector" aria-hidden="true">
-                      <svg viewBox="0 0 180 80" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M10 60C60 15 120 15 170 60" stroke="#13234d" strokeWidth="10" fill="none" strokeLinecap="round" />
-                        <path d="M130 35L170 60L130 68" stroke="#13234d" strokeWidth="10" fill="none" strokeLinecap="round" strokeLinejoin="round" />
-                      </svg>
-                    </div>
-                  )}
                 </div>
-              ))}
+              </div>
+
+              {/* 第二组 */}
+              <div className="step-item">
+                <div className="step-card step-card-image-only">
+                  <div className="step-image-full">
+                    <Image src="/assets/ima/bule.png" alt="" fill className="step-image-full-item" />
+                  </div>
+                </div>
+              </div>
+
+              {/* 第三组 */}
+              <div className="step-item">
+                <div className="step-card step-card-image-only">
+                  <div className="step-image-full">
+                    <Image src="/assets/ima/组合 723 (1).png" alt="" fill className="step-image-full-item" />
+                  </div>
+                </div>
+              </div>
+
+              {/* 第四组 */}
+              <div className="step-item">
+                <div className="step-card step-card-image-only">
+                  <div className="step-image-full">
+                    <Image src="/assets/ima/green.png" alt="" fill className="step-image-full-item" />
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </section>
@@ -492,18 +537,8 @@ export default function Home() {
 
               <div className="kit-layout">
                 <div className="kit-media-block">
-                  <div className="kit-media-frame" aria-hidden="true" />
-                  <div className="kit-media-card">
-                    <div className="kit-blocks-stage">
-                      <span className="kit-block kit-block-a">A</span>
-                      <span className="kit-block kit-block-b">B</span>
-                      <span className="kit-block kit-block-c">C</span>
-                    </div>
-                  </div>
-                  <div className="kit-cta-card">
-                    <Link href="/reserve-vip-spot" className="primary-button kit-cta">
-                      {copy.kit.button}
-                    </Link>
+                  <div className="kit-media-single">
+                    <Image src="/assets/ima/组合 673.png" alt="Sparky Adventure Kit" fill className="kit-media-single-image" />
                   </div>
                 </div>
                 <div className="kit-details-block">
@@ -517,10 +552,18 @@ export default function Home() {
                         style={{ '--kit-accent': accent.base, '--kit-accent-shadow': accent.shadow }}
                       >
                         <div className="kit-panel-title">
-                          <span
-                            className="kit-panel-icon"
-                            style={{ backgroundColor: accent.base }}
-                          />
+                          <div className="kit-panel-icon">
+                            <Image 
+                              src={index === 0 ? '/assets/ima/1.svg' : 
+                                   index === 1 ? '/assets/ima/orange.svg' : 
+                                   index === 2 ? '/assets/ima/3.svg' : 
+                                   '/assets/ima/4.svg'} 
+                              alt="" 
+                              width={25} 
+                              height={25} 
+                              className="kit-panel-icon-svg"
+                            />
+                          </div>
                           <h3>{category.title}</h3>
                         </div>
                         <ul>
@@ -539,10 +582,16 @@ export default function Home() {
         </section>
 
         <section className="family-section">
+          <div className="family-bg-wrapper">
+            <div className="family-bg-image family-bg-top" aria-hidden="true">
+              <img src="/assets/ima/Vector_17_1152.png" alt="" className="family-bg-image-item" />
+            </div>
+            <div className="family-bg-image family-bg-bottom" aria-hidden="true">
+              <img src="/assets/ima/Vector_17_1124.png" alt="" className="family-bg-image-item" />
+            </div>
+          </div>
           <div className="content-container">
             <div className="family-stage">
-              <div className="family-angle family-angle-top" aria-hidden="true" />
-              <div className="family-angle family-angle-bottom" aria-hidden="true" />
               <div className="family-header">
                 <h2>{copy.family.heading}</h2>
               </div>
@@ -573,29 +622,47 @@ export default function Home() {
             <div className="privacy-heading">
               <div>
                 <h2>
-                  {copy.privacy.heading}{' '}
-                  <span>{copy.privacy.subheading}</span>
+                  <span className="privacy-line1">{copy.privacy.heading}</span>
+                  <br />
+                  <span className="privacy-line2">{copy.privacy.subheading}</span>
                 </h2>
                 <p className="privacy-tag">{copy.privacy.tag}</p>
               </div>
             </div>
-            <div className="privacy-grid">
-              {copy.privacy.cards.map((card) => (
-                <div className="privacy-card" key={card.title}>
-                  <h3>{card.title}</h3>
-                  <p>{card.description}</p>
-                </div>
-              ))}
+            <div className="privacy-images">
+              <div className="privacy-image-item">
+                <Image src="/assets/ima/组合 643.png" alt="" width={1200} height={600} className="privacy-image" />
+              </div>
+              <div className="privacy-image-item">
+                <Image src="/assets/ima/组合 648.png" alt="" width={1200} height={600} className="privacy-image" />
+              </div>
             </div>
           </div>
         </section>
 
         <section className="impact-section">
+          <div className="impact-bg-wrapper">
+            <div className="impact-bg-image impact-bg-bottom" aria-hidden="true">
+              <img src="/assets/ima/Vector_17_927.png" alt="" className="impact-bg-image-item" />
+            </div>
+            <div className="impact-bg-image impact-bg-top" aria-hidden="true">
+              <img src="/assets/ima/Vector_17_928.png" alt="" className="impact-bg-image-item" />
+            </div>
+          </div>
           <div className="content-container">
             <h2>{copy.impact.heading}</h2>
             <div className="impact-grid">
-              {copy.impact.stats.map((stat) => (
+              {copy.impact.stats.map((stat, index) => (
                 <div className="impact-card" key={stat.title}>
+                  <div className="impact-icon-wrapper">
+                    <Image
+                      src={index === 0 ? '/assets/ima/svg 5.svg' : index === 1 ? '/assets/ima/svg 6.svg' : '/assets/ima/svg 7.svg'}
+                      alt=""
+                      width={64}
+                      height={64}
+                      className="impact-icon"
+                    />
+                  </div>
                   <h3>{stat.title}</h3>
                   <p>{stat.description}</p>
                 </div>
@@ -706,139 +773,71 @@ export default function Home() {
         .hero-block {
           position: relative;
           margin-top: calc(var(--nav-height) * -1);
-          padding: calc(var(--nav-height) + 48px) 0 140px;
-          background: linear-gradient(180deg, #ffe6a5 0%, #e7f3ff 55%, #f6f7ff 100%);
-          overflow: hidden;
+          padding: calc(var(--nav-height) + 48px) 0 0;
+          overflow: visible;
+          background: linear-gradient(90deg, #FEFAE5 0%, #D9F1FC 100%);
+        }
+
+        .hero-top-bar {
+          position: relative;
+          width: 100%;
+          background-color: #AAC2F4;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 12px;
+          padding: 16px 24px;
+          z-index: 8;
+          margin-top: -100px;
+          top: -100px;
+        }
+
+        .hero-logo {
+          width: 60px;
+          height: 60px;
+          object-fit: contain;
+        }
+
+        .hero-brand-text {
+          font-size: 1.25rem;
+          font-weight: 700;
+          color: #000000;
+        }
+
+        .hero-block::before {
+          content: '';
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(90deg, #FEFAE5 0%, #D9F1FC 100%);
+          z-index: -2;
         }
 
         .hero-backdrop {
           position: absolute;
-          inset: -160px 0 0 0;
+          inset: 0;
           pointer-events: none;
-          z-index: 0;
+          z-index: 6;
         }
 
-        .hero-sun {
+        .hero-background-image {
           position: absolute;
-          top: -220px;
+          inset: 0;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+
+        .hero-ellipse {
+          position: absolute;
           left: 50%;
-          width: 820px;
-          height: 820px;
+          top: 89%;
           transform: translateX(-50%);
-          background: radial-gradient(circle, rgba(255, 223, 142, 0.72) 0%, rgba(255, 223, 142, 0) 65%);
-          filter: blur(10px);
-        }
-
-        .hero-cloud {
-          position: absolute;
-          background: #fdfaf5;
-          box-shadow: 40px 18px 0 4px #fdfaf5, 100px 12px 0 0 #fdfaf5, 150px 24px 0 -4px #fdfaf5;
-          width: 180px;
-          height: 70px;
-          border-radius: 50px;
-          opacity: 0.78;
-        }
-
-        .cloud-1 {
-          top: 80px;
-          left: 7%;
-          transform: scale(0.9) rotate(-3deg);
-        }
-
-        .cloud-2 {
-          top: 120px;
-          right: 8%;
-          transform: scale(0.8) rotate(4deg);
-        }
-
-        .cloud-3 {
-          top: 240px;
-          right: 18%;
-          transform: scale(0.7);
-          opacity: 0.65;
-        }
-
-        .hero-dash {
-          position: absolute;
-          width: 220px;
-          height: 14px;
-          background: repeating-linear-gradient(90deg, #13234d 0 22px, transparent 22px 34px);
-          opacity: 0.16;
-        }
-
-        .dash-1 {
-          top: 260px;
-          left: 6%;
-          transform: rotate(-6deg);
-        }
-
-        .dash-2 {
-          top: 340px;
-          right: 10%;
-          transform: rotate(8deg);
-        }
-
-        .dash-3 {
-          top: 420px;
-          left: 18%;
-          transform: rotate(3deg);
-        }
-
-        .hero-float {
-          position: absolute;
-          width: 72px;
-          height: 72px;
-          border-radius: 18px;
-          background: linear-gradient(145deg, #fff, #f4f1ff);
-          box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
-          display: grid;
-          place-items: center;
-          font-size: 28px;
-          color: #111827;
-        }
-
-        .hero-float::after {
-          content: '🧱';
-        }
-
-        .float-rocket {
-          top: 190px;
-          left: 28%;
-          transform: rotate(-12deg);
-        }
-
-        .float-rocket::after {
-          content: '🚀';
-        }
-
-        .float-plane {
-          top: 230px;
-          right: 24%;
-          transform: rotate(6deg);
-        }
-
-        .float-plane::after {
-          content: '✈️';
-        }
-
-        .float-ship {
-          top: 360px;
-          left: 12%;
-          transform: rotate(-6deg);
-        }
-
-        .float-ship::after {
-          content: '⛵️';
-        }
-
-        .float-block {
-          top: 410px;
-          right: 18%;
-          transform: rotate(8deg);
-        }
-
-        .float-block::after {
-          content: '🎨';
+          width: 700px;
+          max-width: 52%;
+          height: 150px;
+          background-color: #D1EDFA;
+          border-radius: 50%;
+          z-index: 5;
         }
 
         .hero-shell {
@@ -847,8 +846,9 @@ export default function Home() {
           margin: 0 auto;
           padding: 0 24px;
           position: relative;
-          z-index: 1;
+          z-index: 10;
           text-align: center;
+          margin-top: -60px;
         }
 
         .hero-eyebrow {
@@ -874,321 +874,129 @@ export default function Home() {
 
         .hero-title-primary {
           display: block;
-          color: #1f2c4f;
+          color: #54545C;
           font-weight: 800;
+          text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff;
         }
 
         .hero-title-accent {
           display: block;
           color: #f7ad3b;
           font-weight: 800;
+          text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff;
+        }
+
+        .hero-description-wrapper {
+          margin: 6px auto 18px;
+          max-width: 720px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 0;
         }
 
         .hero-description {
-          margin: 6px auto 18px;
-          max-width: 720px;
+          margin: 0;
           font-size: 1.15rem;
           line-height: 1.6;
-          color: #1f2c4f;
-          font-weight: 500;
+          color: #54545C;
+          font-weight: 600;
+          text-align: center;
+        }
+
+        .hero-description-line2 {
+          margin-top: 0;
         }
 
         .hero-badge-row {
           display: inline-flex;
           align-items: center;
-          gap: 14px;
-          padding: 14px 18px;
-          background: rgba(255, 255, 255, 0.85);
-          border-radius: 20px;
-          box-shadow: 0 14px 40px rgba(0, 0, 0, 0.08);
+          gap: 12px;
+          margin-top: -3px;
         }
 
         .hero-badge {
           display: inline-flex;
           align-items: center;
-          gap: 10px;
-          padding: 12px 18px;
-          border-radius: 16px;
-          background: #ffffff;
-          font-weight: 700;
-          color: #1f2c4f;
-          box-shadow: 0 8px 18px rgba(0, 0, 0, 0.06);
-        }
-
-        .hero-stage {
-          margin-top: 30px;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          gap: 26px;
-        }
-
-        .sparky-stage {
-          position: relative;
-          width: min(760px, 96vw);
-          padding: 70px 70px 110px;
-          background: linear-gradient(180deg, #fefdf9 0%, #fff7e4 35%, #f2f7ff 100%);
-          border-radius: 44px;
-          box-shadow: 0 28px 70px rgba(0, 0, 0, 0.12);
-          overflow: visible;
-        }
-
-        .speech-bubble {
-          position: absolute;
-          top: 32px;
-          left: 60px;
-          background: #7787f4;
-          color: #fff;
-          padding: 12px 22px;
-          border-radius: 999px;
-          font-weight: 700;
-          box-shadow: 0 16px 30px rgba(119, 135, 244, 0.35);
-        }
-
-        .sparky-figure {
-          position: relative;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          gap: 10px;
-          transform: translateY(10px);
-        }
-
-        .sparky-ears {
-          position: relative;
-          width: 280px;
-          height: 36px;
-        }
-
-        .ear {
-          position: absolute;
-          top: 0;
-          width: 70px;
-          height: 36px;
-          background: #11121b;
-          border-radius: 12px 12px 6px 6px;
-          box-shadow: inset 0 -8px #2b2f3c;
-        }
-
-        .ear-left {
-          left: 40px;
-        }
-
-        .ear-right {
-          right: 40px;
-        }
-
-        .sparky-head {
-          position: relative;
-          width: 310px;
-          height: 230px;
-          background: #ffffff;
-          border-radius: 28px;
-          box-shadow: 0 18px 0 #eae9ef, 0 30px 55px rgba(0, 0, 0, 0.12);
-        }
-
-        .eye {
-          position: absolute;
-          top: 78px;
-          width: 54px;
-          height: 60px;
-          background: #11121b;
-          border-radius: 14px;
-        }
-
-        .eye-left {
-          left: 76px;
-        }
-
-        .eye-right {
-          right: 76px;
-        }
-
-        .cheek {
-          position: absolute;
-          bottom: 62px;
-          width: 44px;
-          height: 20px;
-          background: #ffc7c1;
-          border-radius: 999px;
-        }
-
-        .cheek-left {
-          left: 62px;
-        }
-
-        .cheek-right {
-          right: 62px;
-        }
-
-        .nose {
-          position: absolute;
-          top: 128px;
-          left: 50%;
-          width: 30px;
-          height: 26px;
-          transform: translateX(-50%);
-          background: #11121b;
-          border-radius: 6px;
-        }
-
-        .mouth {
-          position: absolute;
-          bottom: 38px;
-          left: 50%;
-          width: 48px;
-          height: 22px;
-          transform: translateX(-50%);
-          background: #11121b;
-          border-radius: 0 0 14px 14px;
-          box-shadow: inset 0 -6px #2c2f3d;
-        }
-
-        .sparky-neck {
-          width: 120px;
-          height: 32px;
-          background: #2a2e3a;
-          border-radius: 12px;
-          margin-top: -8px;
-          box-shadow: 0 10px 18px rgba(0, 0, 0, 0.12);
-        }
-
-        .sparky-body {
-          position: relative;
-          width: 250px;
-          height: 210px;
-          background: #1b1e28;
-          border-radius: 20px;
-          box-shadow: 0 18px 30px rgba(0, 0, 0, 0.16);
-        }
-
-        .body-panel {
-          position: absolute;
-          inset: 24px 48px 72px;
-          background: linear-gradient(180deg, #e5e7ff 0%, #ffffff 100%);
-          border-radius: 16px;
-          box-shadow: inset 0 -10px 0 #d1d6f8;
-        }
-
-        .arm {
-          position: absolute;
-          top: 82px;
-          width: 52px;
-          height: 52px;
-          background: #ffd05b;
-          border-radius: 14px;
-          box-shadow: inset 0 -10px #f3b531;
-        }
-
-        .arm-left {
-          left: -34px;
-        }
-
-        .arm-right {
-          right: -34px;
-        }
-
-        .leg {
-          position: absolute;
-          bottom: -16px;
-          width: 64px;
-          height: 54px;
-          background: #11121b;
-          border-radius: 0 0 14px 14px;
-          box-shadow: inset 0 -10px #2b2f3b;
-        }
-
-        .leg-left {
-          left: 52px;
-        }
-
-        .leg-right {
-          right: 52px;
-        }
-
-        .sparky-base {
-          position: relative;
-          margin-top: 24px;
-          width: 340px;
-          height: 86px;
-          background: linear-gradient(180deg, #ffe59c 0%, #f7c241 100%);
-          border-radius: 28px;
-          box-shadow: 0 14px 28px rgba(0, 0, 0, 0.14);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          gap: 10px;
-        }
-
-        .base-star {
-          position: relative;
-          width: 72px;
-          height: 72px;
-          background: #ffffff;
-          clip-path: polygon(50% 0%, 63% 36%, 100% 36%, 70% 58%, 80% 94%, 50% 72%, 20% 94%, 30% 58%, 0 36%, 37% 36%);
-          box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
-        }
-
-        .base-block {
-          width: 54px;
-          height: 54px;
-          border-radius: 14px;
-          box-shadow: inset 0 -8px rgba(0, 0, 0, 0.1);
-        }
-
-        .block-1 {
-          background: linear-gradient(145deg, #e6e0ff, #c8c0ff);
-        }
-
-        .block-2 {
-          background: linear-gradient(145deg, #fdd5d0, #f8b5ac);
-        }
-
-        .block-3 {
-          background: linear-gradient(145deg, #cbe7ff, #a8d2ff);
-        }
-
-        .sparky-shadow {
-          position: absolute;
-          inset: auto 70px 42px 70px;
-          height: 32px;
-          background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.25) 0%, rgba(0, 0, 0, 0) 70%);
-          filter: blur(14px);
-        }
-
-        .hero-swoosh {
-          position: absolute;
-          bottom: -16px;
-          left: 18px;
-          width: 360px;
-          opacity: 0.7;
-        }
-
-        .hero-cta {
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          padding: 16px 28px;
-          border-radius: 16px;
-          background: linear-gradient(180deg, #ffe07a 0%, #ffbe3c 100%);
-          color: #1f2c4f;
-          font-weight: 800;
+          gap: 8px;
+          font-weight: 400;
+          color: #54545C;
           font-size: 1rem;
-          text-transform: uppercase;
-          letter-spacing: 0.03em;
-          border: 2px solid #f5b02c;
-          box-shadow: 0 16px 32px rgba(255, 190, 60, 0.35);
-          transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
 
-        .hero-cta:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 20px 40px rgba(255, 190, 60, 0.45);
+        .hero-badge-text {
+          color: #54545C;
+        }
+
+        .hero-badge-separator {
+          color: #54545C;
+          font-size: 1rem;
+        }
+
+        .hero-badge-icon {
+          width: 20px;
+          height: 20px;
+          object-fit: contain;
+        }
+
+        .hero-transitions {
+          position: relative;
+          width: 100%;
+          height: 640px;
+          z-index: 0;
+          overflow: visible;
+          background: #EEF9FF0;
+        }
+
+        .hero-transition {
+          position: absolute;
+          width: 100%;
+          left: 0;
+        }
+
+        .hero-transition-yellow {
+          top: 0;
+          height: 537px;
+          z-index: 1;
+        }
+
+        .hero-transition-purple {
+          top: 151px;
+          height: 349px;
+          z-index: 2;
+        }
+
+        .hero-transition-blue {
+          top: 284px;
+          height: 364px;
+          z-index: 3;
+        }
+
+        .hero-transition img {
+          width: 100%;
+          height: 100%;
+          object-fit: fill;
+          display: block;
         }
 
         .steps-section {
-          padding: 100px 0;
-          background: #dff1ff;
+          padding: 100px 0 0;
+          background: #EEF9FF;
+          margin-top: 0;
+          position: relative;
+          z-index: 3;
+        }
+
+        .steps-section::after {
+          content: '';
+          position: absolute;
+          bottom: -50px;
+          left: 0;
+          right: 0;
+          height: 100px;
+          background: #EEF9FF;
+          border-radius: 0 0 50% 50% / 0 0 60px 60px;
+          z-index: 2;
         }
 
         .content-container {
@@ -1201,40 +1009,29 @@ export default function Home() {
         .section-heading h2 {
           font-size: clamp(2rem, 3vw, 3rem);
           margin-bottom: 12px;
+          color: #54545C;
+          font-weight: 700;
+          text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff;
         }
 
         .section-heading p {
           font-size: 1.125rem;
-          color: #4b5563;
+          color: #54545C;
+          font-weight: 400;
+          text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff;
         }
 
         .steps-grid {
           margin-top: 48px;
           display: grid;
           grid-template-columns: repeat(4, minmax(0, 1fr));
-          gap: 32px;
+          gap: 16px;
           position: relative;
+          z-index: 3;
         }
 
         .step-item {
           position: relative;
-        }
-
-        .step-connector {
-          position: absolute;
-          right: -90px;
-          top: 50%;
-          transform: translateY(-50%);
-          width: 150px;
-          height: 90px;
-          pointer-events: none;
-          z-index: 2;
-        }
-
-        .step-connector svg {
-          width: 100%;
-          height: 100%;
-          display: block;
         }
 
         .step-card {
@@ -1246,20 +1043,64 @@ export default function Home() {
           display: flex;
           flex-direction: column;
           z-index: 1;
+          background: transparent;
         }
 
-        .step-image {
+        .step-card-image-only {
+          padding: 0;
+          min-height: auto;
+          overflow: visible;
+          box-shadow: none;
+        }
+
+        .step-image-full {
+          position: relative;
+          width: 100%;
+          height: 100%;
+          min-height: 450px;
+          z-index: 3;
+          overflow: visible;
+        }
+
+        .step-image-full-item {
+          object-fit: contain;
+          border-radius: 32px;
+          width: 100%;
+          height: 100%;
+        }
+
+        .step-image-layered {
+          position: relative;
           width: 100%;
           height: 160px;
-          overflow: hidden;
-          border-radius: 24px;
           margin-bottom: 16px;
         }
 
-        .step-image img {
+        .step-image-border {
+          position: absolute;
+          inset: 0;
           width: 100%;
           height: 100%;
+          z-index: 1;
+        }
+
+        .step-image-border-item {
           object-fit: cover;
+          border-radius: 24px;
+        }
+
+        .step-image-inner {
+          position: absolute;
+          top: 20px;
+          left: 20px;
+          right: 20px;
+          bottom: 20px;
+          z-index: 2;
+        }
+
+        .step-image-inner-item {
+          object-fit: cover;
+          border-radius: 16px;
         }
 
         .step-body {
@@ -1276,27 +1117,51 @@ export default function Home() {
           color: #374151;
         }
 
+        .step-connector {
+          position: absolute;
+          right: -90px;
+          top: 50%;
+          transform: translateY(-50%);
+          width: 150px;
+          height: 90px;
+          pointer-events: none;
+          z-index: 2;
+        }
+
+        .step-connector-image {
+          width: 100%;
+          height: 100%;
+          object-fit: contain;
+        }
+
         .kit-section {
-          padding: 140px 0 130px;
-          background: #fffaf5;
+          padding: 100px 0 130px;
+          background: #FFFEF3;
+          position: relative;
+          margin-top: -50px;
+          z-index: 1;
         }
 
         .kit-heading-block {
           text-align: center;
           max-width: 760px;
-          margin: 0 auto 38px;
+          margin: 50px auto 38px;
         }
 
         .kit-heading-block h2 {
-          font-size: clamp(2.6rem, 3.8vw, 3.7rem);
-          color: #161335;
+          font-size: clamp(2.2rem, 3.2vw, 3.2rem);
+          color: #54545C;
+          font-weight: 700;
           margin-bottom: 10px;
+          text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff;
+          white-space: nowrap;
         }
 
         .kit-subheading {
-          font-size: 1.15rem;
-          color: #7b7b8e;
+          font-size: 1.3rem;
+          color: #54545C;
           margin: 0;
+          text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff;
         }
 
         .kit-layout {
@@ -1314,23 +1179,46 @@ export default function Home() {
           padding: 10px 0 0 14px;
         }
 
-        .kit-media-frame {
-          position: absolute;
-          inset: 16px 110px 16px 0;
-          border: 4px solid #d4c4ff;
-          border-radius: 48px;
-          z-index: 0;
-          box-shadow: 0 20px 50px rgba(128, 93, 201, 0.2);
+        .kit-media-single {
+          position: relative;
+          width: 100%;
+          height: 100%;
+          min-height: 500px;
+        }
+
+        .kit-media-single-image {
+          object-fit: contain;
+          object-position: center;
+          width: 100%;
+          height: 100%;
+        }
+          object-position: center;
+          width: 100%;
+          height: 100%;
         }
 
         .kit-media-card {
-          background: linear-gradient(160deg, #f5ecff 0%, #f4f0ff 50%, #fef6ff 100%);
+          background: linear-gradient(180deg, #DCD2EB 0%, #EDE8F5 100%);
+          border: 2px solid #D3C3EC;
           border-radius: 44px;
           padding: 48px;
           box-shadow: 0 30px 60px rgba(24, 20, 52, 0.1);
           position: relative;
           overflow: hidden;
           z-index: 1;
+        }
+
+        .kit-image-container {
+          position: relative;
+          width: 100%;
+          height: 100%;
+          min-height: 400px;
+        }
+
+        .kit-main-image {
+          object-fit: cover;
+          object-position: center;
+          border-radius: 24px;
         }
 
         .kit-blocks-stage {
@@ -1404,7 +1292,7 @@ export default function Home() {
         }
 
         .kit-panel {
-          background: #f4edff;
+          background: #F7F3FD;
           border-radius: 34px;
           padding: 28px 30px;
           box-shadow: 0 24px 55px rgba(106, 96, 185, 0.12);
@@ -1433,16 +1321,25 @@ export default function Home() {
 
         .kit-panel-title h3 {
           margin: 0;
-          font-size: 1.1rem;
-          color: #36266f;
+          font-size: 1.25rem;
+          color: #483E92;
         }
 
         .kit-panel-icon {
-          width: 18px;
-          height: 18px;
-          border-radius: 5px;
+          width: 25px;
+          height: 25px;
+          position: relative;
           display: inline-flex;
-          box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+          flex-shrink: 0;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .kit-panel-icon-svg {
+          display: block;
+          width: 25px;
+          height: 25px;
+          flex-shrink: 0;
         }
 
         .kit-panel-row ul {
@@ -1453,71 +1350,82 @@ export default function Home() {
           gap: 8px;
         }
 
+        .kit-panel-row ul {
+          margin-left: 30px;
+        }
+
         .kit-panel-row li {
-          position: relative;
-          padding-left: 26px;
-          color: #4b5563;
+          color: #6C6767;
           font-size: 0.88rem;
           line-height: 1.45;
-          letter-spacing: -0.005em;
+          white-space: pre-line;
         }
 
-        .kit-panel-row li::before {
-          content: '';
-          position: absolute;
-          left: 0;
-          top: 0.6rem;
-          width: 8px;
-          height: 8px;
-          border-radius: 50%;
-          background: var(--kit-accent, #a38bff);
-          box-shadow: 0 0 0 4px var(--kit-accent-shadow, rgba(163, 139, 255, 0.25));
+        .kit-panel-row li strong::first-letter {
+          font-size: 2rem;
+          line-height: 0.88rem;
+          vertical-align: text-bottom;
+          display: inline-block;
+          margin-right: 4px;
         }
 
-        .kit-panel-row li strong {
-          color: #2f2d65;
+        .kit-panel-row li .kit-text-rest {
+          display: inline;
         }
 
         .family-section {
-          padding: 140px 0 150px;
-          background: linear-gradient(180deg, #f5fbff 0%, #fff7ee 100%);
+          padding: 95px 0 1px;
+          background: #FFFEF3;
+          position: relative;
+        }
+
+        .family-bg-wrapper {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          pointer-events: none;
+          z-index: 1;
+        }
+
+        .family-bg-image {
+          position: absolute;
+          left: 0;
+          width: 100%;
+          pointer-events: none;
+        }
+
+        .family-bg-image-item {
+          width: 100%;
+          height: auto;
+          display: block;
+        }
+
+        .family-bg-top {
+          top: 0;
+          z-index: 2;
+        }
+
+        .family-bg-bottom {
+          top: 45px;
+          z-index: 1;
         }
 
         .family-stage {
           position: relative;
           border-radius: 56px;
           padding: 90px 80px;
-          background: #d5ecff;
+          background: transparent;
           box-shadow: 0 40px 80px rgba(19, 35, 77, 0.15);
           clip-path: polygon(5% 0, 100% 0, 100% 95%, 0 100%, 0 15%);
           overflow: hidden;
-        }
-
-        .family-angle {
-          position: absolute;
-          background: rgba(255, 255, 255, 0.65);
-          pointer-events: none;
-        }
-
-        .family-angle-top {
-          top: -6%;
-          left: -8%;
-          width: 45%;
-          height: 40%;
-          clip-path: polygon(0 0, 100% 0, 0 100%);
-        }
-
-        .family-angle-bottom {
-          right: -12%;
-          bottom: -18%;
-          width: 55%;
-          height: 60%;
-          clip-path: polygon(100% 0, 100% 100%, 15% 100%);
-          opacity: 0.4;
+          z-index: 2;
         }
 
         .family-header {
           max-width: 540px;
+          position: relative;
+          z-index: 2;
         }
 
         .family-tagline {
@@ -1541,6 +1449,8 @@ export default function Home() {
           display: grid;
           grid-template-columns: repeat(2, minmax(0, 1fr));
           gap: 38px 40px;
+          position: relative;
+          z-index: 2;
         }
 
         .family-card {
@@ -1556,6 +1466,7 @@ export default function Home() {
           background: rgba(255, 255, 255, 0.92);
           box-shadow: 0 25px 45px rgba(25, 43, 80, 0.15);
           position: relative;
+          z-index: 2;
         }
 
         .family-card:nth-child(odd) {
@@ -1629,6 +1540,8 @@ export default function Home() {
           display: flex;
           gap: 12px;
           justify-content: center;
+          position: relative;
+          z-index: 2;
         }
 
         .family-pagination span {
@@ -1643,33 +1556,61 @@ export default function Home() {
         }
 
         .privacy-section {
-          padding: 120px 0;
-          background: #fff;
+          padding: 0 0 150px;
+          background: #FFFCF9;
+          margin-top: 0;
+          position: relative;
+          z-index: 0;
+        }
+
+        .privacy-heading {
+          text-align: center;
+          padding-top: 120px;
         }
 
         .privacy-heading h2 {
           font-size: clamp(2rem, 3vw, 3rem);
+          line-height: 1.3;
+          text-align: center;
         }
 
-        .privacy-heading span {
-          color: #111827;
+        .privacy-line1 {
+          font-size: clamp(1.5rem, 2.25vw, 2.25rem);
+          color: #54545C;
+          text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff;
+        }
+
+        .privacy-line2 {
+          color: #54545C;
+          font-weight: 700;
+          text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff;
         }
 
         .privacy-tag {
-          display: inline-flex;
-          align-items: center;
-          padding: 8px 16px;
-          border-radius: 999px;
-          background: #ece8ff;
-          font-weight: 600;
+          display: block;
+          color: #878787;
+          font-size: clamp(1.125rem, 1.6875vw, 1.6875rem);
+          font-weight: 400;
           margin-top: 12px;
+          text-align: center;
         }
 
-        .privacy-grid {
-          margin-top: 48px;
-          display: grid;
-          grid-template-columns: repeat(3, minmax(0, 1fr));
+        .privacy-images {
+          margin-top: 60px;
+          display: flex;
+          flex-direction: column;
           gap: 24px;
+        }
+
+        .privacy-image-item {
+          width: 100%;
+          position: relative;
+        }
+
+        .privacy-image {
+          width: 100%;
+          height: auto;
+          object-fit: contain;
         }
 
         .privacy-card {
@@ -1689,59 +1630,117 @@ export default function Home() {
         }
 
         .impact-section {
-          padding: 140px 0 120px;
-          background: #dbeedc;
+          padding: 150px 0 120px;
+          background: #FFFCF9;
           position: relative;
         }
 
-        .impact-section::before {
-          content: '';
+        .impact-bg-wrapper {
           position: absolute;
-          top: -80px;
+          top: 0;
           left: 0;
           width: 100%;
-          height: 120px;
-          background: #dbeedc;
-          transform: skewY(-4deg);
+          pointer-events: none;
+          z-index: 0;
+        }
+
+        .impact-bg-image {
+          position: absolute;
+          left: 0;
+          width: 100%;
+          pointer-events: none;
+        }
+
+        .impact-bg-image-item {
+          width: 100%;
+          height: auto;
+          display: block;
+        }
+
+        .impact-bg-bottom {
+          top: -5px;
+          z-index: 1;
+        }
+
+        .impact-bg-top {
+          top: 20px;
+          z-index: 2;
         }
 
         .impact-section h2 {
           text-align: center;
           font-size: clamp(2rem, 3vw, 3rem);
           margin-bottom: 48px;
+          position: relative;
+          z-index: 2;
+          font-weight: 700;
+          color: #54545C;
+          text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff;
+          margin-top: 10px;
         }
 
         .impact-grid {
           display: grid;
           grid-template-columns: repeat(3, minmax(0, 1fr));
           gap: 24px;
+          position: relative;
+          z-index: 2;
+          margin-top: 10px;
         }
 
         .impact-card {
-          background: #f7fff5;
+          background: transparent;
           border-radius: 28px;
           padding: 24px;
-          box-shadow: 0 18px 30px rgba(15, 118, 110, 0.15);
+          box-shadow: none;
+          position: relative;
+          z-index: 2;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          text-align: center;
+        }
+
+        .impact-icon-wrapper {
+          width: 50px;
+          height: 50px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin-bottom: 24px;
+        }
+
+        .impact-icon {
+          width: 100%;
+          height: 100%;
+          object-fit: contain;
         }
 
         .impact-card h3 {
           margin-bottom: 12px;
+          font-weight: 700;
+          color: #54545C;
+          font-size: 1.5rem;
         }
 
-        .story-section {
-          padding: 120px 0;
-          background: #fff3e6;
+        .impact-card p {
+          color: #646464;
+          text-align: center;
+          font-size: 0.8rem;
         }
 
         .story-section {
           padding: 140px 0;
-          background: #fff5e8;
+          background: #FFF6D0;
         }
 
         .story-section h2 {
           text-align: center;
-          font-size: clamp(2rem, 3vw, 3rem);
+          font-size: clamp(2.2rem, 4vw, 3.2rem);
           margin-bottom: 48px;
+          font-weight: 700;
+          color: #54545C;
+          text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff;
         }
 
         .story-panels {
@@ -1839,7 +1838,7 @@ export default function Home() {
         .story-card-title {
           font-size: 1.35rem;
           font-weight: 700;
-          color: #4b5c9a;
+          color: #859FD3;
           margin-bottom: 12px;
           position: relative;
         }
@@ -1852,12 +1851,12 @@ export default function Home() {
           width: 120px;
           height: 4px;
           border-radius: 999px;
-          background: #9bb4ff;
+          background: #859FD3;
         }
 
         .story-card p {
           margin: 16px 0 0;
-          color: #22314d;
+          color: #014188;
           font-size: 1rem;
           line-height: 1.6;
         }
@@ -1998,7 +1997,7 @@ export default function Home() {
           }
 
           .hero-block {
-            padding: calc(var(--nav-height) + 30px) 0 110px;
+            padding: calc(var(--nav-height) + 30px) 0 0;
           }
 
           .hero-badge-row {
@@ -2006,13 +2005,22 @@ export default function Home() {
             justify-content: center;
           }
 
-          .sparky-stage {
-            padding: 60px 46px 96px;
+          .hero-transitions {
+            height: 500px;
           }
 
-          .speech-bubble {
-            left: 28px;
-            top: 26px;
+          .hero-transition-yellow {
+            height: 420px;
+          }
+
+          .hero-transition-purple {
+            top: 118px;
+            height: 273px;
+          }
+
+          .hero-transition-blue {
+            top: 221px;
+            height: 284px;
           }
 
           .kit-layout {
@@ -2025,8 +2033,8 @@ export default function Home() {
             padding: 0;
           }
 
-          .kit-media-frame {
-            inset: 10px;
+          .kit-media-single {
+            min-height: 400px;
           }
 
           .family-stage {
@@ -2066,11 +2074,29 @@ export default function Home() {
           }
 
           .hero-block {
-            padding: calc(var(--nav-height) + 12px) 0 90px;
+            padding: calc(var(--nav-height) + 12px) 0 0;
           }
 
           .hero-shell {
             padding: 0 18px;
+          }
+
+          .hero-transitions {
+            height: 400px;
+          }
+
+          .hero-transition-yellow {
+            height: 335px;
+          }
+
+          .hero-transition-purple {
+            top: 94px;
+            height: 218px;
+          }
+
+          .hero-transition-blue {
+            top: 177px;
+            height: 227px;
           }
 
           .hero-heading h1 {
@@ -2086,49 +2112,12 @@ export default function Home() {
             gap: 10px;
           }
 
-          .hero-float {
-            display: none;
-          }
-
-          .sparky-stage {
-            padding: 48px 32px 82px;
-            border-radius: 32px;
-          }
-
-          .speech-bubble {
-            position: relative;
-            left: auto;
-            top: auto;
-            margin-bottom: 14px;
-            display: inline-block;
-          }
-
-          .sparky-head {
-            width: 260px;
-            height: 200px;
-          }
-
-          .sparky-body {
-            width: 220px;
-            height: 190px;
-          }
-
-          .sparky-base {
-            width: 280px;
-            height: 76px;
-          }
-
-          .hero-cta {
-            width: 100%;
-            max-width: 320px;
-          }
-
           .kit-panel {
             padding: 28px;
           }
 
-          .kit-media-frame {
-            display: none;
+          .kit-media-single {
+            min-height: 400px;
           }
 
           .family-stage {
