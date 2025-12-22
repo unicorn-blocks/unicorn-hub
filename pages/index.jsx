@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -7,7 +7,31 @@ import Footer from '../components/layout/Footer';
 import { safeApiCall } from '../lib/api';
 import { useLanguage } from '../context/LanguageContext';
 
+import dynamic from 'next/dynamic'
+import EmailNotifyFloatingBox from '../components/EmailNotifyFloatingBox';
+const PopModal = dynamic(() => import('../components/PopModal'), { ssr: false });
+
 export default function Home() {
+  const [popOpen, setPopOpen] = useState(false);
+  // 弹窗只弹一次
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const closed = localStorage.getItem('popModalClosed');
+    if (closed) return;
+    // 监听滚动到section3
+    function handleScroll() {
+      const section3 = document.querySelector('img[alt="Everything to Build the Magic."]') || document.querySelector('section[id*="section3"]');
+      if (!section3) return;
+      const rect = section3.getBoundingClientRect();
+      if (rect.top < window.innerHeight && rect.bottom > 0) {
+        setPopOpen(true);
+        window.removeEventListener('scroll', handleScroll);
+      }
+    }
+    window.addEventListener('scroll', handleScroll);
+    handleScroll();
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
   const { language } = useLanguage();
   const [openFaq, setOpenFaq] = useState(0);
 
@@ -332,6 +356,7 @@ export default function Home() {
 
   return (
     <>
+      {popOpen && <PopModal onClose={() => { setPopOpen(false); localStorage.setItem('popModalClosed', '1'); }} />}
       <Head>
         <title>{copy.meta.title}</title>
         <meta charSet="UTF-8" />
@@ -389,7 +414,6 @@ export default function Home() {
 
       <div className="background-gradient" />
       <main className="home-root min-h-screen">
-        <Navigation />
 
         <section className="hero-block">
           <div className="hero-top-bar">
@@ -404,7 +428,7 @@ export default function Home() {
           </div>
           <div className="hero-backdrop" aria-hidden="true">
             <Image
-              src="/assets/image/8e907cfa4c8d829cac77709d26f232866e8bbbcc.png"
+              src="/assets/ima/hero图.webp"
               alt=""
               fill
               className="hero-background-image"
@@ -530,7 +554,7 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="kit-section">
+        <section id="section3" className="kit-section">
           <div className="content-container">
             <div className="kit-heading-block">
               <h2>{copy.kit.heading}</h2>
