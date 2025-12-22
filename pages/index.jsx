@@ -356,6 +356,8 @@ export default function Home() {
         <meta name="theme-color" content="#A7C1FF" />
         <meta name="msapplication-TileColor" content="#A7C1FF" />
         <link rel="canonical" href="https://unicornblocks.ai" />
+        <link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Rubik:wght@400&display=swap" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css2?family=Combo&display=swap" rel="stylesheet" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -675,23 +677,19 @@ export default function Home() {
           <div className="content-container">
             <h2>{copy.story.heading}</h2>
             <div className="story-panels">
-              {copy.story.cards.map((card) => (
+              {copy.story.cards.map((card, index) => (
                 <div className="story-card" key={card.title}>
                   <div className="story-card-visual">
                     {card.avatars ? (
-                      <div className="story-avatar-stack">
-                        {card.avatars.map((avatar) => (
-                          <div className="story-avatar" key={avatar}>
-                            <span>{avatar[0]}</span>
-                            <small>{avatar}</small>
-                          </div>
-                        ))}
+                      <div className="story-team-visual">
+                        <img src="/assets/ima/组合 626.svg" alt="Team" className="story-team-image" />
+                        <div className="story-team-names">
+                          <span className="story-name-bruce">Bruce</span>
+                          <span className="story-name-bryan">Bryan</span>
+                        </div>
                       </div>
                     ) : (
-                      <div className="story-logo-stack">
-                        <span>UPenn</span>
-                        <span>Purdue</span>
-                      </div>
+                      <img src="/assets/ima/组合 627-1.svg" alt="Science" className="story-science-image" />
                     )}
                   </div>
                   <div className="story-card-body">
@@ -702,9 +700,7 @@ export default function Home() {
               ))}
             </div>
             <div className="story-roadmap">
-              <svg className="story-roadmap-line" viewBox="0 0 1200 160" preserveAspectRatio="none" aria-hidden="true">
-                <path d="M0 140 Q 150 40 300 120 T 600 120 T 900 120 T 1200 40" stroke="#115499" strokeWidth="8" strokeDasharray="18 18" fill="none" strokeLinecap="round" />
-              </svg>
+              <img src="/assets/ima/Frame 1000007460.svg" alt="" className="story-roadmap-line" />
               <div className="story-milestones">
                 {copy.story.milestones.map((milestone) => (
                   <div className="story-milestone" key={milestone.title}>
@@ -1633,6 +1629,19 @@ export default function Home() {
           padding: 150px 0 120px;
           background: #FFFCF9;
           position: relative;
+          z-index: 1;
+        }
+
+        .impact-section::after {
+          content: '';
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          height: 60%;
+          background: #E9F5EB;
+          z-index: -1;
+          pointer-events: none;
         }
 
         .impact-bg-wrapper {
@@ -1641,7 +1650,7 @@ export default function Home() {
           left: 0;
           width: 100%;
           pointer-events: none;
-          z-index: 0;
+          z-index: -1;
         }
 
         .impact-bg-image {
@@ -1732,6 +1741,19 @@ export default function Home() {
         .story-section {
           padding: 140px 0;
           background: #FFF6D0;
+          position: relative;
+          z-index: 0;
+        }
+
+        .story-section::before {
+          content: '';
+          position: absolute;
+          top: -135px;
+          left: 0;
+          right: 0;
+          height: 135px;
+          background: #E9F5EB;
+          z-index: -1;
         }
 
         .story-section h2 {
@@ -1746,23 +1768,23 @@ export default function Home() {
         .story-panels {
           display: grid;
           grid-template-columns: repeat(2, minmax(0, 1fr));
-          gap: 26px;
+          gap: 60px;
         }
 
         .story-card {
-          display: grid;
-          grid-template-columns: 160px 1fr;
-          gap: 28px;
-          padding: 32px;
-          border-radius: 42px;
-          background: #dce8ff;
-          box-shadow: inset 0 0 0 4px #b8d1ff;
+          display: flex;
+          gap: 15px;
+          padding: 0;
+          border-radius: 39px;
+          background: transparent;
+          box-shadow: none;
           position: relative;
+          align-items: stretch;
         }
 
         .story-card:nth-child(2) {
-          background: #e1e9ff;
-          box-shadow: inset 0 0 0 4px #c6d5ff;
+          background: transparent;
+          box-shadow: none;
         }
 
         .story-card-visual {
@@ -1770,76 +1792,88 @@ export default function Home() {
           display: flex;
           flex-direction: column;
           align-items: center;
+          justify-content: center;
           gap: 14px;
         }
 
-        .story-avatar-stack {
+        .story-team-visual {
+          position: relative;
+          width: 236px;
+          min-width: 236px;
+          height: 294px;
           display: flex;
-          flex-direction: column;
-          gap: 22px;
-        }
-
-        .story-avatar {
-          width: 130px;
-          border-radius: 32px;
-          background: #fafdff;
-          box-shadow: 0 18px 30px rgba(41, 55, 97, 0.22);
-          padding: 20px 16px;
-          text-align: center;
-        }
-
-        .story-avatar span {
-          display: inline-flex;
-          width: 54px;
-          height: 54px;
-          border-radius: 16px;
           align-items: center;
           justify-content: center;
-          font-size: 1.8rem;
-          font-weight: 700;
-          color: #1f2937;
-          background: linear-gradient(135deg, #ffd9a8, #ffb876);
+          flex-shrink: 0;
         }
 
-        .story-avatar small {
-          display: block;
-          margin-top: 10px;
-          font-size: 0.95rem;
-          font-weight: 700;
-          color: #42557a;
+        .story-team-image {
+          width: 236px;
+          height: 294px;
+          object-fit: contain;
         }
 
-        .story-logo-stack {
+        .story-team-names {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
           display: flex;
           flex-direction: column;
-          gap: 16px;
-          width: 140px;
+          justify-content: space-around;
+          align-items: flex-start;
+          padding-left: 10px;
         }
 
-        .story-logo-stack span {
-          display: block;
-          padding: 16px;
-          border-radius: 24px;
-          background: #ffffff;
-          font-weight: 700;
+        .story-name-bruce {
+          font-family: 'Do Hyeon', sans-serif;
+          font-size: 24px;
+          font-weight: 400;
+          line-height: 30px;
           text-align: center;
-          color: #1d2c4e;
-          box-shadow: 0 18px 28px rgba(32, 41, 68, 0.15);
+          color: #859FD3;
+          margin-top: 120px;
+          margin-left: 20px;
+        }
+
+        .story-name-bryan {
+          font-family: 'Do Hyeon', sans-serif;
+          font-size: 24px;
+          font-weight: 400;
+          line-height: 30px;
+          text-align: center;
+          color: #FFFFFF;
+          margin-top: -50px;
+          margin-left: 120px;
+        }
+
+        .story-science-image {
+          width: 202px;
+          min-width: 202px;
+          height: 294px;
+          object-fit: contain;
+          flex-shrink: 0;
         }
 
         .story-card-body {
-          background: #ffffffcc;
-          border-radius: 32px;
+          flex: 1;
+          max-width: 600px;
+          min-height: 349px;
+          background: rgba(215, 229, 255, 1);
+          border-radius: 39px;
           padding: 28px;
           position: relative;
-          box-shadow: inset 0 0 0 2px rgba(24, 60, 131, 0.1);
+          box-shadow: none;
+          display: flex;
+          flex-direction: column;
         }
 
         .story-card-title {
           font-size: 1.35rem;
           font-weight: 700;
           color: #859FD3;
-          margin-bottom: 12px;
+          margin-bottom: 20px;
           position: relative;
         }
 
@@ -1847,7 +1881,7 @@ export default function Home() {
           content: '';
           position: absolute;
           left: 0;
-          bottom: -6px;
+          bottom: -10px;
           width: 120px;
           height: 4px;
           border-radius: 999px;
@@ -1855,29 +1889,32 @@ export default function Home() {
         }
 
         .story-card p {
-          margin: 16px 0 0;
+          margin: 20px 0 0;
           color: #014188;
-          font-size: 1rem;
+          font-size: 0.8rem;
           line-height: 1.6;
         }
 
         .story-roadmap {
           position: relative;
-          padding: 10px 0;
+          padding: 60px 0 20px;
+          margin-top: 60px;
         }
 
         .story-roadmap-line {
           width: 100%;
-          height: 180px;
+          height: auto;
           display: block;
         }
 
         .story-milestones {
-          position: relative;
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          right: 0;
           display: grid;
           grid-template-columns: repeat(3, minmax(0, 1fr));
           gap: 12px;
-          margin-top: -60px;
         }
 
         .story-milestone {
@@ -1885,37 +1922,32 @@ export default function Home() {
           position: relative;
         }
 
-        .story-pin {
-          width: 34px;
-          height: 50px;
-          margin: 0 auto 14px;
-          background: #ffd44d;
-          border-radius: 20px 20px 50px 50px;
-          position: relative;
-          box-shadow: 0 10px 18px rgba(244, 175, 0, 0.3);
-        }
-
-        .story-pin span {
-          position: absolute;
-          top: 10px;
-          left: 50%;
-          transform: translateX(-50%);
-          width: 14px;
-          height: 14px;
-          border-radius: 50%;
-          background: #0f4c81;
-        }
-
         .story-milestone-text h4 {
-          font-size: 1.1rem;
-          font-weight: 700;
-          color: #15305c;
+          font-family: 'Combo', cursive;
+          font-size: 24px;
+          font-weight: 800;
+          line-height: 29px;
+          letter-spacing: 0px;
+          color: #014188;
           margin-bottom: 6px;
+          text-align: center;
+        }
+
+        .story-milestone:nth-child(1) {
+          transform: translateX(100px) translateY(-30px);
+        }
+
+        .story-milestone:nth-child(2) {
+          transform: translateX(75px) translateY(3px);
+        }
+
+        .story-milestone:nth-child(3) {
+          transform: translateX(-20px) translateY(-40px);
         }
 
         .story-milestone-text p {
-          color: #4b5563;
-          font-size: 0.95rem;
+         color:#014188;
+         font-size:0.9rem;
         }
 
         .faq-section {
@@ -2051,7 +2083,42 @@ export default function Home() {
           }
 
           .story-card {
-            grid-template-columns: minmax(0, 1fr);
+            flex-direction: column;
+          }
+
+          .story-card-body {
+            max-width: 100%;
+            width: 100%;
+            min-height: 300px;
+          }
+
+          .story-team-visual {
+            width: 180px;
+            min-width: 180px;
+            height: 224px;
+          }
+
+          .story-team-image {
+            width: 180px;
+            height: 224px;
+          }
+
+          .story-science-image {
+            width: 154px;
+            min-width: 154px;
+            height: 224px;
+          }
+
+          .story-name-bruce {
+            font-size: 20px;
+            margin-top: 118px;
+            margin-left: 19px;
+          }
+
+          .story-name-bryan {
+            font-size: 20px;
+            margin-top: -38px;
+            margin-left: 110px;
           }
         }
 
@@ -2139,13 +2206,63 @@ export default function Home() {
             gap: 18px;
           }
 
+          .story-card {
+            flex-direction: column;
+          }
+
+          .story-card-body {
+            max-width: 100%;
+            width: 100%;
+            min-height: 250px;
+          }
+
+          .story-team-visual {
+            width: 140px;
+            min-width: 140px;
+            height: 175px;
+          }
+
+          .story-team-image {
+            width: 140px;
+            height: 175px;
+          }
+
+          .story-science-image {
+            width: 120px;
+            min-width: 120px;
+            height: 175px;
+          }
+
+          .story-name-bruce {
+            font-size: 18px;
+            margin-top: 92px;
+            margin-left: 15px;
+          }
+
+          .story-name-bryan {
+            font-size: 18px;
+            margin-top: -30px;
+            margin-left: 86px;
+          }
+
           .story-roadmap-line {
-            height: 140px;
+            height: auto;
           }
 
           .story-milestones {
+            position: relative;
             grid-template-columns: minmax(0, 1fr);
             gap: 24px;
+          }
+
+          .story-milestone-text h4 {
+            font-size: 20px;
+            line-height: 24px;
+          }
+
+          .story-milestone-text p {
+            font-size: 16px;
+            line-height: 20px;
           }
 
           .timeline-line {

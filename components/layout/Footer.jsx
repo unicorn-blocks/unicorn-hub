@@ -56,7 +56,7 @@ export default function Footer({ onSubscribe }) {
 
   const footerTranslations = {
     en: {
-      joinMagicList: 'Join the Magic List',
+      joinMagicList: "Let's be friends !",
       enterEmail: 'Enter your email',
       subscribe: 'Subscribe',
       tagline: 'Inspiring the next generation of creators through magical, screen-free play.',
@@ -64,7 +64,7 @@ export default function Footer({ onSubscribe }) {
       privacy: 'Privacy Policy'
     },
     zh: {
-      joinMagicList: '加入魔法列表',
+      joinMagicList: '让我们成为朋友吧！',
       enterEmail: '输入您的邮箱',
       subscribe: '订阅',
       tagline: '通过神奇的、无屏幕的游戏激励下一代创造者。',
@@ -78,7 +78,7 @@ export default function Footer({ onSubscribe }) {
   return (
     <footer className="py-12 md:py-16 relative z-50">
       <div className="container mx-auto px-4">
-        <div className="grid md:grid-cols-3 gap-8 mb-12">
+        <div className="grid md:grid-cols-2 gap-8 mb-12">
           {/* Logo and Contact */}
           <div>
             <div className="flex items-center gap-2 mb-4">
@@ -113,51 +113,54 @@ export default function Footer({ onSubscribe }) {
             </div>
           </div>
 
-          {/* Quick Links */}
+          {/* Let's be friends ! */}
           <div>
-            <h3 className="font-semibold mb-4">{t.quickLinks}</h3>
-            <ul className="space-y-2">
-              <li>
-                <Link href="/features" className="text-gray-600 hover:text-[#7d9ed4]">
-                  {t.features}
-                </Link>
-              </li>
-              <li>
-                <Link href="/faq" className="text-gray-600 hover:text-[#7d9ed4]">
-                  {t.faq}
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          {/* Join the Magic List */}
-          <div>
-            <h3 className="font-semibold mb-4">{footerT.joinMagicList}</h3>
-            <form onSubmit={handleFooterSubmit} className="space-y-3">
-              <input
-                type="email"
-                value={footerEmail}
-                onChange={(e) => setFooterEmail(e.target.value)}
-                placeholder={footerT.enterEmail}
-                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#7d9ed4] focus:border-transparent text-sm"
-              />
-              <button
-                type="submit"
-                className="w-full bg-gradient-to-r from-[#7D9ED4] to-[#F7AEBF] text-white px-6 py-3 rounded-lg font-semibold hover:shadow-lg transition-all transform hover:scale-105 flex items-center justify-center gap-2"
+            <h3 className="font-semibold mb-4" style={{position: 'relative', top: '20px'}}>{footerT.joinMagicList}</h3>
+            <div className="flex items-end gap-0" style={{ transform: 'translateY(-25px)' }}>
+              <div className="flex-1" style={{ maxWidth: '427px', transform: 'translateY(-23px)' }}>
+                <input
+                  type="email"
+                  value={footerEmail}
+                  onChange={(e) => setFooterEmail(e.target.value)}
+                  placeholder="Enter email address..."
+                  className="w-full px-0 py-2 border-0 border-b-2 border-gray-300 focus:outline-none focus:border-[#7d9ed4] bg-transparent text-sm placeholder-gray-400"
+                  style={{ borderRadius: 0 }}
+                />
+              </div>
+              <Link 
+                href="/reserve-vip-spot"
+                className="relative flex items-center justify-center transition-all hover:opacity-80"
+                style={{ width: '120px', height: '120px' }}
               >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                </svg>
-                {footerT.subscribe}
-              </button>
-              {footerStatus.message && (
-                <div className={`text-sm text-center ${
-                  footerStatus.type === 'success' ? 'text-green-600' : 'text-red-600'
-                }`}>
-                  {footerStatus.message}
-                </div>
-              )}
-            </form>
+                <img 
+                  src="/assets/ima/Group 82.svg" 
+                  alt="Notify at Launch" 
+                  className="w-full h-full object-contain"
+                  style={{ position: 'relative', zIndex: 1 }}
+                />
+                <span 
+                  className="absolute font-bold text-center whitespace-nowrap"
+                  style={{ 
+                    color: '#54545C',
+                    fontSize: '12px',
+                    lineHeight: '0.8',
+                    bottom: '34px',
+                    left: '50%',
+                    transform: 'translateX(-50%)',
+                    zIndex: 2
+                  }}
+                >
+                  Notify at Launch
+                </span>
+              </Link>
+            </div>
+            {footerStatus.message && (
+              <div className={`text-sm mt-2 ${
+                footerStatus.type === 'success' ? 'text-green-600' : 'text-red-600'
+              }`}>
+                {footerStatus.message}
+              </div>
+            )}
           </div>
         </div>
 
