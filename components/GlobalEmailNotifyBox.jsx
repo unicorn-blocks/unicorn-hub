@@ -116,7 +116,7 @@ export default function GlobalEmailNotifyBox() {
           padding: 0
         }}
       >
-        Notify at Launch
+        Join Adverture
       </button>
       {/* 右侧 18px 间距 */}
       <div style={{ width: 18, height: BOX_HEIGHT-30 }} />

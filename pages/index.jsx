@@ -16,8 +16,8 @@ export default function Home() {
   // 弹窗只弹一次
   useEffect(() => {
     if (typeof window === 'undefined') return;
-    const closed = localStorage.getItem('popModalClosed');
-    if (closed) return;
+    // const closed = localStorage.getItem('popModalClosed');
+    // if (closed) return;
     // 监听滚动到section3
     function handleScroll() {
       const section3 = document.querySelector('img[alt="Everything to Build the Magic."]') || document.querySelector('section[id*="section3"]');
@@ -38,7 +38,7 @@ export default function Home() {
   const translations = {
     en: {
       meta: {
-        title: 'Not Just Stacking, Creating! | Unicorn Blocks',
+        title: 'Unicorn Blocks | Not Just Stacking, Creating!',
         description:
           'Meet Sparky, the magical block buddy that turns every build into a story. Spark creativity, unlock STEAM skills, and keep playtime screen-free with uncompromising privacy.',
         keywords:
@@ -381,8 +381,6 @@ export default function Home() {
         <meta name="theme-color" content="#A7C1FF" />
         <meta name="msapplication-TileColor" content="#A7C1FF" />
         <link rel="canonical" href="https://unicornblocks.ai" />
-        <link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Rubik:wght@400&display=swap" rel="stylesheet" />
-        <link href="https://fonts.googleapis.com/css2?family=Combo&display=swap" rel="stylesheet" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -414,6 +412,7 @@ export default function Home() {
 
       <div className="background-gradient" />
       <main className="home-root min-h-screen">
+        {/* <Navigation /> */}
 
         <section className="hero-block">
           <div className="hero-top-bar">
@@ -511,42 +510,54 @@ export default function Home() {
         <section className="steps-section">
           <div className="content-container">
             <div className="section-heading text-center">
-              <h2>{copy.steps.heading}</h2>
+              <h2 style={{textAlign: 'center', margin: '0 auto', width: '100%', whiteSpace: 'normal'}}>{copy.steps.heading}</h2>
               <p>{copy.steps.subheading}</p>
             </div>
-            <div className="steps-grid">
+            <div className="steps-grid" style={{gap: 6}}>
               {/* 第一组 */}
-              <div className="step-item">
+              <div className="step-item" style={{zIndex:2}}>
                 <div className="step-card step-card-image-only">
-                  <div className="step-image-full">
-                    <Image src="/assets/ima/组合 721.png" alt="" fill className="step-image-full-item" />
+                  <div className="step-image-full" style={{minHeight:'520px'}}>
+                    <Image src="/assets/ima/组合 721.png" alt="" fill className="step-image-full-item" style={{transform:'scale(1.15)'}} />
                   </div>
+                </div>
+                {/* 第一、二组之间连接矢量 */}
+                <div className="step-connector" style={{right:'-50px',width:'100px',height:'100px',zIndex: 4,top:'calc(50% - 60px)'}}>
+                  <img src="/assets/ima/Vector_17_913.png" alt="arrow-1" className="step-connector-image" />
                 </div>
               </div>
 
               {/* 第二组 */}
-              <div className="step-item">
+              <div className="step-item" style={{zIndex:1}}>
                 <div className="step-card step-card-image-only">
-                  <div className="step-image-full">
-                    <Image src="/assets/ima/bule.png" alt="" fill className="step-image-full-item" />
+                  <div className="step-image-full" style={{minHeight:'520px'}}>
+                    <Image src="/assets/ima/bule.png" alt="" fill className="step-image-full-item" style={{transform:'scale(1.15)'}} />
                   </div>
+                </div>
+                {/* 二、三组之间连接矢量 */}
+                <div className="step-connector" style={{right:'-50px',width:'100px',height:'100px',zIndex: 3,top:'calc(50% + 5px)'}}>
+                  <img src="/assets/ima/Vector_17_911.png" alt="arrow-2" className="step-connector-image" />
                 </div>
               </div>
 
               {/* 第三组 */}
-              <div className="step-item">
+              <div className="step-item" style={{zIndex:0}}>
                 <div className="step-card step-card-image-only">
-                  <div className="step-image-full">
-                    <Image src="/assets/ima/组合 723 (1).png" alt="" fill className="step-image-full-item" />
+                  <div className="step-image-full" style={{minHeight:'520px'}}>
+                    <Image src="/assets/ima/组合 723 (1).png" alt="" fill className="step-image-full-item" style={{transform:'scale(1.15)'}} />
                   </div>
+                </div>
+                {/* 三、四组之间连接矢量 */}
+                <div className="step-connector" style={{right:'-50px',width:'100px',height:'100px',zIndex: 3,top:'calc(50% - 60px)'}}>
+                  <img src="/assets/ima/Vector_17_913.png" alt="arrow-3" className="step-connector-image" />
                 </div>
               </div>
 
               {/* 第四组 */}
-              <div className="step-item">
+              <div className="step-item" style={{zIndex:-1}}>
                 <div className="step-card step-card-image-only">
-                  <div className="step-image-full">
-                    <Image src="/assets/ima/green.png" alt="" fill className="step-image-full-item" />
+                  <div className="step-image-full" style={{minHeight:'520px'}}>
+                    <Image src="/assets/ima/green.png" alt="" fill className="step-image-full-item" style={{transform:'scale(1.15)'}} />
                   </div>
                 </div>
               </div>
@@ -1766,7 +1777,7 @@ export default function Home() {
           padding: 140px 0;
           background: #FFF6D0;
           position: relative;
-          z-index: 0;
+          z-index: 10;
         }
 
         .story-section::before {
@@ -2036,9 +2047,16 @@ export default function Home() {
           color: #4b5563;
         }
 
-        @media (max-width: 1280px) {
+    /*    @media (max-width: 1280px) {
           .step-connector {
             display: none;
+          }
+        }
+    */
+        @media (max-width: 780px) {
+          .step-connector-image {
+            transform: rotate(90deg);
+            transition: transform 0.3s;
           }
         }
 
@@ -2135,12 +2153,14 @@ export default function Home() {
 
           .story-name-bruce {
             font-size: 20px;
+            font-weight: bold;
             margin-top: 118px;
             margin-left: 19px;
           }
 
           .story-name-bryan {
             font-size: 20px;
+            font-weight: bold;
             margin-top: -38px;
             margin-left: 110px;
           }
@@ -2230,47 +2250,9 @@ export default function Home() {
             gap: 18px;
           }
 
-          .story-card {
-            flex-direction: column;
-          }
-
-          .story-card-body {
-            max-width: 100%;
-            width: 100%;
-            min-height: 250px;
-          }
-
-          .story-team-visual {
-            width: 140px;
-            min-width: 140px;
-            height: 175px;
-          }
-
-          .story-team-image {
-            width: 140px;
-            height: 175px;
-          }
-
-          .story-science-image {
-            width: 120px;
-            min-width: 120px;
-            height: 175px;
-          }
-
-          .story-name-bruce {
-            font-size: 18px;
-            margin-top: 92px;
-            margin-left: 15px;
-          }
-
-          .story-name-bryan {
-            font-size: 18px;
-            margin-top: -30px;
-            margin-left: 86px;
-          }
 
           .story-roadmap-line {
-            height: auto;
+            height: 140px;
           }
 
           .story-milestones {

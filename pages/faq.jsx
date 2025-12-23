@@ -204,7 +204,7 @@ export default function Faq() {
       <div className="background-gradient"></div>
       <main className="min-h-screen">
         {/* 使用导航组件 */}
-        <Navigation />
+        {/* <Navigation /> */}
 
         {/* Faq Section */}
         <section className="faq-section">

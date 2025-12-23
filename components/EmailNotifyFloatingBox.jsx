@@ -75,7 +75,7 @@ export default function EmailNotifyFloatingBox() {
           marginLeft: 8
         }}
       >
-        Notify at Launch
+        Join Adverture
       </button>
       {/* 错误提示 */}
       {error && (

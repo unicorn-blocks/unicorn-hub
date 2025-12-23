@@ -22,7 +22,7 @@ export default function PopModal({ onClose }) {
   };
 
   // hover时按钮文字切换，点击后submitted就变回Notify at Launch
-  let btnText = 'Notify at Launch';
+  let btnText = 'Join Adverture';
   if (isHovered && !submitted) btnText = 'Reserve My Spot';
 
   return (

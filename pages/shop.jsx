@@ -181,7 +181,7 @@ export default function ShopNew() {
       <div className="background-gradient"></div>
       
       {/* 使用导航组件 */}
-      <Navigation />
+      {/* <Navigation /> */}
 
       {/* Main Content */}
       <main className="min-h-[calc(100vh-300px)] pt-48 px-4">

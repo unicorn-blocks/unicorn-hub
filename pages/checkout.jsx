@@ -1,12 +1,15 @@
 import { useState, useEffect } from 'react';
 import Head from 'next/head';
+import { Elements, CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
+import { loadStripe } from '@stripe/stripe-js';
 import { safeApiCall } from '../lib/api';
 import Navigation from '../components/layout/Navigation';
 import Footer from '../components/layout/Footer';
 import { useLanguage } from '../context/LanguageContext';
 import { COUNTRIES, COUNTRY_CODES, COUNTRY_STATES } from '../lib/countryRegions';
 
-export default function Checkout() {
+const stripePromise = loadStripe('pk_test_51Sh51ShBGUBjERjy3zGenxn7nuL8bRErSpHWgrY50Zb2lBX3mRlbCaE0TzydiykOhHSqvolhPTYSGgeLngI3e8D4qQem00XRj54fBc');
+function CheckoutForm() {
   const { language } = useLanguage();
   
   // 表单状态
@@ -1558,7 +1561,6 @@ export default function Checkout() {
           border-color: var(--error-border);
           background-color: var(--error-bg);
         }
-
         .form-select.error:focus {
           border-color: var(--error-border);
           box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
@@ -3118,5 +3120,13 @@ export default function Checkout() {
         }
       `}</style>
     </>
+  );
+}
+
+export default function Checkout(){
+  return (
+    <Elements stripe={stripePromise}>
+      <CheckoutForm />
+    </Elements>
   );
 }

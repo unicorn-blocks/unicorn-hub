@@ -229,6 +229,7 @@
   font-size: 14px;
 }
 
+/* 弹窗hover/点击逻辑的隐藏：不会自动加样式，需JS控制 */
 .popModalHideContent {
   opacity: 0!important;
   pointer-events: none;

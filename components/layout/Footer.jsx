@@ -113,7 +113,7 @@ export default function Footer({ onSubscribe }) {
               >
                 <img 
                   src="/assets/ima/Group 82.svg" 
-                  alt="Notify at Launch" 
+                  alt="Join Adverture" 
                   className="w-full h-full object-contain"
                   style={{ position: 'relative', zIndex: 1 }}
                 />
@@ -129,7 +129,7 @@ export default function Footer({ onSubscribe }) {
                     zIndex: 2
                   }}
                 >
-                  Notify at Launch
+                  Join Adverture
                 </span>
               </Link>
             </div>
