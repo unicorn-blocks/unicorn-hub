@@ -189,8 +189,8 @@ export default function Features() {
 
       <div className="background-gradient"></div>
       <main className="min-h-screen">
-        {/* 使用导航组件 */}
-        <Navigation />
+      {/* 使用导航组件（已注释，2025/12/23根据需求不显示悬浮导航栏） */}
+      {/* <Navigation /> */}
 
         {/* Features Section */}
         <section className="features-section">

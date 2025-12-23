@@ -154,7 +154,7 @@ export default function PreOrder() {
       <div className="background-gradient"></div>
       
       {/* 使用导航组件 */}
-      <Navigation />
+      {/* <Navigation /> */}
 
       {/* Main Content */}
       <main className="min-h-screen pt-48 px-4 pb-24">
@@ -272,8 +272,8 @@ export default function PreOrder() {
         </div>
       </main>
 
-      {/* 使用Footer组件 */}
-      <Footer />
+      {/* 使用Footer组件（已注释，2025/12/23根据需求reserve-vip-spot不显示底部Email悬浮输入框） */}
+      {/* <Footer /> */}
 
       <style jsx global>{`
         /* ===== 基础样式 ===== */

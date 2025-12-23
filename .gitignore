@@ -6,3 +6,7 @@ out/
 *.html
 !pages/**/*.html
 .next/
+pop弹窗-react-new/
+stripe-sample-code/
+frontend&backend开发/
+landingpage/
