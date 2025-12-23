@@ -1389,8 +1389,10 @@ function CheckoutForm() {
         </div>
       )}
 
-      {/* 传递订阅回调函数给 Footer（已注释，2025/12/23根据需求checkout不显示底部Email悬浮输入框） */}
-      {/* <Footer onSubscribe={handleFooterSubmit} /> */}
+      {/* 传递订阅回调函数给 Footer */}
+      <Footer showEmailInput={false} />,
+      <Footer onSubscribe={handleFooterSubmit} />
+      
 
 
       <style jsx global>{`

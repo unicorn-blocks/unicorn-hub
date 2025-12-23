@@ -10,15 +10,35 @@ export default function PopModal({ onClose }) {
 
   const isValidEmail = (email) => /\S+@\S+\.\S+/.test(email);
 
-  const handleNotify = () => {
+  // Google Sheets 版提交通知
+  const handleNotify = async () => {
     if (!isValidEmail(email)) {
       setError('Please provide a valid email address');
       return;
     }
-    setSubmitted(true);
-    setTimeout(() => {
-      window.location.href = '/reserve-vip-spot';
-    }, 800);
+    try {
+      const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbyn8MOU7baUKZ2exFQsLZD6hGs8poE8KpE31vIrpLXgeoLB4EItUzVgn0qTKi9eqmk9/exec";
+      const res = await fetch(GOOGLE_SHEET_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams({
+          email,
+          source: "pop-modal",
+          note: "reserve-pop-modal",
+        }),
+      });
+      const text = await res.text();
+      if (!text.includes('OK')) {
+        setError('Server error: ' + text);
+        return;
+      }
+      setSubmitted(true);
+      setTimeout(() => {
+        window.location.href = '/reserve-vip-spot';
+      }, 800);
+    } catch (err) {
+      setError('Network error');
+    }
   };
 
   // hover时按钮文字切换，点击后submitted就变回Notify at Launch

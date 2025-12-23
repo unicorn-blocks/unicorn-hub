@@ -272,8 +272,8 @@ export default function PreOrder() {
         </div>
       </main>
 
-      {/* 使用Footer组件（已注释，2025/12/23根据需求reserve-vip-spot不显示底部Email悬浮输入框） */}
-      {/* <Footer /> */}
+      {/* 使用Footer组件 */}
+      <Footer showEmailInput={false} />
 
       <style jsx global>{`
         /* ===== 基础样式 ===== */

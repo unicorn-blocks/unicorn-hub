@@ -17,12 +17,32 @@ export default function EmailNotifyFloatingBox() {
   };
 
   // 按钮点击
-  const handleNotify = () => {
+  // Google Sheets 版邮箱收集
+  const handleNotify = async () => {
     if (!isValidEmail(email)) {
       setError('Please provide a valid email address');
       return;
     }
-    router.push('/reserve-vip-spot');
+    try {
+      const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbyn8MOU7baUKZ2exFQsLZD6hGs8poE8KpE31vIrpLXgeoLB4EItUzVgn0qTKi9eqmk9/exec";
+      const res = await fetch(GOOGLE_SHEET_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams({
+          email,
+          source: "floating-bar",
+          note: "notify-floating-bar",
+        }),
+      });
+      const text = await res.text();
+      if (!text.includes('OK')) {
+        setError('Submit failed: ' + text);
+        return;
+      }
+      router.push('/reserve-vip-spot');
+    } catch (err) {
+      setError('Network error');
+    }
   };
 
   return (

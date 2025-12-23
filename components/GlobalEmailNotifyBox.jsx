@@ -29,12 +29,33 @@ export default function GlobalEmailNotifyBox() {
     setEmail(e.target.value);
     if (error) setError('');
   };
-  const handleNotify = () => {
+  // Google Sheets 版邮箱收集
+  const handleNotify = async () => {
     if (!isValidEmail(email)) {
       setError('Please provide a valid email address');
       return;
     }
-    router.push('/reserve-vip-spot');
+    try {
+      const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbyn8MOU7baUKZ2exFQsLZD6hGs8poE8KpE31vIrpLXgeoLB4EItUzVgn0qTKi9eqmk9/exec";
+      const res = await fetch(GOOGLE_SHEET_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams({
+          email,
+          source: "global-notify-bar",
+          note: "notify-global-bar",
+        }),
+      });
+      const text = await res.text();
+      if (!text.includes('OK')) {
+        setError('Submit failed: ' + text);
+        return;
+      }
+      // 成功后直接跳转
+      router.push('/reserve-vip-spot');
+    } catch (err) {
+      setError('Network error');
+    }
   };
 
   if (!show) return null;
@@ -58,7 +79,7 @@ export default function GlobalEmailNotifyBox() {
         position: 'fixed',
         left: 0,
         right: 0,
-        bottom: 32,
+        bottom: 10,
         margin: '0 auto',
         width: OUTER_WIDTH,
         height: 81,

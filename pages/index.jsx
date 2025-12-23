@@ -152,9 +152,9 @@ export default function Home() {
         ]
       },
       privacy: {
-        heading: 'Uncompromising Privacy:',
-        subheading: "Your Child's Data Is Yours Alone.",
-        tag: 'COPPA Compliant Design',
+        /*heading: 'Uncompromising Privacy:',*/
+        subheading: "Your Child's Data. Yours Alone.",
+        tag: 'COPPA Compliant by Design',
         cards: [
           {
             title: 'All Data Stays Yours',
@@ -306,7 +306,9 @@ export default function Home() {
     );
   };
 
-  const handleFooterSubmit = (email, setFooterStatus) => {
+  // Google Sheets 版订阅 Footer
+  const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbyn8MOU7baUKZ2exFQsLZD6hGs8poE8KpE31vIrpLXgeoLB4EItUzVgn0qTKi9eqmk9/exec";
+  const handleFooterSubmit = async (email, setFooterStatus) => {
     if (!email || !email.includes('@')) {
       if (setFooterStatus) {
         setFooterStatus({
@@ -316,43 +318,33 @@ export default function Home() {
       }
       return;
     }
-
-    safeApiCall('/api/subscribe', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        email,
-        language
-      })
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.success) {
-          if (setFooterStatus) {
-            setFooterStatus({
-              message: data.message || copy.messages.subscribeSuccess,
-              type: 'success'
-            });
-          }
-        } else {
-          if (setFooterStatus) {
-            setFooterStatus({
-              message: data.message || copy.messages.subscribeFailed,
-              type: 'error'
-            });
-          }
-        }
-      })
-      .catch((error) => {
-        console.error('Error:', error);
-        if (setFooterStatus) {
-          setFooterStatus({
-            message: copy.messages.connectionError,
-            type: 'error'
-          });
-        }
+    try {
+      const res = await fetch(GOOGLE_SHEET_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams({
+          email,
+          source: "index-footer",
+          note: "notify-at-launch",
+        }),
       });
+      const text = await res.text();
+      if (text.includes("OK")) {
+        if (setFooterStatus) {
+          setFooterStatus({ message: copy.messages.subscribeSuccess, type: 'success' });
+        }
+      } else {
+        if (setFooterStatus) {
+          setFooterStatus({ message: copy.messages.subscribeFailed + ': ' + text, type: 'error' });
+        }
+      }
+    } catch (err) {
+      if (setFooterStatus) {
+        setFooterStatus({ message: copy.messages.connectionError, type: 'error' });
+      }
+    }
   };
+
 
   return (
     <>

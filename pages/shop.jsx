@@ -60,45 +60,31 @@ export default function ShopNew() {
     // Show loading state
     setIsSubmitting(true);
     
-    // 使用 safeApiCall 而不是直接使用 fetch
-    safeApiCall('/api/subscribe', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ 
-        email,
-        language   // 添加语言参数
-      })
-    })
-    .then(response => response.json())
-    .then(data => {
-      if (data.success) {
-        // Show success message
-        setFormStatus({
-          message: data.message || t.subscribeSuccess,
-          type: 'success'
+    // 直接提交到 Google Sheets
+    const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbyn8MOU7baUKZ2exFQsLZD6hGs8poE8KpE31vIrpLXgeoLB4EItUzVgn0qTKi9eqmk9/exec";
+    (async () => {
+      try {
+        const res = await fetch(GOOGLE_SHEET_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: new URLSearchParams({
+            email,
+            source: "shop-form",
+            note: "notify-at-launch",
+          }),
         });
-        setEmail(''); // Clear input
-      } else {
-        // Show error message
-        setFormStatus({
-          message: data.error || t.subscribeFailed,
-          type: 'error'
-        });
+        const text = await res.text();
+        if (text.includes("OK")) {
+          setFormStatus({ message: t.subscribeSuccess, type: 'success' });
+          setEmail("");
+        } else {
+          setFormStatus({ message: t.subscribeFailed + ": " + text, type: 'error' });
+        }
+      } catch (err) {
+        setFormStatus({ message: t.connectionError, type: 'error' });
       }
-    })
-    .catch(error => {
-      console.error('Error:', error);
-      setFormStatus({
-        message: t.connectionError,
-        type: 'error'
-      });
-    })
-    .finally(() => {
-      // Restore button state
       setIsSubmitting(false);
-    });
+    })();
   };
 
   // 从页脚提交的处理函数
@@ -109,65 +95,33 @@ export default function ShopNew() {
     // Show loading state
     setIsSubmitting(true);
     
-    // 使用 safeApiCall 发送请求
-    safeApiCall('/api/subscribe', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ 
-        email: footerEmail,
-        language   // 添加语言参数
-      })
-    })
-    .then(response => response.json())
-    .then(data => {
-      if (data.success) {
-        // 不仅更新主表单状态，也更新页脚状态
-        setFormStatus({
-          message: data.message || t.subscribeSuccess,
-          type: 'success'
+    // 直接提交到 Google Sheets
+    const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbyn8MOU7baUKZ2exFQsLZD6hGs8poE8KpE31vIrpLXgeoLB4EItUzVgn0qTKi9eqmk9/exec";
+    (async () => {
+      try {
+        const res = await fetch(GOOGLE_SHEET_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: new URLSearchParams({
+            email: footerEmail,
+            source: "shop-footer",
+            note: "notify-at-launch",
+          }),
         });
-        
-        if (setFooterStatus) {
-          setFooterStatus({
-            message: data.message || t.subscribeSuccess,
-            type: 'success'
-          });
+        const text = await res.text();
+        if (text.includes("OK")) {
+          setFormStatus({ message: t.subscribeSuccess, type: 'success' });
+          if (setFooterStatus) setFooterStatus({ message: t.subscribeSuccess, type: 'success' });
+        } else {
+          setFormStatus({ message: t.subscribeFailed + ": " + text, type: 'error' });
+          if (setFooterStatus) setFooterStatus({ message: t.subscribeFailed + ": " + text, type: 'error' });
         }
-      } else {
-        // 更新错误状态
-        setFormStatus({
-          message: data.error || t.subscribeFailed,
-          type: 'error'
-        });
-        
-        if (setFooterStatus) {
-          setFooterStatus({
-            message: data.error || t.subscribeFailed,
-            type: 'error'
-          });
-        }
+      } catch (err) {
+        setFormStatus({ message: t.connectionError, type: 'error' });
+        if (setFooterStatus) setFooterStatus({ message: t.connectionError, type: 'error' });
       }
-    })
-    .catch(error => {
-      console.error('Error:', error);
-      setFormStatus({
-        message: t.connectionError,
-        type: 'error'
-      });
-      
-      if (setFooterStatus) {
-        setFooterStatus({
-          message: t.connectionError,
-          type: 'error'
-        });
-      }
-    })
-    .finally(() => {
-      // Restore button state
       setIsSubmitting(false);
-    });
+    })();
   };
 
   return (
