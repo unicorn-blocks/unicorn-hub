@@ -134,20 +134,17 @@ export default function Home() {
         testimonials: [
           {
             quote: '“So much better than watching TV.”',
-            author: 'Mom of 3-Year-Old',
-            image: '/assets/reserve-vip-spot/toy-1.jpg'
+            author: 'Dad of 3-Year- Old'
           },
           {
             quote:
-              "“I love that Sparky doesn’t ‘correct’ him. If he says it’s a rocket, Sparky sees a rocket. It really protects his imagination.”",
-            author: 'Our Little Builder, 5',
-            image: '/assets/reserve-vip-spot/toy-2.jpg'
+             "“I love that Sparky doesn’t ‘correct’ him. If he says it’s a rocket, Sparky sees a rocket. It really protects his imagination.”",
+            author: 'Mom of 5-Year-Old'
           },
           {
             quote:
               '“Pleeease, just five more minutes! I have to light up all the lights on Sparky’s hat!”',
-            author: 'Our Little Builder, 5',
-            image: '/assets/ks_pic/train.png'
+            author: 'Our Little Builder, 5'
           }
         ]
       },
@@ -259,7 +256,7 @@ export default function Home() {
     { base: '#b7c3ff', shadow: 'rgba(183, 195, 255, 0.35)' },
     { base: '#ffa0e1', shadow: 'rgba(255, 160, 225, 0.3)' }
   ];
-  const familyBlocks = Array.from({ length: 4 }, (_, idx) => {
+  const familyBlocks = Array.from({ length: 3 }, (_, idx) => {
     const testimonial = copy.family.testimonials[idx % copy.family.testimonials.length];
     const palette = idx % 2 === 0 ? 'sunset' : 'sky';
 
@@ -625,17 +622,34 @@ export default function Home() {
                 <h2>{copy.family.heading}</h2>
               </div>
               <div className="family-mosaic">
-                {familyBlocks.map((block, index) => (
+                {familyBlocks.map((block, index) => {
+                  // 更新见证内容
+                  let updatedQuote = block.quote;
+                  let updatedAuthor = block.author;
+                  
+                  if (index === 0) {
+                    updatedQuote = '"So much better than watching TV."';
+                    updatedAuthor = '-Dad of 3-Year- Old';
+                  } else if (index === 1) {
+                    updatedQuote = '"I love that Sparky doesn’t ‘correct’ him. If he says it’s a rocket, Sparky sees a rocket. It really protects his imagination."';
+                    updatedAuthor = '-Mom of 5-Year-Old';
+                  } else if (index === 2) {
+                    updatedQuote = '"Pleeease, just five more minutes! I have to light up all the lights on Sparky’s hat!"';
+                    updatedAuthor = '-Our Little Builder, 5';
+                  }
+                  
+                  return (
                   <div className={`family-card ${block.palette}`} key={block.id || `${block.author}-${index}`}>
-                    <div className={`family-photo frame-${block.palette}`}>
-                      <Image src={block.image} alt={block.author} width={320} height={240} />
+                    <div className="family-quote-icon">
+                      <img src="/assets/ima/逗号.svg" alt="quote" className="quote-icon" />
                     </div>
                     <div className="family-quote">
-                      <p>{block.quote}</p>
-                      <span>{block.author}</span>
+                      <p>{updatedQuote}</p>
+                      <span>{updatedAuthor}</span>
                     </div>
                   </div>
-                ))}
+                  );
+                })}
               </div>
               <div className="family-pagination" aria-hidden="true">
                 <span className="active" />
@@ -651,8 +665,6 @@ export default function Home() {
             <div className="privacy-heading">
               <div>
                 <h2>
-                  <span className="privacy-line1">{copy.privacy.heading}</span>
-                  <br />
                   <span className="privacy-line2">{copy.privacy.subheading}</span>
                 </h2>
                 <p className="privacy-tag">{copy.privacy.tag}</p>
@@ -808,11 +820,11 @@ export default function Home() {
           display: flex;
           align-items: center;
           justify-content: center;
-          gap: 12px;
-          padding: 16px 24px;
+          gap: 10px;
+          padding: 0.5px 24px; /* 缩小上下padding从16px到6px */
           z-index: 8;
           margin-top: -100px;
-          top: -100px;
+          top: -88px;
         }
 
         .hero-logo {
@@ -1158,11 +1170,10 @@ export default function Home() {
         }
 
         .kit-section {
-          padding: 100px 0 130px;
+          padding: 100px 0 90px;
           background: #FFFEF3;
           position: relative;
-          margin-top: -50px;
-          z-index: 1;
+          z-index: -2;
         }
 
         .kit-heading-block {
@@ -1397,9 +1408,11 @@ export default function Home() {
         }
 
         .family-section {
-          padding: 95px 0 1px;
+          padding: 95px 0 50px;
           background: #FFFEF3;
           position: relative;
+          overflow: hidden;
+          z-index: 3;
         }
 
         .family-bg-wrapper {
@@ -1407,8 +1420,10 @@ export default function Home() {
           top: 0;
           left: 0;
           width: 100%;
+          height: 100%;
           pointer-events: none;
-          z-index: 1;
+          z-index: 2;
+          overflow: hidden;
         }
 
         .family-bg-image {
@@ -1425,12 +1440,12 @@ export default function Home() {
         }
 
         .family-bg-top {
-          top: 0;
+          top: -50px;
           z-index: 2;
         }
 
         .family-bg-bottom {
-          top: 45px;
+          top: -5px;
           z-index: 1;
         }
 
@@ -1449,6 +1464,8 @@ export default function Home() {
           max-width: 540px;
           position: relative;
           z-index: 2;
+          text-align: center;
+          margin: 0 auto;
         }
 
         .family-tagline {
@@ -1462,42 +1479,76 @@ export default function Home() {
 
         .family-header h2 {
           font-size: clamp(2.2rem, 4vw, 3rem);
-          color: #1c2957;
+          color: #54545C;
+          font-weight: bold;
           margin: 0;
           line-height: 1.05;
+          -webkit-text-stroke: 1px white;
+          text-stroke: 1px white;
+          text-shadow: 
+            -1px -1px 0 white,
+            1px -1px 0 white,
+            -1px 1px 0 white,
+            1px 1px 0 white;
         }
 
         .family-mosaic {
           margin-top: 54px;
           display: grid;
-          grid-template-columns: repeat(2, minmax(0, 1fr));
-          gap: 38px 40px;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 30px;
           position: relative;
           z-index: 2;
+          max-width: 1600px;
+          margin-left: auto;
+          margin-right: auto;
         }
 
         .family-card {
           --quote-color: #f07f1f;
           --frame-color: #f49f3f;
           --photo-bg: #fff1df;
-          display: grid;
-          grid-template-columns: minmax(150px, 210px) 1fr;
-          align-items: center;
-          gap: 22px;
-          padding: 24px 32px;
-          border-radius: 34px;
-          background: rgba(255, 255, 255, 0.92);
-          box-shadow: 0 25px 45px rgba(25, 43, 80, 0.15);
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          min-height: 60px;
+          padding: 58px 50px;
+          border-radius: 20px;
+          background: rgba(255, 255, 255, 1);
+          box-shadow: 0 8px 16px rgba(25, 43, 80, 0.1);
           position: relative;
           z-index: 2;
+          width: 103%;
+          max-width: none;
+        }
+
+        .family-quote-icon {
+          position: absolute;
+          top: -30px;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 54px;
+          height: 54px;
+          background: transparent !important;
+          border-radius: 0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          z-index: 3;
+        }
+
+        .quote-icon {
+          width: 48px;
+          height: 48px;
+          object-fit: contain;
         }
 
         .family-card:nth-child(odd) {
-          transform: translateY(-18px);
+          transform: translateY(0);
         }
 
         .family-card:nth-child(even) {
-          transform: translateY(18px);
+          transform: translateY(0);
         }
 
         .family-card.sky {
@@ -1541,21 +1592,32 @@ export default function Home() {
           background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCAzMjAgMjQwJz4KPHBhdGggZD0nTTE4IDYwIFEgNDIgNSA3MCA2MCBRIDk4IDExNSAxMjYgNjAgUSAxNTQgNSAxODIgNjAgUSAyMTAgMTE1IDIzOCA2MCBRIDI2NiA1IDI5NCA2MCBMIDI5NCAxODAgUSAyNjAgMjEwIDIzMCAxODggUSAyMDAgMTY2IDE3MCAxODggUSAxNDAgMjEwIDExMCAxODggUSA4MCAxNjYgNTAgMTg4IFEgMzAgMjAyIDE4IDE4OCBaJyBzdHJva2U9JyM2RUE4RkYnIHN0cm9rZS13aWR0aD0nMTInIGZpbGw9J25vbmUnIHN0cm9rZS1saW5lam9pbj0ncm91bmQnIHN0cm9rZS1saW5lY2FwPSdyb3VuZCcvPgo8L3N2Zz4=");
         }
 
+        .family-quote {
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          height: 100%;
+        }
+
         .family-quote p {
           font-family: 'Playfair Display', 'Times New Roman', serif;
-          font-size: clamp(1.3rem, 2.6vw, 1.8rem);
+          font-size: clamp(1rem, 2vw, 1.2rem);
           font-weight: 700;
-          color: var(--quote-color);
+          color: #45334D;
           line-height: 1.35;
-          margin: 0 0 12px;
+          margin: 0;
+          flex-grow: 1;
         }
 
         .family-quote span {
-          font-weight: 700;
+          font-family: 'Rubik', sans-serif;
+          font-weight: 400;
           letter-spacing: 0.08em;
-          color: #25336a;
-          text-transform: uppercase;
+          color: #697077;
+          /* 去除 text-transform: capitalize; 保持原文样式 */
           font-size: 0.9rem;
+          margin-top: 16px;
+          align-self: flex-start;
         }
 
         .family-pagination {
@@ -1568,14 +1630,17 @@ export default function Home() {
         }
 
         .family-pagination span {
-          width: 10px;
-          height: 10px;
-          border-radius: 999px;
-          background: rgba(30, 47, 97, 0.3);
+          width: 15px;
+          height: 15px;
+          border-radius: 50%;
+          background: rgba(229, 222, 237, 1);
         }
 
         .family-pagination .active {
-          background: #1d4acb;
+          width: 49.47px;
+          height: 15px;
+          border-radius: 20px;
+          background: rgba(244, 192, 37, 1);
         }
 
         .privacy-section {
@@ -1588,7 +1653,7 @@ export default function Home() {
 
         .privacy-heading {
           text-align: center;
-          padding-top: 120px;
+          padding-top: 80px; /* 从120px减少到80px，让标题上移 */
         }
 
         .privacy-heading h2 {
@@ -2229,13 +2294,12 @@ export default function Home() {
           }
 
           .family-mosaic {
-            grid-template-columns: minmax(0, 1fr);
-            gap: 22px;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
           }
 
           .family-card {
-            grid-template-columns: minmax(0, 1fr);
-            padding: 18px 22px;
+            padding: 16px 18px;
           }
 
           .story-panels {

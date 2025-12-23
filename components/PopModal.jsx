@@ -42,7 +42,7 @@ export default function PopModal({ onClose }) {
   };
 
   // hover时按钮文字切换，点击后submitted就变回Notify at Launch
-  let btnText = 'Join Adverture';
+  let btnText = 'Join Adventure';
   if (isHovered && !submitted) btnText = 'Reserve My Spot';
 
   return (
@@ -62,8 +62,8 @@ export default function PopModal({ onClose }) {
           <Image src="/assets/ima/Image copy 1.png" alt="airplane" width={151} height={161} className={styles.plane} />
           {/* 大标题 */}
           <h2 className={styles.reserveTitle}><span>Reserve VIP spot!</span></h2>
-          {/* hover时隐藏内容，本体class切换*/}
-          <div className={isHovered ? styles.popModalHideContent : ''}>
+          {/* 内容区域 - hover时不再隐藏 */}
+          <div>
             <div className={styles.txtLine}>
               Reserve your VIP spot now for <span>$5</span> and secure <span className={styles.discount}>$49 off</span> the retail price on launch day.
             </div>
@@ -73,8 +73,8 @@ export default function PopModal({ onClose }) {
               <span className={styles.counterRest}>of 500 left!</span>
             </div>
           </div>
-          {/* 底部输入区块，hover态居中显示 */}
-          <div className={isHovered ? styles.bottomInputWrapperCenter : styles.bottomInputWrapper}>
+          {/* 底部输入区块 - hover时位置不再改变 */}
+          <div className={styles.bottomInputWrapper}>
             {/* 邮箱输入框放左边 */}
             <input
               type="email"

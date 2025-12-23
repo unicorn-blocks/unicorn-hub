@@ -85,9 +85,8 @@ export default function Footer({ onSubscribe, showEmailInput = true }) {
         <div className="grid md:grid-cols-2 gap-8 mb-12">
           {/* Logo and Contact */}
           <div>
-            <div className="flex items-center gap-2 mb-4">
-  <img src="/assets/logo_horizontal_white_eng.svg" alt="Unicorn Logo" className="h-14" decoding="async" />
-  <span style={{fontWeight:'bold', fontSize:'1.43rem', color:'#444',letterSpacing:'-1px'}}>Unicorn Blocks</span>
+            <div className="flex items-center mb-4">
+  <img src="/assets/group 85.svg" alt="Unicorn Blocks Logo" className="h-14" decoding="async" />
 </div>
             <p className="text-sm text-gray-600 mb-4 leading-relaxed">
               A world of blocks, stories, and imagination.<br/>
@@ -128,15 +127,15 @@ export default function Footer({ onSubscribe, showEmailInput = true }) {
                 }}
               >
                 <img 
-                  src="/assets/ima/Group 82.svg" 
-                  alt="Join Adverture" 
+                  src="/assets/ima/Group 83.svg" 
+                  alt="Join Adventure" 
                   className="w-full h-full object-contain"
                   style={{ position: 'relative', zIndex: 1 }}
                 />
                 <span 
                   className="absolute font-bold text-center whitespace-nowrap"
                   style={{ 
-                    color: '#54545C',
+                    color: '#fff',
                     fontSize: '12px',
                     lineHeight: '0.8',
                     bottom: '34px',
@@ -145,7 +144,7 @@ export default function Footer({ onSubscribe, showEmailInput = true }) {
                     zIndex: 2
                   }}
                 >
-                  Join Adverture
+                  Join Adventure
                 </span>
               </button>
             </div>
@@ -153,9 +152,11 @@ export default function Footer({ onSubscribe, showEmailInput = true }) {
         </div>
       </div>
 
-      {/* 右下角版权文案 */}
-      <div style={{ position: 'absolute', right: '80px', bottom: '127px', color: '#555', fontSize: '0.94rem', fontWeight: 400 }}>
-        {t.allRightsReserved}
+      {/* 左下角版权文案 - 与邮箱对齐 */}
+      <div className="container mx-auto px-4">
+        <div style={{ color: '#555', fontSize: '0.94rem', fontWeight: 400 }}>
+          {t.allRightsReserved}
+        </div>
       </div>
       {/* 添加页脚消息样式 */}
       <style jsx>{`

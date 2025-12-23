@@ -137,7 +137,7 @@ export default function GlobalEmailNotifyBox() {
           padding: 0
         }}
       >
-        Join Adverture
+        Join Adventure
       </button>
       {/* 右侧 18px 间距 */}
       <div style={{ width: 18, height: BOX_HEIGHT-30 }} />

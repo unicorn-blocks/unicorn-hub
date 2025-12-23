@@ -95,7 +95,7 @@ export default function EmailNotifyFloatingBox() {
           marginLeft: 8
         }}
       >
-        Join Adverture
+        Join Adventure
       </button>
       {/* 错误提示 */}
       {error && (
