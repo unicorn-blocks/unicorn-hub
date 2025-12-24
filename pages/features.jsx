@@ -17,8 +17,8 @@ export default function Features() {
   const contentRef = useRef(null);
   const headingsRef = useRef([]);
 
-  // 订阅处理函数
-  const handleFooterSubmit = (email, setFooterStatus) => {
+  // 订阅处理函数 - 使用统一的Google Sheets工具函数
+  const handleFooterSubmit = async (email, setFooterStatus) => {
     if (!email || !email.includes('@')) {
       if (setFooterStatus) {
         setFooterStatus({
@@ -29,41 +29,34 @@ export default function Features() {
       return;
     }
     
-    safeApiCall('/api/subscribe', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ 
-        email,
-        language   // 添加语言参数
-      })
-    })
-    .then(response => response.json())
-    .then(data => {
-      if (data.success) {
+    try {
+      const { submitEmailToGoogleSheets } = await import('../lib/googleSheets');
+      const result = await submitEmailToGoogleSheets(email, "features-footer", "notify-at-launch");
+      
+      if (result.success) {
         if (setFooterStatus) {
           setFooterStatus({
-            message: data.message || t.subscribeSuccess,
+            message: t.subscribeSuccess,
             type: 'success'
           });
         }
       } else {
         if (setFooterStatus) {
           setFooterStatus({
-            message: data.message || t.subscribeFailed,
+            message: result.message,
             type: 'error'
           });
         }
       }
-    })
-    .catch(error => {
-      console.error('Error:', error);
+    } catch (err) {
+      console.error('提交错误:', err);
       if (setFooterStatus) {
         setFooterStatus({
           message: t.connectionError,
           type: 'error'
         });
       }
-    });
+    }
   };
 
   useEffect(() => {

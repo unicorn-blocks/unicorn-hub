@@ -604,73 +604,58 @@ function CheckoutForm() {
     setExpiryDate(formatted);
   };
 
-  // 从页脚提交的处理函数
-  const handleFooterSubmit = (footerEmail, setFooterStatus) => {
+  // 从页脚提交的处理函数 - 使用统一的Google Sheets工具函数
+  const handleFooterSubmit = async (footerEmail, setFooterStatus) => {
     // 设置 email 状态并触发表单提交
     setEmail(footerEmail);
     
     // Show loading state
     setIsProcessing(true);
     
-    // 使用 safeApiCall 发送请求
-    safeApiCall('/api/subscribe', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ 
-        email: footerEmail,
-        language
-      })
-    })
-    .then(response => response.json())
-    .then(data => {
-      if (data.success) {
+    try {
+      const { submitEmailToGoogleSheets } = await import('../lib/googleSheets');
+      const result = await submitEmailToGoogleSheets(footerEmail, "checkout-footer", "notify-at-launch");
+      
+      if (result.success) {
         // 不仅更新主表单状态，也更新页脚状态
         setFormStatus({
-          message: data.message || 'Thank you for subscribing!',
+          message: translations[language].subscribeSuccess,
           type: 'success'
         });
-        
         if (setFooterStatus) {
           setFooterStatus({
-            message: data.message || 'Thank you for subscribing!',
+            message: translations[language].subscribeSuccess,
             type: 'success'
           });
         }
       } else {
-        // 更新错误状态
         setFormStatus({
-          message: data.error || 'Subscription failed, please try again later',
+          message: result.message,
           type: 'error'
         });
-        
         if (setFooterStatus) {
           setFooterStatus({
-            message: data.error || 'Subscription failed, please try again later',
+            message: result.message,
             type: 'error'
           });
         }
       }
-    })
-    .catch(error => {
-      console.error('Error:', error);
+    } catch (err) {
+      console.error('提交错误:', err);
+      const errorMessage = translations[language].connectionError;
       setFormStatus({
-        message: t.connectionError,
+        message: errorMessage,
         type: 'error'
       });
-      
       if (setFooterStatus) {
         setFooterStatus({
-          message: t.connectionError,
+          message: errorMessage,
           type: 'error'
         });
       }
-    })
-    .finally(() => {
-      // Restore button state
-      setIsProcessing(false);
-    });
+    }
+    
+    setIsProcessing(false);
   };
 
   return (
@@ -684,7 +669,7 @@ function CheckoutForm() {
       <div className="background-gradient"></div>
       
       {/* 使用导航组件 */}
-      <Navigation />
+      {/*<Navigation />*/}
 
       {/* Main Content */}
       <main className="min-h-screen pt-48 px-4 pb-24">
@@ -1390,9 +1375,11 @@ function CheckoutForm() {
       )}
 
       {/* 传递订阅回调函数给 Footer */}
-      <Footer showEmailInput={false} />,
-      <Footer onSubscribe={handleFooterSubmit} />
-      
+      {/* <Footer 
+        showEmailInput={false} 
+        onSubscribe={handleFooterSubmit} 
+        /> */}
+      <Footer showEmailInput={false} />
 
 
       <style jsx global>{`
@@ -1542,11 +1529,15 @@ function CheckoutForm() {
           border: 1.5px solid var(--color-border);
           border-radius: 12px;
           font-size: 0.875rem;
-          color: var(--color-primary);
+          color: #A7A7A7; /* 默认颜色 */
           background: rgba(255, 255, 255, 0.9);
           backdrop-filter: blur(8px);
           transition: all 0.3s ease;
           box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        }
+
+        .form-input:not(:placeholder-shown) {
+          color: #54545C; /* 有输入时的颜色 */
         }
 
         .form-input.error {

@@ -17,8 +17,8 @@ export default function Faq() {
   const contentRef = useRef(null);
   const headingsRef = useRef([]);
 
-  // 订阅处理函数
-  const handleFooterSubmit = (email, setFooterStatus) => {
+  // 订阅处理函数 - 使用统一的Google Sheets工具函数
+  const handleFooterSubmit = async (email, setFooterStatus) => {
     // 硬编码中英文提示文本
     const errorMsg = language === 'en' ? 
       'Please provide a valid email address' : 
@@ -26,9 +26,6 @@ export default function Faq() {
     const successMsg = language === 'en' ? 
       'Thank you for subscribing!' : 
       '感谢您的订阅！';
-    const failedMsg = language === 'en' ? 
-      'Subscription failed, please try again later' : 
-      '订阅失败，请稍后再试';
     const connErrorMsg = language === 'en' ? 
       'Error connecting to server, please try again later' : 
       '连接服务器错误，请稍后再试';
@@ -43,41 +40,34 @@ export default function Faq() {
       return;
     }
     
-    safeApiCall('/api/subscribe', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ 
-        email,
-        language  // 添加语言参数
-      })
-    })
-    .then(response => response.json())
-    .then(data => {
-      if (data.success) {
+    try {
+      const { submitEmailToGoogleSheets } = await import('../lib/googleSheets');
+      const result = await submitEmailToGoogleSheets(email, "faq-footer", "notify-at-launch");
+      
+      if (result.success) {
         if (setFooterStatus) {
           setFooterStatus({
-            message: data.message || successMsg,
+            message: successMsg,
             type: 'success'
           });
         }
       } else {
         if (setFooterStatus) {
           setFooterStatus({
-            message: data.message || failedMsg,
+            message: result.message,
             type: 'error'
           });
         }
       }
-    })
-    .catch(error => {
-      console.error('Error:', error);
+    } catch (err) {
+      console.error('提交错误:', err);
       if (setFooterStatus) {
         setFooterStatus({
           message: connErrorMsg,
           type: 'error'
         });
       }
-    });
+    }
   };
 
   useEffect(() => {

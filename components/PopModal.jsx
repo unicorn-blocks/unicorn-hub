@@ -10,33 +10,27 @@ export default function PopModal({ onClose }) {
 
   const isValidEmail = (email) => /\S+@\S+\.\S+/.test(email);
 
-  // Google Sheets 版提交通知
+  // Google Sheets 版提交通知 - 使用统一工具函数
   const handleNotify = async () => {
     if (!isValidEmail(email)) {
       setError('Please provide a valid email address');
       return;
     }
     try {
-      const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbyn8MOU7baUKZ2exFQsLZD6hGs8poE8KpE31vIrpLXgeoLB4EItUzVgn0qTKi9eqmk9/exec";
-      const res = await fetch(GOOGLE_SHEET_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: new URLSearchParams({
-          email,
-          source: "pop-modal",
-          note: "reserve-pop-modal",
-        }),
-      });
-      const text = await res.text();
-      if (!text.includes('OK')) {
-        setError('Server error: ' + text);
-        return;
+      // 动态导入工具函数
+      const { submitEmailToGoogleSheets } = await import('../lib/googleSheets');
+      const result = await submitEmailToGoogleSheets(email, "pop-modal", "reserve-pop-modal");
+      
+      if (result.success) {
+        setSubmitted(true);
+        setTimeout(() => {
+          window.location.href = '/reserve-vip-spot';
+        }, 800);
+      } else {
+        setError(result.message);
       }
-      setSubmitted(true);
-      setTimeout(() => {
-        window.location.href = '/reserve-vip-spot';
-      }, 800);
     } catch (err) {
+      console.error('提交错误:', err);
       setError('Network error');
     }
   };
@@ -78,7 +72,7 @@ export default function PopModal({ onClose }) {
             {/* 邮箱输入框放左边 */}
             <input
               type="email"
-              placeholder="Enter email address..."
+              placeholder="Enter your email to join"
               value={email}
               onChange={e => {
                 setEmail(e.target.value); setError(''); setSubmitted(false);}}

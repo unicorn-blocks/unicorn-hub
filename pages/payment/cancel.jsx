@@ -26,6 +26,7 @@ export default function PaymentCancel() {
       tryAgain: 'Try Again',
       backToHome: 'Back to Home',
       emailError: 'Please provide a valid email address',
+      //emailError: '❌',
       subscribeSuccess: 'Thank you for subscribing!',
       subscribeFailed: 'Subscription failed, please try again later',
       connectionError: 'Error connecting to server, please try again later'
@@ -53,8 +54,8 @@ export default function PaymentCancel() {
 
   const t = translations[language] || translations.en;
 
-  // 订阅处理函数
-  const handleFooterSubmit = (email, setFooterStatus) => {
+  // 订阅处理函数 - 使用统一的Google Sheets工具函数
+  const handleFooterSubmit = async (email, setFooterStatus) => {
     if (!email || !email.includes('@')) {
       if (setFooterStatus) {
         setFooterStatus({
@@ -65,41 +66,34 @@ export default function PaymentCancel() {
       return;
     }
     
-    safeApiCall('/api/subscribe', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ 
-        email,
-        language   // 添加语言参数
-      })
-    })
-    .then(response => response.json())
-    .then(data => {
-      if (data.success) {
+    try {
+      const { submitEmailToGoogleSheets } = await import('../../lib/googleSheets');
+      const result = await submitEmailToGoogleSheets(email, "payment-cancel-footer", "notify-at-launch");
+      
+      if (result.success) {
         if (setFooterStatus) {
           setFooterStatus({
-            message: data.message || t.subscribeSuccess,
+            message: t.subscribeSuccess,
             type: 'success'
           });
         }
       } else {
         if (setFooterStatus) {
           setFooterStatus({
-            message: data.message || t.subscribeFailed,
+            message: result.message,
             type: 'error'
           });
         }
       }
-    })
-    .catch(error => {
-      console.error('Error:', error);
+    } catch (err) {
+      console.error('提交错误:', err);
       if (setFooterStatus) {
         setFooterStatus({
           message: t.connectionError,
           type: 'error'
         });
       }
-    });
+    }
   };
 
   return (

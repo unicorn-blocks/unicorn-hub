@@ -13,6 +13,7 @@ const PopModal = dynamic(() => import('../components/PopModal'), { ssr: false })
 
 export default function Home() {
   const [popOpen, setPopOpen] = useState(false);
+  const [familyPage, setFamilyPage] = useState(0); // 添加家庭见证页面状态
   // 弹窗只弹一次
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -133,18 +134,18 @@ export default function Home() {
         heading: 'Our Family Says',
         testimonials: [
           {
-            quote: '“So much better than watching TV.”',
-            author: 'Dad of 3-Year- Old'
+            quote: '"So much better than watching TV."',
+            author: '—Dad of 3-Year- Old'
           },
           {
             quote:
              "“I love that Sparky doesn’t ‘correct’ him. If he says it’s a rocket, Sparky sees a rocket. It really protects his imagination.”",
-            author: 'Mom of 5-Year-Old'
+            author: '—Mom of 5-Year-Old'
           },
           {
             quote:
               '“Pleeease, just five more minutes! I have to light up all the lights on Sparky’s hat!”',
-            author: 'Our Little Builder, 5'
+            author: '—Our Little Builder, 5'
           }
         ]
       },
@@ -257,13 +258,34 @@ export default function Home() {
     { base: '#ffa0e1', shadow: 'rgba(255, 160, 225, 0.3)' }
   ];
   const familyBlocks = Array.from({ length: 3 }, (_, idx) => {
-    const testimonial = copy.family.testimonials[idx % copy.family.testimonials.length];
+    // 使用当前页面的见证内容，如果是数组的数组则使用对应页面，否则使用原来的逻辑
+    const testimonials = Array.isArray(copy.family.testimonials[0]) 
+      ? copy.family.testimonials[familyPage] || copy.family.testimonials[0]
+      : copy.family.testimonials;
+    
+    let testimonial = testimonials[idx % testimonials.length];
+    
+    // 根据页面和索引硬编码特定的更改
+    if (familyPage === 1 && idx === 0) {
+      // 第二页的第一个矩形块
+      testimonial = {
+        quote: '"So much better than watching TV."',
+        author: '—Dad of 3-Year- Old'
+      };
+    } else if (familyPage === 2 && idx === 1) {
+      // 第三页的第二个矩形块
+      testimonial = {
+        quote: '"I love that Sparky doesn’t ‘correct’ him. If he says it’s a rocket, Sparky sees a rocket. It really protects his imagination."',
+        author: '—Mom of 5-Year-Old'
+      };
+    }
+    
     const palette = idx % 2 === 0 ? 'sunset' : 'sky';
 
     return {
       ...testimonial,
       palette,
-      id: `${testimonial.author}-${idx}`
+      id: `${testimonial.author}-${idx}-${familyPage}`
     };
   });
 
@@ -303,42 +325,18 @@ export default function Home() {
     );
   };
 
-  // Google Sheets 版订阅 Footer
-  const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbyn8MOU7baUKZ2exFQsLZD6hGs8poE8KpE31vIrpLXgeoLB4EItUzVgn0qTKi9eqmk9/exec";
+  // Google Sheets 版订阅 Footer - 使用统一工具函数
   const handleFooterSubmit = async (email, setFooterStatus) => {
-    if (!email || !email.includes('@')) {
-      if (setFooterStatus) {
-        setFooterStatus({
-          message: copy.messages.emailError,
-          type: 'error'
-        });
-      }
-      return;
-    }
-    try {
-      const res = await fetch(GOOGLE_SHEET_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: new URLSearchParams({
-          email,
-          source: "index-footer",
-          note: "notify-at-launch",
-        }),
+    // 动态导入工具函数
+    const { submitEmailToGoogleSheets } = await import('../lib/googleSheets');
+    
+    const result = await submitEmailToGoogleSheets(email, "index-footer", "notify-at-launch");
+    
+    if (setFooterStatus) {
+      setFooterStatus({
+        message: result.success ? copy.messages.subscribeSuccess : result.message,
+        type: result.success ? 'success' : 'error'
       });
-      const text = await res.text();
-      if (text.includes("OK")) {
-        if (setFooterStatus) {
-          setFooterStatus({ message: copy.messages.subscribeSuccess, type: 'success' });
-        }
-      } else {
-        if (setFooterStatus) {
-          setFooterStatus({ message: copy.messages.subscribeFailed + ': ' + text, type: 'error' });
-        }
-      }
-    } catch (err) {
-      if (setFooterStatus) {
-        setFooterStatus({ message: copy.messages.connectionError, type: 'error' });
-      }
     }
   };
 
@@ -629,13 +627,13 @@ export default function Home() {
                   
                   if (index === 0) {
                     updatedQuote = '"So much better than watching TV."';
-                    updatedAuthor = '-Dad of 3-Year- Old';
+                    updatedAuthor = '—Dad of 3-Year- Old';
                   } else if (index === 1) {
                     updatedQuote = '"I love that Sparky doesn’t ‘correct’ him. If he says it’s a rocket, Sparky sees a rocket. It really protects his imagination."';
-                    updatedAuthor = '-Mom of 5-Year-Old';
+                    updatedAuthor = '—Mom of 5-Year-Old';
                   } else if (index === 2) {
                     updatedQuote = '"Pleeease, just five more minutes! I have to light up all the lights on Sparky’s hat!"';
-                    updatedAuthor = '-Our Little Builder, 5';
+                    updatedAuthor = '—Our Little Builder, 5';
                   }
                   
                   return (
@@ -644,17 +642,22 @@ export default function Home() {
                       <img src="/assets/ima/逗号.svg" alt="quote" className="quote-icon" />
                     </div>
                     <div className="family-quote">
-                      <p>{updatedQuote}</p>
-                      <span>{updatedAuthor}</span>
+                      <p>{block.quote}</p>
+                      <span>{block.author}</span>
                     </div>
                   </div>
                   );
                 })}
               </div>
-              <div className="family-pagination" aria-hidden="true">
-                <span className="active" />
-                <span />
-                <span />
+              <div className="family-pagination">
+                {[0, 1, 2].map((pageIndex) => (
+                  <button
+                    key={pageIndex}
+                    className={familyPage === pageIndex ? 'active' : ''}
+                    onClick={() => setFamilyPage(pageIndex)}
+                    aria-label={`显示第${pageIndex + 1}页见证`}
+                  />
+                ))}
               </div>
             </div>
           </div>
@@ -1454,7 +1457,6 @@ export default function Home() {
           border-radius: 56px;
           padding: 90px 80px;
           background: transparent;
-          box-shadow: 0 40px 80px rgba(19, 35, 77, 0.15);
           clip-path: polygon(5% 0, 100% 0, 100% 95%, 0 100%, 0 15%);
           overflow: hidden;
           z-index: 2;
@@ -1629,14 +1631,21 @@ export default function Home() {
           z-index: 2;
         }
 
-        .family-pagination span {
+        .family-pagination button {
           width: 15px;
           height: 15px;
           border-radius: 50%;
           background: rgba(229, 222, 237, 1);
+          border: none;
+          cursor: pointer;
+          transition: all 0.3s ease;
         }
 
-        .family-pagination .active {
+        .family-pagination button:hover {
+          background: rgba(244, 192, 37, 0.7);
+        }
+
+        .family-pagination button.active {
           width: 49.47px;
           height: 15px;
           border-radius: 20px;
@@ -1983,7 +1992,7 @@ export default function Home() {
         .story-card p {
           margin: 20px 0 0;
           color: #014188;
-          font-size: 0.8rem;
+          font-size: 18px;
           line-height: 1.6;
         }
 

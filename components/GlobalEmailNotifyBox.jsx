@@ -29,31 +29,26 @@ export default function GlobalEmailNotifyBox() {
     setEmail(e.target.value);
     if (error) setError('');
   };
-  // Google Sheets 版邮箱收集
+  // Google Sheets 版邮箱收集 - 使用统一工具函数
   const handleNotify = async () => {
     if (!isValidEmail(email)) {
       setError('Please provide a valid email address');
+      //setError('❌');
       return;
     }
     try {
-      const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbyn8MOU7baUKZ2exFQsLZD6hGs8poE8KpE31vIrpLXgeoLB4EItUzVgn0qTKi9eqmk9/exec";
-      const res = await fetch(GOOGLE_SHEET_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: new URLSearchParams({
-          email,
-          source: "global-notify-bar",
-          note: "notify-global-bar",
-        }),
-      });
-      const text = await res.text();
-      if (!text.includes('OK')) {
-        setError('Submit failed: ' + text);
-        return;
+      // 动态导入工具函数
+      const { submitEmailToGoogleSheets } = await import('../lib/googleSheets');
+      const result = await submitEmailToGoogleSheets(email, "global-notify-bar", "notify-global-bar");
+      
+      if (result.success) {
+        // 成功后直接跳转
+        router.push('/reserve-vip-spot');
+      } else {
+        setError(result.message);
       }
-      // 成功后直接跳转
-      router.push('/reserve-vip-spot');
     } catch (err) {
+      console.error('提交错误:', err);
       setError('Network error');
     }
   };
@@ -61,13 +56,13 @@ export default function GlobalEmailNotifyBox() {
   if (!show) return null;
 
   // UI 细节变量
-  const OUTER_WIDTH = 458; // 外黄色框更窄些
-  const BOX_HEIGHT = 60; // 内部输入和按钮高度
-  const BLACK_BORDER = 2;
+  const OUTER_WIDTH = 420; // 外黄色框更窄些
+  const BOX_HEIGHT = 50; // 内部输入和按钮高度
+  const BLACK_BORDER = 2;//黑色描边
   const OUTER_RADIUS = 12;
   const INNER_RADIUS = 12;
   const GAP = 8;
-  const SIDE_PAD = 18;
+  const SIDE_PAD = 12;
   const INPUT_WIDTH = 180;
   const BTN_WIDTH = 120;
   const FONT_SIZE = 14;
@@ -79,10 +74,10 @@ export default function GlobalEmailNotifyBox() {
         position: 'fixed',
         left: 0,
         right: 0,
-        bottom: 10,
+        bottom: 15,//到页面底部距离
         margin: '0 auto',
         width: OUTER_WIDTH,
-        height: 81,
+        height: 60,
         background: '#FCD77F',
         border: `${BLACK_BORDER}px solid #111`,
         borderRadius: OUTER_RADIUS,
@@ -94,23 +89,23 @@ export default function GlobalEmailNotifyBox() {
         boxShadow: '0 3px 10px 0 rgba(39,40,47,0.3)'
       }}
     >
-      {/* 左侧 18px 间距 */}
+      {/* 左侧 12px 间距 */}
       <div style={{ width: SIDE_PAD, height: BOX_HEIGHT }} />
       {/* 输入框（减小尺寸） */}
       <input
         type="email"
         value={email}
         onChange={handleInputChange}
-        placeholder="Enter email address..."
+        placeholder="Enter your email to join"
         style={{
           width: 281,
-          height: 44,
+          height: 37,
           background: '#fff',
           borderRadius: INNER_RADIUS,
           border: 'none',
           outline: 'none',
           fontSize: FONT_SIZE,
-          color: '#A7A7A7',
+          color: email ? '#54545C' : '#A7A7A7', // 有输入时使用 #54545C，否则使用 #A7A7A7
           padding: '0 16px',
           boxSizing: 'border-box',
         }}
@@ -123,7 +118,7 @@ export default function GlobalEmailNotifyBox() {
         onClick={handleNotify}
         style={{
           width: 158,
-          height: 44,
+          height: 37,
           background: '#2F2737',
           color: '#fff',
           fontWeight: 500,
@@ -139,17 +134,19 @@ export default function GlobalEmailNotifyBox() {
       >
         Join Adventure
       </button>
-      {/* 右侧 18px 间距 */}
-      <div style={{ width: 18, height: BOX_HEIGHT-30 }} />
+      {/* 右侧 12px 间距 */}
+      <div style={{ width: 12, height: BOX_HEIGHT-30 }} />
       {/* 错误提示 */}
       {error && (
         <div
           style={{
             position: 'absolute',
-            bottom: -26,
-            left: 24,
+            bottom: -20,
+            left: 20,
             color: '#dc2626',
-            fontSize: 14,
+            fontSize: 13,
+            
+           //left:200
           }}
         >
           {error}

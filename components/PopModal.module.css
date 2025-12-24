@@ -213,13 +213,16 @@
   border: none;
   outline: none;
   font-size: 14px;
-  color: #A7A7A7;
+  color: #54545C;
   background: #fff;
   padding: 0 17px;
   box-sizing: border-box;
   font-family: inherit;
   margin-right: 8px;
   box-shadow: 0 5px 15px 0 rgba(39,40,47,.13);
+}
+.inputEmail::placeholder {
+  color: #A7A7A7;
 }
 .errorTip {
   position: absolute;

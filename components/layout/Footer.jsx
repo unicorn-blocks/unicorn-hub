@@ -19,6 +19,7 @@ export default function Footer({ onSubscribe, showEmailInput = true }) {
         productOf: 'A product of',
         allRightsReserved: '© 2025 Stardust Echo, LLC. All rights reserved',
         emailError: 'Please provide a valid email address'
+        //emailError: '❌'
       },
       zh: {
         joinWaitlist: '加入候补名单',
@@ -38,7 +39,7 @@ export default function Footer({ onSubscribe, showEmailInput = true }) {
   // email 格式校验 - 悬浮框同款
   const isValidEmail = (email) => /\S+@\S+\.\S+/.test(email);
 
-  const handleFooterSubmit = (e) => {
+  const handleFooterSubmit = async (e) => {
     e.preventDefault();
     setFooterStatus({ message: '', type: '' }); // 重置状态
     
@@ -54,6 +55,14 @@ export default function Footer({ onSubscribe, showEmailInput = true }) {
       // 使用回调函数处理订阅，并传入状态更新函数
       onSubscribe(footerEmail, setFooterStatus);
       setFooterEmail(''); // 清空输入框
+      
+      // 提交成功后跳转到VIP页面
+      setTimeout(() => {
+        window.location.href = '/reserve-vip-spot';
+      }, 1500); // 等待1.5秒显示成功消息后跳转
+    } else {
+      // 如果没有回调函数，直接跳转
+      window.location.href = '/reserve-vip-spot';
     }
   };
 
@@ -88,13 +97,14 @@ export default function Footer({ onSubscribe, showEmailInput = true }) {
             <div className="flex items-center mb-4">
   <img src="/assets/group 85.svg" alt="Unicorn Blocks Logo" className="h-14" decoding="async" />
 </div>
-            <p className="text-sm text-gray-600 mb-4 leading-relaxed">
+            <p className="mb-4 leading-relaxed" style={{ fontSize: '15px', color: '#666' }}>
               A world of blocks, stories, and imagination.<br/>
               Join the adventure that sparks imagination.
             </p>
-            <p className="text-sm text-gray-600 mb-4">
+            <div className="flex items-center mb-4" style={{ fontSize: '12px', color: '#666' }}>
               <a href="mailto:support@unicornblocks.ai" className="hover:text-[#7d9ed4] transition-colors" target="_blank" rel="noopener">support@unicornblocks.ai</a>
-            </p>
+              <span style={{ marginLeft: '20px', color: '#555' }}>{t.allRightsReserved}</span>
+            </div>
           </div>
 
           {/* Let's be friends ! */}
@@ -106,7 +116,7 @@ export default function Footer({ onSubscribe, showEmailInput = true }) {
                   type="email"
                   value={footerEmail}
                   onChange={e => { setFooterEmail(e.target.value); if (footerStatus.message) setFooterStatus({ message: '', type: '' }); }}
-                  placeholder="Enter email address..."
+                  placeholder="Enter your email to join"
                   className="w-full px-0 py-2 border-0 border-b-2 border-gray-300 focus:outline-none focus:border-[#7d9ed4] bg-transparent text-sm placeholder-gray-400"
                   style={{ borderRadius: 0 }}
                 />
@@ -149,13 +159,6 @@ export default function Footer({ onSubscribe, showEmailInput = true }) {
               </button>
             </div>
           </div>)}
-        </div>
-      </div>
-
-      {/* 左下角版权文案 - 与邮箱对齐 */}
-      <div className="container mx-auto px-4">
-        <div style={{ color: '#555', fontSize: '0.94rem', fontWeight: 400 }}>
-          {t.allRightsReserved}
         </div>
       </div>
       {/* 添加页脚消息样式 */}

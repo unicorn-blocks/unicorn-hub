@@ -17,30 +17,25 @@ export default function EmailNotifyFloatingBox() {
   };
 
   // 按钮点击
-  // Google Sheets 版邮箱收集
+  // Google Sheets 版邮箱收集 - 使用统一工具函数
   const handleNotify = async () => {
     if (!isValidEmail(email)) {
       setError('Please provide a valid email address');
+      //setError('❌');
       return;
     }
     try {
-      const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbyn8MOU7baUKZ2exFQsLZD6hGs8poE8KpE31vIrpLXgeoLB4EItUzVgn0qTKi9eqmk9/exec";
-      const res = await fetch(GOOGLE_SHEET_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: new URLSearchParams({
-          email,
-          source: "floating-bar",
-          note: "notify-floating-bar",
-        }),
-      });
-      const text = await res.text();
-      if (!text.includes('OK')) {
-        setError('Submit failed: ' + text);
-        return;
+      // 动态导入工具函数
+      const { submitEmailToGoogleSheets } = await import('../lib/googleSheets');
+      const result = await submitEmailToGoogleSheets(email, "floating-bar", "notify-floating-bar");
+      
+      if (result.success) {
+        router.push('/reserve-vip-spot');
+      } else {
+        setError(result.message);
       }
-      router.push('/reserve-vip-spot');
     } catch (err) {
+      console.error('提交错误:', err);
       setError('Network error');
     }
   };
@@ -63,7 +58,7 @@ export default function EmailNotifyFloatingBox() {
         type="email"
         value={email}
         onChange={handleInputChange}
-        placeholder="Enter email address..."
+        placeholder="Enter your email to join"
         style={{
           background: '#fff',
           borderRadius: '16px 0 0 16px',
@@ -73,7 +68,7 @@ export default function EmailNotifyFloatingBox() {
           fontSize: 22,
           height: 56,
           flex: 1,
-          color: '#A7A7A7',
+          color: email ? '#54545C' : '#A7A7A7', // 有输入时使用 #54545C，否则使用 #A7A7A7
           boxSizing: 'border-box'
         }}
         className="placeholder:text-[#A7A7A7]"

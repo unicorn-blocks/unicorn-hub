@@ -21,6 +21,7 @@ export default function ShopNew() {
       buttonText: 'Join Waitlist',
       processing: 'Processing...',
       emailError: 'Please provide a valid email address',
+      //emailError: '❌',
       subscribeSuccess: 'Thank you for subscribing! We will keep you updated.',
       subscribeFailed: 'Subscription failed, please try again later',
       connectionError: 'Error connecting to server, please try again later'
@@ -60,68 +61,52 @@ export default function ShopNew() {
     // Show loading state
     setIsSubmitting(true);
     
-    // 直接提交到 Google Sheets
-    const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbyn8MOU7baUKZ2exFQsLZD6hGs8poE8KpE31vIrpLXgeoLB4EItUzVgn0qTKi9eqmk9/exec";
+    // 使用统一的Google Sheets工具函数
     (async () => {
       try {
-        const res = await fetch(GOOGLE_SHEET_URL, {
-          method: "POST",
-          headers: { "Content-Type": "application/x-www-form-urlencoded" },
-          body: new URLSearchParams({
-            email,
-            source: "shop-form",
-            note: "notify-at-launch",
-          }),
-        });
-        const text = await res.text();
-        if (text.includes("OK")) {
+        const { submitEmailToGoogleSheets } = await import('../lib/googleSheets');
+        const result = await submitEmailToGoogleSheets(email, "shop-form", "notify-at-launch");
+        
+        if (result.success) {
           setFormStatus({ message: t.subscribeSuccess, type: 'success' });
           setEmail("");
         } else {
-          setFormStatus({ message: t.subscribeFailed + ": " + text, type: 'error' });
+          setFormStatus({ message: result.message, type: 'error' });
         }
       } catch (err) {
+        console.error('提交错误:', err);
         setFormStatus({ message: t.connectionError, type: 'error' });
       }
       setIsSubmitting(false);
     })();
   };
 
-  // 从页脚提交的处理函数
-  const handleFooterSubmit = (footerEmail, setFooterStatus) => {
+  // 从页脚提交的处理函数 - 使用统一工具函数
+  const handleFooterSubmit = async (footerEmail, setFooterStatus) => {
     // 设置 email 状态并触发表单提交
     setEmail(footerEmail);
     
     // Show loading state
     setIsSubmitting(true);
     
-    // 直接提交到 Google Sheets
-    const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbyn8MOU7baUKZ2exFQsLZD6hGs8poE8KpE31vIrpLXgeoLB4EItUzVgn0qTKi9eqmk9/exec";
-    (async () => {
-      try {
-        const res = await fetch(GOOGLE_SHEET_URL, {
-          method: "POST",
-          headers: { "Content-Type": "application/x-www-form-urlencoded" },
-          body: new URLSearchParams({
-            email: footerEmail,
-            source: "shop-footer",
-            note: "notify-at-launch",
-          }),
-        });
-        const text = await res.text();
-        if (text.includes("OK")) {
-          setFormStatus({ message: t.subscribeSuccess, type: 'success' });
-          if (setFooterStatus) setFooterStatus({ message: t.subscribeSuccess, type: 'success' });
-        } else {
-          setFormStatus({ message: t.subscribeFailed + ": " + text, type: 'error' });
-          if (setFooterStatus) setFooterStatus({ message: t.subscribeFailed + ": " + text, type: 'error' });
-        }
-      } catch (err) {
-        setFormStatus({ message: t.connectionError, type: 'error' });
-        if (setFooterStatus) setFooterStatus({ message: t.connectionError, type: 'error' });
+    try {
+      const { submitEmailToGoogleSheets } = await import('../lib/googleSheets');
+      const result = await submitEmailToGoogleSheets(footerEmail, "shop-footer", "notify-at-launch");
+      
+      if (result.success) {
+        setFormStatus({ message: t.subscribeSuccess, type: 'success' });
+        if (setFooterStatus) setFooterStatus({ message: t.subscribeSuccess, type: 'success' });
+      } else {
+        setFormStatus({ message: result.message, type: 'error' });
+        if (setFooterStatus) setFooterStatus({ message: result.message, type: 'error' });
       }
-      setIsSubmitting(false);
-    })();
+    } catch (err) {
+      console.error('提交错误:', err);
+      setFormStatus({ message: t.connectionError, type: 'error' });
+      if (setFooterStatus) setFooterStatus({ message: t.connectionError, type: 'error' });
+    }
+    
+    setIsSubmitting(false);
   };
 
   return (
@@ -214,6 +199,11 @@ export default function ShopNew() {
           font-size: 1rem;
           margin-bottom: 1rem;
           transition: all 0.3s ease;
+          color: #A7A7A7; /* 默认颜色 */
+        }
+
+        .subscribe-input:not(:placeholder-shown) {
+          color: #54545C; /* 有输入时的颜色 */
         }
 
         .subscribe-input:focus {
