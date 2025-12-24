@@ -51,18 +51,34 @@ export default function Footer({ onSubscribe, showEmailInput = true }) {
       return;
     }
     
-    if (onSubscribe) {
-      // 使用回调函数处理订阅，并传入状态更新函数
-      onSubscribe(footerEmail, setFooterStatus);
-      setFooterEmail(''); // 清空输入框
+    try {
+      // 使用统一的Google Sheets工具函数
+      const { submitEmailToGoogleSheets } = await import('../../lib/googleSheets');
+      const result = await submitEmailToGoogleSheets(footerEmail, "footer", "footer-subscription");
       
-      // 提交成功后跳转到VIP页面
-      setTimeout(() => {
-        window.location.href = '/reserve-vip-spot';
-      }, 1500); // 等待1.5秒显示成功消息后跳转
-    } else {
-      // 如果没有回调函数，直接跳转
-      window.location.href = '/reserve-vip-spot';
+      if (result.success) {
+        setFooterStatus({
+          message: '您已成功加入我们的通知列表！🎉',
+          type: 'success'
+        });
+        setFooterEmail(''); // 清空输入框
+        
+        // 提交成功后跳转到VIP页面
+        setTimeout(() => {
+          window.location.href = '/reserve-vip-spot';
+        }, 1500); // 等待1.5秒显示成功消息后跳转
+      } else {
+        setFooterStatus({
+          message: result.message,
+          type: 'error'
+        });
+      }
+    } catch (err) {
+      console.error('Footer邮箱提交错误:', err);
+      setFooterStatus({
+        message: '网络错误，请稍后重试',
+        type: 'error'
+      });
     }
   };
 
@@ -110,7 +126,7 @@ export default function Footer({ onSubscribe, showEmailInput = true }) {
           {/* Let's be friends ! */}
           {showEmailInput && (<div>
             <h3 className="font-semibold mb-4" style={{position: 'relative', top: '20px'}}>{footerT.joinMagicList}</h3>
-            <div className="flex items-end gap-0" style={{ transform: 'translateY(-25px)' }}>
+            <form onSubmit={handleFooterSubmit} className="flex items-end gap-0" style={{ transform: 'translateY(-25px)' }}>
               <div className="flex-1" style={{ maxWidth: '427px', transform: 'translateY(-23px)' }}>
                 <input
                   type="email"
@@ -118,7 +134,7 @@ export default function Footer({ onSubscribe, showEmailInput = true }) {
                   onChange={e => { setFooterEmail(e.target.value); if (footerStatus.message) setFooterStatus({ message: '', type: '' }); }}
                   placeholder="Enter your email to join"
                   className="w-full px-0 py-2 border-0 border-b-2 border-gray-300 focus:outline-none focus:border-[#7d9ed4] bg-transparent text-sm placeholder-gray-400"
-                  style={{ borderRadius: 0 }}
+                  style={{ borderRadius: 0, color: '#54545C' }}
                 />
                 {footerStatus.message && (
   <div className={`text-sm ${footerStatus.type === 'success' ? 'text-green-600' : 'text-red-600'}`}
@@ -128,13 +144,9 @@ export default function Footer({ onSubscribe, showEmailInput = true }) {
 )}
               </div>
               <button
-                type="button"
+                type="submit"
                 className="relative flex items-center justify-center transition-all hover:opacity-80"
                 style={{ width: '120px', height: '120px', background: 'transparent', border: 'none', padding: 0, cursor: 'pointer' }}
-                onClick={() => {
-                  if (isValidEmail(footerEmail)) window.location.href = '/reserve-vip-spot';
-                  else setFooterStatus({ message: t.emailError, type: 'error' });
-                }}
               >
                 <img 
                   src="/assets/ima/Group 83.svg" 
@@ -157,7 +169,7 @@ export default function Footer({ onSubscribe, showEmailInput = true }) {
                   Join Adventure
                 </span>
               </button>
-            </div>
+            </form>
           </div>)}
         </div>
       </div>
