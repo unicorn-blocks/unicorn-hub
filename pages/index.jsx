@@ -330,7 +330,7 @@ export default function Home() {
     // 动态导入工具函数
     const { submitEmailToGoogleSheets } = await import('../lib/googleSheets');
     
-    const result = await submitEmailToGoogleSheets(email, "index-footer", "notify-at-launch");
+    const result = await submitEmailToGoogleSheets(email, "index-footer", "");
     
     if (setFooterStatus) {
       setFooterStatus({

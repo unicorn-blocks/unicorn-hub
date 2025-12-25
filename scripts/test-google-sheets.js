@@ -9,24 +9,52 @@ async function testEmailSubmission() {
   // 测试用例
   const testCases = [
     {
-      name: '有效邮箱测试',
+      name: '有效邮箱测试 - 普通收集',
       email: 'test@example.com',
       source: 'test-script',
-      note: 'automated-test',
+      note: '', // 普通邮箱收集，Note为空
+      expectedSuccess: true
+    },
+    {
+      name: '有效邮箱测试 - VIP预订',
+      email: 'vip@example.com',
+      source: 'pop-modal',
+      note: 'reserve-pop-modal', // VIP预订保持原有标识
+      expectedSuccess: true
+    },
+    {
+      name: '有效邮箱测试 - 优惠券购买',
+      email: 'coupon@example.com',
+      source: 'paid-user-coupon',
+      note: 'Coupon', // 购买优惠券
+      expectedSuccess: true
+    },
+    {
+      name: '有效邮箱测试 - 定金购买',
+      email: 'deposit@example.com',
+      source: 'paid-user-coupon',
+      note: 'Deposit', // 付定金购买最终产品
+      expectedSuccess: true
+    },
+    {
+      name: '有效邮箱测试 - 直接购买产品',
+      email: 'product@example.com',
+      source: 'paid-user-coupon',
+      note: 'Product', // 直接购买产品
       expectedSuccess: true
     },
     {
       name: '无效邮箱测试',
       email: 'invalid-email',
       source: 'test-script',
-      note: 'automated-test',
+      note: '',
       expectedSuccess: false
     },
     {
       name: '空邮箱测试',
       email: '',
       source: 'test-script',
-      note: 'automated-test',
+      note: '',
       expectedSuccess: false
     },
     {

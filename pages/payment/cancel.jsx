@@ -68,7 +68,7 @@ export default function PaymentCancel() {
     
     try {
       const { submitEmailToGoogleSheets } = await import('../../lib/googleSheets');
-      const result = await submitEmailToGoogleSheets(email, "payment-cancel-footer", "notify-at-launch");
+      const result = await submitEmailToGoogleSheets(email, "payment-cancel-footer", "");
       
       if (result.success) {
         if (setFooterStatus) {
@@ -104,7 +104,8 @@ export default function PaymentCancel() {
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </Head>
 
-      <Navigation />
+      {/* 使用导航组件 */}
+      {/*<Navigation />*/}
       
       <div className="background-gradient"></div>
       <main className="min-h-screen">
@@ -146,7 +147,7 @@ export default function PaymentCancel() {
               {/* 操作按钮 */}
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <button
-                  onClick={() => router.push('/buy')}
+                  onClick={() => router.push('/checkout')}
                   className="primary-button duration-200"
                 >
                   {t.tryAgain}
@@ -163,7 +164,12 @@ export default function PaymentCancel() {
           </div>
         </section>
 
-        <Footer onSubscribe={handleFooterSubmit} />
+        {/* 传递订阅回调函数给 Footer */}
+        {/* <Footer 
+          showEmailInput={false} 
+          onSubscribe={handleFooterSubmit} 
+          /> */}
+        <Footer showEmailInput={false} />
       </main>
 
       <style jsx global>{`

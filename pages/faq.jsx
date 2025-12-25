@@ -43,7 +43,7 @@ export default function Faq() {
     
     try {
       const { submitEmailToGoogleSheets } = await import('../lib/googleSheets');
-      const result = await submitEmailToGoogleSheets(email, "faq-footer", "notify-at-launch");
+      const result = await submitEmailToGoogleSheets(email, "faq-footer", "");
       
       if (result.success) {
         if (setFooterStatus) {

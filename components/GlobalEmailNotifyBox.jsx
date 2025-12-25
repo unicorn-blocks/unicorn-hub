@@ -50,7 +50,7 @@ export default function GlobalEmailNotifyBox() {
     try {
       // 动态导入工具函数
       const { submitEmailToGoogleSheets } = await import('../lib/googleSheets');
-      const result = await submitEmailToGoogleSheets(email, "global-notify-bar", "notify-global-bar");
+      const result = await submitEmailToGoogleSheets(email, "global-notify-bar", "");
       
       if (result.success) {
         // 保存邮箱到 localStorage

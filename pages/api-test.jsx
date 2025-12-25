@@ -51,7 +51,7 @@ export default function ApiTest() {
       console.log('开始测试工具函数...');
       
       const { submitEmailToGoogleSheets } = await import('../lib/googleSheets');
-      const response = await submitEmailToGoogleSheets(email, 'tool-test', 'tool-function-test');
+      const response = await submitEmailToGoogleSheets(email, 'tool-test', '');
       
       console.log('工具函数响应:', response);
       setResult(JSON.stringify(response, null, 2));

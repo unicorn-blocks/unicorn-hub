@@ -66,7 +66,7 @@ export default function ShopNew() {
     (async () => {
       try {
         const { submitEmailToGoogleSheets } = await import('../lib/googleSheets');
-        const result = await submitEmailToGoogleSheets(email, "shop-form", "notify-at-launch");
+        const result = await submitEmailToGoogleSheets(email, "shop-form", "");
         
         if (result.success) {
           setFormStatus({ message: t.subscribeSuccess, type: 'success' });
@@ -92,7 +92,7 @@ export default function ShopNew() {
     
     try {
       const { submitEmailToGoogleSheets } = await import('../lib/googleSheets');
-      const result = await submitEmailToGoogleSheets(footerEmail, "shop-footer", "notify-at-launch");
+      const result = await submitEmailToGoogleSheets(footerEmail, "shop-footer", "");
       
       if (result.success) {
         setFormStatus({ message: t.subscribeSuccess, type: 'success' });
@@ -161,7 +161,8 @@ export default function ShopNew() {
       </main>
 
       {/* 传递订阅回调函数给 Footer */}
-      <Footer onSubscribe={handleFooterSubmit} />
+     {/*<Footer onSubscribe={handleFooterSubmit} />*/}
+       <Footer showEmailInput={false} />
 
       <style jsx global>{`
         /* Basic styles */

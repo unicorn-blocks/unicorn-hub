@@ -9,7 +9,7 @@ import BlueTopBar from '../components/BlueTopBar';
 import { useLanguage } from '../context/LanguageContext';
 import { COUNTRIES, COUNTRY_CODES, COUNTRY_STATES } from '../lib/countryRegions';
 
-const stripePromise = loadStripe('pk_test_51Sh51ShBGUBjERjy3zGenxn7nuL8bRErSpHWgrY50Zb2lBX3mRlbCaE0TzydiykOhHSqvolhPTYSGgeLngI3e8D4qQem00XRj54fBc');
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
 function CheckoutForm() {
   const { language } = useLanguage();
   
@@ -415,18 +415,18 @@ function CheckoutForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    // Reset status
+    // 重置状态
     setFormStatus({ message: '', type: '' });
     
-    // Form validation
+    // 表单验证
     if (!validateForm()) {
-      return; // 验证失败，错误信息已通过validateField设置
+      return;
     }
     
     // 检查是否选择了支付方式
     if (!paymentMethod) {
       setFormStatus({
-        message: 'Please select a payment method',
+        message: language === 'en' ? 'Please select a payment method' : '请选择支付方式',
         type: 'error'
       });
       return;
@@ -436,41 +436,60 @@ function CheckoutForm() {
     setIsProcessing(true);
     
     try {
-      // 决定使用哪个地址作为账单地址
-      const finalBillingAddress = useShippingAsBilling ? {
-        country: getCountryCode(country),
-        countryName: country,
-        firstName: firstName,
-        lastName: lastName,
-        address: address,
-        address2: apartment,
-        city: city,
-        state: state,
-        zipCode: zipCode
-      } : {
-        country: getCountryCode(billingCountry),
-        countryName: billingCountry,
-        firstName: billingFirstName,
-        lastName: billingLastName,
-        address: billingAddress,
-        address2: billingApartment,
-        city: billingCity,
-        state: billingState,
-        zipCode: billingZipCode
-      };
-      
-      // 准备支付数据
-      const paymentData = {
-        payment_type: 'reserve_vip_spot', // VIP预订
-        payment_method: paymentMethod.toLowerCase(), // paypal, card, payoneer
-        amount: (5 * quantity).toFixed(2),
-        currency: 'USD',
-        customer: {
-          email: email,
-          firstName: firstName,
-          lastName: lastName
-        },
-        shipping: {
+      // 如果选择 Stripe，使用新的 Checkout Session API
+      if (paymentMethod === 'card') {
+        // 准备 Stripe Checkout 数据
+        const checkoutData = {
+          amount: 5.00, // $5.00 VIP 预订费
+          currency: 'usd',
+          customer: {
+            email: email,
+            firstName: firstName,
+            lastName: lastName
+          },
+          shipping: {
+            country: country,
+            firstName: firstName,
+            lastName: lastName,
+            address: address,
+            city: city,
+            state: state,
+            zipCode: zipCode,
+            phone: phone
+          },
+          metadata: {
+            paymentType: 'reserve_vip_spot',
+            orderId: `order_${Date.now()}`
+          },
+          language: language
+        };
+        
+        // 调用 Stripe Checkout Session API
+        const response = await fetch('/api/payment/stripe/checkout-session', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(checkoutData)
+        });
+        
+        const data = await response.json();
+        
+        if (data.success && data.url) {
+          // 重定向到 Stripe Checkout 页面
+          window.location.href = data.url;
+        } else {
+          setFormStatus({
+            message: data.error || t.paymentFailed,
+            type: 'error'
+          });
+          setIsProcessing(false);
+        }
+      } else {
+        // 使用原来的支付方式（PayPal、Payoneer）
+        /* ===== 原来的支付代码 ===== */
+        // 决定使用哪个地址作为账单地址
+        const finalBillingAddress = useShippingAsBilling ? {
           country: getCountryCode(country),
           countryName: country,
           firstName: firstName,
@@ -479,82 +498,86 @@ function CheckoutForm() {
           address2: apartment,
           city: city,
           state: state,
-          zipCode: zipCode,
-          phone: phone
-        },
-        billing_address: finalBillingAddress,
-        items: [{
-          name: 'Unicorn Blocks VIP Spot Reservation',
-          description: '$5 deposit for $129 VIP price',
-          quantity: quantity.toString(),
-          unit_amount: {
-            currency_code: 'USD',
-            value: '5.00'
-          }
-        }],
-        language: language,
-        return_url: `${window.location.origin}/payment/success`,
-        cancel_url: `${window.location.origin}/payment/cancel`
-      };
-      
-      // 如果是信用卡支付，构建payment_source对象
-      if (paymentMethod === 'card') {
-        const expiryParts = expiryDate.split('/');
-        // PayPal格式的账单地址
-        const paypalBillingAddress = useShippingAsBilling ? {
-          address_line_1: address,
-          admin_area_2: city,
-          admin_area_1: state,
-          postal_code: zipCode,
-          country_code: getCountryCode(country)
+          zipCode: zipCode
         } : {
-          address_line_1: billingAddress,
-          admin_area_2: billingCity,
-          admin_area_1: billingState,
-          postal_code: billingZipCode,
-          country_code: getCountryCode(billingCountry)
+          country: getCountryCode(billingCountry),
+          countryName: billingCountry,
+          firstName: billingFirstName,
+          lastName: billingLastName,
+          address: billingAddress,
+          address2: billingApartment,
+          city: billingCity,
+          state: billingState,
+          zipCode: billingZipCode
         };
         
-        paymentData.payment_source = {
-          card: {
-            number: cardNumber.replace(/\s/g, ''),
-            exp_month: expiryParts[0] || '',
-            exp_year: expiryParts[1] ? '20' + expiryParts[1] : '',
-            security_code: cvv,
-            name: cardName.toUpperCase(),
-            billing_address: paypalBillingAddress
-          }
+        // 准备支付数据
+        const paymentData = {
+          payment_type: 'reserve_vip_spot', // VIP预订
+          payment_method: paymentMethod.toLowerCase(), // paypal, payoneer
+          amount: (5 * quantity).toFixed(2),
+          currency: 'USD',
+          customer: {
+            email: email,
+            firstName: firstName,
+            lastName: lastName
+          },
+          shipping: {
+            country: getCountryCode(country),
+            countryName: country,
+            firstName: firstName,
+            lastName: lastName,
+            address: address,
+            address2: apartment,
+            city: city,
+            state: state,
+            zipCode: zipCode,
+            phone: phone
+          },
+          billing_address: finalBillingAddress,
+          items: [{
+            name: 'Unicorn Blocks VIP Spot Reservation',
+            description: '$5 deposit for $129 VIP price',
+            quantity: quantity.toString(),
+            unit_amount: {
+              currency_code: 'USD',
+              value: '5.00'
+            }
+          }],
+          language: language,
+          return_url: `${window.location.origin}/payment/success`,
+          cancel_url: `${window.location.origin}/payment/cancel`
         };
-      }
-      
-      // 调用支付API
-      const response = await safeApiCall('/api/payment', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(paymentData)
-      });
-      
-      const data = await response.json();
-      
-      if (data.success) {
-        // 如果是PayPal或Payoneer，重定向到支付页面
-        if (data.approval_url) {
-          window.location.href = data.approval_url;
-        } else {
-          // 信用卡支付成功，直接到成功页面
-          handlePaymentSuccess(data);
-        }
-      } else {
-        setFormStatus({
-          message: data.message || t.paymentFailed,
-          type: 'error'
+        
+        // 调用支付API
+        const response = await safeApiCall('/api/payment', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(paymentData)
         });
-        setIsProcessing(false);
+        
+        const data = await response.json();
+        
+        if (data.success) {
+          // 如果是PayPal或Payoneer，重定向到支付页面
+          if (data.approval_url) {
+            window.location.href = data.approval_url;
+          } else {
+            handlePaymentSuccess(data);
+          }
+        } else {
+          setFormStatus({
+            message: data.message || t.paymentFailed,
+            type: 'error'
+          });
+          setIsProcessing(false);
+        }
+        /* ===== 原来的支付代码结束 ===== */
       }
     } catch (error) {
-      console.error('Payment error:', error);
+      console.error('支付错误:', error);
       setFormStatus({
         message: t.connectionError,
         type: 'error'
@@ -615,7 +638,7 @@ function CheckoutForm() {
     
     try {
       const { submitEmailToGoogleSheets } = await import('../lib/googleSheets');
-      const result = await submitEmailToGoogleSheets(footerEmail, "checkout-footer", "notify-at-launch");
+      const result = await submitEmailToGoogleSheets(footerEmail, "checkout-footer", "");
       
       if (result.success) {
         // 不仅更新主表单状态，也更新页脚状态
@@ -883,8 +906,9 @@ function CheckoutForm() {
 
                 {/* 支付方式选择 - Plaud抽屉风格 */}
                 <div className="form-section">
-                  <h2 className="section-title">Payment Method</h2>
+                  <h2 className="section-title">{language === 'en' ? 'Payment Method' : '支付方式'}</h2>
                   <div className="payment-method-selector-plaud">
+                    {/* Stripe 支付方式 */}
                     <div className="payment-option-plaud">
                       <input 
                         type="radio" 
@@ -898,264 +922,37 @@ function CheckoutForm() {
                       <label htmlFor="card" className="payment-label-plaud">
                         <div className="payment-method-content">
                           <div className="payment-method-info">
-                            <span className="payment-method-name-plaud">Credit card</span>
+                            <span className="payment-method-name-plaud">{language === 'en' ? 'Credit card' : '信用卡'}</span>
                           </div>
                           <div className="payment-method-logo">
                             <div className="card-logos-mini">
                               <img src="/assets/checkout/visa.svg" alt="Visa" className="card-icon-main" decoding="async" />
                               <img src="/assets/checkout/mastercard.svg" alt="Mastercard" className="card-icon-main" decoding="async" />
                               <img src="/assets/checkout/amex.svg" alt="American Express" className="card-icon-main" decoding="async" />
-                              <div className="more-cards-container">
-                                <button 
-                                  type="button"
-                                  className="more-cards-btn"
-                                  onClick={() => setShowMoreCards(!showMoreCards)}
-                                  onMouseEnter={() => setShowMoreCards(true)}
-                                  onMouseLeave={() => setShowMoreCards(false)}
-                                >
-                                  +5
-                                </button>
-                                {showMoreCards && (
-                                  <div 
-                                    className="more-cards-popup"
-                                    onMouseEnter={() => setShowMoreCards(true)}
-                                    onMouseLeave={() => setShowMoreCards(false)}
-                                  >
-                                    <div className="more-cards-grid">
-                                      <div className="card-icon-item">
-                                        <img src="/assets/checkout/jcb.svg" alt="JCB" className="card-icon-svg" decoding="async" />
-                                      </div>
-                                      <div className="card-icon-item">
-                                        <img src="/assets/checkout/unionpay.svg" alt="UnionPay" className="card-icon-svg" decoding="async" />
-                                      </div>
-                                      <div className="card-icon-item">
-                                        <img src="/assets/checkout/diners.svg" alt="Diners Club" className="card-icon-svg" decoding="async" />
-                                      </div>
-                                      <div className="card-icon-item">
-                                        <img src="/assets/checkout/discover.svg" alt="Discover" className="card-icon-svg" decoding="async" />
-                                      </div>
-                                      <div className="card-icon-item">
-                                        <img src="/assets/checkout/maestro.svg" alt="Maestro" className="card-icon-svg" decoding="async" />
-                                      </div>
-                                    </div>
-                                  </div>
-                                )}
-                              </div>
                             </div>
                           </div>
                         </div>
                       </label>
-                      {/* 信用卡输入字段 - 直接显示在支付方式下方 */}
+                      {/* Stripe 支付信息 */}
                       {paymentMethod === 'card' && (
-                        <div className="card-input-fields">
-                          <div className="form-field">
-                            <input 
-                              type="text" 
-                              id="cardNumber" 
-                              className="form-input"
-                              placeholder={language === 'en' ? 'Card number' : '卡号'}
-                              maxLength="23"
-                              value={cardNumber}
-                              onChange={handleCardNumberChange}
-                              disabled={isProcessing}
-                            />
+                        <div className="payment-drawer">
+                          <div className="drawer-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                              <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
+                              <line x1="1" y1="10" x2="23" y2="10"/>
+                            </svg>
                           </div>
-                          
-                          <div className="form-row">
-                            <div className="form-field">
-                              <input 
-                                type="text" 
-                                id="expiryDate" 
-                                className="form-input"
-                                placeholder={language === 'en' ? 'Expiration date (MM / YY)' : '有效期 (MM / YY)'}
-                                maxLength="5"
-                                value={expiryDate}
-                                onChange={handleExpiryDateChange}
-                                disabled={isProcessing}
-                              />
-                            </div>
-                            <div className="form-field cvv-field-wrapper">
-                              <input 
-                                type="text" 
-                                id="cvv" 
-                                className="form-input"
-                                placeholder={language === 'en' ? 'Security code' : '安全码'}
-                                maxLength="4"
-                                value={cvv}
-                                onChange={(e) => setCvv(e.target.value.replace(/\D/g, ''))}
-                                disabled={isProcessing}
-                              />
-                              <span className="cvv-help-icon-container">
-                                <span 
-                                  className="cvv-help-icon"
-                                  onMouseEnter={() => setShowSecurityCodeTooltip(true)}
-                                  onMouseLeave={() => setShowSecurityCodeTooltip(false)}
-                                >
-                                  ?
-                                </span>
-                                {showSecurityCodeTooltip && (
-                                  <div 
-                                    className="security-code-tooltip"
-                                    onMouseEnter={() => setShowSecurityCodeTooltip(true)}
-                                    onMouseLeave={() => setShowSecurityCodeTooltip(false)}
-                                  >
-                                    {language === 'en' 
-                                      ? '3-digit security code usually found on the back of your card. American Express cards have a 4-digit code located on the front.'
-                                      : '3位安全码通常位于卡片背面。美国运通卡的安全码是4位数字，位于卡片正面。'
-                                    }
-                                  </div>
-                                )}
-                              </span>
-                            </div>
-                          </div>
-                          
-                          <div className="form-field">
-                            <input 
-                              type="text" 
-                              id="cardName" 
-                              className="form-input"
-                              placeholder={language === 'en' ? 'Name on card' : '持卡人姓名'}
-                              value={cardName}
-                              onChange={(e) => setCardName(e.target.value)}
-                              disabled={isProcessing}
-                            />
-                          </div>
-                          
-                          <div className="billing-address-section">
-                            <div className="billing-address-checkbox">
-                              <input 
-                                type="checkbox" 
-                                id="useShippingAddress" 
-                                className="checkbox-input"
-                                checked={useShippingAsBilling}
-                                onChange={(e) => setUseShippingAsBilling(e.target.checked)}
-                              />
-                              <label htmlFor="useShippingAddress" className="checkbox-label">
-                                {language === 'en' ? 'Use shipping address as billing address' : '使用收货地址作为账单地址'}
-                              </label>
-                            </div>
-                            
-                            {/* 账单地址输入字段 - 当不使用收货地址时显示 */}
-                            {!useShippingAsBilling && (
-                              <div className="billing-address-fields">
-                                <h3 className="billing-section-title">{language === 'en' ? 'Billing address' : '账单地址'}</h3>
-                                <div className="form-field">
-                                  <select 
-                                    id="billingCountry" 
-                                    className="form-select"
-                                    value={billingCountry}
-                                    onChange={(e) => {
-                                      setBillingCountry(e.target.value);
-                                      setBillingState(''); // 重置州/省
-                                    }}
-                                    disabled={isProcessing}
-                                  >
-                                    <option value="">{language === 'en' ? 'Country/Region' : '国家/地区'}</option>
-                                    {COUNTRIES.map((country) => (
-                                      <option key={country.code} value={country.name}>
-                                        {language === 'zh' ? country.nameZh : country.name}
-                                      </option>
-                                    ))}
-                                    <option value="Other">{language === 'zh' ? '其他' : 'Other'}</option>
-                                  </select>
-                                </div>
-                                
-                                <div className="form-row">
-                                  <div className="form-field">
-                                    <input 
-                                      type="text" 
-                                      id="billingFirstName" 
-                                      className="form-input"
-                                      placeholder={language === 'en' ? 'First name' : '名字'}
-                                      value={billingFirstName}
-                                      onChange={(e) => setBillingFirstName(e.target.value)}
-                                      disabled={isProcessing}
-                                    />
-                                  </div>
-                                  <div className="form-field">
-                                    <input 
-                                      type="text" 
-                                      id="billingLastName" 
-                                      className="form-input"
-                                      placeholder={language === 'en' ? 'Last name' : '姓氏'}
-                                      value={billingLastName}
-                                      onChange={(e) => setBillingLastName(e.target.value)}
-                                      disabled={isProcessing}
-                                    />
-                                  </div>
-                                </div>
-                                
-                                <div className="form-field">
-                                  <input 
-                                    type="text" 
-                                    id="billingAddress" 
-                                    className="form-input"
-                                    placeholder={language === 'en' ? 'Address' : '地址'}
-                                    value={billingAddress}
-                                    onChange={(e) => setBillingAddress(e.target.value)}
-                                    disabled={isProcessing}
-                                  />
-                                </div>
-                                
-                                <div className="form-field">
-                                  <input 
-                                    type="text" 
-                                    id="billingApartment" 
-                                    className="form-input"
-                                    placeholder={language === 'en' ? 'Apartment, suite, etc. (optional)' : '公寓、套房等（可选）'}
-                                    value={billingApartment}
-                                    onChange={(e) => setBillingApartment(e.target.value)}
-                                    disabled={isProcessing}
-                                  />
-                                </div>
-                                
-                                <div className="form-row">
-                                  <div className="form-field">
-                                    <input 
-                                      type="text" 
-                                      id="billingCity" 
-                                      className="form-input"
-                                      placeholder={language === 'en' ? 'City' : '城市'}
-                                      value={billingCity}
-                                      onChange={(e) => setBillingCity(e.target.value)}
-                                      disabled={isProcessing}
-                                    />
-                                  </div>
-                                  {getStatesForCountry(billingCountry).length > 0 && (
-                                    <div className="form-field">
-                                      <select 
-                                        id="billingState" 
-                                        className="form-select"
-                                        value={billingState}
-                                        onChange={(e) => setBillingState(e.target.value)}
-                                        disabled={isProcessing}
-                                      >
-                                        <option value="">{language === 'en' ? 'State' : '州/省'}</option>
-                                        {getStatesForCountry(billingCountry).map((stateName) => (
-                                          <option key={stateName} value={stateName}>{stateName}</option>
-                                        ))}
-                                      </select>
-                                    </div>
-                                  )}
-                                  <div className="form-field">
-                                    <input 
-                                      type="text" 
-                                      id="billingZipCode" 
-                                      className="form-input"
-                                      placeholder={language === 'en' ? 'Postal code (optional)' : '邮编（可选）'}
-                                      value={billingZipCode}
-                                      onChange={(e) => setBillingZipCode(e.target.value)}
-                                      disabled={isProcessing}
-                                    />
-                                  </div>
-                                </div>
-                              </div>
-                            )}
+                          <div className="drawer-text">
+                            {language === 'en' 
+                              ? 'Your payment is processed securely by Stripe. You will be redirected to Stripe Checkout to complete your purchase.'
+                              : '您的支付由 Stripe 安全处理。您将被重定向到 Stripe Checkout 完成购买。'
+                            }
                           </div>
                         </div>
                       )}
                     </div>
 
+                    {/* PayPal 支付方式 */}
                     <div className="payment-option-plaud">
                       <input 
                         type="radio" 
@@ -1176,7 +973,7 @@ function CheckoutForm() {
                           </div>
                         </div>
                       </label>
-                      {/* PayPal抽屉内容 */}
+                      {/* PayPal 抽屉内容 */}
                       {paymentMethod === 'paypal' && (
                         <div className="payment-drawer">
                           <div className="drawer-icon">
@@ -1188,12 +985,16 @@ function CheckoutForm() {
                             </svg>
                           </div>
                           <div className="drawer-text">
-                            After clicking 'Pay with PayPal', you will be redirected to PayPal to complete your purchase securely.
+                            {language === 'en'
+                              ? 'After clicking "Complete Order", you will be redirected to PayPal to complete your purchase securely.'
+                              : '点击"完成订单"后，您将被重定向到 PayPal 安全完成购买。'
+                            }
                           </div>
                         </div>
                       )}
                     </div>
 
+                    {/* Payoneer 支付方式 */}
                     <div className="payment-option-plaud">
                       <input 
                         type="radio" 
@@ -1214,7 +1015,7 @@ function CheckoutForm() {
                           </div>
                         </div>
                       </label>
-                      {/* Payoneer抽屉内容 */}
+                      {/* Payoneer 抽屉内容 */}
                       {paymentMethod === 'payoneer' && (
                         <div className="payment-drawer">
                           <div className="drawer-icon">
@@ -1224,14 +1025,16 @@ function CheckoutForm() {
                             </svg>
                           </div>
                           <div className="drawer-text">
-                            After clicking 'Pay with Payoneer', you will be redirected to Payoneer to complete your purchase securely.
+                            {language === 'en'
+                              ? 'After clicking "Complete Order", you will be redirected to Payoneer to complete your purchase securely.'
+                              : '点击"完成订单"后，您将被重定向到 Payoneer 安全完成购买。'
+                            }
                           </div>
                         </div>
                       )}
                     </div>
                   </div>
                 </div>
-
 
                 {/* 错误消息 */}
                 {formStatus.type === 'error' && formStatus.message && (
@@ -1243,10 +1046,10 @@ function CheckoutForm() {
                 {/* 提交按钮 */}
                 <button 
                   type="submit" 
-                    className="primary-button button-shine checkout-button"
+                  className="primary-button button-shine checkout-button"
                   disabled={isProcessing}
                 >
-                    {isProcessing ? t.processing : `Pay with ${paymentMethod === 'paypal' ? 'PayPal' : paymentMethod === 'card' ? 'Credit Card' : 'Payoneer'}`}
+                  {isProcessing ? t.processing : t.completeOrder}
                 </button>
               </form>
             </div>
@@ -1881,6 +1684,75 @@ function CheckoutForm() {
         .payment-method-name {
           font-weight: 500;
           color: var(--color-primary);
+        }
+
+        /* 支付信息框样式 */
+        .payment-info-box {
+          background: rgba(255, 255, 255, 0.9);
+          backdrop-filter: blur(8px);
+          border: 1.5px solid #e5e7eb;
+          border-radius: 12px;
+          padding: 1.5rem;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 1.5rem;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        }
+
+        .payment-info-content {
+          display: flex;
+          align-items: center;
+          gap: 1rem;
+          flex: 1;
+        }
+
+        .payment-info-icon {
+          width: 48px;
+          height: 48px;
+          background: linear-gradient(135deg, #F7AEBF 0%, #9b90da 100%);
+          border-radius: 12px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: white;
+          flex-shrink: 0;
+        }
+
+        .payment-info-icon svg {
+          width: 24px;
+          height: 24px;
+        }
+
+        .payment-info-text {
+          flex: 1;
+        }
+
+        .payment-info-title {
+          font-size: 0.875rem;
+          font-weight: 600;
+          color: var(--color-primary);
+          margin: 0 0 0.25rem 0;
+        }
+
+        .payment-info-desc {
+          font-size: 0.75rem;
+          color: var(--color-tertiary);
+          margin: 0;
+          line-height: 1.4;
+        }
+
+        .payment-card-logos {
+          display: flex;
+          align-items: center;
+          gap: 0.75rem;
+          flex-shrink: 0;
+        }
+
+        .card-logo-small {
+          height: 24px;
+          width: auto;
+          object-fit: contain;
         }
 
         .payment-logos, .card-logos {

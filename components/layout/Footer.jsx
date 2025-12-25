@@ -72,7 +72,7 @@ export default function Footer({ onSubscribe, showEmailInput = true }) {
     try {
       // 使用统一的Google Sheets工具函数
       const { submitEmailToGoogleSheets } = await import('../../lib/googleSheets');
-      const result = await submitEmailToGoogleSheets(footerEmail, "footer", "footer-subscription");
+      const result = await submitEmailToGoogleSheets(footerEmail, "footer", "");
       
       if (result.success) {
         // 保存邮箱到 localStorage
@@ -80,7 +80,7 @@ export default function Footer({ onSubscribe, showEmailInput = true }) {
         setIsEmailSaved(true);
         
         setFooterStatus({
-          message: '您已成功加入我们的通知列表！🎉',
+          message: 'You have successfully joined our notification list!🎉',
           type: 'success'
         });
         

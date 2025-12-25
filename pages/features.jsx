@@ -32,7 +32,7 @@ export default function Features() {
     
     try {
       const { submitEmailToGoogleSheets } = await import('../lib/googleSheets');
-      const result = await submitEmailToGoogleSheets(email, "features-footer", "notify-at-launch");
+      const result = await submitEmailToGoogleSheets(email, "features-footer", "");
       
       if (result.success) {
         if (setFooterStatus) {

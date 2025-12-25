@@ -52,7 +52,21 @@ function doPost(e) {
     
     // 添加新邮箱记录
     const timestamp = Utilities.formatDate(new Date(), "America/New_York", "yyyy-MM-dd HH:mm:ss");
-    sheet.appendRow([email, source, note, timestamp, 'active']);
+    
+    // 根据source确定Note字段的值
+    let finalNote = note;
+    if (source === 'paid-user-coupon') {
+      // 支付相关的Note字段使用传入的note值（Coupon, Deposit, Product）
+      finalNote = note;
+    } else if (source === 'pop-modal') {
+      // VIP预订保持原有逻辑
+      finalNote = 'reserve-pop-modal';
+    } else {
+      // 普通邮箱收集，Note字段为空
+      finalNote = '';
+    }
+    
+    sheet.appendRow([email, source, finalNote, timestamp, 'active']);
     
     console.log('新邮箱已添加:', email);
     return HtmlService.createHtmlOutput("OK");

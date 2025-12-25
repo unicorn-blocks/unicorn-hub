@@ -66,7 +66,7 @@ export default function PaymentSuccess() {
     
     try {
       const { submitEmailToGoogleSheets } = await import('../../lib/googleSheets');
-      const result = await submitEmailToGoogleSheets(email, "payment-success-footer", "notify-at-launch");
+      const result = await submitEmailToGoogleSheets(email, "payment-success-footer", "");
       
       if (result.success) {
         if (setFooterStatus) {
@@ -102,7 +102,8 @@ export default function PaymentSuccess() {
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </Head>
 
-      <Navigation />
+      {/* 使用导航组件 */}
+      {/*<Navigation />*/}
       
       <div className="background-gradient"></div>
       <main className="min-h-screen">
@@ -158,7 +159,12 @@ export default function PaymentSuccess() {
           </div>
         </section>
 
-        <Footer onSubscribe={handleFooterSubmit} />
+        {/* 传递订阅回调函数给 Footer */}
+        {/* <Footer 
+          showEmailInput={false} 
+          onSubscribe={handleFooterSubmit} 
+          /> */}
+        <Footer showEmailInput={false} />
       </main>
 
       <style jsx global>{`
