@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { marked } from 'marked';
 import Navigation from '../components/layout/Navigation';
 import Footer from '../components/layout/Footer';
+import BlueTopBar from '../components/BlueTopBar';
 import { useLanguage } from '../context/LanguageContext';
 import { safeApiCall } from '../lib/api';
 
@@ -181,6 +182,10 @@ export default function Features() {
       </Head>
 
       <div className="background-gradient"></div>
+      
+      {/* 蓝色顶部条 */}
+      <BlueTopBar />
+      
       <main className="min-h-screen">
       {/* 使用导航组件（已注释，2025/12/23根据需求不显示悬浮导航栏） */}
       {/* <Navigation /> */}
@@ -257,7 +262,7 @@ export default function Features() {
         }
 
         .features-section {
-          padding-top: 160px;
+          padding-top: 96px;
           padding-bottom: 4rem;
           padding-left: 40px;
           padding-right: 40px;

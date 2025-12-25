@@ -8,7 +8,7 @@ import { safeApiCall } from '../lib/api';
 import { useLanguage } from '../context/LanguageContext';
 
 import dynamic from 'next/dynamic'
-import EmailNotifyFloatingBox from '../components/EmailNotifyFloatingBox';
+import BlueTopBar from '../components/BlueTopBar';
 const PopModal = dynamic(() => import('../components/PopModal'), { ssr: false });
 
 export default function Home() {
@@ -398,20 +398,14 @@ export default function Home() {
       </Head>
 
       <div className="background-gradient" />
+      
+      {/* 蓝色顶部条 */}
+      <BlueTopBar />
+      
       <main className="home-root min-h-screen">
         {/* <Navigation /> */}
 
         <section className="hero-block">
-          <div className="hero-top-bar">
-            <Image
-              src="/assets/image/Rectangle_17_1389.png"
-              alt="Unicorn Blocks Logo"
-              width={60}
-              height={60}
-              className="hero-logo"
-            />
-            <span className="hero-brand-text">Unicorn Blocks</span>
-          </div>
           <div className="hero-backdrop" aria-hidden="true">
             <Image
               src="/assets/ima/hero图.webp"
@@ -811,35 +805,9 @@ export default function Home() {
         .hero-block {
           position: relative;
           margin-top: calc(var(--nav-height) * -1);
-          padding: calc(var(--nav-height) + 48px) 0 0;
+          padding: calc(var(--nav-height) + 0.1px) 0 0;
           overflow: visible;
           background: linear-gradient(90deg, #FEFAE5 0%, #D9F1FC 100%);
-        }
-
-        .hero-top-bar {
-          position: relative;
-          width: 100%;
-          background-color: #AAC2F4;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          gap: 10px;
-          padding: 0.5px 24px; /* 缩小上下padding从16px到6px */
-          z-index: 8;
-          margin-top: -100px;
-          top: -88px;
-        }
-
-        .hero-logo {
-          width: 60px;
-          height: 60px;
-          object-fit: contain;
-        }
-
-        .hero-brand-text {
-          font-size: 1.25rem;
-          font-weight: 700;
-          color: #000000;
         }
 
         .hero-block::before {
@@ -925,7 +893,7 @@ export default function Home() {
         }
 
         .hero-description-wrapper {
-          margin: 6px auto 18px;
+          margin: 46px auto 18px;
           max-width: 720px;
           display: flex;
           flex-direction: column;
@@ -935,7 +903,7 @@ export default function Home() {
 
         .hero-description {
           margin: 0;
-          font-size: 1.15rem;
+          font-size: 1.2rem;
           line-height: 1.6;
           color: #54545C;
           font-weight: 600;
@@ -950,7 +918,7 @@ export default function Home() {
           display: inline-flex;
           align-items: center;
           gap: 12px;
-          margin-top: -3px;
+          margin-top: -5px;
         }
 
         .hero-badge {
@@ -959,7 +927,7 @@ export default function Home() {
           gap: 8px;
           font-weight: 400;
           color: #54545C;
-          font-size: 1rem;
+          font-size: 0.78rem;
         }
 
         .hero-badge-text {
@@ -2137,7 +2105,7 @@ export default function Home() {
           }
 
           .hero-block {
-            padding: calc(var(--nav-height) + 30px) 0 0;
+            padding: calc(var(--nav-height) + 12px) 0 0;
           }
 
           .hero-badge-row {

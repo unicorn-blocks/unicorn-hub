@@ -1,11 +1,24 @@
-import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
 import { useLanguage } from '../../context/LanguageContext';
+import { saveEmail, getSavedEmail } from '../../lib/emailStorage';
 
 export default function Footer({ onSubscribe, showEmailInput = true }) {
+  const router = useRouter();
   const { language } = useLanguage();
   const [footerEmail, setFooterEmail] = useState('');
   const [footerStatus, setFooterStatus] = useState({ message: '', type: '' });
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [isEmailSaved, setIsEmailSaved] = useState(false);
+
+  // 组件加载时检查是否有保存的邮箱
+  useEffect(() => {
+    const savedEmail = getSavedEmail();
+    if (savedEmail) {
+      setFooterEmail(savedEmail);
+      setIsEmailSaved(true);
+    }
+  }, []);
   
   // 翻译文本
   const translations = {
@@ -43,6 +56,9 @@ export default function Footer({ onSubscribe, showEmailInput = true }) {
     e.preventDefault();
     setFooterStatus({ message: '', type: '' }); // 重置状态
     
+    // 防止重复提交
+    if (isProcessing) return;
+    
     if (!isValidEmail(footerEmail)) {
       setFooterStatus({
         message: t.emailError,
@@ -51,27 +67,33 @@ export default function Footer({ onSubscribe, showEmailInput = true }) {
       return;
     }
     
+    setIsProcessing(true);
+    
     try {
       // 使用统一的Google Sheets工具函数
       const { submitEmailToGoogleSheets } = await import('../../lib/googleSheets');
       const result = await submitEmailToGoogleSheets(footerEmail, "footer", "footer-subscription");
       
       if (result.success) {
+        // 保存邮箱到 localStorage
+        saveEmail(footerEmail);
+        setIsEmailSaved(true);
+        
         setFooterStatus({
           message: '您已成功加入我们的通知列表！🎉',
           type: 'success'
         });
-        setFooterEmail(''); // 清空输入框
         
         // 提交成功后跳转到VIP页面
         setTimeout(() => {
-          window.location.href = '/reserve-vip-spot';
-        }, 1500); // 等待1.5秒显示成功消息后跳转
+          router.push('/reserve-vip-spot');
+        }, 300);//延迟
       } else {
         setFooterStatus({
           message: result.message,
           type: 'error'
         });
+        setIsProcessing(false);
       }
     } catch (err) {
       console.error('Footer邮箱提交错误:', err);
@@ -79,6 +101,7 @@ export default function Footer({ onSubscribe, showEmailInput = true }) {
         message: '网络错误，请稍后重试',
         type: 'error'
       });
+      setIsProcessing(false);
     }
   };
 
@@ -114,12 +137,13 @@ export default function Footer({ onSubscribe, showEmailInput = true }) {
   <img src="/assets/group 85.svg" alt="Unicorn Blocks Logo" className="h-14" decoding="async" />
 </div>
             <p className="mb-4 leading-relaxed" style={{ fontSize: '15px', color: '#666' }}>
-              A world of blocks, stories, and imagination.<br/>
-              Join the adventure that sparks imagination.
+              {/*A world of blocks, stories, and imagination.<br/>
+              Join the adventure that sparks imagination.*/}
+              A world of blocks, stories, and imagination.
             </p>
             <div className="flex items-center mb-4" style={{ fontSize: '12px', color: '#666' }}>
               <a href="mailto:support@unicornblocks.ai" className="hover:text-[#7d9ed4] transition-colors" target="_blank" rel="noopener">support@unicornblocks.ai</a>
-              <span style={{ marginLeft: '20px', color: '#555' }}>{t.allRightsReserved}</span>
+              <span style={{ marginLeft: '40px', color: '#555' }}>{t.allRightsReserved}</span>
             </div>
           </div>
 
@@ -127,15 +151,27 @@ export default function Footer({ onSubscribe, showEmailInput = true }) {
           {showEmailInput && (<div>
             <h3 className="font-semibold mb-4" style={{position: 'relative', top: '20px'}}>{footerT.joinMagicList}</h3>
             <form onSubmit={handleFooterSubmit} className="flex items-end gap-0" style={{ transform: 'translateY(-25px)' }}>
-              <div className="flex-1" style={{ maxWidth: '427px', transform: 'translateY(-23px)' }}>
+              <div className="flex-1" style={{ maxWidth: '427px', transform: 'translateY(-23px)', position: 'relative' }}>
                 <input
                   type="email"
                   value={footerEmail}
                   onChange={e => { setFooterEmail(e.target.value); if (footerStatus.message) setFooterStatus({ message: '', type: '' }); }}
                   placeholder="Enter your email to join"
                   className="w-full px-0 py-2 border-0 border-b-2 border-gray-300 focus:outline-none focus:border-[#7d9ed4] bg-transparent text-sm placeholder-gray-400"
-                  style={{ borderRadius: 0, color: '#54545C' }}
+                  style={{ borderRadius: 0, color: '#54545C', paddingRight: isEmailSaved ? '30px' : '0' }}
                 />
+                {isEmailSaved && (
+                  <span style={{
+                    position: 'absolute',
+                    right: '10px',
+                    bottom: '4px',
+                    fontSize: '18px',
+                    color: '#10B981',
+                    pointerEvents: 'none'
+                  }}>
+                    ✅
+                  </span>
+                )}
                 {footerStatus.message && (
   <div className={`text-sm ${footerStatus.type === 'success' ? 'text-green-600' : 'text-red-600'}`}
     style={{ marginTop: '4px', minHeight: '18px', lineHeight: '18px' }}>
@@ -170,6 +206,14 @@ export default function Footer({ onSubscribe, showEmailInput = true }) {
                 </span>
               </button>
             </form>
+          </div>)}
+
+          {/* Welcome message for pages without email input */}
+          {!showEmailInput && (<div>
+            <p className="mb-4 leading-relaxed" style={{ fontSize: '15px', color: '#666', marginTop: '40px' }}>
+              Welcome to the Adventure ✨<br/>
+              You're officially part of the Unicorn Blocks world.
+            </p>
           </div>)}
         </div>
       </div>

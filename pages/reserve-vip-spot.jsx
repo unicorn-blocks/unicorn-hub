@@ -3,6 +3,7 @@ import Head from 'next/head';
 import Link from 'next/link';
 import Navigation from '../components/layout/Navigation';
 import Footer from '../components/layout/Footer';
+import BlueTopBar from '../components/BlueTopBar';
 import ProductCarousel from '../components/ProductCarousel';
 import { useLanguage } from '../context/LanguageContext';
 
@@ -153,11 +154,14 @@ export default function PreOrder() {
 
       <div className="background-gradient"></div>
       
+      {/* 蓝色顶部条 */}
+      <BlueTopBar />
+      
       {/* 使用导航组件 */}
       {/* <Navigation /> */}
 
       {/* Main Content */}
-      <main className="min-h-screen pt-48 px-4 pb-24">
+      <main className="min-h-screen pt-24 px-4 pb-24">
         <div className="buy-container">
           {/* 页面标题 */}
           <div className="text-center mb-12 max-w-5xl mx-auto">

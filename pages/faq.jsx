@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { marked } from 'marked';
 import Navigation from '../components/layout/Navigation';
 import Footer from '../components/layout/Footer';
+import BlueTopBar from '../components/BlueTopBar';
 import { useLanguage } from '../context/LanguageContext';
 import { safeApiCall } from '../lib/api';
 
@@ -192,6 +193,10 @@ export default function Faq() {
       </Head>
 
       <div className="background-gradient"></div>
+      
+      {/* 蓝色顶部条 */}
+      <BlueTopBar />
+      
       <main className="min-h-screen">
         {/* 使用导航组件 */}
         {/* <Navigation /> */}
@@ -268,7 +273,7 @@ export default function Faq() {
         }
 
         .faq-section {
-          padding-top: 160px;
+          padding-top: 96px;
           padding-bottom: 4rem;
           padding-left: 40px;
           padding-right: 40px;

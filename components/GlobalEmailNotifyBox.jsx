@@ -1,11 +1,22 @@
 import { useRef, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
+import { saveEmail, getSavedEmail } from '../lib/emailStorage';
 
 export default function GlobalEmailNotifyBox() {
   const [email, setEmail] = useState('');
   const [error, setError] = useState('');
   const [show, setShow] = useState(true);
+  const [isEmailSaved, setIsEmailSaved] = useState(false);
   const router = useRouter();
+
+  // 组件加载时检查是否有保存的邮箱
+  useEffect(() => {
+    const savedEmail = getSavedEmail();
+    if (savedEmail) {
+      setEmail(savedEmail);
+      setIsEmailSaved(true);
+    }
+  }, []);
 
   // 邮箱验证
   const isValidEmail = (email) => /\S+@\S+\.\S+/.test(email);
@@ -42,6 +53,9 @@ export default function GlobalEmailNotifyBox() {
       const result = await submitEmailToGoogleSheets(email, "global-notify-bar", "notify-global-bar");
       
       if (result.success) {
+        // 保存邮箱到 localStorage
+        saveEmail(email);
+        setIsEmailSaved(true);
         // 成功后直接跳转
         router.push('/reserve-vip-spot');
       } else {
@@ -92,25 +106,41 @@ export default function GlobalEmailNotifyBox() {
       {/* 左侧 12px 间距 */}
       <div style={{ width: SIDE_PAD, height: BOX_HEIGHT }} />
       {/* 输入框（减小尺寸） */}
-      <input
-        type="email"
-        value={email}
-        onChange={handleInputChange}
-        placeholder="Enter your email to join"
-        style={{
-          width: 281,
-          height: 37,
-          background: '#fff',
-          borderRadius: INNER_RADIUS,
-          border: 'none',
-          outline: 'none',
-          fontSize: FONT_SIZE,
-          color: email ? '#54545C' : '#A7A7A7', // 有输入时使用 #54545C，否则使用 #A7A7A7
-          padding: '0 16px',
-          boxSizing: 'border-box',
-        }}
-        className="placeholder:text-[#A7A7A7]"
-      />
+      <div style={{ position: 'relative', width: 281, height: 37 }}>
+        <input
+          type="email"
+          value={email}
+          onChange={handleInputChange}
+          placeholder="Enter your email to join"
+          style={{
+            width: '100%',
+            height: '100%',
+            background: '#fff',
+            borderRadius: INNER_RADIUS,
+            border: 'none',
+            outline: 'none',
+            fontSize: FONT_SIZE,
+            color: email ? '#54545C' : '#A7A7A7', // 有输入时使用 #54545C，否则使用 #A7A7A7
+            padding: '0 16px',
+            paddingRight: isEmailSaved ? '40px' : '16px',
+            boxSizing: 'border-box',
+          }}
+          className="placeholder:text-[#A7A7A7]"
+        />
+        {isEmailSaved && (
+          <span style={{
+            position: 'absolute',
+            right: '12px',
+            top: '50%',
+            transform: 'translateY(-50%)',
+            fontSize: '16px',
+            color: '#10B981',
+            pointerEvents: 'none'
+          }}>
+            ✅
+          </span>
+        )}
+      </div>
       {/* 中间gap */}
       <div style={{ width: GAP }} />
       {/* 按钮 */}

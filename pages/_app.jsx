@@ -26,8 +26,8 @@ function MyApp({ Component, pageProps }) {
     };
   }, [router.events]);
 
-  // 在checkout页面不显示GlobalEmailNotifyBox
-  const shouldShowGlobalEmailBox = router.pathname !== '/checkout';
+  // 在checkout和reserve-vip-spot页面不显示GlobalEmailNotifyBox
+  const shouldShowGlobalEmailBox = router.pathname !== '/checkout' && router.pathname !== '/reserve-vip-spot';
 
   return (
     <LanguageProvider>

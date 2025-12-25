@@ -5,6 +5,7 @@ import { loadStripe } from '@stripe/stripe-js';
 import { safeApiCall } from '../lib/api';
 import Navigation from '../components/layout/Navigation';
 import Footer from '../components/layout/Footer';
+import BlueTopBar from '../components/BlueTopBar';
 import { useLanguage } from '../context/LanguageContext';
 import { COUNTRIES, COUNTRY_CODES, COUNTRY_STATES } from '../lib/countryRegions';
 
@@ -668,11 +669,14 @@ function CheckoutForm() {
 
       <div className="background-gradient"></div>
       
+      {/* 蓝色顶部条 */}
+      <BlueTopBar />
+      
       {/* 使用导航组件 */}
       {/*<Navigation />*/}
 
       {/* Main Content */}
-      <main className="min-h-screen pt-48 px-4 pb-24">
+      <main className="min-h-screen pt-24 px-4 pb-24">
         <div className="buy-container">
           {/* 页面标题 */}
           <div className="text-center mb-12 max-w-3xl mx-auto">

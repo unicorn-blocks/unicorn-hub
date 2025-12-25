@@ -3,6 +3,7 @@ import Head from 'next/head';
 import { safeApiCall } from '../lib/api';
 import Navigation from '../components/layout/Navigation';
 import Footer from '../components/layout/Footer';
+import BlueTopBar from '../components/BlueTopBar';
 import { useLanguage } from '../context/LanguageContext';
 
 export default function ShopNew() {
@@ -119,11 +120,14 @@ export default function ShopNew() {
 
       <div className="background-gradient"></div>
       
+      {/* 蓝色顶部条 */}
+      <BlueTopBar />
+      
       {/* 使用导航组件 */}
       {/* <Navigation /> */}
 
       {/* Main Content */}
-      <main className="min-h-[calc(100vh-300px)] pt-48 px-4">
+      <main className="min-h-[calc(100vh-300px)] pt-24 px-4">
         <div className="subscribe-container">
           <h1 className="text-3xl font-bold text-center mb-6">{t.joinWaitlist}</h1>
           <p className="text-gray-600 text-center mb-8">{t.beFirst}</p>

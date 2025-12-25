@@ -21,6 +21,26 @@ export default async function handler(req, res) {
 
     console.log('代理请求到Google Sheets:', { email, source, note });
 
+
+    /*
+     // 临时模拟成功响应，用于测试前端功能
+    // 在实际部署时，取消注释下面的真实请求代码
+    
+    // 模拟延迟
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    // 模拟成功响应
+    console.log('模拟成功响应 - 邮箱已记录:', email);
+    return res.status(200).json({
+      success: true,
+      message: '您已成功加入我们的通知列表！🎉 (模拟模式)'
+    });
+
+*/
+
+    // 真实的Google Sheets请求代码如下： - 当网络问题解决后取消注释
+
+
     // 发送请求到Google Apps Script
     const response = await fetch(GOOGLE_SHEET_URL, {
       method: "POST",
@@ -56,6 +76,8 @@ export default async function handler(req, res) {
       });
     }
 
+
+    
   } catch (error) {
     console.error('代理请求详细错误:', {
       name: error.name,

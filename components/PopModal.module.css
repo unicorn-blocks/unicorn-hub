@@ -41,7 +41,8 @@
   overflow: visible;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
+  justify-content: space-between;
+  padding-bottom: 40px;
 }
 
 .closeBtn {
@@ -138,10 +139,11 @@
 }
 
 .bottomInputWrapper {
-  position: absolute;
-  left: 0; right: 0;
+  position: relative;
+  left: auto;
+  right: auto;
+  bottom: auto;
   margin: 0 auto;
-  bottom: 59px;
   display: flex;
   flex-direction: row;
   align-items: flex-end;
@@ -197,14 +199,19 @@
   box-shadow: 0 5px 15px 0 rgba(39,40,47,.15);
   transition: background .2s;
 }
+.notifyBtn:hover:not(:disabled) {
+  background: #4E81A8;
+}
 .notifyBtn:active {
   background: #4E81A8;
 }
 .notifyBtn.submitted {
   background: #4E81A8;
 }
-.notifyBtn:hover {
-  background: #413553;
+.notifyBtn:disabled {
+  background: #4E81A8;
+  cursor: pointer;
+  opacity: 0.8;
 }
 .inputEmail {
   width: 281px;
