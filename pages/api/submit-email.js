@@ -22,12 +22,12 @@ export default async function handler(req, res) {
     console.log('代理请求到Google Sheets:', { email, source, note });
 
 
-    
+/* 
      // 临时模拟成功响应，用于测试前端功能
     // 在实际部署时，取消注释下面的真实请求代码，将下列测试代码注释掉
- /*   
+    
     // 模拟延迟
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await new Promise(resolve => setTimeout(resolve, 800));
     
     // 模拟成功响应
     console.log('模拟成功响应 - 邮箱已记录:', email);

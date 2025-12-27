@@ -44,7 +44,15 @@ export default function PopModal({ onClose }) {
       
       if (result.success) {
         // 保存邮箱到 localStorage
+        console.log('=== PopModal 保存邮箱 ===');
+        console.log('要保存的邮箱:', email);
         saveEmail(email);
+        
+        // 验证保存是否成功
+        const savedEmail = getSavedEmail();
+        console.log('保存后验证读取:', savedEmail);
+        console.log('localStorage直接读取:', localStorage.getItem('unicorn_blocks_user_email'));
+        
         setIsEmailSaved(true);
         setSubmitted(true);
         

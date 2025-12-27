@@ -129,14 +129,14 @@ export default function Footer({ onSubscribe, showEmailInput = true }) {
 
   return (
     <footer className="py-12 md:py-16 relative z-50" style={{ minHeight: 180 }}>
-      <div className="container mx-auto px-4">
-        <div className="grid md:grid-cols-2 gap-8 mb-12">
+      <div className="container mx-auto px-2">
+        <div className="grid md:grid-cols-2 gap-10 mb-12">
           {/* Logo and Contact */}
           <div>
             <div className="flex items-center mb-4">
   <img src="/assets/group 85.svg" alt="Unicorn Blocks Logo" className="h-14" decoding="async" />
 </div>
-            <p className="mb-4 leading-relaxed" style={{ fontSize: '15px', color: '#666' }}>
+            <p className="mb-4 leading-relaxed" style={{ fontSize: '15px', color: '#666', marginTop: '26px' }}>
               {/*A world of blocks, stories, and imagination.<br/>
               Join the adventure that sparks imagination.*/}
               A world of blocks, stories, and imagination.
@@ -148,7 +148,8 @@ export default function Footer({ onSubscribe, showEmailInput = true }) {
           </div>
 
           {/* Let's be friends ! */}
-          {showEmailInput && (<div>
+          {showEmailInput && (<div className="flex justify-end">
+            <div style={{ maxWidth: '547px', width: '100%' }}>
             <h3 className="font-semibold mb-4" style={{position: 'relative', top: '20px'}}>{footerT.joinMagicList}</h3>
             <form onSubmit={handleFooterSubmit} className="flex items-end gap-0" style={{ transform: 'translateY(-25px)' }}>
               <div className="flex-1" style={{ maxWidth: '427px', transform: 'translateY(-23px)', position: 'relative' }}>
@@ -206,14 +207,17 @@ export default function Footer({ onSubscribe, showEmailInput = true }) {
                 </span>
               </button>
             </form>
+            </div>
           </div>)}
 
           {/* Welcome message for pages without email input */}
-          {!showEmailInput && (<div>
-            <p className="mb-4 leading-relaxed" style={{ fontSize: '15px', color: '#666', marginTop: '40px' }}>
+          {!showEmailInput && (<div className="flex justify-end">
+            <div style={{ maxWidth: '547px', width: '100%' }}>
+            <p className="mb-4 leading-relaxed" style={{ fontSize: '15px', color: '#666', marginTop: '80px', paddingLeft: '150px' }}>
               Welcome to the Adventure ✨<br/>
               You're officially part of the Unicorn Blocks world.
             </p>
+            </div>
           </div>)}
         </div>
       </div>

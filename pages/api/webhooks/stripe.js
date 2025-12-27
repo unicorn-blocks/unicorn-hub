@@ -89,6 +89,12 @@ export default async function handler(req, res) {
         await handleChargeRefunded(event.data.object)
         break
 
+      case 'charge.updated':
+        // charge.updated 事件通常在支付完成时触发
+        // 如果需要处理，可以在这里添加逻辑
+        console.log('收到 charge.updated 事件，暂不处理')
+        break
+
       default:
         console.log(`未处理的事件类型: ${event.type}`)
     }
@@ -215,39 +221,48 @@ async function handleCheckoutSessionCompleted(session) {
       // 不中断流程
     }
 
-    // 6. 添加到付费用户列表（用于优惠券发放）
+    // 6. 添加到PaidCoupon表（支付用户记录）
+    // 将支付用户数据发送到Google Apps Script处理
+    // 这样可以自动更新PaidCoupon表，用于Meta广告追踪和用户管理
     try {
-      const productType = session.metadata?.productType || 'coupon'
       const amount = session.amount_total / 100
+      const shippingInfo = session.shipping_details?.address
+      const state = shippingInfo?.state || ''
+      const zipcode = shippingInfo?.postal_code || ''
       
-      // 根据支付金额和产品类型确定Note字段
-      let noteType = ''
-      if (amount === 5) {
-        // $5 的是优惠券购买
-        noteType = 'Coupon'
-      } else if (productType === 'final-product' && session.metadata?.hasCoupon === 'true') {
-        // 使用了优惠券购买最终产品（付过定金）
-        noteType = 'Deposit'
-      } else if (productType === 'final-product') {
-        // 直接购买最终产品（没付过定金）
-        noteType = 'Product'
-      } else {
-        // 其他情况，保持为空或使用默认值
-        noteType = ''
+      // 准备PaidCoupon数据
+      // 表结构: Email | Units | Amount_Paid | State | Created_at | Stripe_Session_ID | Source | Zipcode
+      const paidCouponData = {
+        email: customerEmail,
+        units: 1, // 默认1个单位
+        amount_paid: amount,
+        state: state,
+        stripe_session_id: session.id,
+        source: 'stripe',
+        zipcode: zipcode
       }
       
-      const paidUserMessage = `${orderId}|${amount}|${currency}|VIP49OFF|${productType}`
-      
-      await submitEmailToGoogleSheets(
-        customerEmail,
-        'paid-user-coupon',
-        noteType // 使用新的Note逻辑
-      )
-      
-      console.log('用户已添加到付费用户列表:', customerEmail, '产品类型:', productType, 'Note类型:', noteType)
-    } catch (paidUserError) {
-      console.error('添加付费用户失败:', paidUserError)
-      // 不中断流程
+      // 检查环境变量是否配置
+      if (!process.env.PAID_COUPON_WEBHOOK_URL) {
+        console.warn('⚠️ PAID_COUPON_WEBHOOK_URL 未配置，无法更新PaidCoupon表')
+        console.warn('请在 .env.production 中添加: PAID_COUPON_WEBHOOK_URL=https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec')
+      } else {
+        // 发送到Google Apps Script处理PaidCoupon表
+        const paidCouponResponse = await fetch(process.env.PAID_COUPON_WEBHOOK_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(paidCouponData)
+        })
+        
+        const paidCouponText = await paidCouponResponse.text()
+        console.log('✅ PaidCoupon表更新响应:', paidCouponText)
+        console.log('用户已添加到PaidCoupon表:', customerEmail, '金额:', amount)
+      }
+    } catch (paidCouponError) {
+      console.error('❌ 添加PaidCoupon记录失败:', paidCouponError)
+      // 不中断流程，继续处理其他逻辑
     }
 
     // 7. 记录完整的支付信息

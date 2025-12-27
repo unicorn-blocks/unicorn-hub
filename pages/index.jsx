@@ -408,15 +408,14 @@ export default function Home() {
         <section className="hero-block">
           <div className="hero-backdrop" aria-hidden="true">
             <Image
-              src="/assets/ima/hero图.webp"
+              src="/assets/ima/hero-image.webp"
               alt=""
               fill
               className="hero-background-image"
               priority
-              style={{ objectFit: 'cover' }}
+              style={{ objectFit: 'contain' }}
             />
           </div>
-          <div className="hero-ellipse" />
 
           <div className="hero-shell">
             <div className="hero-eyebrow" style={{ visibility: 'hidden', height: '0', margin: '0', padding: '0' }}>UNICORN Blocks</div>
@@ -805,9 +804,10 @@ export default function Home() {
         .hero-block {
           position: relative;
           margin-top: calc(var(--nav-height) * -1);
-          padding: calc(var(--nav-height) + 0.1px) 0 0;
+          padding: calc(var(--nav-height) +0.1px) 0 0;
           overflow: visible;
           background: linear-gradient(90deg, #FEFAE5 0%, #D9F1FC 100%);
+          //max-height: 80vh;
         }
 
         .hero-block::before {
@@ -820,7 +820,7 @@ export default function Home() {
 
         .hero-backdrop {
           position: absolute;
-          inset: 0;
+          inset: -5%;
           pointer-events: none;
           z-index: 6;
         }
@@ -830,20 +830,10 @@ export default function Home() {
           inset: 0;
           width: 100%;
           height: 100%;
-          object-fit: cover;
-        }
-
-        .hero-ellipse {
-          position: absolute;
-          left: 50%;
-          top: 89%;
-          transform: translateX(-50%);
-          width: 700px;
-          max-width: 52%;
-          height: 150px;
-          background-color: #D1EDFA;
-          border-radius: 50%;
-          z-index: 5;
+          object-fit: scale-down;//在contain和none之间选择较小的
+          transform: scale(0.9);
+          //left: -100%; /* 向左偏移5%来居中 */
+          //top: -50%;  /* 向上偏移5%来居中 */
         }
 
         .hero-shell {
@@ -854,7 +844,7 @@ export default function Home() {
           position: relative;
           z-index: 10;
           text-align: center;
-          margin-top: -60px;
+          margin-top: -10px;
         }
 
         .hero-eyebrow {
@@ -873,7 +863,7 @@ export default function Home() {
         }
 
         .hero-heading h1 {
-          margin: 18px 0 10px;
+          margin: -5px 0 1px;
           font-size: clamp(3.1rem, 5vw, 4.8rem);
           line-height: 1.05;
         }
@@ -893,7 +883,7 @@ export default function Home() {
         }
 
         .hero-description-wrapper {
-          margin: 46px auto 18px;
+          margin: 6px auto 8px;//上 左右 下
           max-width: 720px;
           display: flex;
           flex-direction: column;
@@ -954,6 +944,18 @@ export default function Home() {
           background: #EEF9FF0;
         }
 
+        /* 大屏幕响应式调整 */
+        /*
+        @media (min-width: 1440px) {
+          .hero-block {
+            max-height: 88vh;
+          }
+          
+          .hero-transitions {
+            height: min(640px, calc(90vh - var(--nav-height) - 200px));
+          }
+        */
+
         .hero-transition {
           position: absolute;
           width: 100%;
@@ -986,7 +988,7 @@ export default function Home() {
         }
 
         .steps-section {
-          padding: 100px 0 0;
+          padding: 80px 0 0;
           background: #EEF9FF;
           margin-top: 0;
           position: relative;
@@ -999,7 +1001,7 @@ export default function Home() {
           bottom: -50px;
           left: 0;
           right: 0;
-          height: 100px;
+          height: 80px;
           background: #EEF9FF;
           border-radius: 0 0 50% 50% / 0 0 60px 60px;
           z-index: 2;

@@ -2,32 +2,17 @@ import { stripe } from '../../../../lib/stripe'
 
 /**
  * POST /api/payment/stripe/checkout-session
- * 创建 Stripe Checkout Session
+ * 创建 Stripe Checkout Session - 极简版本
  * 
  * 请求体:
  * {
- *   amount: number,           // 金额（美元）
- *   currency: string,         // 'usd'
- *   customer: {
- *     email: string,
- *     firstName: string,
- *     lastName: string
- *   },
- *   shipping: {
- *     country: string,
- *     firstName: string,
- *     lastName: string,
- *     address: string,
- *     city: string,
- *     state: string,
- *     zipCode: string,
- *     phone: string
- *   },
- *   metadata: {
- *     paymentType: string,    // 'reserve_vip_spot'
- *     orderId: string
- *   },
- *   language: string          // 'en' 或 'zh'
+ *   email: string,        // 用户邮箱（必需）
+ *   firstName: string,    // 名字（必需）
+ *   lastName: string,     // 姓氏（必需）
+ *   zip: string,          // 邮编（必需）
+ *   leadId: string,       // 追踪ID（可选）
+ *   amount: number,       // 金额（美元，默认5）
+ *   currency: string      // 货币（默认usd）
  * }
  */
 export default async function handler(req, res) {
@@ -38,71 +23,89 @@ export default async function handler(req, res) {
 
   try {
     const {
-      amount,
-      currency = 'usd',
-      customer,
-      shipping,
-      metadata,
-      language = 'en'
+      email,
+      firstName,
+      lastName,
+      zip,
+      leadId = '',
+      amount = 5,
+      currency = 'usd'
     } = req.body
 
     // 验证必需字段
-    if (!amount || !customer?.email || !shipping?.country) {
+    if (!email || !firstName || !lastName || !zip) {
       return res.status(400).json({
         success: false,
-        error: '缺少必需字段'
+        error: '缺少必需字段：email, firstName, lastName, zip'
+      })
+    }
+
+    // 验证邮箱格式
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      return res.status(400).json({
+        success: false,
+        error: '邮箱格式无效'
       })
     }
 
     // 获取应用 URL
     const origin = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
 
-    // 创建 Checkout Session
+    // 创建 Checkout Session - 极简配置
     const session = await stripe.checkout.sessions.create({
+      mode: 'payment',
       payment_method_types: ['card'],
+      
+
+      
+      // 产品信息
       line_items: [
         {
           price_data: {
             currency: currency,
             product_data: {
-              name: '独角兽积木 VIP 名额预订',
-              description: '$5 订金锁定 $129 VIP 价格',
-              images: [
-                'https://unicornblocks.com/logo.png' // 替换为实际 Logo URL
-              ]
+              name: 'Unicorn Blocks VIP Spot',
+              description: '$5 deposit to lock in $129 VIP price'
             },
             unit_amount: Math.round(amount * 100) // 转换为美分
           },
           quantity: 1
         }
       ],
-      mode: 'payment',
+      
+      // 重定向URL
       success_url: `${origin}/payment/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${origin}/payment/cancel`,
-      customer_email: customer.email,
+      cancel_url: `${origin}/reserve-vip-spot`,
       
-      // 设置 billing address 为 auto（自动从支付方式获取）
+      // 关键：用已收集的email，不让用户再填
+      customer_email: email,
+      
+      // 极简配置 - 只在必要时要求billing地址
+      // 'auto' = Stripe根据风险和合规需要动态决定是否显示
+      // 对于$5的小额交易，大多数用户不会看到地址字段
       billing_address_collection: 'auto',
+      // 不设置 shipping_address_collection（默认不启用）
+      // 不设置 phone_number_collection（默认不启用）
+      // 不传 allow_promotion_codes（默认不开）
       
-      // 配送地址收集（如果需要实体商品配送）
-      shipping_address_collection: {
-        allowed_countries: ['US', 'CA', 'CN', 'GB', 'AU', 'DE', 'FR', 'JP', 'SG', 'HK']
-      },
-      
-      // 不启用税务计算（因为 Stripe Tax 未开启）
-      automatic_tax: {
-        enabled: false
-      },
-      
+      // 追踪数据
+      client_reference_id: leadId || email,
       metadata: {
-        paymentType: metadata?.paymentType || 'reserve_vip_spot',
-        orderId: metadata?.orderId || '',
-        customerFirstName: customer.firstName || '',
-        customerLastName: customer.lastName || '',
-        language: language,
-        productType: 'coupon' // 标记当前购买的是优惠券
+        leadId: leadId || '',
+        firstName: firstName || '',
+        lastName: lastName || '',
+        zip: zip || '',
+        email: email
       },
-      locale: language === 'zh' ? 'zh' : 'en'
+      payment_intent_data: {
+        metadata: {
+          leadId: leadId || '',
+          firstName: firstName || '',
+          lastName: lastName || '',
+          zip: zip || '',
+          email: email
+        }
+      }
     })
 
     return res.status(200).json({

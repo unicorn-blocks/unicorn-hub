@@ -7,63 +7,65 @@ import Navigation from '../components/layout/Navigation';
 import Footer from '../components/layout/Footer';
 import BlueTopBar from '../components/BlueTopBar';
 import { useLanguage } from '../context/LanguageContext';
-import { COUNTRIES, COUNTRY_CODES, COUNTRY_STATES } from '../lib/countryRegions';
+import { getSavedEmail } from '../lib/emailStorage';
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
 function CheckoutForm() {
   const { language } = useLanguage();
   
-  // 表单状态
+  // 表单状态 - 只保留必需字段
   const [email, setEmail] = useState('');
-  const [newsletter, setNewsletter] = useState(true);
-  const [country, setCountry] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
-  const [address, setAddress] = useState('');
-  const [apartment, setApartment] = useState('');
-  const [city, setCity] = useState('');
-  const [state, setState] = useState('');
   const [zipCode, setZipCode] = useState('');
-  const [phone, setPhone] = useState('');
+  const [newsletter, setNewsletter] = useState(true);
   const [paymentMethod, setPaymentMethod] = useState('card');
-  // 产品数量状态
   const [quantity, setQuantity] = useState(1);
-  // 信用卡信息状态
-  const [cardNumber, setCardNumber] = useState('');
-  const [expiryDate, setExpiryDate] = useState('');
-  const [cvv, setCvv] = useState('');
-  const [cardName, setCardName] = useState('');
-  // 卡片类型提示状态
-  const [showMoreCards, setShowMoreCards] = useState(false);
-  // Security code提示状态
-  const [showSecurityCodeTooltip, setShowSecurityCodeTooltip] = useState(false);
-  // 账单地址状态
-  const [useShippingAsBilling, setUseShippingAsBilling] = useState(true);
-  const [billingCountry, setBillingCountry] = useState('');
-  const [billingFirstName, setBillingFirstName] = useState('');
-  const [billingLastName, setBillingLastName] = useState('');
-  const [billingAddress, setBillingAddress] = useState('');
-  const [billingApartment, setBillingApartment] = useState('');
-  const [billingCity, setBillingCity] = useState('');
-  const [billingState, setBillingState] = useState('');
-  const [billingZipCode, setBillingZipCode] = useState('');
+  const [leadId, setLeadId] = useState('');
+  
   // UI状态
   const [isProcessing, setIsProcessing] = useState(false);
   const [formStatus, setFormStatus] = useState({ message: '', type: '' });
   const [errors, setErrors] = useState({});
   
-  // 获取当前选中国家的州/省列表
-  const getStatesForCountry = (selectedCountry) => {
-    return COUNTRY_STATES[selectedCountry] || [];
-  };
-
-  // 处理国家变化
-  const handleCountryChange = (selectedCountry) => {
-    setCountry(selectedCountry);
-    setState(''); // 重置州/省选择
-  };
+  // 在组件挂载时从localStorage读取邮箱
+  useEffect(() => {
+    console.log('=== Checkout页面 useEffect 开始 ===');
+    
+    // 检查localStorage中的所有相关key
+    if (typeof window !== 'undefined') {
+      console.log('所有localStorage keys:', Object.keys(localStorage));
+      console.log('unicorn_blocks_user_email:', localStorage.getItem('unicorn_blocks_user_email'));
+      console.log('lead_email:', localStorage.getItem('lead_email')); // 检查是否有其他key
+    }
+    
+    const savedEmail = getSavedEmail();
+    console.log('getSavedEmail() 返回:', savedEmail);
+    
+    if (savedEmail) {
+      setEmail(savedEmail);
+      console.log('设置email状态为:', savedEmail);
+    } else {
+      console.log('没有找到保存的邮箱');
+    }
+    
+    // 生成或获取 leadId
+    if (typeof window !== 'undefined') {
+      let storedLeadId = localStorage.getItem('leadId');
+      if (!storedLeadId) {
+        storedLeadId = `lead_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+        localStorage.setItem('leadId', storedLeadId);
+        console.log('生成新的leadId:', storedLeadId);
+      } else {
+        console.log('使用现有leadId:', storedLeadId);
+      }
+      setLeadId(storedLeadId);
+    }
+    
+    console.log('=== Checkout页面 useEffect 结束 ===');
+  }, []);
   
-  // 验证函数
+  // 验证函数 - 简化版本，只验证4个字段
   const validateField = (name, value) => {
     const newErrors = { ...errors };
     
@@ -91,41 +93,9 @@ function CheckoutForm() {
           delete newErrors.lastName;
         }
         break;
-      case 'address':
-        if (!value) {
-          newErrors.address = language === 'en' ? 'Address is required' : '请输入地址';
-        } else {
-          delete newErrors.address;
-        }
-        break;
-      case 'city':
-        if (!value) {
-          newErrors.city = language === 'en' ? 'City is required' : '请输入城市';
-        } else {
-          delete newErrors.city;
-        }
-        break;
       case 'zipCode':
         // 邮编是可选的，不验证
         delete newErrors.zipCode;
-        break;
-      case 'phone':
-        // 电话是可选的，不验证
-        delete newErrors.phone;
-        break;
-      case 'country':
-        if (!value) {
-          newErrors.country = language === 'en' ? 'Country/Region is required' : '请选择国家/地区';
-        } else {
-          delete newErrors.country;
-        }
-        break;
-      case 'state':
-        if (!value) {
-          newErrors.state = language === 'en' ? 'State/Province is required' : '请选择州/省';
-        } else {
-          delete newErrors.state;
-        }
         break;
       default:
         break;
@@ -135,21 +105,14 @@ function CheckoutForm() {
     return Object.keys(newErrors).length === 0;
   };
 
-  // 验证整个表单
+  // 验证整个表单 - 简化版本，只验证4个字段
   const validateForm = () => {
     const fieldsToValidate = [
       { name: 'email', value: email },
       { name: 'firstName', value: firstName },
       { name: 'lastName', value: lastName },
-      { name: 'address', value: address },
-      { name: 'city', value: city },
-      { name: 'country', value: country }
+      { name: 'zipCode', value: zipCode }
     ];
-    
-    // 只有当国家有州/省列表时才验证 state
-    if (getStatesForCountry(country).length > 0) {
-      fieldsToValidate.push({ name: 'state', value: state });
-    }
     
     const newErrors = {};
     let isValid = true;
@@ -179,29 +142,8 @@ function CheckoutForm() {
             isValid = false;
           }
           break;
-        case 'address':
-          if (!value) {
-            newErrors.address = language === 'en' ? 'Address is required' : '请输入地址';
-            isValid = false;
-          }
-          break;
-        case 'city':
-          if (!value) {
-            newErrors.city = language === 'en' ? 'City is required' : '请输入城市';
-            isValid = false;
-          }
-          break;
-        case 'country':
-          if (!value) {
-            newErrors.country = language === 'en' ? 'Country/Region is required' : '请选择国家/地区';
-            isValid = false;
-          }
-          break;
-        case 'state':
-          if (!value) {
-            newErrors.state = language === 'en' ? 'State/Province is required' : '请选择州/省';
-            isValid = false;
-          }
+        case 'zipCode':
+          // 邮编是可选的，不验证
           break;
         default:
           break;
@@ -277,8 +219,8 @@ function CheckoutForm() {
       productDescription: 'Sparky First Adventure',
       quantity: 'Quantity',
       subtotal: 'Subtotal',
-      shipping: 'Shipping',
-      shippingPending: 'Calculated at checkout',
+      //shipping: 'Shipping',
+      //shippingPending: 'Calculated at checkout',
       total: 'Total',
       discountCode: 'Discount code or gift card',
       applyDiscount: 'Apply',
@@ -353,8 +295,8 @@ function CheckoutForm() {
       productDescription: 'Sparky 首次冒险',
       quantity: '数量',
       subtotal: '小计',
-      shipping: '运费',
-      shippingPending: '结账时计算',
+      //shipping: '运费',
+      //shippingPending: '结账时计算',
       total: '总计',
       discountCode: '折扣码或礼品卡',
       applyDiscount: '应用',
@@ -436,145 +378,37 @@ function CheckoutForm() {
     setIsProcessing(true);
     
     try {
-      // 如果选择 Stripe，使用新的 Checkout Session API
-      if (paymentMethod === 'card') {
-        // 准备 Stripe Checkout 数据
-        const checkoutData = {
-          amount: 5.00, // $5.00 VIP 预订费
-          currency: 'usd',
-          customer: {
-            email: email,
-            firstName: firstName,
-            lastName: lastName
-          },
-          shipping: {
-            country: country,
-            firstName: firstName,
-            lastName: lastName,
-            address: address,
-            city: city,
-            state: state,
-            zipCode: zipCode,
-            phone: phone
-          },
-          metadata: {
-            paymentType: 'reserve_vip_spot',
-            orderId: `order_${Date.now()}`
-          },
-          language: language
-        };
-        
-        // 调用 Stripe Checkout Session API
-        const response = await fetch('/api/payment/stripe/checkout-session', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(checkoutData)
-        });
-        
-        const data = await response.json();
-        
-        if (data.success && data.url) {
-          // 重定向到 Stripe Checkout 页面
-          window.location.href = data.url;
-        } else {
-          setFormStatus({
-            message: data.error || t.paymentFailed,
-            type: 'error'
-          });
-          setIsProcessing(false);
-        }
+      // 准备支付数据 - 简化版本，只发送必需字段
+      const paymentData = {
+        email: email,
+        firstName: firstName,
+        lastName: lastName,
+        zip: zipCode,
+        leadId: leadId,
+        amount: 5,
+        currency: 'usd'
+      };
+      
+      // 调用 Stripe Checkout Session API
+      const response = await fetch('/api/payment/stripe/checkout-session', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(paymentData)
+      });
+      
+      const data = await response.json();
+      
+      if (data.success && data.url) {
+        // 重定向到 Stripe Checkout 页面
+        window.location.href = data.url;
       } else {
-        // 使用原来的支付方式（PayPal、Payoneer）
-        /* ===== 原来的支付代码 ===== */
-        // 决定使用哪个地址作为账单地址
-        const finalBillingAddress = useShippingAsBilling ? {
-          country: getCountryCode(country),
-          countryName: country,
-          firstName: firstName,
-          lastName: lastName,
-          address: address,
-          address2: apartment,
-          city: city,
-          state: state,
-          zipCode: zipCode
-        } : {
-          country: getCountryCode(billingCountry),
-          countryName: billingCountry,
-          firstName: billingFirstName,
-          lastName: billingLastName,
-          address: billingAddress,
-          address2: billingApartment,
-          city: billingCity,
-          state: billingState,
-          zipCode: billingZipCode
-        };
-        
-        // 准备支付数据
-        const paymentData = {
-          payment_type: 'reserve_vip_spot', // VIP预订
-          payment_method: paymentMethod.toLowerCase(), // paypal, payoneer
-          amount: (5 * quantity).toFixed(2),
-          currency: 'USD',
-          customer: {
-            email: email,
-            firstName: firstName,
-            lastName: lastName
-          },
-          shipping: {
-            country: getCountryCode(country),
-            countryName: country,
-            firstName: firstName,
-            lastName: lastName,
-            address: address,
-            address2: apartment,
-            city: city,
-            state: state,
-            zipCode: zipCode,
-            phone: phone
-          },
-          billing_address: finalBillingAddress,
-          items: [{
-            name: 'Unicorn Blocks VIP Spot Reservation',
-            description: '$5 deposit for $129 VIP price',
-            quantity: quantity.toString(),
-            unit_amount: {
-              currency_code: 'USD',
-              value: '5.00'
-            }
-          }],
-          language: language,
-          return_url: `${window.location.origin}/payment/success`,
-          cancel_url: `${window.location.origin}/payment/cancel`
-        };
-        
-        // 调用支付API
-        const response = await safeApiCall('/api/payment', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(paymentData)
+        setFormStatus({
+          message: data.error || t.paymentFailed,
+          type: 'error'
         });
-        
-        const data = await response.json();
-        
-        if (data.success) {
-          // 如果是PayPal或Payoneer，重定向到支付页面
-          if (data.approval_url) {
-            window.location.href = data.approval_url;
-          } else {
-            handlePaymentSuccess(data);
-          }
-        } else {
-          setFormStatus({
-            message: data.message || t.paymentFailed,
-            type: 'error'
-          });
-          setIsProcessing(false);
-        }
-        /* ===== 原来的支付代码结束 ===== */
+        setIsProcessing(false);
       }
     } catch (error) {
       console.error('支付错误:', error);
@@ -586,46 +420,11 @@ function CheckoutForm() {
     }
   };
   
-  // 获取国家代码
-  const getCountryCode = (countryName) => {
-    return COUNTRY_CODES[countryName] || 'US';
-  };
-
   // 处理支付方式选择
   const handlePaymentMethodChange = (method) => {
     setPaymentMethod(method);
     // 清除任何错误状态
     setFormStatus({ message: '', type: '' });
-  };
-
-  // 信用卡输入格式化函数
-  const formatCardNumber = (value) => {
-    // 移除所有非数字字符
-    const numbers = value.replace(/\D/g, '');
-    // 限制为19位数字（支持所有信用卡类型）
-    const limitedNumbers = numbers.substring(0, 19);
-    // 每4位添加一个空格
-    return limitedNumbers.replace(/(\d{4})(?=\d)/g, '$1 ');
-  };
-
-  const formatExpiryDate = (value) => {
-    // 移除所有非数字字符
-    const numbers = value.replace(/\D/g, '');
-    // 在MM后添加/
-    if (numbers.length >= 2) {
-      return numbers.substring(0, 2) + '/' + numbers.substring(2, 4);
-    }
-    return numbers;
-  };
-
-  const handleCardNumberChange = (e) => {
-    const formatted = formatCardNumber(e.target.value);
-    setCardNumber(formatted);
-  };
-
-  const handleExpiryDateChange = (e) => {
-    const formatted = formatExpiryDate(e.target.value);
-    setExpiryDate(formatted);
   };
 
   // 从页脚提交的处理函数 - 使用统一的Google Sheets工具函数
@@ -753,6 +552,8 @@ function CheckoutForm() {
                 <div className="form-section">
                   <h2 className="section-title">{t.delivery}</h2>
                   
+                  {/* 暂时注释 - Country/Region 字段不需要 */}
+                  {/*
                   <div className="form-field">
                     <select 
                       id="country" 
@@ -775,6 +576,7 @@ function CheckoutForm() {
                     </select>
                     <ErrorMessage field="country" />
                   </div>
+                  */}
                   
                   <div className="form-row">
                     <div className="form-field">
@@ -811,6 +613,8 @@ function CheckoutForm() {
                     </div>
                   </div>
                   
+                  {/* 暂时注释 - Address 字段不需要 */}
+                  {/*
                   <div className="form-field">
                     <input 
                       type="text" 
@@ -827,7 +631,10 @@ function CheckoutForm() {
                     />
                     <ErrorMessage field="address" />
                   </div>
+                  */}
                   
+                  {/* 暂时注释 - Apartment 字段不需要 */}
+                  {/*
                   <div className="form-field">
                     <input 
                       type="text" 
@@ -839,7 +646,10 @@ function CheckoutForm() {
                       disabled={isProcessing}
                     />
                   </div>
+                  */}
                   
+                  {/* 暂时注释 - City 和 State 字段不需要 */}
+                  {/*
                   <div className="form-row">
                     <div className="form-field">
                       <input 
@@ -878,19 +688,29 @@ function CheckoutForm() {
                         <ErrorMessage field="state" />
                       </div>
                     )}
-                    <div className="form-field">
-                      <input 
-                        type="text" 
-                        id="zipCode" 
-                        className="form-input"
-                        value={zipCode}
-                        onChange={(e) => setZipCode(e.target.value)}
-                        placeholder={t.zipPlaceholder}
-                        disabled={isProcessing}
-                      />
-                    </div>
+                  </div>
+                  */}
+                  
+                  {/* ZIP Code - 保留这个字段 */}
+                  <div className="form-field">
+                    <input 
+                      type="text" 
+                      id="zipCode" 
+                      className={`form-input ${errors.zipCode ? 'error' : ''}`}
+                      value={zipCode}
+                      onChange={(e) => {
+                        setZipCode(e.target.value);
+                        validateField('zipCode', e.target.value);
+                      }}
+                      onBlur={(e) => validateField('zipCode', e.target.value)}
+                      placeholder="ZIP Code (helps us plan shipping & availability)"
+                      disabled={isProcessing}
+                    />
+                    <ErrorMessage field="zipCode" />
                   </div>
                   
+                  {/* 暂时注释 - Phone 字段不需要 */}
+                  {/*
                   <div className="form-field">
                     <input 
                       type="tel" 
@@ -902,6 +722,7 @@ function CheckoutForm() {
                       disabled={isProcessing}
                     />
                   </div>
+                  */}
                 </div>
 
                 {/* 支付方式选择 - Plaud抽屉风格 */}
@@ -1132,7 +953,7 @@ function CheckoutForm() {
                   <div className="price-row-clean">
                     <span className="price-label-clean">
                       {t.shipping}
-                      <span className="help-icon-small">?</span>
+                      {/*<span className="help-icon-small">?</span>*/}
                     </span>
                     <span className="price-value-clean shipping-pending-clean">{t.shippingPending}</span>
                   </div>
@@ -1142,8 +963,7 @@ function CheckoutForm() {
                       {t.currency} ${(5 * quantity).toFixed(2)}
                     </span>
                   </div>
-                </div>
-                
+                </div>                
               </div>
             </div>
           </div>
