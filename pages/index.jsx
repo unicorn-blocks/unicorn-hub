@@ -1035,6 +1035,18 @@ export default function Home() {
           padding-top: 50px;
         }
 
+        @media (min-width: 768px) {
+          .hero-shell {
+            padding: 0 var(--spacing-desktop);  /* PC端：40px */
+          }
+        }
+
+        @media (min-width: 1400px) {
+          .hero-shell {
+            padding: 0 var(--spacing-desktop-lg);  /* 超大屏幕：60px */
+          }
+        }
+
         .hero-eyebrow {
           display: inline-flex;
           align-items: center;
@@ -3063,12 +3075,17 @@ export default function Home() {
           }
 
           .hero-shell {
+<<<<<<< HEAD
             padding: 20px 18px 0;
           }
 
           .hero-background-image {
             transform: scale(0.82);
             object-position: center 60px;
+=======
+            padding: 0 18px;
+            margin-top: -50px;  /* 移动端：上移40px（原本-10px，现在-50px） */
+>>>>>>> 7b5e6a1 (feat: mobile; style: footer、section 5、cheakout)
           }
 
           .hero-transitions {
