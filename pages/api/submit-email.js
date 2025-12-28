@@ -1,6 +1,9 @@
 // Next.js API路由 - 代理Google Sheets请求以避免CORS问题
-
+import { ProxyAgent, fetch as ufetch } from "undici";
 const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbyn8MOU7baUKZ2exFQsLZD6hGs8poE8KpE31vIrpLXgeoLB4EItUzVgn0qTKi9eqmk9/exec";
+
+// ✅ 用 socks5h：DNS + 连接都走代理，更稳
+const DEV_PROXY_AGENT = new ProxyAgent("http://127.0.0.1:7897");
 
 export default async function handler(req, res) {
   // 只允许POST请求
@@ -42,18 +45,22 @@ export default async function handler(req, res) {
 
 
     // 发送请求到Google Apps Script
-    const response = await fetch(GOOGLE_SHEET_URL, {
+    const isDev = process.env.NODE_ENV !== "production";
+
+    const response = await ufetch(GOOGLE_SHEET_URL, {
       method: "POST",
-      headers: { 
-        "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8" 
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8"
       },
-      body: new URLSearchParams({ 
-        email: email.trim().toLowerCase(), 
-        source: source || 'api-proxy',
-        note: note || 'notify-at-launch',
+      body: new URLSearchParams({
+        email: email.trim().toLowerCase(),
+        source: source || "api-proxy",
+        note: note || "notify-at-launch",
         timestamp: new Date().toISOString()
       }),
-    });
+      dispatcher: isDev ? DEV_PROXY_AGENT : undefined,
+    });    
+    
 
     const text = await response.text();
     console.log('Google Sheets响应:', { status: response.status, text });
