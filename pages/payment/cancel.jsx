@@ -147,7 +147,7 @@ export default function PaymentCancel() {
               {/* 操作按钮 */}
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <button
-                  onClick={() => router.push('/checkout')}
+                  onClick={() => router.push('/payment/stripe-checkout')}
                   className="primary-button duration-200"
                 >
                   {t.tryAgain}

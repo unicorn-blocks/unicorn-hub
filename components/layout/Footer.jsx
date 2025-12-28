@@ -128,119 +128,192 @@ export default function Footer({ onSubscribe, showEmailInput = true }) {
   const footerT = footerTranslations[language === 'zh' ? 'zh' : 'en'];
 
   return (
-    <footer className="py-12 md:py-16 relative z-50" style={{ minHeight: 180 }}>
-      <div className="container mx-auto px-2">
-        <div className="grid md:grid-cols-2 gap-10 mb-12">
+    <footer className="footer-responsive py-8 md:py-12 lg:py-16 relative z-50" style={{ minHeight: 180 }}>
+      <div className="container mx-auto px-4 md:px-6 lg:px-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10 mb-8 md:mb-12">
           {/* Logo and Contact */}
-          <div>
-            <div className="flex items-center mb-4">
-  <img src="/assets/group 85.svg" alt="Unicorn Blocks Logo" className="h-14" decoding="async" />
-</div>
-            <p className="mb-4 leading-relaxed" style={{ fontSize: '15px', color: '#666', marginTop: '26px' }}>
-              {/*A world of blocks, stories, and imagination.<br/>
-              Join the adventure that sparks imagination.*/}
+          <div className="footer-logo-section">
+            <div className="flex items-center mb-3 md:mb-4">
+              <img src="/assets/group 85.svg" alt="Unicorn Blocks Logo" className="h-10 md:h-14" decoding="async" />
+            </div>
+            <p className="footer-tagline mb-3 md:mb-4 leading-relaxed" style={{ marginTop: '16px' }}>
               A world of blocks, stories, and imagination.
             </p>
-            <div className="flex items-center mb-4" style={{ fontSize: '12px', color: '#666' }}>
-              <a href="mailto:support@unicornblocks.ai" className="hover:text-[#7d9ed4] transition-colors" target="_blank" rel="noopener">support@unicornblocks.ai</a>
-              <span style={{ marginLeft: '40px', color: '#555' }}>{t.allRightsReserved}</span>
+            <div className="footer-contact flex flex-col md:flex-row md:items-center mb-3 md:mb-4 gap-2 md:gap-0">
+              <a href="mailto:support@unicornblocks.ai" className="hover:text-[#7d9ed4] transition-colors" target="_blank" rel="noopener">
+                support@unicornblocks.ai
+              </a>
+              <span className="footer-copyright md:ml-10">{t.allRightsReserved}</span>
             </div>
           </div>
 
           {/* Let's be friends ! */}
-          {showEmailInput && (<div className="flex justify-end">
-            <div style={{ maxWidth: '547px', width: '100%' }}>
-            <h3 className="font-semibold mb-4" style={{position: 'relative', top: '20px'}}>{footerT.joinMagicList}</h3>
-            <form onSubmit={handleFooterSubmit} className="flex items-end gap-0" style={{ transform: 'translateY(-25px)' }}>
-              <div className="flex-1" style={{ maxWidth: '427px', transform: 'translateY(-23px)', position: 'relative' }}>
-                <input
-                  type="email"
-                  value={footerEmail}
-                  onChange={e => { setFooterEmail(e.target.value); if (footerStatus.message) setFooterStatus({ message: '', type: '' }); }}
-                  placeholder="Enter your email to join"
-                  className="w-full px-0 py-2 border-0 border-b-2 border-gray-300 focus:outline-none focus:border-[#7d9ed4] bg-transparent text-sm placeholder-gray-400"
-                  style={{ borderRadius: 0, color: '#54545C', paddingRight: isEmailSaved ? '30px' : '0' }}
-                />
-                {isEmailSaved && (
-                  <span style={{
-                    position: 'absolute',
-                    right: '10px',
-                    bottom: '4px',
-                    fontSize: '18px',
-                    color: '#10B981',
-                    pointerEvents: 'none'
-                  }}>
-                    ✅
-                  </span>
-                )}
-                {footerStatus.message && (
-  <div className={`text-sm ${footerStatus.type === 'success' ? 'text-green-600' : 'text-red-600'}`}
-    style={{ marginTop: '4px', minHeight: '18px', lineHeight: '18px' }}>
-    {footerStatus.message}
-  </div>
-)}
+          {showEmailInput && (
+            <div className="footer-email-section flex justify-start md:justify-end">
+              <div className="w-full md:max-w-[547px]">
+                <h3 className="footer-email-title font-semibold mb-3 md:mb-4">
+                  {footerT.joinMagicList}
+                </h3>
+                <form onSubmit={handleFooterSubmit} className="footer-email-form flex flex-col md:flex-row md:items-end gap-4 md:gap-0">
+                  <div className="footer-input-wrapper flex-1 w-full md:max-w-[427px] relative">
+                    <input
+                      type="email"
+                      value={footerEmail}
+                      onChange={e => { setFooterEmail(e.target.value); if (footerStatus.message) setFooterStatus({ message: '', type: '' }); }}
+                      placeholder="Enter your email to join"
+                      className="footer-email-input w-full px-0 py-2 border-0 border-b-2 border-gray-300 focus:outline-none focus:border-[#7d9ed4] bg-transparent placeholder-gray-400"
+                      style={{ borderRadius: 0, color: '#54545C', paddingRight: isEmailSaved ? '30px' : '0' }}
+                    />
+                    {isEmailSaved && (
+                      <span className="footer-checkmark">✅</span>
+                    )}
+                    {footerStatus.message && (
+                      <div className={`footer-status-message text-sm ${footerStatus.type === 'success' ? 'text-green-600' : 'text-red-600'}`}>
+                        {footerStatus.message}
+                      </div>
+                    )}
+                  </div>
+                  <button
+                    type="submit"
+                    className="footer-submit-btn relative flex items-center justify-center transition-all hover:opacity-80 self-center md:self-auto"
+                    style={{ background: 'transparent', border: 'none', padding: 0, cursor: 'pointer' }}
+                  >
+                    <img 
+                      src="/assets/ima/Group 83.svg" 
+                      alt="Join Adventure" 
+                      className="w-full h-full object-contain"
+                      style={{ position: 'relative', zIndex: 1 }}
+                    />
+                    <span 
+                      className="footer-btn-text absolute font-bold text-center whitespace-nowrap"
+                      style={{ 
+                        color: '#fff',
+                        lineHeight: '0.8',
+                        left: '50%',
+                        transform: 'translateX(-50%)',
+                        zIndex: 2
+                      }}
+                    >
+                      Join Adventure
+                    </span>
+                  </button>
+                </form>
               </div>
-              <button
-                type="submit"
-                className="relative flex items-center justify-center transition-all hover:opacity-80"
-                style={{ width: '120px', height: '120px', background: 'transparent', border: 'none', padding: 0, cursor: 'pointer' }}
-              >
-                <img 
-                  src="/assets/ima/Group 83.svg" 
-                  alt="Join Adventure" 
-                  className="w-full h-full object-contain"
-                  style={{ position: 'relative', zIndex: 1 }}
-                />
-                <span 
-                  className="absolute font-bold text-center whitespace-nowrap"
-                  style={{ 
-                    color: '#fff',
-                    fontSize: '12px',
-                    lineHeight: '0.8',
-                    bottom: '34px',
-                    left: '50%',
-                    transform: 'translateX(-50%)',
-                    zIndex: 2
-                  }}
-                >
-                  Join Adventure
-                </span>
-              </button>
-            </form>
             </div>
-          </div>)}
+          )}
 
           {/* Welcome message for pages without email input */}
-          {!showEmailInput && (<div className="flex justify-end">
-            <div style={{ maxWidth: '547px', width: '100%' }}>
-            <p className="mb-4 leading-relaxed" style={{ fontSize: '15px', color: '#666', marginTop: '80px', paddingLeft: '150px' }}>
-              Welcome to the Adventure ✨<br/>
-              You're officially part of the Unicorn Blocks world.
-            </p>
+          {!showEmailInput && (
+            <div className="footer-welcome-section flex justify-start md:justify-end">
+              <div className="w-full md:max-w-[547px]">
+                <p className="footer-welcome-text mb-3 md:mb-4 leading-relaxed md:pl-[150px]">
+                  Welcome to the Adventure ✨<br/>
+                  You're officially part of the Unicorn Blocks world.
+                </p>
+              </div>
             </div>
-          </div>)}
+          )}
         </div>
       </div>
-      {/* 添加页脚消息样式 */}
+      {/* Footer响应式样式 */}
       <style jsx>{`
-        .footer-success-message {
-          color: #059669;
-          background-color: #d1fae5;
-          padding: 0.5rem;
-          border-radius: 6px;
-          margin-top: 0.5rem;
-          font-size: 0.875rem;
-          text-align: center;
+        /* 移动端样式 */
+        .footer-responsive {
+          font-size: 14px;
         }
         
-        .footer-error-message {
-          color: #dc2626;
-          background-color: #fee2e2;
-          padding: 0.5rem;
-          border-radius: 6px;
-          margin-top: 0.5rem;
-          font-size: 0.875rem;
-          text-align: center;
+        .footer-tagline {
+          font-size: 14px;
+          color: #666;
+        }
+        
+        .footer-contact {
+          font-size: 12px;
+          color: #666;
+        }
+        
+        .footer-copyright {
+          color: #555;
+        }
+        
+        .footer-email-title {
+          font-size: 16px;
+        }
+        
+        .footer-email-input {
+          font-size: 14px;
+        }
+        
+        .footer-submit-btn {
+          width: 100px;
+          height: 100px;
+        }
+        
+        .footer-btn-text {
+          font-size: 11px;
+          bottom: 28px;
+        }
+        
+        .footer-checkmark {
+          position: absolute;
+          right: 10px;
+          bottom: 4px;
+          font-size: 18px;
+          color: #10B981;
+          pointer-events: none;
+        }
+        
+        .footer-status-message {
+          margin-top: 4px;
+          min-height: 18px;
+          line-height: 18px;
+        }
+        
+        .footer-welcome-text {
+          font-size: 14px;
+          color: #666;
+          margin-top: 20px;
+        }
+        
+        /* PC端样式 */
+        @media (min-width: 768px) {
+          .footer-responsive {
+            font-size: 16px;
+          }
+          
+          .footer-tagline {
+            font-size: 15px;
+            margin-top: 26px;
+          }
+          
+          .footer-email-title {
+            font-size: 18px;
+            position: relative;
+            top: 20px;
+          }
+          
+          .footer-email-form {
+            transform: translateY(-25px);
+          }
+          
+          .footer-input-wrapper {
+            transform: translateY(-23px);
+          }
+          
+          .footer-submit-btn {
+            width: 120px;
+            height: 120px;
+          }
+          
+          .footer-btn-text {
+            font-size: 12px;
+            bottom: 34px;
+          }
+          
+          .footer-welcome-text {
+            font-size: 15px;
+            margin-top: 57.5px;
+          }
         }
       `}</style>
     </footer>

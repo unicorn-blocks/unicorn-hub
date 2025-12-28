@@ -6,10 +6,10 @@ import { stripe } from '../../../../lib/stripe'
  * 
  * 请求体:
  * {
- *   email: string,        // 用户邮箱（必需）
- *   firstName: string,    // 名字（必需）
- *   lastName: string,     // 姓氏（必需）
- *   zip: string,          // 邮编（必需）
+ *   email: string,        // 用户邮箱（可选）
+ *   firstName: string,    // 名字（可选）
+ *   lastName: string,     // 姓氏（可选）
+ *   zip: string,          // 邮编（可选）
  *   leadId: string,       // 追踪ID（可选）
  *   amount: number,       // 金额（美元，默认5）
  *   currency: string      // 货币（默认usd）
@@ -32,53 +32,45 @@ export default async function handler(req, res) {
       currency = 'usd'
     } = req.body
 
-    // 验证必需字段
-    if (!email || !firstName || !lastName || !zip) {
-      return res.status(400).json({
-        success: false,
-        error: '缺少必需字段：email, firstName, lastName, zip'
-      })
-    }
-
-    // 验证邮箱格式
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      return res.status(400).json({
-        success: false,
-        error: '邮箱格式无效'
-      })
-    }
-
     // 获取应用 URL
     const origin = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
+    
+    // 图片URL - 必须是公开可访问的HTTPS URL
+    // 在生产环境使用实际域名，本地开发时Stripe无法访问localhost图片
+    const productImageUrl = process.env.NEXT_PUBLIC_APP_URL 
+      ? `${process.env.NEXT_PUBLIC_APP_URL}/assets/checkout/sparky.jpg`
+      : null; // 本地开发时不设置图片（Stripe无法访问localhost）
 
-    // 创建 Checkout Session - 极简配置
-    const session = await stripe.checkout.sessions.create({
+    // 构建 session 配置
+    const sessionConfig = {
       mode: 'payment',
       payment_method_types: ['card'],
       
-
-      
-      // 产品信息
+      // 产品信息 - 使用与 checkout 页面相同的产品信息
       line_items: [
         {
           price_data: {
             currency: currency,
             product_data: {
-              name: 'Unicorn Blocks VIP Spot',
-              description: '$5 deposit to lock in $129 VIP price'
+              name: 'VIP Spot Reservation',
+              description: 'Sparky First Adventure',
+              // 只在生产环境设置图片（本地开发时Stripe无法访问localhost）
+              ...(productImageUrl && { images: [productImageUrl] }),
             },
             unit_amount: Math.round(amount * 100) // 转换为美分
           },
-          quantity: 1
+          quantity: 1,
+          adjustable_quantity: {
+            enabled: true,
+            minimum: 1,
+            maximum: 10
+          }
         }
       ],
       
       // 重定向URL
       success_url: `${origin}/payment/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${origin}/reserve-vip-spot`,
-      
-      // 关键：用已收集的email，不让用户再填
-      customer_email: email,
+      cancel_url: `${origin}/payment/cancel`,
       
       // 极简配置 - 只在必要时要求billing地址
       // 'auto' = Stripe根据风险和合规需要动态决定是否显示
@@ -89,13 +81,13 @@ export default async function handler(req, res) {
       // 不传 allow_promotion_codes（默认不开）
       
       // 追踪数据
-      client_reference_id: leadId || email,
+      client_reference_id: leadId || email || 'anonymous',
       metadata: {
         leadId: leadId || '',
         firstName: firstName || '',
         lastName: lastName || '',
         zip: zip || '',
-        email: email
+        email: email || ''
       },
       payment_intent_data: {
         metadata: {
@@ -103,10 +95,18 @@ export default async function handler(req, res) {
           firstName: firstName || '',
           lastName: lastName || '',
           zip: zip || '',
-          email: email
+          email: email || ''
         }
       }
-    })
+    }
+
+    // 如果有 email，预填充到 Stripe Checkout
+    if (email) {
+      sessionConfig.customer_email = email
+    }
+
+    // 创建 Checkout Session
+    const session = await stripe.checkout.sessions.create(sessionConfig)
 
     return res.status(200).json({
       success: true,

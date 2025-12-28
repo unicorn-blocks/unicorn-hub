@@ -1,5 +1,6 @@
 import '../styles/globals.css';
 import GlobalEmailNotifyBox from '../components/GlobalEmailNotifyBox';
+import FloatingJoinButton from '../components/FloatingJoinButton';
 import Head from 'next/head';
 import { LanguageProvider } from '../context/LanguageContext';
 import { useEffect } from 'react';
@@ -26,8 +27,8 @@ function MyApp({ Component, pageProps }) {
     };
   }, [router.events]);
 
-  // 在checkout和reserve-vip-spot页面不显示GlobalEmailNotifyBox
-  const shouldShowGlobalEmailBox = router.pathname !== '/checkout' && router.pathname !== '/reserve-vip-spot';
+  // 在checkout和reserve-vip-spot页面不显示GlobalEmailNotifyBox和FloatingJoinButton
+  const shouldShowGlobalEmailBox = router.pathname !== '/checkout' && router.pathname !== '/reserve-vip-spot' && router.pathname !== '/payment/cancel' && router.pathname !== '/payment/success';
 
   return (
     <LanguageProvider>
@@ -36,6 +37,7 @@ function MyApp({ Component, pageProps }) {
       </Head>
       <Component {...pageProps} />
       {shouldShowGlobalEmailBox && <GlobalEmailNotifyBox />}
+      {shouldShowGlobalEmailBox && <FloatingJoinButton />}
     </LanguageProvider>
   );
 }
