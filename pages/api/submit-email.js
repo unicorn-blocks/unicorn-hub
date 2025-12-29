@@ -3,7 +3,7 @@ import { ProxyAgent, fetch as ufetch } from "undici";
 const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbyn8MOU7baUKZ2exFQsLZD6hGs8poE8KpE31vIrpLXgeoLB4EItUzVgn0qTKi9eqmk9/exec";
 
 // ✅ 用 socks5h：DNS + 连接都走代理，更稳
-const DEV_PROXY_AGENT = new ProxyAgent("http://127.0.0.1:7897");
+const DEV_PROXY_AGENT = new ProxyAgent("http://127.0.0.1:1082");
 
 export default async function handler(req, res) {
   // 只允许POST请求

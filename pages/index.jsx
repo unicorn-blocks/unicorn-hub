@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Navigation from '../components/layout/Navigation';
 import Footer from '../components/layout/Footer';
 import { safeApiCall } from '../lib/api';
+import { getStepsMobileImage } from '../lib/content';
 import { useLanguage } from '../context/LanguageContext';
 
 import dynamic from 'next/dynamic'
@@ -14,6 +15,7 @@ const PopModal = dynamic(() => import('../components/PopModal'), { ssr: false })
 export default function Home() {
   const [popOpen, setPopOpen] = useState(false);
   const [familyPage, setFamilyPage] = useState(0); // 添加家庭见证页面状态
+  const [kitPanelOpen, setKitPanelOpen] = useState([false, false, false, false]); // Kit Section 展开状态
   // 弹窗只弹一次
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -166,8 +168,10 @@ export default function Home() {
           },
           {
             title: 'No Third-Party Ads',
-            description:
-              'A 100% Pure Play Zone. Contains no third-party ads, no tracking, and no stranger interaction.'
+            description:[
+              'A 100% Pure Play Zone. Contains no third-party ads, no tracking,',
+              'and no stranger interaction.'
+            ]
           }
         ]
       },
@@ -176,18 +180,32 @@ export default function Home() {
         stats: [
           {
             title: '3x Creativity Boost',
+            titleLine1: '3x',
+            titleLine2: 'Creativity Boost',
             description:
-              'From simple stacks to complex masterpieces. Testers show a 3x increase in complexity, using more colors, bolder shapes, and richer details than ever before.'
+              'From simple stacks to complex masterpieces. Testers show a 3x increase in complexity, using more colors, bolder shapes, and richer details than ever before.',
+            descriptionMobile: [
+              'Testers show a 3x increase in complexity,',
+              'using more colors, bolder shapes, and',
+              'richer details than ever before.'
+            ]
           },
           {
             title: '90 Mins Deep Focus',
+            titleLine1: '90',
+            titleLine1Small: 'mins',
+            titleLine2: 'Deep Focus',
             description:
-              "Kids build wonderlands. Parents make coffee. Average play time extends to 90 minutes (vs. the usual 15). That's deep flow state for them, and well deserved downtime for you."
+              "Kids build wonderlands. Parents make coffee. Average play time extends to 90 minutes (vs. the usual 15). That's deep flow state for them, and well deserved downtime for you.",
+            descriptionMobile: "Average play time extends to 90 minutes (vs. the usual 15). That's deep flow state for them, and downtime for you."
           },
           {
-            title: 'STEAM & Problem Solving',
+            title: 'Steam & Problem Solving',
+            titleLine1: 'Steam',
+            titleLine2: 'Problem Solving',
             description:
-              'Learning engineering without knowing it. Sparky guides them to solve structural problems to advance the story. They learn physics and math naturally while saving the day.'
+              'Learning engineering without knowing it. Sparky guides them to solve structural problems to advance the story. They learn physics and math naturally while saving the day.',
+            descriptionMobile: 'Learning Engineering without knowing it. Sparky guides them to solve structural problems to advance the story. They learn Physics and Math naturally while saving the day.'
           }
         ]
       },
@@ -320,7 +338,10 @@ export default function Home() {
 
     return (
       <>
-        <strong style={{ color: isSpecial ? '#6C6767' : '#2f2d65' }}>·  {lead} --</strong> <span className="kit-text-rest">{processedRest}</span>
+        <strong style={{ color: isSpecial ? '#6C6767' : '#2f2d65' }}>
+          <span style={{ display: 'inline-block', width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#F4C025', marginRight: '8px', verticalAlign: 'middle' }}></span>
+          {lead} --
+        </strong> <span className="kit-text-rest">{processedRest}</span>
       </>
     );
   };
@@ -413,7 +434,7 @@ export default function Home() {
               fill
               className="hero-background-image"
               priority
-              style={{ objectFit: 'contain' }}
+              style={{ objectFit: 'cover' }}
             />
           </div>
 
@@ -490,19 +511,25 @@ export default function Home() {
         <section className="steps-section">
           <div className="content-container">
             <div className="section-heading text-center">
-              <h2 style={{textAlign: 'center', margin: '0 auto', width: '100%', whiteSpace: 'normal'}}>{copy.steps.heading}</h2>
+              <h2 style={{textAlign: 'center', margin: '0 auto', width: '100%', whiteSpace: 'normal'}}>
+                <span className="steps-heading-line1">{copy.steps.heading}</span>
+                <span className="steps-heading-line2">{copy.steps.headingLine2}</span>
+              </h2>
               <p>{copy.steps.subheading}</p>
             </div>
-            <div className="steps-grid" style={{gap: 6}}>
+            <div className="steps-grid">
               {/* 第一组 */}
               <div className="step-item" style={{zIndex:2}}>
                 <div className="step-card step-card-image-only">
                   <div className="step-image-full" style={{minHeight:'520px'}}>
-                    <Image src="/assets/ima/组合 721.png" alt="" fill className="step-image-full-item" style={{transform:'scale(1.15)'}} />
+                    {/* 移动端图片 */}
+                    <Image src={getStepsMobileImage(0)} alt="" fill className="step-image-full-item md:hidden" style={{transform:'scale(1.15)'}} />
+                    {/* PC端图片 */}
+                    <Image src="/assets/ima/组合 721.png" alt="" fill className="step-image-full-item hidden md:block" style={{transform:'scale(1.15)'}} />
                   </div>
                 </div>
                 {/* 第一、二组之间连接矢量 */}
-                <div className="step-connector" style={{right:'-50px',width:'100px',height:'100px',zIndex: 4,top:'calc(50% - 60px)'}}>
+                <div className="step-connector">
                   <img src="/assets/ima/Vector_17_913.png" alt="arrow-1" className="step-connector-image" />
                 </div>
               </div>
@@ -511,11 +538,14 @@ export default function Home() {
               <div className="step-item" style={{zIndex:1}}>
                 <div className="step-card step-card-image-only">
                   <div className="step-image-full" style={{minHeight:'520px'}}>
-                    <Image src="/assets/ima/bule.png" alt="" fill className="step-image-full-item" style={{transform:'scale(1.15)'}} />
+                    {/* 移动端图片 */}
+                    <Image src={getStepsMobileImage(1)} alt="" fill className="step-image-full-item md:hidden" style={{transform:'scale(1.15)'}} />
+                    {/* PC端图片 */}
+                    <Image src="/assets/ima/bule.png" alt="" fill className="step-image-full-item hidden md:block" style={{transform:'scale(1.15)'}} />
                   </div>
                 </div>
                 {/* 二、三组之间连接矢量 */}
-                <div className="step-connector" style={{right:'-50px',width:'100px',height:'100px',zIndex: 3,top:'calc(50% + 5px)'}}>
+                <div className="step-connector">
                   <img src="/assets/ima/Vector_17_911.png" alt="arrow-2" className="step-connector-image" />
                 </div>
               </div>
@@ -524,11 +554,14 @@ export default function Home() {
               <div className="step-item" style={{zIndex:0}}>
                 <div className="step-card step-card-image-only">
                   <div className="step-image-full" style={{minHeight:'520px'}}>
-                    <Image src="/assets/ima/组合 723 (1).png" alt="" fill className="step-image-full-item" style={{transform:'scale(1.15)'}} />
+                    {/* 移动端图片 */}
+                    <Image src={getStepsMobileImage(2)} alt="" fill className="step-image-full-item md:hidden" style={{transform:'scale(1.15)'}} />
+                    {/* PC端图片 */}
+                    <Image src="/assets/ima/组合 723 (1).png" alt="" fill className="step-image-full-item hidden md:block" style={{transform:'scale(1.15)'}} />
                   </div>
                 </div>
                 {/* 三、四组之间连接矢量 */}
-                <div className="step-connector" style={{right:'-50px',width:'100px',height:'100px',zIndex: 3,top:'calc(50% - 60px)'}}>
+                <div className="step-connector">
                   <img src="/assets/ima/Vector_17_913.png" alt="arrow-3" className="step-connector-image" />
                 </div>
               </div>
@@ -537,7 +570,10 @@ export default function Home() {
               <div className="step-item" style={{zIndex:-1}}>
                 <div className="step-card step-card-image-only">
                   <div className="step-image-full" style={{minHeight:'520px'}}>
-                    <Image src="/assets/ima/green.png" alt="" fill className="step-image-full-item" style={{transform:'scale(1.15)'}} />
+                    {/* 移动端图片 */}
+                    <Image src={getStepsMobileImage(3)} alt="" fill className="step-image-full-item md:hidden" style={{transform:'scale(1.15)'}} />
+                    {/* PC端图片 */}
+                    <Image src="/assets/ima/green.png" alt="" fill className="step-image-full-item hidden md:block" style={{transform:'scale(1.15)'}} />
                   </div>
                 </div>
               </div>
@@ -555,35 +591,63 @@ export default function Home() {
               <div className="kit-layout">
                 <div className="kit-media-block">
                   <div className="kit-media-single">
-                    <Image src="/assets/ima/组合 673.png" alt="Sparky Adventure Kit" fill className="kit-media-single-image" />
+                    {/* 移动端图片 */}
+                    <Image src="/assets/ima/section3.png" alt="Sparky Adventure Kit" fill className="kit-media-single-image md:hidden" />
+                    {/* PC端图片 */}
+                    <Image src="/assets/ima/组合 673.png" alt="Sparky Adventure Kit" fill className="kit-media-single-image hidden md:block" />
                   </div>
                 </div>
                 <div className="kit-details-block">
                   <div className="kit-panel">
                     {copy.kit.categories.map((category, index) => {
                       const accent = kitIconPalette[index % kitIconPalette.length];
+                      const isOpen = kitPanelOpen[index];
+                      const toggleOpen = () => {
+                        const newState = [...kitPanelOpen];
+                        newState[index] = !newState[index];
+                        setKitPanelOpen(newState);
+                      };
+                      
                       return (
                       <div
                         className="kit-panel-row"
                         key={category.title}
                         style={{ '--kit-accent': accent.base, '--kit-accent-shadow': accent.shadow }}
                       >
-                        <div className="kit-panel-title">
-                          <div className="kit-panel-icon">
-                            <Image 
-                              src={index === 0 ? '/assets/ima/1.svg' : 
-                                   index === 1 ? '/assets/ima/orange.svg' : 
-                                   index === 2 ? '/assets/ima/3.svg' : 
-                                   '/assets/ima/4.svg'} 
-                              alt="" 
-                              width={25} 
-                              height={25} 
-                              className="kit-panel-icon-svg"
-                            />
+                        <button 
+                          className="kit-panel-title-button"
+                          onClick={toggleOpen}
+                          style={{ width: '100%', textAlign: 'left', background: 'none', border: 'none', padding: 0, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
+                        >
+                          <div className="kit-panel-title" style={{ flex: 1, margin: 0 }}>
+                            <div className="kit-panel-icon">
+                              <Image 
+                                src={index === 0 ? '/assets/ima/section3-1.svg' : 
+                                     index === 1 ? '/assets/ima/section3-2.svg' : 
+                                     index === 2 ? '/assets/ima/section3-3.svg' : 
+                                     '/assets/ima/section3-4.svg'} 
+                                alt="" 
+                                width={40} 
+                                height={40} 
+                                className="kit-panel-icon-svg"
+                              />
+                            </div>
+                            <h3 style={{ color: isOpen ? '#B589E2' : '#0F172A' }}>{index === 0 ? 'Magical Buddy' : 
+                                 index === 1 ? 'Magic Hats' : 
+                                 index === 2 ? 'Magic Blocks' : 
+                                 '100 Universal Blocks'}</h3>
                           </div>
-                          <h3>{category.title}</h3>
-                        </div>
-                        <ul>
+                          <span className="kit-panel-toggle" style={{ display: 'none', marginLeft: '8px', fontSize: '16px' }}>
+                            {isOpen ? '▲' : '▼'}
+                          </span>
+                        </button>
+                        <ul className="kit-panel-content" style={{ 
+                          maxHeight: isOpen ? '1000px' : '0',
+                          overflow: 'hidden',
+                          transition: 'max-height 0.3s ease',
+                          margin: 0,
+                          padding: isOpen ? '12px 0 0 0' : '0'
+                        }}>
                           {category.highlights.map((item) => (
                             <li key={item}>{renderHighlight(item)}</li>
                           ))}
@@ -666,12 +730,73 @@ export default function Home() {
                 <p className="privacy-tag">{copy.privacy.tag}</p>
               </div>
             </div>
-            <div className="privacy-images">
-              <div className="privacy-image-item">
-                <Image src="/assets/ima/组合 643.png" alt="" width={1200} height={600} className="privacy-image" />
+            
+            {/* 第一个卡片：All Data Stays Yours */}
+            <div className="privacy-card-row">
+              <div className="privacy-card-with-text">
+                <div className="privacy-card-bg">
+                  <Image src="/assets/ima/section5-1.svg" alt="" fill className="privacy-bg-image" />
+                </div>
+                {/* 移动端左上角图标 */}
+                <div className="privacy-card-icon md:hidden">
+                  <Image src="/assets/ima/section5-11.svg" alt="" width={48} height={48} />
+                </div>
+                <div className="privacy-card-content">
+                  <h3 style={{ color: '#383838', fontWeight: 'bold' }}>All Data Stays Yours</h3>
+                  <p style={{ color: '#646464', }}>
+                    Data is automatically wiped and NEVER exposed to third parties. 
+                    <br />
+                    You can permanently delete any history instantly via the app.
+                  </p>
+                </div>
               </div>
-              <div className="privacy-image-item">
-                <Image src="/assets/ima/组合 648.png" alt="" width={1200} height={600} className="privacy-image" />
+              <div className="privacy-illustration">
+                <Image src="/assets/ima/Rectangle_17_1101.png" alt="" width={400} height={400} className="privacy-illustration-image" />
+              </div>
+            </div>
+
+            {/* 第二行：两个对话框卡片 */}
+            <div className="privacy-cards-row">
+              {/* No Eavesdropping. Ever */}
+              <div className="privacy-card-with-text">
+                <div className="privacy-card-bg">
+                  <Image src="/assets/ima/section5-2.svg" alt="" fill className="privacy-bg-image" />
+                </div>
+                {/* 移动端左上角图标 */}
+                <div className="privacy-card-icon md:hidden">
+                  <Image src="/assets/ima/section5-22.svg" alt="" width={48} height={48} />
+                </div>
+                <div className="privacy-card-content">
+                  <h3 style={{ color: '#383838', fontWeight: 'bold' }}>No Eavesdropping. Ever</h3>
+                  <p style={{ color: '#646464' }}>
+                    Physically OFF Until You Press.
+                    <br />
+                    Mic & Camera are hard-wired to stay OFF.
+                    <br />
+                    They can't see or hear a thing until you actively hold the button.
+                  </p>
+                </div>
+              </div>
+
+              {/* No Third-Party Ads */}
+              <div className="privacy-card-with-text">
+                <div className="privacy-card-bg">
+                  <Image src="/assets/ima/section5-3.svg" alt="" fill className="privacy-bg-image" />
+                </div>
+                {/* 移动端左上角图标 */}
+                <div className="privacy-card-icon md:hidden">
+                  <Image src="/assets/ima/section5-33.svg" alt="" width={48} height={48} />
+                </div>
+                <div className="privacy-card-content">
+                  <h3 style={{ color: '#383838', fontWeight: 'bold' }}>No Third-Party Ads</h3>
+                  <p style={{ color: '#646464' }}>
+                    A 100% Pure Play Zone.
+                    <br />
+                    Contains No Third-Party Ads, no tracking,
+                    <br />
+                    and no stranger interaction.
+                  </p>
+                </div>
               </div>
             </div>
           </div>
@@ -687,21 +812,56 @@ export default function Home() {
             </div>
           </div>
           <div className="content-container">
-            <h2>{copy.impact.heading}</h2>
+            <h2>
+              <span className="impact-heading-line1 md:hidden">3x Creativity. 90 Mins</span>
+              <span className="impact-heading-line2 md:hidden">Focus. Real STEAM Skills</span>
+              <span className="hidden md:inline">{copy.impact.heading}</span>
+            </h2>
             <div className="impact-grid">
               {copy.impact.stats.map((stat, index) => (
                 <div className="impact-card" key={stat.title}>
                   <div className="impact-icon-wrapper">
+                    {/* 移动端图片 */}
+                    <Image
+                      src={index === 0 ? '/assets/ima/section6-1.svg' : index === 1 ? '/assets/ima/section6-2.svg' : '/assets/ima/section6-3.svg'}
+                      alt=""
+                      width={64}
+                      height={64}
+                      className="impact-icon md:hidden"
+                    />
+                    {/* PC端图片 */}
                     <Image
                       src={index === 0 ? '/assets/ima/svg 5.svg' : index === 1 ? '/assets/ima/svg 6.svg' : '/assets/ima/svg 7.svg'}
                       alt=""
                       width={64}
                       height={64}
-                      className="impact-icon"
+                      className="impact-icon hidden md:block"
                     />
                   </div>
-                  <h3>{stat.title}</h3>
-                  <p>{stat.description}</p>
+                  {/* PC端标题 */}
+                  <h3 className="hidden md:block">{stat.title}</h3>
+                  {/* 移动端标题 */}
+                  <h3 className="impact-card-title-mobile md:hidden">
+                    <span className="impact-title-line1">
+                      {stat.titleLine1}
+                      {stat.titleLine1Small && <span className="impact-title-small">{stat.titleLine1Small}</span>}
+                    </span>
+                    <span className="impact-title-line2">{stat.titleLine2}</span>
+                  </h3>
+                  {/* PC端描述 */}
+                  <p className="hidden md:block">{stat.description}</p>
+                  {/* 移动端描述 */}
+                  <p className="md:hidden">
+                    {Array.isArray(stat.descriptionMobile) 
+                      ? stat.descriptionMobile.map((line, i) => (
+                          <span key={i}>
+                            {line}
+                            {i < stat.descriptionMobile.length - 1 && <br />}
+                          </span>
+                        ))
+                      : stat.descriptionMobile
+                    }
+                  </p>
                 </div>
               ))}
             </div>
@@ -710,11 +870,15 @@ export default function Home() {
 
         <section className="story-section">
           <div className="content-container">
-            <h2>{copy.story.heading}</h2>
+            <h2>
+              <span className="story-heading-line1">From Dreamers to</span>
+              <span className="story-heading-line2">Builders</span>
+            </h2>
             <div className="story-panels">
               {copy.story.cards.map((card, index) => (
                 <div className="story-card" key={card.title}>
-                  <div className="story-card-visual">
+                  {/* PC端：图片在上方 */}
+                  <div className="story-card-visual hidden md:block">
                     {card.avatars ? (
                       <div className="story-team-visual">
                         <img src="/assets/ima/组合 626.svg" alt="Team" className="story-team-image" />
@@ -724,17 +888,41 @@ export default function Home() {
                         </div>
                       </div>
                     ) : (
-                      <img src="/assets/ima/组合 627-1.svg" alt="Science" className="story-science-image" />
+                      <img src="/assets/ima/组合 627.svg" alt="Science" className="story-science-image" />
                     )}
                   </div>
+                  
+                  {/* 移动端和PC端：文字内容 */}
                   <div className="story-card-body">
-                    <div className="story-card-title">{card.title}</div>
+                    {/* 移动端：图片和标题在同一行 */}
+                    <div className="story-card-header md:hidden">
+                      <div className="story-card-image-mobile">
+                        {card.avatars ? (
+                          <img src="/assets/ima/section7-1.png" alt="Team" />
+                        ) : (
+                          <img src="/assets/ima/section7-2.png" alt="Science" />
+                        )}
+                      </div>
+                      <div className="story-card-title-wrapper">
+                        <div className="story-card-title">{card.title}</div>
+                        {/* 移动端：The Team下方添加Bruce & Bryan副标题 */}
+                        {card.avatars && (
+                          <div className="story-card-subtitle">Bruce & Bryan</div>
+                        )}
+                      </div>
+                    </div>
+                    
+                    {/* PC端：只显示标题 */}
+                    <div className="hidden md:block">
+                      <div className="story-card-title">{card.title}</div>
+                    </div>
+                    
                     <p>{card.description}</p>
                   </div>
                 </div>
               ))}
             </div>
-            <div className="story-roadmap">
+            <div className="story-roadmap hidden md:block">
               <img src="/assets/ima/Frame 1000007460.svg" alt="" className="story-roadmap-line" />
               <div className="story-milestones">
                 {copy.story.milestones.map((milestone) => (
@@ -840,7 +1028,7 @@ export default function Home() {
           width: 100%;
           max-width: 1200px;
           margin: 0 auto;
-          padding: 0 24px;
+          padding: 0 var(--spacing-mobile);  /* 移动端：16px */
           position: relative;
           z-index: 10;
           text-align: center;
@@ -870,9 +1058,15 @@ export default function Home() {
 
         .hero-title-primary {
           display: block;
-          color: #54545C;
+          color: var(--color-primary-dark);  /* 移动端：#0F192A */
           font-weight: 800;
           text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff;
+        }
+
+        @media (min-width: 768px) {
+          .hero-title-primary {
+            color: #54545C;  /* PC端：恢复原色 */
+          }
         }
 
         .hero-title-accent {
@@ -895,9 +1089,15 @@ export default function Home() {
           margin: 0;
           font-size: 1.2rem;
           line-height: 1.6;
-          color: #54545C;
+          color: var(--color-secondary-gray);  /* 移动端：#475569 */
           font-weight: 600;
           text-align: center;
+        }
+
+        @media (min-width: 768px) {
+          .hero-description {
+            color: #54545C;  /* PC端：恢复原色 */
+          }
         }
 
         .hero-description-line2 {
@@ -1017,9 +1217,31 @@ export default function Home() {
         .section-heading h2 {
           font-size: clamp(2rem, 3vw, 3rem);
           margin-bottom: 12px;
-          color: #54545C;
+          color: var(--color-primary-dark);  /* 移动端：#0F192A */
           font-weight: 700;
           text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff;
+        }
+
+        @media (min-width: 768px) {
+          .section-heading h2 {
+            color: #54545C;  /* PC端：恢复原色 */
+          }
+        }
+
+        /* Steps Section标题分行 */
+        .steps-heading-line1,
+        .steps-heading-line2 {
+          display: block;
+        }
+
+        @media (min-width: 768px) {
+          .steps-heading-line1::after {
+            content: ' ';  /* PC端：单行显示 */
+          }
+          
+          .steps-heading-line2 {
+            display: inline;
+          }
         }
 
         .section-heading p {
@@ -1033,7 +1255,7 @@ export default function Home() {
           margin-top: 48px;
           display: grid;
           grid-template-columns: repeat(4, minmax(0, 1fr));
-          gap: 16px;
+          gap: 6px;  /* PC端间距 */
           position: relative;
           z-index: 3;
         }
@@ -1127,13 +1349,27 @@ export default function Home() {
 
         .step-connector {
           position: absolute;
-          right: -90px;
-          top: 50%;
-          transform: translateY(-50%);
-          width: 150px;
-          height: 90px;
+          /* 移动端：底部居中，镜像翻转（斜向下） */
+          bottom: -50px;
+          left: 50%;
+          transform: translateX(-50%) rotate(-50deg) scaleX(-1);
+          width: 100px;
+          height: 100px;
           pointer-events: none;
-          z-index: 2;
+          z-index: 3;
+        }
+
+        @media (min-width: 768px) {
+          .step-connector {
+            /* PC端：右侧垂直居中，不旋转 */
+            bottom: auto;
+            left: auto;
+            right: -50px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 150px;
+            height: 90px;
+          }
         }
 
         .step-connector-image {
@@ -1157,11 +1393,17 @@ export default function Home() {
 
         .kit-heading-block h2 {
           font-size: clamp(2.2rem, 3.2vw, 3.2rem);
-          color: #54545C;
+          color: var(--color-primary-dark);  /* 移动端：#0F192A */
           font-weight: 700;
           margin-bottom: 10px;
           text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff;
           white-space: nowrap;
+        }
+
+        @media (min-width: 768px) {
+          .kit-heading-block h2 {
+            color: #54545C;  /* PC端：恢复原色 */
+          }
         }
 
         .kit-subheading {
@@ -1307,6 +1549,16 @@ export default function Home() {
           gap: 18px;
         }
 
+        /* 移动端白色矩形背景 */
+        @media (max-width: 767px) {
+          .kit-panel {
+            background: rgba(255, 255, 255, 1);
+            border-radius: 20px;
+            box-shadow: inset 0px 4px 4px 0px rgba(235, 223, 247, 0.5), 0px 2px 2px 0px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+          }
+        }
+
         .kit-panel-row {
           padding-bottom: 10px;
         }
@@ -1328,24 +1580,37 @@ export default function Home() {
 
         .kit-panel-title h3 {
           margin: 0;
-          font-size: 1.25rem;
-          color: #483E92;
+          font-size: 15px;
+          font-weight: 600;
+          font-family: 'Rubik', sans-serif;
+          color: #0F172A;
+          line-height: 30px;
+          letter-spacing: 0;
+          text-align: left;
+        }
+
+        /* 移动端标题颜色 - 展开时为 #B589E2，未展开时为 #0F172A */
+        @media (max-width: 767px) {
+          .kit-panel-title h3 {
+            color: #0F172A;
+          }
         }
 
         .kit-panel-icon {
-          width: 25px;
-          height: 25px;
+          width: 40px;
+          height: 40px;
           position: relative;
           display: inline-flex;
           flex-shrink: 0;
           align-items: center;
           justify-content: center;
+          margin-left: 20px;
         }
 
         .kit-panel-icon-svg {
           display: block;
-          width: 25px;
-          height: 25px;
+          width: 40px;
+          height: 40px;
           flex-shrink: 0;
         }
 
@@ -1359,6 +1624,29 @@ export default function Home() {
 
         .kit-panel-row ul {
           margin-left: 30px;
+        }
+
+        /* 移动端展开/收起样式 */
+        @media (max-width: 767px) {
+          .kit-panel-title-button {
+            cursor: pointer;
+          }
+
+          .kit-panel-toggle {
+            display: inline-block !important;
+          }
+        }
+
+        /* PC端始终展开 */
+        @media (min-width: 768px) {
+          .kit-panel-toggle {
+            display: none !important;
+          }
+
+          .kit-panel-content {
+            max-height: none !important;
+            overflow: visible !important;
+          }
         }
 
         .kit-panel-row li {
@@ -1382,10 +1670,16 @@ export default function Home() {
 
         .family-section {
           padding: 95px 0 50px;
-          background: #FFFEF3;
+          background: #F7F3FD;  /* 移动端：紫色 */
           position: relative;
           overflow: hidden;
           z-index: 3;
+        }
+
+        @media (min-width: 768px) {
+          .family-section {
+            background: #FFFEF3;  /* PC端：原色 */
+          }
         }
 
         .family-bg-wrapper {
@@ -1397,6 +1691,13 @@ export default function Home() {
           pointer-events: none;
           z-index: 2;
           overflow: hidden;
+          display: none;  /* 移动端隐藏背景图片 */
+        }
+
+        @media (min-width: 768px) {
+          .family-bg-wrapper {
+            display: block;  /* PC端显示背景图片 */
+          }
         }
 
         .family-bg-image {
@@ -1451,7 +1752,7 @@ export default function Home() {
 
         .family-header h2 {
           font-size: clamp(2.2rem, 4vw, 3rem);
-          color: #54545C;
+          color: var(--color-primary-dark);  /* 移动端：#0F192A */
           font-weight: bold;
           margin: 0;
           line-height: 1.05;
@@ -1464,16 +1765,36 @@ export default function Home() {
             1px 1px 0 white;
         }
 
+        @media (min-width: 768px) {
+          .family-header h2 {
+            color: #54545C;  /* PC端：恢复原色 */
+          }
+        }
+
         .family-mosaic {
           margin-top: 54px;
-          display: grid;
-          grid-template-columns: repeat(3, 1fr);
-          gap: 30px;
+          display: flex;
+          overflow-x: auto;
+          overflow-y: visible;  /* 允许垂直方向溢出，确保逗号图片显示 */
+          gap: 16px;
           position: relative;
           z-index: 2;
-          max-width: 1600px;
+          max-width: 100%;
           margin-left: auto;
           margin-right: auto;
+          scroll-behavior: smooth;
+          padding: 40px 16px 0;  /* 增加顶部 padding，为逗号图片留出空间 */
+        }
+
+        @media (min-width: 768px) {
+          .family-mosaic {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            overflow-x: visible;
+            max-width: 1600px;
+            padding: 0;
+          }
         }
 
         .family-card {
@@ -1492,11 +1813,21 @@ export default function Home() {
           z-index: 2;
           width: 103%;
           max-width: none;
+          flex: 0 0 calc(100% - 80px);
+          min-width: 280px;
+        }
+
+        @media (min-width: 768px) {
+          .family-card {
+            width: auto;
+            flex: 1;
+            max-width: none;
+          }
         }
 
         .family-quote-icon {
           position: absolute;
-          top: -30px;
+          top: -35px;  /* 增加向上偏移，确保完全显示 */
           left: 50%;
           transform: translateX(-50%);
           width: 54px;
@@ -1506,7 +1837,7 @@ export default function Home() {
           display: flex;
           align-items: center;
           justify-content: center;
-          z-index: 3;
+          z-index: 10;  /* 增加 z-index 确保不被遮盖 */
         }
 
         .quote-icon {
@@ -1616,23 +1947,29 @@ export default function Home() {
         }
 
         .family-pagination button.active {
-          width: 49.47px;
-          height: 15px;
+          width: 80px;
+          height: 10px;
           border-radius: 20px;
           background: rgba(244, 192, 37, 1);
         }
 
         .privacy-section {
           padding: 0 0 150px;
-          background: #FFFCF9;
+          background: #F3F8FA;  /* 移动端：淡蓝色 */
           margin-top: 0;
           position: relative;
           z-index: 0;
         }
 
+        @media (min-width: 768px) {
+          .privacy-section {
+            background: #FFFCF9;  /* PC端：原色 */
+          }
+        }
+
         .privacy-heading {
           text-align: center;
-          padding-top: 80px; /* 从120px减少到80px，让标题上移 */
+          padding-top: 80px;
         }
 
         .privacy-heading h2 {
@@ -1648,36 +1985,274 @@ export default function Home() {
         }
 
         .privacy-line2 {
-          color: #54545C;
+          color: var(--color-primary-dark);  /* 移动端：#0F192A */
           font-weight: 700;
           text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff;
         }
 
+        @media (min-width: 768px) {
+          .privacy-line2 {
+            color: #54545C;  /* PC端：恢复原色 */
+          }
+        }
+
         .privacy-tag {
-          display: block;
-          color: #878787;
-          font-size: clamp(1.125rem, 1.6875vw, 1.6875rem);
-          font-weight: 400;
+          display: inline-block;
+          color: #20604B;
+          font-size: 12px;  /* 减小两号字体 */
+          font-weight: 600;
           margin-top: 12px;
           text-align: center;
+          min-width: 200px;  /* 增加最小宽度让文字一行显示 */
+          height: 19px;
+          border-radius: 10px;
+          background: #EAF6F2;
+          padding: 4px 16px;  /* 增加左右padding */
+          line-height: 19px;
+          white-space: nowrap;  /* 确保一行显示 */
         }
 
-        .privacy-images {
+        @media (min-width: 768px) {
+          .privacy-tag {
+            background: transparent;  /* PC端无背景 */
+            color: #878787;  /* PC端颜色 */
+            font-size: clamp(1.125rem, 1.6875vw, 1.6875rem);  /* PC端字体 */
+            font-weight: 400;
+            padding: 0;
+            min-width: auto;
+          }
+        }
+
+        /* 第一行：卡片 + 插图 */
+        .privacy-card-row {
           margin-top: 60px;
           display: flex;
-          flex-direction: column;
-          gap: 24px;
-        }
-
-        .privacy-image-item {
-          width: 100%;
+          gap: 0;
+          align-items: center;
+          justify-content: center;
           position: relative;
         }
 
-        .privacy-image {
+        /* 第二行：两个对话框卡片 */
+        .privacy-cards-row {
+          margin-top: -50px;
+          display: flex;
+          gap: 24px;
+          justify-content: center;
+        }
+
+        .privacy-card-with-text {
+          position: relative;
+          flex: 1;
+          min-height: 300px;
+          display: flex;
+          align-items: flex-start;
+          justify-content: center;
+          padding-top: 40px;
+        }
+
+        /* 第一行的第一个卡片 - 放大并设置 z-index */
+        .privacy-card-row .privacy-card-with-text {
+          flex: 0 0 80%;
+          max-width: 1190px;
+          min-height: 350px;
+          z-index: 1;
+          align-items: center;
+          padding-top: 0;
+        }
+
+        /* 第二行的卡片 - 放大尺寸 */
+        .privacy-cards-row .privacy-card-with-text {
+          flex: 0 0 50%;
+          max-width: 690px;
+          min-height: 320px;
+        }
+
+        .privacy-card-bg {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          z-index: 0;
+        }
+
+        .privacy-bg-image {
+          object-fit: contain;
+        }
+
+        .privacy-card-content {
+          position: relative;
+          z-index: 1;
+          text-align: center;
+          padding: 40px 40px 40px 40px;
+          max-width: 1000px;
+        }
+
+        /* 第一行卡片的文字位置 */
+        .privacy-card-row .privacy-card-content {
+          padding: 40px 40px 40px 40px;
+        }
+
+        /* 第二行卡片的文字位置 - 标题和正文各下移 10px */
+        .privacy-cards-row .privacy-card-content {
+          padding: 60px 40px 40px 40px;
+        }
+
+        .privacy-card-content h3 {
+          font-size: clamp(1.25rem, 2vw, 1.75rem);
+          margin-bottom: 20px;
+          line-height: 1.3;
+        }
+
+        /* 第二行卡片的标题下移 10px */
+        .privacy-cards-row .privacy-card-content h3 {
+          margin-bottom: 10px;
+          margin-left: 70px;
+        }
+
+        /* 第二行卡片的正文下移 10px */
+        .privacy-cards-row .privacy-card-content p {
+          margin-top: 20px;
+          margin-left: 70px;
+        }
+
+        .privacy-card-content p {
+          font-size: clamp(16px, 1vw, 18px);
+          line-height: 1.5;
+        }
+
+        /* 插图 - 重叠在卡片右侧，z-index 更高 */
+        .privacy-illustration {
+          flex-shrink: 0;
+          position: relative;
+          z-index: 2;
+          margin-left: -150px;
+        }
+
+        .privacy-illustration-image {
           width: 100%;
           height: auto;
-          object-fit: contain;
+          max-width: 400px;
+        }
+
+        /* 移动端响应式 */
+        @media (max-width: 768px) {
+          .privacy-card-row {
+            flex-direction: column;
+            gap: 24px;
+          }
+
+          .privacy-card-row .privacy-card-with-text {
+            flex: 1;
+            max-width: 100%;
+          }
+
+          .privacy-illustration {
+            margin-left: 0;
+            position: absolute;  /* 移动端改为绝对定位 */
+            top: 16px;  /* 右上角 */
+            right: 16px;
+            z-index: 3;
+          }
+
+          .privacy-illustration-image {
+            max-width: 120px;  /* 移动端图片更小 */
+          }
+
+          .privacy-cards-row {
+            flex-direction: column;
+          }
+
+          .privacy-card-with-text {
+            min-height: 250px;
+          }
+
+          .privacy-card-content {
+            padding: 30px 20px;
+          }
+
+          /* 移动端：隐藏 PC 端背景图片，显示白色卡片 */
+          .privacy-card-bg {
+            display: none;
+          }
+
+          .privacy-card-with-text {
+            background: rgba(255, 255, 255, 1);
+            border-radius: 20px;
+            box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.1);
+            padding: 24px;
+            position: relative;
+          }
+
+          /* 移动端卡片左上角图标 */
+          .privacy-card-icon {
+            position: absolute;
+            top: 30px;  /* 与 privacy-card-content 的 padding-top 对齐 */
+            left: 20px;  /* 与 privacy-card-content 的 padding-left 对齐 */
+            z-index: 2;
+            width: 48px;
+            height: 48px;
+          }
+
+          /* 移动端卡片标题渐变文字 */
+          .privacy-cards-row .privacy-card-content h3 {
+            background: linear-gradient(258.25deg, rgba(0, 0, 0, 1), rgba(0, 35, 105, 1) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-fill-color: transparent;
+            font-family: 'Rubik', sans-serif;
+            font-weight: 600;
+            font-size: 18px;
+            line-height: 30px;
+            letter-spacing: 0;
+            text-align: left;
+            margin-left: 60px;  /* 为
+            margin-bottom: 10px;
+            color: transparent;
+          }
+
+          /* 移动端卡片正文 */
+          .privacy-cards-row .privacy-card-content p {
+            margin-left: 0;
+            margin-top: 10px;
+            color: #697077;
+            font-family: 'Rubik', sans-serif;
+            font-size: 14px;
+            line-height: 1.6;
+          }
+
+          /* 第一行卡片的标题渐变 */
+          .privacy-card-row .privacy-card-content h3 {
+            background: linear-gradient(258.25deg, rgba(0, 0, 0, 1), rgba(0, 35, 105, 1) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-fill-color: transparent;
+            font-family: 'Rubik', sans-serif;
+            font-weight: 600;
+            font-size: 18px;
+            line-height: 30px;
+            letter-spacing: 0;
+            text-align: left;
+            color: transparent;
+          }
+
+          /* 第一行卡片的正文 */
+          .privacy-card-row .privacy-card-content p {
+            color: #697077;
+            font-family: 'Rubik', sans-serif;
+            font-size: 14px;
+            line-height: 1.6;
+          }
+
+          /* 移动端：减小标题和正文的间距 */
+          .privacy-card h3,
+          .privacy-card-row .privacy-card-content h3 {
+            margin-bottom: 6px;  /* 从 12px 减小到 6px */
+
+          }
         }
 
         .privacy-card {
@@ -1698,7 +2273,7 @@ export default function Home() {
 
         .impact-section {
           padding: 150px 0 120px;
-          background: #FFFCF9;
+          background: #E9F5EB;  /* 改为绿色 */
           position: relative;
           z-index: 1;
         }
@@ -1754,9 +2329,32 @@ export default function Home() {
           position: relative;
           z-index: 2;
           font-weight: 700;
-          color: #54545C;
+          color: var(--color-primary-dark);  /* 移动端：#0F192A */
           text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff;
           margin-top: 10px;
+          white-space: normal;
+        }
+
+        @media (min-width: 768px) {
+          .impact-section h2 {
+            color: #54545C;  /* PC端：恢复原色 */
+          }
+        }
+
+        /* Impact Section 标题分行 */
+        .impact-heading-line1,
+        .impact-heading-line2 {
+          display: block;
+        }
+
+        @media (min-width: 768px) {
+          .impact-heading-line1::after {
+            content: ' ';  /* PC端：单行显示 */
+          }
+          
+          .impact-heading-line2 {
+            display: inline;
+          }
         }
 
         .impact-grid {
@@ -1781,6 +2379,16 @@ export default function Home() {
           text-align: center;
         }
 
+        /* 移动端白色矩形背景 */
+        @media (max-width: 767px) {
+          .impact-card {
+            background: rgba(255, 255, 255, 1);
+            border-radius: 20px;
+            box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.1);
+            padding: 24px;
+          }
+        }
+
         .impact-icon-wrapper {
           width: 50px;
           height: 50px;
@@ -1799,21 +2407,95 @@ export default function Home() {
         .impact-card h3 {
           margin-bottom: 12px;
           font-weight: 700;
-          color: #54545C;
+          background: linear-gradient(258.25deg, rgba(0, 0, 0, 1), rgba(0, 35, 105, 1) 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+          text-fill-color: transparent;
           font-size: 1.5rem;
+          font-family: 'Rubik', sans-serif;
+          line-height: 30px;
+          letter-spacing: 0;
+          text-align: center;
+          color: transparent;
+        }
+
+        @media (min-width: 768px) {
+          .impact-card h3 {
+            color: #54545C;
+            background: none;
+            -webkit-background-clip: unset;
+            -webkit-text-fill-color: unset;
+            background-clip: unset;
+          }
         }
 
         .impact-card p {
-          color: #646464;
+          color: #4a4a4a;
           text-align: center;
           font-size: 0.8rem;
+          font-family: 'Rubik', sans-serif;
+          line-height: 1.6;
+        }
+
+        @media (max-width: 767px) {
+          .impact-card p {
+            color: #697077;
+            font-size: 14px;
+          }
+
+          /* 移动端标题样式 */
+          .impact-card-title-mobile {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 12px;
+          }
+
+          .impact-title-line1 {
+            font-family: 'Rubik', sans-serif;
+            font-size: 32px;
+            font-weight: 700;
+            line-height: 1.2;
+            background: linear-gradient(258.25deg, rgba(0, 0, 0, 1), rgba(0, 35, 105, 1) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-fill-color: transparent;
+            color: transparent;
+          }
+
+          .impact-title-small {
+            font-size: 20px;
+            font-weight: 400;
+            margin-left: 4px;
+          }
+
+          .impact-title-line2 {
+            font-family: 'Rubik', sans-serif;
+            font-size: 24px;
+            font-weight: 600;
+            line-height: 1.3;
+            background: linear-gradient(258.25deg, rgba(0, 0, 0, 1), rgba(0, 35, 105, 1) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-fill-color: transparent;
+            color: transparent;
+          }
         }
 
         .story-section {
           padding: 140px 0;
-          background: #FFF6D0;
+          background: #FFFCEB;  /* 移动端：更淡的黄色 */
           position: relative;
           z-index: 10;
+        }
+
+        @media (min-width: 768px) {
+          .story-section {
+            background: #FFF6D0;  /* PC端：原色 */
+          }
         }
 
         .story-section::before {
@@ -1832,8 +2514,31 @@ export default function Home() {
           font-size: clamp(2.2rem, 4vw, 3.2rem);
           margin-bottom: 48px;
           font-weight: 700;
-          color: #54545C;
+          color: var(--color-primary-dark);  /* 移动端：#0F192A */
           text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff;
+          white-space: normal;
+        }
+
+        @media (min-width: 768px) {
+          .story-section h2 {
+            color: #54545C;  /* PC端：恢复原色 */
+          }
+        }
+
+        /* Story Section 标题分行 */
+        .story-heading-line1,
+        .story-heading-line2 {
+          display: block;
+        }
+
+        @media (min-width: 768px) {
+          .story-heading-line1::after {
+            content: ' ';  /* PC端：单行显示 */
+          }
+          
+          .story-heading-line2 {
+            display: inline;
+          }
         }
 
         .story-panels {
@@ -1940,12 +2645,107 @@ export default function Home() {
           flex-direction: column;
         }
 
+        /* 移动端白色背景框 */
+        @media (max-width: 767px) {
+          .story-card {
+            flex-direction: column;
+            gap: 16px;
+          }
+
+          /* 移动端隐藏 PC 端图片 */
+          .story-card-visual {
+            display: none !important;
+          }
+
+          .story-card-body {
+            background: rgba(255, 255, 255, 1);
+            border-radius: 20px;
+            box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            min-height: auto;
+          }
+
+          /* 移动端：图片和标题在同一行 */
+          .story-card-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 12px;
+          }
+
+          .story-card-image-mobile {
+            flex-shrink: 0;
+            width: 80px;
+            height: 80px;
+          }
+
+          .story-card-image-mobile img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+          }
+
+          .story-card-title-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+          }
+
+          .story-team-visual,
+          .story-science-image {
+            width: 80px;
+            min-width: 80px;
+            height: 80px;
+          }
+
+          .story-team-image {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+          }
+        }
+
         .story-card-title {
           font-size: 1.35rem;
           font-weight: 700;
           color: #859FD3;
           margin-bottom: 20px;
           position: relative;
+        }
+
+        /* 移动端标题渐变文字 */
+        @media (max-width: 767px) {
+          .story-card-title {
+            background: linear-gradient(258.25deg, rgba(0, 0, 0, 1), rgba(0, 35, 105, 1) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-fill-color: transparent;
+            font-family: 'Rubik', sans-serif;
+            font-weight: 600;
+            font-size: 18px;
+            line-height: 24px;
+            letter-spacing: 0;
+            text-align: left;
+            color: transparent;
+            margin-bottom: 4px;  /* 减小与副标题的间距 */
+          }
+
+          .story-card-title::after {
+            display: none;
+          }
+
+          /* 移动端副标题：Bruce & Bryan */
+          .story-card-subtitle {
+            color: #3F89F7;
+            font-family: 'Rubik', sans-serif;
+            font-size: 16px;  /* 比The Team小两号 */
+            font-weight: 400;
+            line-height: 1.5;
+            text-align: left;
+            margin-bottom: 0;
+          }
         }
 
         .story-card-title::after {
@@ -1964,6 +2764,18 @@ export default function Home() {
           color: #014188;
           font-size: 18px;
           line-height: 1.6;
+        }
+
+        /* 移动端正文样式 */
+        @media (max-width: 767px) {
+          .story-card p {
+            color: #697077;
+            font-family: 'Rubik', sans-serif;
+            font-style: italic;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-top: 10px;
+          }
         }
 
         .story-roadmap {
@@ -2030,6 +2842,15 @@ export default function Home() {
           text-align: center;
           font-size: clamp(2rem, 3vw, 3rem);
           margin-bottom: 32px;
+          color: var(--color-primary-dark);  /* 移动端：#0F172A */
+          font-weight: 700;  /* 移动端：加粗 */
+        }
+
+        @media (min-width: 768px) {
+          .faq-section h2 {
+            color: inherit;  /* PC端：恢复原色 */
+            font-weight: 600;  /* PC端：正常粗细 */
+          }
         }
 
         .faq-list {
@@ -2093,6 +2914,11 @@ export default function Home() {
           .step-connector-image {
             transform: rotate(90deg);
             transition: transform 0.3s;
+          }
+
+          /* 移动端：第二个箭头特殊旋转角度 */
+          .step-connector-image[alt="arrow-2"] {
+            transform: rotate(-10deg);
           }
         }
 
@@ -2203,18 +3029,9 @@ export default function Home() {
             height: 224px;
           }
 
-          .story-name-bruce {
-            font-size: 20px;
-            font-weight: bold;
-            margin-top: 118px;
-            margin-left: 19px;
-          }
-
-          .story-name-bryan {
-            font-size: 20px;
-            font-weight: bold;
-            margin-top: -38px;
-            margin-left: 110px;
+          /* 移动端不显示 Bruce 和 Bryan 名字 */
+          .story-team-names {
+            display: none !important;
           }
         }
 
@@ -2234,6 +3051,11 @@ export default function Home() {
           .steps-grid,
           .timeline-points {
             grid-template-columns: minmax(0, 1fr);
+          }
+
+          /* 移动端 Section 2 图片间距更小 */
+          .steps-grid {
+            gap: 8px;
           }
 
           .hero-block {
