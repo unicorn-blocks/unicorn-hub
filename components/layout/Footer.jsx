@@ -164,16 +164,12 @@ export default function Footer({ onSubscribe, showEmailInput = true }) {
                     {isEmailSaved && (
                       <span className="footer-checkmark">✅</span>
                     )}
-                    {footerStatus.message && (
-                      <div className={`footer-status-message text-sm ${footerStatus.type === 'success' ? 'text-green-600' : 'text-red-600'}`}>
-                        {footerStatus.message}
-                      </div>
-                    )}
                   </div>
                   <button
                     type="submit"
-                    className="footer-submit-btn relative flex items-center justify-center transition-all hover:opacity-80 self-center md:self-auto"
-                    style={{ background: 'transparent', border: 'none', padding: 0, cursor: 'pointer' }}
+                    disabled={isProcessing}
+                    className="footer-submit-btn relative flex items-center justify-center transition-all self-center md:self-auto"
+                    style={{ background: 'transparent', border: 'none', padding: 0, cursor: isProcessing ? 'not-allowed' : 'pointer', opacity: isProcessing ? 0.7 : 1 }}
                   >
                     <img 
                       src="/assets/ima/Group 83.svg" 
@@ -191,7 +187,7 @@ export default function Footer({ onSubscribe, showEmailInput = true }) {
                         zIndex: 2
                       }}
                     >
-                      Join Adventure
+                      {isProcessing ? 'Joining' : 'Join Adventure'}
                     </span>
                   </button>
                 </form>
@@ -254,16 +250,11 @@ export default function Footer({ onSubscribe, showEmailInput = true }) {
         .footer-checkmark {
           position: absolute;
           right: 10px;
-          bottom: 4px;
+          top: 50%;
+          transform: translateY(-50%);
           font-size: 18px;
           color: #10B981;
           pointer-events: none;
-        }
-        
-        .footer-status-message {
-          margin-top: 4px;
-          min-height: 18px;
-          line-height: 18px;
         }
         
         .footer-welcome-text {

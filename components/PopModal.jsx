@@ -54,7 +54,6 @@ export default function PopModal({ onClose }) {
 
   // 固定按钮文案
   const btnText = 'Join Adventure';
- 
 
   return (
     <div className={styles.popModalMask}>
@@ -121,7 +120,7 @@ export default function PopModal({ onClose }) {
                 onClick={handleNotify}
                 disabled={submitted || isProcessing}
               >
-                {btnText}
+                {isProcessing ? 'Joining' : btnText}
               </button>
             </div>
             {/* 错误提示 */}

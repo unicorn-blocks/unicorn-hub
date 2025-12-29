@@ -7,6 +7,7 @@ export default function GlobalEmailNotifyBox() {
   const [error, setError] = useState('');
   const [show, setShow] = useState(true);
   const [isEmailSaved, setIsEmailSaved] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
   // 邮箱验证
@@ -38,6 +39,7 @@ export default function GlobalEmailNotifyBox() {
       //setError('❌');
       return;
     }
+    setIsLoading(true);
     try {
       // 动态导入工具函数
       const { submitEmailToGoogleSheets } = await import('../lib/googleSheets');
@@ -54,6 +56,8 @@ export default function GlobalEmailNotifyBox() {
     } catch (err) {
       console.error('提交错误:', err);
       setError('Network error');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -138,6 +142,7 @@ export default function GlobalEmailNotifyBox() {
       {/* 按钮 */}
       <button
         onClick={handleNotify}
+        disabled={isLoading}
         style={{
           width: 158,
           height: CONTROL_HEIGHT,
@@ -152,10 +157,12 @@ export default function GlobalEmailNotifyBox() {
           overflow: 'hidden',
           textOverflow: 'ellipsis',
           padding: 0,
-          lineHeight: `${CONTROL_HEIGHT}px`
+          lineHeight: `${CONTROL_HEIGHT}px`,
+          opacity: isLoading ? 0.7 : 1,
+          cursor: isLoading ? 'not-allowed' : 'pointer'
         }}
       >
-        Join Adventure
+        {isLoading ? 'Joining' : 'Join Adventure'}
       </button>
       {/* 右侧 12px 间距 */}
       <div style={{ width: 12, height: CONTROL_HEIGHT }} />
