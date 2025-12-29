@@ -14,7 +14,10 @@ export default function BlueTopBar() {
       
       <style jsx>{`
         .blue-top-bar {
-          position: relative;
+          position: sticky;
+          top: 0;
+          left: 0;
+          right: 0;
           width: 100%;
           background-color: #AAC2F4;
           display: flex;
@@ -22,7 +25,7 @@ export default function BlueTopBar() {
           justify-content: center;
           gap: 10px;
           padding: 8px 24px;
-          z-index: 8;
+          z-index: 999;
           height: 60px;
         }
 
