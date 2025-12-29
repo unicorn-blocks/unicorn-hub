@@ -1548,7 +1548,8 @@ export default function Home() {
         .kit-panel {
           background: #F7F3FD;
           border-radius: 34px;
-          padding: 28px 30px;
+          /* 收紧左右内边距，让标题更靠左贴齐图片 */
+          padding: 28px 24px;
           box-shadow: 0 24px 55px rgba(106, 96, 185, 0.12);
           display: grid;
           gap: 18px;
@@ -1609,7 +1610,7 @@ export default function Home() {
           flex-shrink: 0;
           align-items: center;
           justify-content: center;
-          margin-left: 20px;
+          margin-left: 0;
         }
 
         .kit-panel-icon-svg {
@@ -1629,6 +1630,10 @@ export default function Home() {
 
         .kit-panel-row ul {
           margin-left: 30px;
+        }
+
+        .kit-panel-row li {
+          padding-left: 40px; /* 子弹列表整体右移 */
         }
 
         /* 移动端展开/收起样式 */
@@ -2855,27 +2860,6 @@ export default function Home() {
           .faq-section h2 {
             color: inherit;  /* PC端：恢复原色 */
             font-weight: 600;  /* PC端：正常粗细 */
-          }
-        }
-
-        /* ≥1200px 时标题停止继续放大，保持单行视感 */
-        @media (min-width: 1200px) {
-          .hero-heading h1 {
-            font-size: 3.75rem; /* 约1200px即达到上限 */
-          }
-
-          .section-heading h2,
-          .kit-heading-block h2,
-          .family-header h2,
-          .privacy-heading h2,
-          .impact-section h2,
-          .story-section h2,
-          .faq-section h2 {
-            font-size: 3rem; /* 上限 48px 左右，避免超大 */
-          }
-
-          .story-section h2 {
-            font-size: 3.1rem; /* 略大保层级，但不再随屏增大 */
           }
         }
 
