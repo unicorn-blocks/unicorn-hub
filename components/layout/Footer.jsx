@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { useLanguage } from '../../context/LanguageContext';
-import { saveEmail, getSavedEmail } from '../../lib/emailStorage';
+import { clearSavedEmail } from '../../lib/emailStorage';
 
 export default function Footer({ onSubscribe, showEmailInput = true }) {
   const router = useRouter();
@@ -11,13 +11,11 @@ export default function Footer({ onSubscribe, showEmailInput = true }) {
   const [isProcessing, setIsProcessing] = useState(false);
   const [isEmailSaved, setIsEmailSaved] = useState(false);
 
-  // 组件加载时检查是否有保存的邮箱
+  // 页面加载时不再恢复历史邮箱，并清空本地存储
   useEffect(() => {
-    const savedEmail = getSavedEmail();
-    if (savedEmail) {
-      setFooterEmail(savedEmail);
-      setIsEmailSaved(true);
-    }
+    clearSavedEmail();
+    setFooterEmail('');
+    setIsEmailSaved(false);
   }, []);
   
   // 翻译文本
@@ -75,8 +73,7 @@ export default function Footer({ onSubscribe, showEmailInput = true }) {
       const result = await submitEmailToGoogleSheets(footerEmail, "footer", "");
       
       if (result.success) {
-        // 保存邮箱到 localStorage
-        saveEmail(footerEmail);
+        // 成功状态仅用于当次展示，不再持久化邮箱
         setIsEmailSaved(true);
         
         setFooterStatus({
