@@ -1020,7 +1020,11 @@ export default function Home() {
           height: 100%;
           object-fit: contain;
           object-position: center;
-          transform: none;
+          /* 自适应位移：随屏宽缩放，避免固定像素导致不跟随窗口 */
+          /* 下移并保持自适应位移，避免高分辨率下贴顶 */
+          /* 再下移一档，保持随屏宽缩放 */
+          transform: scale(0.85) translateY(clamp(90px, 10vw, 240px));
+          transform-origin: center top;
           //left: -100%; /* 向左偏移5%来居中 */
           //top: -50%;  /* 向上偏移5%来居中 */
         }
@@ -1139,7 +1143,7 @@ export default function Home() {
         .hero-transitions {
           position: relative;
           width: 100%;
-          height: clamp(360px, 60vw, 640px); /* 自适应高度 */
+          height: clamp(220px, 35vw, 360px); /* 压缩过渡区域高度 */
           z-index: 0;
           overflow: visible;
           background: #EEF9FF0;
@@ -1165,19 +1169,19 @@ export default function Home() {
 
         .hero-transition-yellow {
           top: 0;
-          height: 537px;
+          height: clamp(240px, 38vw, 420px);
           z-index: 1;
         }
 
         .hero-transition-purple {
-          top: 151px;
-          height: 349px;
+          top: clamp(80px, 14vw, 140px);
+          height: clamp(160px, 22vw, 240px);
           z-index: 2;
         }
 
         .hero-transition-blue {
-          top: 284px;
-          height: 364px;
+          top: clamp(150px, 22vw, 210px);
+          height: clamp(180px, 24vw, 240px);
           z-index: 3;
         }
 
@@ -2854,6 +2858,27 @@ export default function Home() {
           }
         }
 
+        /* ≥1200px 时标题停止继续放大，保持单行视感 */
+        @media (min-width: 1200px) {
+          .hero-heading h1 {
+            font-size: 3.75rem; /* 约1200px即达到上限 */
+          }
+
+          .section-heading h2,
+          .kit-heading-block h2,
+          .family-header h2,
+          .privacy-heading h2,
+          .impact-section h2,
+          .story-section h2,
+          .faq-section h2 {
+            font-size: 3rem; /* 上限 48px 左右，避免超大 */
+          }
+
+          .story-section h2 {
+            font-size: 3.1rem; /* 略大保层级，但不再随屏增大 */
+          }
+        }
+
         .faq-list {
           max-width: 800px;
           margin: 0 auto;
@@ -2949,8 +2974,8 @@ export default function Home() {
           }
 
           .hero-background-image {
-            transform: scale(0.85);
-            object-position: center 40px;
+            transform: scale(0.85) translateY(clamp(20px, 5vw, 60px));
+            object-position: center;
           }
 
           .hero-badge-icon {
@@ -2959,21 +2984,21 @@ export default function Home() {
           }
 
           .hero-transitions {
-            height: 380px;
+            height: 280px;
           }
 
           .hero-transition-yellow {
-            height: 420px;
+            height: 300px;
           }
 
           .hero-transition-purple {
-            top: 118px;
-            height: 273px;
+            top: 90px;
+            height: 190px;
           }
 
           .hero-transition-blue {
-            top: 221px;
-            height: 284px;
+            top: 160px;
+            height: 180px;
           }
 
           .kit-layout {
@@ -3068,26 +3093,26 @@ export default function Home() {
           }
 
           .hero-background-image {
-            transform: scale(0.82);
-            object-position: center 60px;
+            transform: scale(0.82) translateY(clamp(12px, 4vw, 36px));
+            object-position: center;
           }
 
           .hero-transitions {
-            height: 300px;
+            height: 220px;
           }
 
           .hero-transition-yellow {
-            height: 335px;
+            height: 230px;
           }
 
           .hero-transition-purple {
-            top: 94px;
-            height: 218px;
+            top: 70px;
+            height: 150px;
           }
 
           .hero-transition-blue {
-            top: 177px;
-            height: 227px;
+            top: 135px;
+            height: 160px;
           }
 
           .hero-heading h1 {
