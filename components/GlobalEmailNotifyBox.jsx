@@ -1,6 +1,6 @@
-import { useRef, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { saveEmail, getSavedEmail } from '../lib/emailStorage';
+// 不再持久化邮箱
 
 export default function GlobalEmailNotifyBox() {
   const [email, setEmail] = useState('');
@@ -8,15 +8,6 @@ export default function GlobalEmailNotifyBox() {
   const [show, setShow] = useState(true);
   const [isEmailSaved, setIsEmailSaved] = useState(false);
   const router = useRouter();
-
-  // 组件加载时检查是否有保存的邮箱
-  useEffect(() => {
-    const savedEmail = getSavedEmail();
-    if (savedEmail) {
-      setEmail(savedEmail);
-      setIsEmailSaved(true);
-    }
-  }, []);
 
   // 邮箱验证
   const isValidEmail = (email) => /\S+@\S+\.\S+/.test(email);
@@ -53,8 +44,7 @@ export default function GlobalEmailNotifyBox() {
       const result = await submitEmailToGoogleSheets(email, "global-notify-bar", "");
 
       if (result.success) {
-        // 保存邮箱到 localStorage
-        saveEmail(email);
+        // 本地状态标记即可，不持久化
         setIsEmailSaved(true);
         // 成功后直接跳转
         router.push('/reserve-vip-spot');

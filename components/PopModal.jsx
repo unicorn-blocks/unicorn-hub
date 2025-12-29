@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
 import styles from './PopModal.module.css';
-import { saveEmail, getSavedEmail } from '../lib/emailStorage';
+// 不再持久化邮箱，本地状态即可
 
 export default function PopModal({ onClose }) {
   const router = useRouter();
@@ -12,15 +12,6 @@ export default function PopModal({ onClose }) {
   const [submitted, setSubmitted] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [isEmailSaved, setIsEmailSaved] = useState(false);
-
-  // 组件加载时检查是否有保存的邮箱
-  useEffect(() => {
-    const savedEmail = getSavedEmail();
-    if (savedEmail) {
-      setEmail(savedEmail);
-      setIsEmailSaved(true);
-    }
-  }, []);
 
   const isValidEmail = (email) => /\S+@\S+\.\S+/.test(email);
 
@@ -43,16 +34,6 @@ export default function PopModal({ onClose }) {
       const result = await submitEmailToGoogleSheets(email, "pop-modal", "reserve-pop-modal");
       
       if (result.success) {
-        // 保存邮箱到 localStorage
-        console.log('=== PopModal 保存邮箱 ===');
-        console.log('要保存的邮箱:', email);
-        saveEmail(email);
-        
-        // 验证保存是否成功
-        const savedEmail = getSavedEmail();
-        console.log('保存后验证读取:', savedEmail);
-        console.log('localStorage直接读取:', localStorage.getItem('unicorn_blocks_user_email'));
-        
         setIsEmailSaved(true);
         setSubmitted(true);
         

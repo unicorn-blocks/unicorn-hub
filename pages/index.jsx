@@ -434,7 +434,7 @@ export default function Home() {
               fill
               className="hero-background-image"
               priority
-              style={{ objectFit: 'cover' }}
+              style={{ objectFit: 'contain', objectPosition: 'center' }}
             />
           </div>
 
@@ -1018,8 +1018,9 @@ export default function Home() {
           inset: 0;
           width: 100%;
           height: 100%;
-          object-fit: scale-down;//在contain和none之间选择较小的
-          transform: scale(0.9);
+          object-fit: contain;
+          object-position: center;
+          transform: none;
           //left: -100%; /* 向左偏移5%来居中 */
           //top: -50%;  /* 向上偏移5%来居中 */
         }
@@ -1138,7 +1139,7 @@ export default function Home() {
         .hero-transitions {
           position: relative;
           width: 100%;
-          height: 480px;
+          height: clamp(360px, 60vw, 640px); /* 自适应高度 */
           z-index: 0;
           overflow: visible;
           background: #EEF9FF0;
