@@ -51,7 +51,7 @@ export default function GlobalEmailNotifyBox() {
       // 动态导入工具函数
       const { submitEmailToGoogleSheets } = await import('../lib/googleSheets');
       const result = await submitEmailToGoogleSheets(email, "global-notify-bar", "");
-      
+
       if (result.success) {
         // 保存邮箱到 localStorage
         saveEmail(email);
@@ -79,6 +79,7 @@ export default function GlobalEmailNotifyBox() {
   const SIDE_PAD = 12;
   const INPUT_WIDTH = 180;
   const BTN_WIDTH = 120;
+  const CONTROL_HEIGHT = 44;
   const FONT_SIZE = 14;
   const BTN_FONT_SIZE = 13;
 
@@ -107,7 +108,7 @@ export default function GlobalEmailNotifyBox() {
       {/* 左侧 12px 间距 */}
       <div style={{ width: SIDE_PAD, height: BOX_HEIGHT }} />
       {/* 输入框（减小尺寸） */}
-      <div style={{ position: 'relative', width: 281, height: 37 }}>
+      <div style={{ position: 'relative', width: 281, height: CONTROL_HEIGHT }}>
         <input
           type="email"
           value={email}
@@ -149,7 +150,7 @@ export default function GlobalEmailNotifyBox() {
         onClick={handleNotify}
         style={{
           width: 158,
-          height: 37,
+          height: CONTROL_HEIGHT,
           background: '#2F2737',
           color: '#fff',
           fontWeight: 500,
@@ -160,13 +161,14 @@ export default function GlobalEmailNotifyBox() {
           whiteSpace: 'nowrap',
           overflow: 'hidden',
           textOverflow: 'ellipsis',
-          padding: 0
+          padding: 0,
+          lineHeight: `${CONTROL_HEIGHT}px`
         }}
       >
         Join Adventure
       </button>
       {/* 右侧 12px 间距 */}
-      <div style={{ width: 12, height: BOX_HEIGHT-30 }} />
+      <div style={{ width: 12, height: CONTROL_HEIGHT }} />
       {/* 错误提示 */}
       {error && (
         <div
@@ -176,8 +178,8 @@ export default function GlobalEmailNotifyBox() {
             left: 20,
             color: '#dc2626',
             fontSize: 13,
-            
-           //left:200
+
+            //left:200
           }}
         >
           {error}

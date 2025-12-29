@@ -71,11 +71,8 @@ export default function PopModal({ onClose }) {
     }
   };
 
-  // hover时按钮文字切换
-  let btnText = 'Join Adventure';
-  if (isHovered && !submitted) {
-    btnText = 'Reserve My Spot';
-  }
+  // 固定按钮文案
+  const btnText = 'Join Adventure';
  
 
   return (
