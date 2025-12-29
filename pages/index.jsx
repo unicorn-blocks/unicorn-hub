@@ -1032,19 +1032,7 @@ export default function Home() {
           position: relative;
           z-index: 10;
           text-align: center;
-          margin-top: -10px;
-        }
-
-        @media (min-width: 768px) {
-          .hero-shell {
-            padding: 0 var(--spacing-desktop);  /* PC端：40px */
-          }
-        }
-
-        @media (min-width: 1400px) {
-          .hero-shell {
-            padding: 0 var(--spacing-desktop-lg);  /* 超大屏幕：60px */
-          }
+          padding-top: 50px;
         }
 
         .hero-eyebrow {
@@ -1063,7 +1051,7 @@ export default function Home() {
         }
 
         .hero-heading h1 {
-          margin: -5px 0 1px;
+          margin: 0 0 10px;
           font-size: clamp(3.1rem, 5vw, 4.8rem);
           line-height: 1.05;
         }
@@ -1089,7 +1077,7 @@ export default function Home() {
         }
 
         .hero-description-wrapper {
-          margin: 6px auto 8px;//上 左右 下
+          margin: 10px auto 15px;//上 左右 下
           max-width: 720px;
           display: flex;
           flex-direction: column;
@@ -1120,7 +1108,7 @@ export default function Home() {
           display: inline-flex;
           align-items: center;
           gap: 12px;
-          margin-top: -5px;
+          margin-top: 0;
         }
 
         .hero-badge {
@@ -1150,7 +1138,7 @@ export default function Home() {
         .hero-transitions {
           position: relative;
           width: 100%;
-          height: 640px;
+          height: 480px;
           z-index: 0;
           overflow: visible;
           background: #EEF9FF0;
@@ -2945,16 +2933,32 @@ export default function Home() {
           }
 
           .hero-block {
-            padding: calc(var(--nav-height) + 12px) 0 0;
+            padding: calc(var(--nav-height) +0.1px) 0 0;
           }
 
           .hero-badge-row {
-            flex-wrap: wrap;
+            flex-wrap: nowrap;
             justify-content: center;
+            gap: 8px;
+          }
+
+          .hero-badge {
+            font-size: 0.7rem;
+            gap: 6px;
+          }
+
+          .hero-background-image {
+            transform: scale(0.85);
+            object-position: center 40px;
+          }
+
+          .hero-badge-icon {
+            width: 18px;
+            height: 18px;
           }
 
           .hero-transitions {
-            height: 500px;
+            height: 380px;
           }
 
           .hero-transition-yellow {
@@ -3055,16 +3059,20 @@ export default function Home() {
           }
 
           .hero-block {
-            padding: calc(var(--nav-height) + 12px) 0 0;
+            padding: calc(var(--nav-height) +0.1px) 0 0;
           }
 
           .hero-shell {
-            padding: 0 18px;
-            margin-top: -50px;  /* 移动端：上移40px（原本-10px，现在-50px） */
+            padding: 20px 18px 0;
+          }
+
+          .hero-background-image {
+            transform: scale(0.82);
+            object-position: center 60px;
           }
 
           .hero-transitions {
-            height: 400px;
+            height: 300px;
           }
 
           .hero-transition-yellow {
@@ -3090,8 +3098,23 @@ export default function Home() {
           }
 
           .hero-badge-row {
-            flex-direction: column;
-            gap: 10px;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            gap: 6px;
+          }
+
+          .hero-badge {
+            font-size: 0.65rem;
+            gap: 4px;
+          }
+
+          .hero-badge-icon {
+            width: 16px;
+            height: 16px;
+          }
+
+          .hero-badge-separator {
+            font-size: 0.8rem;
           }
 
           .kit-panel {
