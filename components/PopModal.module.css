@@ -112,15 +112,16 @@
   color: #242424;
   text-align: left;
   font-weight: 400;
-  max-width: 510px;
+  max-width: 580px;
   transition: opacity 0.2s;
 }
 
 .txtLine span {
   color: #54545C;
-  font-weight: 900;
+  font-weight: 1000;
   font-family: 'Rubik', 'Arial', sans-serif;
-  font-size: 25px;
+  font-size: 28px;
+  letter-spacing: 0.02em;
 }
 
 .discount {

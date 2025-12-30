@@ -71,11 +71,11 @@ export default function PopModal({ onClose }) {
           {/* 顶部飞机 */}
           <Image src="/assets/ima/Image copy 1.png" alt="airplane" width={151} height={161} className={styles.plane} />
           {/* 大标题 */}
-          <h2 className={styles.reserveTitle}><span>Join Sparky’s Adventure</span></h2>
+          <h2 className={styles.reserveTitle}><span>Exclusive VIP Invitation</span></h2>
           {/* 内容区域 - hover时不再隐藏 */}
           <div className={styles.contentMiddle}>
             <div className={styles.txtLine}>
-              Get launch updates, early-bird perks, and first access to our exclusive VIP price.
+              Get <span>Launch Updates</span>, <span>Early-Bird Perks</span>, and the first access to our <span>Exclusive VIP Price</span>.
             </div>
           </div>
           {/* 底部输入区块 - hover时位置不再改变 */}
