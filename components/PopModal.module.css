@@ -122,6 +122,11 @@
   font-family: 'Rubik', 'Arial', sans-serif;
   font-size: 28px;
   letter-spacing: 0.02em;
+  text-shadow:
+    2px 2px 0 #fff,
+    -2px -2px 0 #fff,
+    2px -2px 0 #fff,
+    -2px 2px 0 #fff;
 }
 
 .discount {
