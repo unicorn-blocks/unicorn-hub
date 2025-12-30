@@ -482,7 +482,7 @@ export default function Home() {
         <section className="steps-section">
           <div className="content-container">
             <div className="section-heading text-center">
-              <h2 style={{ textAlign: 'center', margin: '0 auto', width: '100%', whiteSpace: 'normal' }}>
+              <h2 style={{ textAlign: 'center', margin: '0 auto', width: '100%' }}>
                 <span className="steps-heading-line1">{copy.steps.heading}</span>
                 <span className="steps-heading-line2">{copy.steps.headingLine2}</span>
               </h2>
@@ -1150,13 +1150,19 @@ export default function Home() {
           display: block;
         }
 
-        @media (min-width: 768px) {
-          .steps-heading-line1::after {
-            content: ' ';  /* PC端：单行显示 */
+        @media (min-width: 1024px) {
+          .section-heading h2 {
+             display: flex;
+             justify-content: center;
+             width: 100%;
+             white-space: nowrap;
+             gap: 0.25em;
           }
-          
-          .steps-heading-line2 {
-            display: inline;
+          .steps-heading-line1, .steps-heading-line2 {
+            display: block;
+          }
+          .steps-heading-line1::after {
+            content: none;
           }
         }
 
