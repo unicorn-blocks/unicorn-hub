@@ -75,6 +75,7 @@
   width: 151px !important;
   height: 161px !important;
   z-index: 4;
+  clip-path: inset(0 5px 6px 0);
 }
 
 .reserveTitle {
