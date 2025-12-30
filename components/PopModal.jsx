@@ -19,24 +19,24 @@ export default function PopModal({ onClose }) {
   const handleNotify = async () => {
     // 防止重复提交
     if (isProcessing) return;
-    
+
     if (!isValidEmail(email)) {
       setError('Please provide a valid email address');
       return;
     }
-    
+
     setIsProcessing(true);
     setIsHovered(false);  // 立即重置hover状态，让文字变成"Join Adventure"
-    
+
     try {
       // 动态导入工具函数
       const { submitEmailToGoogleSheets } = await import('../lib/googleSheets');
       const result = await submitEmailToGoogleSheets(email, "pop-modal", "reserve-pop-modal");
-      
+
       if (result.success) {
         setIsEmailSaved(true);
         setSubmitted(true);
-        
+
         // 使用 Next.js Router 进行平滑导航
         setTimeout(() => {
           router.push('/reserve-vip-spot');
@@ -71,16 +71,11 @@ export default function PopModal({ onClose }) {
           {/* 顶部飞机 */}
           <Image src="/assets/ima/Image copy 1.png" alt="airplane" width={151} height={161} className={styles.plane} />
           {/* 大标题 */}
-          <h2 className={styles.reserveTitle}><span>Reserve VIP spot!</span></h2>
+          <h2 className={styles.reserveTitle}><span>Join Sparky’s Adventure</span></h2>
           {/* 内容区域 - hover时不再隐藏 */}
-          <div>
+          <div className={styles.contentMiddle}>
             <div className={styles.txtLine}>
-              Reserve your VIP spot now for <span>$5</span> and secure <span className={styles.discount}>$49 off</span> the retail price on launch day.
-            </div>
-            <div className={styles.counterRow}>
-              <span>Only</span>
-              <Image src="/assets/ima/svg 37.png" alt="calendar num" width={86} height={91} className={styles.calendar} />
-              <span className={styles.counterRest}>of 500 left!</span>
+              Get launch updates, early-bird perks, and first access to our exclusive VIP price.
             </div>
           </div>
           {/* 底部输入区块 - hover时位置不再改变 */}
@@ -92,7 +87,8 @@ export default function PopModal({ onClose }) {
                 placeholder="Enter your email to join"
                 value={email}
                 onChange={e => {
-                  setEmail(e.target.value); setError(''); setSubmitted(false);}}
+                  setEmail(e.target.value); setError(''); setSubmitted(false);
+                }}
                 className={styles.inputEmail}
                 style={{ paddingRight: isEmailSaved ? '40px' : '17px' }}
                 disabled={submitted}
