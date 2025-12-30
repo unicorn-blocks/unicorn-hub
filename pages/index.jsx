@@ -141,7 +141,7 @@ export default function Home() {
           },
           {
             quote:
-             "“I love that Sparky doesn’t ‘correct’ him. If he says it’s a rocket, Sparky sees a rocket. It really protects his imagination.”",
+              "“I love that Sparky doesn’t ‘correct’ him. If he says it’s a rocket, Sparky sees a rocket. It really protects his imagination.”",
             author: '—Mom of 5-Year-Old'
           },
           {
@@ -168,7 +168,7 @@ export default function Home() {
           },
           {
             title: 'No Third-Party Ads',
-            description:[
+            description: [
               'A 100% Pure Play Zone. Contains no third-party ads, no tracking,',
               'and no stranger interaction.'
             ]
@@ -277,12 +277,12 @@ export default function Home() {
   ];
   const familyBlocks = Array.from({ length: 3 }, (_, idx) => {
     // 使用当前页面的见证内容，如果是数组的数组则使用对应页面，否则使用原来的逻辑
-    const testimonials = Array.isArray(copy.family.testimonials[0]) 
+    const testimonials = Array.isArray(copy.family.testimonials[0])
       ? copy.family.testimonials[familyPage] || copy.family.testimonials[0]
       : copy.family.testimonials;
-    
+
     let testimonial = testimonials[idx % testimonials.length];
-    
+
     // 根据页面和索引硬编码特定的更改
     if (familyPage === 1 && idx === 0) {
       // 第二页的第一个矩形块
@@ -297,7 +297,7 @@ export default function Home() {
         author: '—Mom of 5-Year-Old'
       };
     }
-    
+
     const palette = idx % 2 === 0 ? 'sunset' : 'sky';
 
     return {
@@ -317,10 +317,10 @@ export default function Home() {
 
     // 需要设置为 #6C6767 的文字
     const specialTexts = [
-      'Story Sparks Creation', 
-      'Magic Window', 
-      'Smart Brain', 
-      'Privacy Button', 
+      'Story Sparks Creation',
+      'Magic Window',
+      'Smart Brain',
+      'Privacy Button',
       '7-Hour Playtime',
       'Themes',
       'Creative Journey',
@@ -332,7 +332,7 @@ export default function Home() {
     const isSpecial = specialTexts.some(special => lead.includes(special));
 
     // 处理换行：将 rest 中的换行符替换为换行+3个空格
-    const processedRest = rest.split('\n').map((line, index) => 
+    const processedRest = rest.split('\n').map((line, index) =>
       index === 0 ? line : `   ${line}`
     ).join('\n');
 
@@ -350,9 +350,9 @@ export default function Home() {
   const handleFooterSubmit = async (email, setFooterStatus) => {
     // 动态导入工具函数
     const { submitEmailToGoogleSheets } = await import('../lib/googleSheets');
-    
+
     const result = await submitEmailToGoogleSheets(email, "index-footer", "");
-    
+
     if (setFooterStatus) {
       setFooterStatus({
         message: result.success ? copy.messages.subscribeSuccess : result.message,
@@ -419,17 +419,17 @@ export default function Home() {
       </Head>
 
       <div className="background-gradient" />
-      
+
       {/* 蓝色顶部条 */}
       <BlueTopBar />
-      
+
       <main className="home-root min-h-screen">
         {/* <Navigation /> */}
 
         <section className="hero-block">
           <div className="hero-backdrop" aria-hidden="true">
             <img
-              src="/assets/image/HeroImage1230.svg"
+              src="/assets/image/HeroImage1230.webp"
               alt=""
               className="hero-background-image"
             />
@@ -482,7 +482,7 @@ export default function Home() {
         <section className="steps-section">
           <div className="content-container">
             <div className="section-heading text-center">
-              <h2 style={{textAlign: 'center', margin: '0 auto', width: '100%', whiteSpace: 'normal'}}>
+              <h2 style={{ textAlign: 'center', margin: '0 auto', width: '100%', whiteSpace: 'normal' }}>
                 <span className="steps-heading-line1">{copy.steps.heading}</span>
                 <span className="steps-heading-line2">{copy.steps.headingLine2}</span>
               </h2>
@@ -490,13 +490,13 @@ export default function Home() {
             </div>
             <div className="steps-grid">
               {/* 第一组 */}
-              <div className="step-item" style={{zIndex:2}}>
+              <div className="step-item" style={{ zIndex: 2 }}>
                 <div className="step-card step-card-image-only">
-                  <div className="step-image-full" style={{minHeight:'520px'}}>
+                  <div className="step-image-full" style={{ minHeight: '520px' }}>
                     {/* 移动端图片 */}
-                    <Image src={getStepsMobileImage(0)} alt="" fill className="step-image-full-item md:hidden" style={{transform:'scale(1.15)'}} />
+                    <Image src={getStepsMobileImage(0)} alt="" fill className="step-image-full-item md:hidden" style={{ transform: 'scale(1.15)' }} />
                     {/* PC端图片 */}
-                    <Image src="/assets/ima/组合 721.png" alt="" fill className="step-image-full-item hidden md:block" style={{transform:'scale(1.15)'}} />
+                    <Image src="/assets/ima/组合 721.png" alt="" fill className="step-image-full-item hidden md:block" style={{ transform: 'scale(1.15)' }} />
                   </div>
                 </div>
                 {/* 第一、二组之间连接矢量 */}
@@ -506,13 +506,13 @@ export default function Home() {
               </div>
 
               {/* 第二组 */}
-              <div className="step-item" style={{zIndex:1}}>
+              <div className="step-item" style={{ zIndex: 1 }}>
                 <div className="step-card step-card-image-only">
-                  <div className="step-image-full" style={{minHeight:'520px'}}>
+                  <div className="step-image-full" style={{ minHeight: '520px' }}>
                     {/* 移动端图片 */}
-                    <Image src={getStepsMobileImage(1)} alt="" fill className="step-image-full-item md:hidden" style={{transform:'scale(1.15)'}} />
+                    <Image src={getStepsMobileImage(1)} alt="" fill className="step-image-full-item md:hidden" style={{ transform: 'scale(1.15)' }} />
                     {/* PC端图片 */}
-                    <Image src="/assets/ima/bule.png" alt="" fill className="step-image-full-item hidden md:block" style={{transform:'scale(1.15)'}} />
+                    <Image src="/assets/ima/bule.png" alt="" fill className="step-image-full-item hidden md:block" style={{ transform: 'scale(1.15)' }} />
                   </div>
                 </div>
                 {/* 二、三组之间连接矢量 */}
@@ -522,13 +522,13 @@ export default function Home() {
               </div>
 
               {/* 第三组 */}
-              <div className="step-item" style={{zIndex:0}}>
+              <div className="step-item" style={{ zIndex: 0 }}>
                 <div className="step-card step-card-image-only">
-                  <div className="step-image-full" style={{minHeight:'520px'}}>
+                  <div className="step-image-full" style={{ minHeight: '520px' }}>
                     {/* 移动端图片 */}
-                    <Image src={getStepsMobileImage(2)} alt="" fill className="step-image-full-item md:hidden" style={{transform:'scale(1.15)'}} />
+                    <Image src={getStepsMobileImage(2)} alt="" fill className="step-image-full-item md:hidden" style={{ transform: 'scale(1.15)' }} />
                     {/* PC端图片 */}
-                    <Image src="/assets/ima/组合 723 (1).png" alt="" fill className="step-image-full-item hidden md:block" style={{transform:'scale(1.15)'}} />
+                    <Image src="/assets/ima/组合 723 (1).png" alt="" fill className="step-image-full-item hidden md:block" style={{ transform: 'scale(1.15)' }} />
                   </div>
                 </div>
                 {/* 三、四组之间连接矢量 */}
@@ -538,13 +538,13 @@ export default function Home() {
               </div>
 
               {/* 第四组 */}
-              <div className="step-item" style={{zIndex:-1}}>
+              <div className="step-item" style={{ zIndex: -1 }}>
                 <div className="step-card step-card-image-only">
-                  <div className="step-image-full" style={{minHeight:'520px'}}>
+                  <div className="step-image-full" style={{ minHeight: '520px' }}>
                     {/* 移动端图片 */}
-                    <Image src={getStepsMobileImage(3)} alt="" fill className="step-image-full-item md:hidden" style={{transform:'scale(1.15)'}} />
+                    <Image src={getStepsMobileImage(3)} alt="" fill className="step-image-full-item md:hidden" style={{ transform: 'scale(1.15)' }} />
                     {/* PC端图片 */}
-                    <Image src="/assets/ima/green.png" alt="" fill className="step-image-full-item hidden md:block" style={{transform:'scale(1.15)'}} />
+                    <Image src="/assets/ima/green.png" alt="" fill className="step-image-full-item hidden md:block" style={{ transform: 'scale(1.15)' }} />
                   </div>
                 </div>
               </div>
@@ -559,60 +559,60 @@ export default function Home() {
               <p className="kit-subheading">{copy.kit.subheading}</p>
             </div>
 
-              <div className="kit-layout">
-                <div className="kit-media-block">
-                  <div className="kit-media-single">
-                    {/* 移动端图片 */}
-                    <Image src="/assets/ima/section3.png" alt="Sparky Adventure Kit" fill className="kit-media-single-image md:hidden" />
-                    {/* PC端图片 */}
-                    <Image src="/assets/ima/组合 673.png" alt="Sparky Adventure Kit" fill className="kit-media-single-image hidden md:block" />
-                  </div>
+            <div className="kit-layout">
+              <div className="kit-media-block">
+                <div className="kit-media-single">
+                  {/* 移动端图片 */}
+                  <Image src="/assets/ima/section3.png" alt="Sparky Adventure Kit" fill className="kit-media-single-image md:hidden" />
+                  {/* PC端图片 */}
+                  <Image src="/assets/ima/组合 673.png" alt="Sparky Adventure Kit" fill className="kit-media-single-image hidden md:block" />
                 </div>
-                <div className="kit-details-block">
-                  <div className="kit-panel">
-                    {copy.kit.categories.map((category, index) => {
-                      const accent = kitIconPalette[index % kitIconPalette.length];
-                      const isOpen = kitPanelOpen[index];
-                      const toggleOpen = () => {
-                        const newState = [...kitPanelOpen];
-                        newState[index] = !newState[index];
-                        setKitPanelOpen(newState);
-                      };
-                      
-                      return (
+              </div>
+              <div className="kit-details-block">
+                <div className="kit-panel">
+                  {copy.kit.categories.map((category, index) => {
+                    const accent = kitIconPalette[index % kitIconPalette.length];
+                    const isOpen = kitPanelOpen[index];
+                    const toggleOpen = () => {
+                      const newState = [...kitPanelOpen];
+                      newState[index] = !newState[index];
+                      setKitPanelOpen(newState);
+                    };
+
+                    return (
                       <div
                         className="kit-panel-row"
                         key={category.title}
                         style={{ '--kit-accent': accent.base, '--kit-accent-shadow': accent.shadow }}
                       >
-                        <button 
+                        <button
                           className="kit-panel-title-button"
                           onClick={toggleOpen}
                           style={{ width: '100%', textAlign: 'left', background: 'none', border: 'none', padding: 0, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
                         >
                           <div className="kit-panel-title" style={{ flex: 1, margin: 0 }}>
                             <div className="kit-panel-icon">
-                              <Image 
-                                src={index === 0 ? '/assets/ima/section3-1.svg' : 
-                                     index === 1 ? '/assets/ima/section3-2.svg' : 
-                                     index === 2 ? '/assets/ima/section3-3.svg' : 
-                                     '/assets/ima/section3-4.svg'} 
-                                alt="" 
-                                width={40} 
-                                height={40} 
+                              <Image
+                                src={index === 0 ? '/assets/ima/section3-1.svg' :
+                                  index === 1 ? '/assets/ima/section3-2.svg' :
+                                    index === 2 ? '/assets/ima/section3-3.svg' :
+                                      '/assets/ima/section3-4.svg'}
+                                alt=""
+                                width={40}
+                                height={40}
                                 className="kit-panel-icon-svg"
                               />
                             </div>
-                            <h3 style={{ color: isOpen ? '#B589E2' : '#0F172A' }}>{index === 0 ? 'Magical Buddy' : 
-                                 index === 1 ? 'Magic Hats' : 
-                                 index === 2 ? 'Magic Blocks' : 
-                                 '100 Universal Blocks'}</h3>
+                            <h3 style={{ color: isOpen ? '#B589E2' : '#0F172A' }}>{index === 0 ? 'Magical Buddy' :
+                              index === 1 ? 'Magic Hats' :
+                                index === 2 ? 'Magic Blocks' :
+                                  '100 Universal Blocks'}</h3>
                           </div>
                           <span className="kit-panel-toggle" style={{ display: 'none', marginLeft: '8px', fontSize: '16px' }}>
                             {isOpen ? '▲' : '▼'}
                           </span>
                         </button>
-                        <ul className="kit-panel-content" style={{ 
+                        <ul className="kit-panel-content" style={{
                           maxHeight: isOpen ? '1000px' : '0',
                           overflow: 'hidden',
                           transition: 'max-height 0.3s ease',
@@ -625,9 +625,9 @@ export default function Home() {
                         </ul>
                       </div>
                     );
-                    })}
-                  </div>
+                  })}
                 </div>
+              </div>
 
             </div>
           </div>
@@ -652,7 +652,7 @@ export default function Home() {
                   // 更新见证内容
                   let updatedQuote = block.quote;
                   let updatedAuthor = block.author;
-                  
+
                   if (index === 0) {
                     updatedQuote = '"So much better than watching TV."';
                     updatedAuthor = '—Dad of 3-Year- Old';
@@ -663,17 +663,17 @@ export default function Home() {
                     updatedQuote = '"Pleeease, just five more minutes! I have to light up all the lights on Sparky’s hat!"';
                     updatedAuthor = '—Our Little Builder, 5';
                   }
-                  
+
                   return (
-                  <div className={`family-card ${block.palette}`} key={block.id || `${block.author}-${index}`}>
-                    <div className="family-quote-icon">
-                      <img src="/assets/ima/逗号.svg" alt="quote" className="quote-icon" />
+                    <div className={`family-card ${block.palette}`} key={block.id || `${block.author}-${index}`}>
+                      <div className="family-quote-icon">
+                        <img src="/assets/ima/逗号.svg" alt="quote" className="quote-icon" />
+                      </div>
+                      <div className="family-quote">
+                        <p>{block.quote}</p>
+                        <span>{block.author}</span>
+                      </div>
                     </div>
-                    <div className="family-quote">
-                      <p>{block.quote}</p>
-                      <span>{block.author}</span>
-                    </div>
-                  </div>
                   );
                 })}
               </div>
@@ -701,7 +701,7 @@ export default function Home() {
                 <p className="privacy-tag">{copy.privacy.tag}</p>
               </div>
             </div>
-            
+
             {/* 第一个卡片：All Data Stays Yours */}
             <div className="privacy-card-row">
               <div className="privacy-card-with-text">
@@ -715,7 +715,7 @@ export default function Home() {
                 <div className="privacy-card-content">
                   <h3 style={{ color: '#383838', fontWeight: 'bold' }}>All Data Stays Yours</h3>
                   <p style={{ color: '#646464', }}>
-                    Data is automatically wiped and NEVER exposed to third parties. 
+                    Data is automatically wiped and NEVER exposed to third parties.
                     <br />
                     You can permanently delete any history instantly via the app.
                   </p>
@@ -823,13 +823,13 @@ export default function Home() {
                   <p className="hidden md:block">{stat.description}</p>
                   {/* 移动端描述 */}
                   <p className="md:hidden">
-                    {Array.isArray(stat.descriptionMobile) 
+                    {Array.isArray(stat.descriptionMobile)
                       ? stat.descriptionMobile.map((line, i) => (
-                          <span key={i}>
-                            {line}
-                            {i < stat.descriptionMobile.length - 1 && <br />}
-                          </span>
-                        ))
+                        <span key={i}>
+                          {line}
+                          {i < stat.descriptionMobile.length - 1 && <br />}
+                        </span>
+                      ))
                       : stat.descriptionMobile
                     }
                   </p>
@@ -862,7 +862,7 @@ export default function Home() {
                       <img src="/assets/ima/组合 627.svg" alt="Science" className="story-science-image" />
                     )}
                   </div>
-                  
+
                   {/* 移动端和PC端：文字内容 */}
                   <div className="story-card-body">
                     {/* 移动端：图片和标题在同一行 */}
@@ -882,12 +882,12 @@ export default function Home() {
                         )}
                       </div>
                     </div>
-                    
+
                     {/* PC端：只显示标题 */}
                     <div className="hidden md:block">
                       <div className="story-card-title">{card.title}</div>
                     </div>
-                    
+
                     <p>{card.description}</p>
                   </div>
                 </div>
