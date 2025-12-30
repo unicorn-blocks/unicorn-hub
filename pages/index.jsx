@@ -428,13 +428,10 @@ export default function Home() {
 
         <section className="hero-block">
           <div className="hero-backdrop" aria-hidden="true">
-            <Image
-              src="/assets/ima/hero-image.webp"
+            <img
+              src="/assets/image/HeroImage1230.svg"
               alt=""
-              fill
               className="hero-background-image"
-              priority
-              style={{ objectFit: 'contain', objectPosition: 'center' }}
             />
           </div>
 
@@ -480,32 +477,6 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="hero-transitions">
-            <div className="hero-transition hero-transition-yellow">
-              <Image
-                src="/assets/image/Vector_17_1367.png"
-                alt=""
-                fill
-                style={{ objectFit: 'cover', objectPosition: 'top center' }}
-              />
-            </div>
-            <div className="hero-transition hero-transition-purple">
-              <Image
-                src="/assets/image/Vector_17_1368.png"
-                alt=""
-                fill
-                style={{ objectFit: 'cover', objectPosition: 'top center' }}
-              />
-            </div>
-            <div className="hero-transition hero-transition-blue">
-              <Image
-                src="/assets/image/Vector_17_1369.png"
-                alt=""
-                fill
-                style={{ objectFit: 'cover', objectPosition: 'top center' }}
-              />
-            </div>
-          </div>
         </section>
 
         <section className="steps-section">
@@ -992,10 +963,8 @@ export default function Home() {
         .hero-block {
           position: relative;
           margin-top: calc(var(--nav-height) * -1);
-          padding: calc(var(--nav-height) +0.1px) 0 0;
           overflow: visible;
           background: linear-gradient(90deg, #FEFAE5 0%, #D9F1FC 100%);
-          //max-height: 80vh;
         }
 
         .hero-block::before {
@@ -1007,37 +976,31 @@ export default function Home() {
         }
 
         .hero-backdrop {
-          position: absolute;
-          inset: -5%;
+          position: relative;
+          width: 100%;
           pointer-events: none;
-          z-index: 6;
+          z-index: 1;
         }
 
         .hero-background-image {
-          position: absolute;
-          inset: 0;
+          display: block;
           width: 100%;
-          height: 100%;
-          object-fit: contain;
-          object-position: center;
-          /* 自适应位移：随屏宽缩放，避免固定像素导致不跟随窗口 */
-          /* 下移并保持自适应位移，避免高分辨率下贴顶 */
-          /* 再下移一档，保持随屏宽缩放 */
-          transform: scale(0.85) translateY(clamp(90px, 10vw, 240px));
-          transform-origin: center top;
-          //left: -100%; /* 向左偏移5%来居中 */
-          //top: -50%;  /* 向上偏移5%来居中 */
+          height: auto;
+          /* 保持 SVG 原始比例自适应宽度 */
         }
 
         .hero-shell {
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
           width: 100%;
           max-width: 1200px;
           margin: 0 auto;
           padding: 0 var(--spacing-mobile);  /* 移动端：16px */
-          position: relative;
           z-index: 10;
           text-align: center;
-          padding-top: 50px;
+          padding-top: calc(var(--nav-height) - clamp(30px, 4vw, 60px));
         }
 
         .hero-eyebrow {
@@ -1056,9 +1019,9 @@ export default function Home() {
         }
 
         .hero-heading h1 {
-          margin: 0 0 10px;
-          font-size: clamp(3.1rem, 5vw, 4.8rem);
-          line-height: 1.05;
+          margin: 0 0 clamp(6px, 1vw, 10px);
+          font-size: clamp(2.2rem, 4vw, 4.2rem);
+          line-height: 1.1;
         }
 
         .hero-title-primary {
@@ -1092,8 +1055,8 @@ export default function Home() {
 
         .hero-description {
           margin: 0;
-          font-size: 1.2rem;
-          line-height: 1.6;
+          font-size: clamp(0.95rem, 1.2vw, 1.2rem);
+          line-height: 1.5;
           color: var(--color-secondary-gray);  /* 移动端：#475569 */
           font-weight: 600;
           text-align: center;
@@ -1140,62 +1103,10 @@ export default function Home() {
           object-fit: contain;
         }
 
-        .hero-transitions {
-          position: relative;
-          width: 100%;
-          height: clamp(220px, 35vw, 360px); /* 压缩过渡区域高度 */
-          z-index: 0;
-          overflow: visible;
-          background: #EEF9FF0;
-        }
-
-        /* 大屏幕响应式调整 */
-        /*
-        @media (min-width: 1440px) {
-          .hero-block {
-            max-height: 88vh;
-          }
-          
-          .hero-transitions {
-            height: min(640px, calc(90vh - var(--nav-height) - 200px));
-          }
-        */
-
-        .hero-transition {
-          position: absolute;
-          width: 100%;
-          left: 0;
-        }
-
-        .hero-transition-yellow {
-          top: 0;
-          height: clamp(240px, 38vw, 420px);
-          z-index: 1;
-        }
-
-        .hero-transition-purple {
-          top: clamp(80px, 14vw, 140px);
-          height: clamp(160px, 22vw, 240px);
-          z-index: 2;
-        }
-
-        .hero-transition-blue {
-          top: clamp(150px, 22vw, 210px);
-          height: clamp(180px, 24vw, 240px);
-          z-index: 3;
-        }
-
-        .hero-transition img {
-          width: 100%;
-          height: 100%;
-          object-fit: fill;
-          display: block;
-        }
-
         .steps-section {
           padding: 80px 0 0;
           background: #EEF9FF;
-          margin-top: 0;
+          margin-top: clamp(-120px, -8vw, -60px);
           position: relative;
           z-index: 3;
         }
@@ -2942,10 +2853,6 @@ export default function Home() {
             grid-template-columns: repeat(2, minmax(0, 1fr));
           }
 
-          .hero-block {
-            padding: calc(var(--nav-height) +0.1px) 0 0;
-          }
-
           .hero-badge-row {
             flex-wrap: nowrap;
             justify-content: center;
@@ -2957,32 +2864,9 @@ export default function Home() {
             gap: 6px;
           }
 
-          .hero-background-image {
-            transform: scale(0.85) translateY(clamp(20px, 5vw, 60px));
-            object-position: center;
-          }
-
           .hero-badge-icon {
             width: 18px;
             height: 18px;
-          }
-
-          .hero-transitions {
-            height: 280px;
-          }
-
-          .hero-transition-yellow {
-            height: 300px;
-          }
-
-          .hero-transition-purple {
-            top: 90px;
-            height: 190px;
-          }
-
-          .hero-transition-blue {
-            top: 160px;
-            height: 180px;
           }
 
           .kit-layout {
@@ -3068,43 +2952,17 @@ export default function Home() {
             gap: 8px;
           }
 
-          .hero-block {
-            padding: calc(var(--nav-height) +0.1px) 0 0;
-          }
-
           .hero-shell {
             padding: 20px 18px 0;
-          }
-
-          .hero-background-image {
-            transform: scale(0.82) translateY(clamp(12px, 4vw, 36px));
-            object-position: center;
-          }
-
-          .hero-transitions {
-            height: 220px;
-          }
-
-          .hero-transition-yellow {
-            height: 230px;
-          }
-
-          .hero-transition-purple {
-            top: 70px;
-            height: 150px;
-          }
-
-          .hero-transition-blue {
-            top: 135px;
-            height: 160px;
+            padding-top: calc(var(--nav-height) - 120px);
           }
 
           .hero-heading h1 {
-            font-size: clamp(2.6rem, 8vw, 3.6rem);
+            font-size: clamp(1.4rem, 5vw, 2rem);
           }
 
           .hero-description {
-            font-size: 1.05rem;
+            font-size: clamp(0.85rem, 2.5vw, 1rem);
           }
 
           .hero-badge-row {
