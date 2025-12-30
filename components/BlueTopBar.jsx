@@ -21,14 +21,13 @@ export default function BlueTopBar() {
           align-items: center;
           justify-content: center;
           gap: 10px;
-          padding: 8px 24px;
+          padding: 0.8px 24px;
           z-index: 8;
-          height: 60px;
         }
 
         .blue-top-bar-logo {
-          width: 40px;
-          height: 40px;
+          width: 60px;
+          height: 60px;
           object-fit: contain;
         }
 
@@ -36,22 +35,6 @@ export default function BlueTopBar() {
           font-size: 1.25rem;
           font-weight: 700;
           color: #000000;
-        }
-
-        @media (min-width: 768px) {
-          .blue-top-bar {
-            padding: 8px 24px;
-            height: 60px;
-          }
-
-          .blue-top-bar-logo {
-            width: 48px;
-            height: 48px;
-          }
-
-          .blue-top-bar-text {
-            font-size: 18px;
-          }
         }
       `}</style>
     </div>

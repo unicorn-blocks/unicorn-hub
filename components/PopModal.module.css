@@ -197,7 +197,7 @@
   cursor: pointer;
   margin-top: 0;
   box-shadow: 0 5px 15px 0 rgba(39,40,47,.15);
-  transition: background .1s;
+  transition: background .2s;
 }
 .notifyBtn:hover:not(:disabled) {
   background: #4E81A8;

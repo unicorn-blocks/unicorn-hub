@@ -216,12 +216,11 @@ export default function PreOrder() {
 
                   {/* 行动按钮 */}
                   <div className="card-section">
-                    <button 
-                      className="primary-button button-shine"
-                      onClick={() => window.location.href = '/payment/stripe-checkout'}
-                    >
-                      {t.ctaButton}
-                    </button>
+                    <Link href="/checkout">
+                      <button className="primary-button button-shine">
+                        {t.ctaButton}
+                      </button>
+                    </Link>
                     
                     {/* 信任提示 - 绝对定位 */}
                     <div className="trust-indicators">
