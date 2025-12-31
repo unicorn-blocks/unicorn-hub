@@ -1375,6 +1375,7 @@ export default function Home() {
           width: 100%;
           height: 100%;
         }
+        
           object-position: center;
           width: 100%;
           height: 100%;
@@ -2147,7 +2148,7 @@ export default function Home() {
             line-height: 30px;
             letter-spacing: 0;
             text-align: left;
-            margin-left: 60px;  /* 为
+            margin-left: 60px;  
             margin-bottom: 10px;
             color: transparent;
           }
