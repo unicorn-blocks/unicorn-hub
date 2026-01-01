@@ -69,7 +69,7 @@ export default function Home() {
         cards: [
           {
             title: 'Pick To Start',
-            description: 'Pick a Magic Hat. Snap on the hat to unlock the world.',
+            description: 'Pick a Magic Hat to unlock the world.',
             background: '#D8CBFF',
             image: '/assets/ks_pic/space.png'
           },
@@ -501,14 +501,23 @@ export default function Home() {
               <div className="step-item" style={{ zIndex: 2 }}>
                 <div className="step-card step-card-image-only">
                   <div className="step-image-full" style={{ minHeight: '520px' }}>
-                    {/* 移动端图片 */}
-                    <Image src={getStepsMobileImage(0)} alt="" fill className="step-image-full-item md:hidden" style={{ transform: 'scale(1.15)' }} />
+                    {/* 移动端：分层展示结构 */}
+                    <div className="step-mobile-wrapper md:hidden">
+                      <div className="step-mobile-bg"></div>
+                      <div className="step-mobile-content">
+                        <div className="step-mobile-frame"></div>
+                        <div className="step-mobile-text">
+                          <h3>1. Pick To Start</h3>
+                          <p>Pick a Magic Hat Snap to unlock the world.</p>
+                        </div>
+                      </div>
+                    </div>
                     {/* PC端图片 */}
                     <Image src="/assets/ima/组合 721.png" alt="" fill className="step-image-full-item hidden md:block" style={{ transform: 'scale(1.15)' }} />
                   </div>
                 </div>
-                {/* 第一、二组之间连接矢量 */}
-                <div className="step-connector">
+                {/* 隐藏mobile端的箭头 */}
+                <div className="step-connector hidden md:block">
                   <img src="/assets/ima/Vector_17_913.png" alt="arrow-1" className="step-connector-image" />
                 </div>
               </div>
@@ -517,14 +526,23 @@ export default function Home() {
               <div className="step-item" style={{ zIndex: 1 }}>
                 <div className="step-card step-card-image-only">
                   <div className="step-image-full" style={{ minHeight: '520px' }}>
-                    {/* 移动端图片 */}
-                    <Image src={getStepsMobileImage(1)} alt="" fill className="step-image-full-item md:hidden" style={{ transform: 'scale(1.15)' }} />
+                    {/* 移动端：分层展示结构 - Step 2 */}
+                    <div className="step-mobile-wrapper md:hidden">
+                      <div className="step-mobile-bg"></div>
+                      <div className="step-mobile-content">
+                        <div className="step-mobile-frame"></div>
+                        <div className="step-mobile-text">
+                          <h3>2. Story Sparks Creation</h3>
+                          <p>Every Build is part of a Story.</p>
+                        </div>
+                      </div>
+                    </div>
                     {/* PC端图片 */}
                     <Image src="/assets/ima/bule.png" alt="" fill className="step-image-full-item hidden md:block" style={{ transform: 'scale(1.15)' }} />
                   </div>
                 </div>
-                {/* 二、三组之间连接矢量 */}
-                <div className="step-connector">
+                {/* 隐藏mobile端的箭头 */}
+                <div className="step-connector hidden md:block">
                   <img src="/assets/ima/Vector_17_911.png" alt="arrow-2" className="step-connector-image" />
                 </div>
               </div>
@@ -533,14 +551,23 @@ export default function Home() {
               <div className="step-item" style={{ zIndex: 0 }}>
                 <div className="step-card step-card-image-only">
                   <div className="step-image-full" style={{ minHeight: '520px' }}>
-                    {/* 移动端图片 */}
-                    <Image src={getStepsMobileImage(2)} alt="" fill className="step-image-full-item md:hidden" style={{ transform: 'scale(1.15)' }} />
+                    {/* 移动端：分层展示结构 - Step 3 */}
+                    <div className="step-mobile-wrapper md:hidden">
+                      <div className="step-mobile-bg"></div>
+                      <div className="step-mobile-content">
+                        <div className="step-mobile-frame"></div>
+                        <div className="step-mobile-text">
+                          <h3>3. Create & Understand</h3>
+                          <p>Build and show your creation to Sparky.</p>
+                        </div>
+                      </div>
+                    </div>
                     {/* PC端图片 */}
                     <Image src="/assets/ima/组合 723 (1).png" alt="" fill className="step-image-full-item hidden md:block" style={{ transform: 'scale(1.15)' }} />
                   </div>
                 </div>
-                {/* 三、四组之间连接矢量 */}
-                <div className="step-connector">
+                {/* 隐藏mobile端的箭头 */}
+                <div className="step-connector hidden md:block">
                   <img src="/assets/ima/Vector_17_913.png" alt="arrow-3" className="step-connector-image" />
                 </div>
               </div>
@@ -549,8 +576,17 @@ export default function Home() {
               <div className="step-item" style={{ zIndex: -1 }}>
                 <div className="step-card step-card-image-only">
                   <div className="step-image-full" style={{ minHeight: '520px' }}>
-                    {/* 移动端图片 */}
-                    <Image src={getStepsMobileImage(3)} alt="" fill className="step-image-full-item md:hidden" style={{ transform: 'scale(1.15)' }} />
+                    {/* 移动端：分层展示结构 - Step 4 */}
+                    <div className="step-mobile-wrapper md:hidden">
+                      <div className="step-mobile-bg"></div>
+                      <div className="step-mobile-content">
+                        <div className="step-mobile-frame"></div>
+                        <div className="step-mobile-text">
+                          <h3>4. The Adventure Continues</h3>
+                          <p>The Magic har and Blocks light up to celebrate success!</p>
+                        </div>
+                      </div>
+                    </div>
                     {/* PC端图片 */}
                     <Image src="/assets/ima/green.png" alt="" fill className="step-image-full-item hidden md:block" style={{ transform: 'scale(1.15)' }} />
                   </div>
@@ -1376,13 +1412,20 @@ export default function Home() {
           }
           
           /* 减少图片本身容器的高度占用 */
+          /* Mobile specific adjustments for stricter spacing */
+          .steps-section {
+             padding-top: 40px !important;
+             padding-bottom: 20px !important; /* 减少底部留白 */
+          }
+
+          /* 减小.steps-image-full的高度限制 */
           .step-image-full {
-             min-height: 480px !important;
+             min-height: 400px !important;
           }
           
           /* 调整负margin来拉近卡片间距 */
           .step-item + .step-item {
-            margin-top: -20px;
+            margin-top: -80px;
           }
         }
 
@@ -3031,6 +3074,88 @@ export default function Home() {
           .story-team-names {
             display: none !important;
           }
+        }
+
+
+        /* Mobile Layered Step Item Styles */
+        .step-mobile-wrapper {
+          position: relative;
+          width: 90vw; /* Use viewport width for better scaling */
+          max-width: 400px; 
+          margin: 0 auto;
+          height: 100%;
+          min-height: 400px; /* 进一步减小高度 */
+          display: flex;
+          flex-direction: column;
+          border-radius: 32px;
+          overflow: hidden;
+        }
+
+        .step-mobile-bg {
+          position: absolute;
+          inset: 0;
+          z-index: 1;
+        }
+
+        /* Target the Next.js Image component class if needed, or rely on global img styles */
+        .step-mobile-bg-img {
+          object-fit: contain !important; /* Ensure it mimics the original scaling */
+          border-radius: 32px;
+        }
+
+        /* 确保PC端隐藏移动端组件 */
+        @media (min-width: 768px) {
+          .step-mobile-wrapper {
+             display: none !important;
+          }
+        }
+
+        .step-mobile-content {
+          position: relative;
+          z-index: 2;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          width: 100%;
+          height: 100%;
+          padding: 24px; /* 控制 顶边距 & 侧边距 = 24px */
+          box-sizing: border-box;
+          /* transform: rotate(-4deg);  已移除旋转 */
+        }
+
+        .step-mobile-frame {
+          width: 100%; /* 自适应宽度，距离两侧各24px */
+          aspect-ratio: 16 / 9; /* 16:9 比例 */
+          border: 3px solid #FFFFFF;
+          border-radius: 20px;
+          margin-top: 0; 
+          margin-bottom: 24px; /* 底边距 = 24px (等于padding) */
+          box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+          flex-shrink: 0;
+        }
+
+        .step-mobile-text {
+          width: 100%;
+          text-align: center; /* 保持用户当前的居中设置 */
+          padding: 0 4px;
+          /* 移除 margin-top: auto，确保紧跟 frame下方24px处 */
+        }
+
+        .step-mobile-text h3 {
+          color: #13234d; /* Dark Navy matches theme */
+          font-size: 22px;
+          font-weight: 800;
+          margin-bottom: 8px;
+          line-height: 1.2;
+        }
+
+        .step-mobile-text p {
+          color: #6E6E73;
+          font-size: 14px;
+          line-height: 1.4;
+          margin: 0;
+          opacity: 0.9;
+          font-weight: 500;
         }
 
         @media (max-width: 768px) {
