@@ -607,7 +607,12 @@ export default function Home() {
               <div className="kit-media-block">
                 <div className="kit-media-single">
                   {/* 移动端图片 */}
-                  <Image src="/assets/ima/section3.png" alt="Sparky Adventure Kit" fill className="kit-media-single-image md:hidden" />
+                  <img
+                    src="/assets/ima/section3.png"
+                    alt="Sparky Adventure Kit"
+                    className="kit-media-single-image md:hidden"
+                    style={{ display: 'block' }}
+                  />
                   {/* PC端图片 */}
                   <Image src="/assets/ima/组合 673.png" alt="Sparky Adventure Kit" fill className="kit-media-single-image hidden md:block" />
                 </div>
@@ -618,8 +623,11 @@ export default function Home() {
                     const accent = kitIconPalette[index % kitIconPalette.length];
                     const isOpen = kitPanelOpen[index];
                     const toggleOpen = () => {
-                      const newState = [...kitPanelOpen];
-                      newState[index] = !newState[index];
+                      // Accordion behavior: close all, then open the clicked one (or close if already open)
+                      const newState = [false, false, false, false];
+                      if (!isOpen) {
+                        newState[index] = true;
+                      }
                       setKitPanelOpen(newState);
                     };
 
@@ -657,9 +665,9 @@ export default function Home() {
                           </span>
                         </button>
                         <ul className="kit-panel-content" style={{
-                          maxHeight: isOpen ? '1000px' : '0',
+                          maxHeight: isOpen ? '500px' : '0',
                           overflow: 'hidden',
-                          transition: 'max-height 0.3s ease',
+                          transition: 'max-height 0.15s cubic-bezier(0.4, 0, 0.2, 1), padding 0.15s cubic-bezier(0.4, 0, 0.2, 1)',
                           margin: 0,
                           padding: isOpen ? '12px 0 0 0' : '0'
                         }}>
@@ -1420,12 +1428,17 @@ export default function Home() {
 
           /* 减小.steps-image-full的高度限制 */
           .step-image-full {
-             min-height: 400px !important;
+             min-height: 320px !important;
+          }
+          
+          /* 减小移动端step wrapper的高度 */
+          .step-mobile-wrapper {
+             min-height: 320px !important;
           }
           
           /* 调整负margin来拉近卡片间距 */
           .step-item + .step-item {
-            margin-top: -80px;
+            margin-top: -20px;
           }
         }
 
@@ -1452,7 +1465,16 @@ export default function Home() {
           padding: 100px 0 90px;
           background: #FFFEF3;
           position: relative;
-          z-index: -2;
+          z-index: 1;
+        }
+
+        @media (max-width: 767px) {
+          .kit-section {
+            padding-top: 50px;
+          }
+          .kit-heading-block {
+            margin-top: 25px;
+          }
         }
 
         .kit-heading-block {
@@ -1467,12 +1489,13 @@ export default function Home() {
           font-weight: 700;
           margin-bottom: 10px;
           text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff;
-          white-space: nowrap;
+          white-space: normal;
         }
 
         @media (min-width: 768px) {
           .kit-heading-block h2 {
             color: #54545C;  /* PC端：恢复原色 */
+            white-space: nowrap;
           }
         }
 
@@ -1485,9 +1508,16 @@ export default function Home() {
 
         .kit-layout {
           display: grid;
-          grid-template-columns: minmax(0, 0.95fr) minmax(0, 1fr);
-          gap: 46px;
+          grid-template-columns: 1fr;
+          gap: 32px;
           align-items: stretch;
+        }
+
+        @media (min-width: 768px) {
+          .kit-layout {
+            grid-template-columns: minmax(0, 0.95fr) minmax(0, 1fr);
+            gap: 46px;
+          }
         }
 
         .kit-media-block {
@@ -1507,11 +1537,6 @@ export default function Home() {
 
         .kit-media-single-image {
           object-fit: contain;
-          object-position: center;
-          width: 100%;
-          height: 100%;
-        }
-        
           object-position: center;
           width: 100%;
           height: 100%;
@@ -1706,6 +1731,12 @@ export default function Home() {
         @media (max-width: 767px) {
           .kit-panel-title-button {
             cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+            outline: none;
+          }
+
+          .kit-panel-row {
+            -webkit-tap-highlight-color: transparent;
           }
 
           .kit-panel-toggle {
@@ -3143,10 +3174,11 @@ export default function Home() {
 
         .step-mobile-text h3 {
           color: #13234d; /* Dark Navy matches theme */
-          font-size: 22px;
+          font-size: 20px;
           font-weight: 800;
           margin-bottom: 8px;
           line-height: 1.2;
+          white-space: nowrap;
         }
 
         .step-mobile-text p {
