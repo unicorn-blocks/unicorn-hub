@@ -332,66 +332,131 @@
 
 @media (max-width: 600px) {
 
-  .popModalMain,
-  .blackShadow,
+  .popModalMain {
+    padding: 20px;
+    width: 100%;
+    align-items: center;
+    /* 垂直居中 */
+    justify-content: center;
+  }
+
+  .blackShadow {
+    display: none;
+    /* 移动端隐藏阴影层以简化布局 */
+  }
+
   .yellowPanel {
-    width: 100vw !important;
-    min-width: 0;
-    width: 100vw;
-    max-width: none;
+    position: relative;
+    width: 100% !important;
+    max-width: 350px;
     height: auto;
-    min-height: 0;
+    min-height: auto;
+    padding: 24px 20px 30px;
+    /* 上左右下 */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    /* 左对齐 */
   }
 
-  .reserveTitle {
-    font-size: 26px;
-    line-height: 30px;
-    margin-left: 0;
-  }
-
-  .txtLine,
-  .counterRow {
-    margin-left: 2vw;
-  }
-
-  .txtLine {
-    font-size: 14px;
-  }
-
-  .counterRow {
-    font-size: 14px;
-  }
-
-  .calendar {
-    width: 40px !important;
-    height: 42px !important;
-  }
-
-  .counterRest {
-    font-size: 11px;
+  .plane {
+    left: -20px;
+    top: -20px;
+    width: 60px !important;
+    height: 64px !important;
   }
 
   .closeBtn {
-    top: 8px;
-    right: 16px;
+    top: 10px;
+    right: 15px;
+    font-size: 30px;
   }
 
-  .bottomInputWrapperCenter,
+  /* 标题左对齐，去除margin-left */
+  .reserveTitle {
+    margin-top: 35px;
+    margin-left: 20px;
+    /* 标题整体右移 */
+    font-size: 26px;
+    line-height: 1.2;
+    text-align: left;
+    width: 100%;
+    padding-right: 10px;
+  }
+
+  /* 文本区域 */
+  .contentMiddle {
+    margin-top: 16px;
+    margin-bottom: 24px;
+    width: 100%;
+  }
+
+  .txtLine {
+    margin-left: 20px;
+    /* 副标题与标题左侧对齐 */
+    max-width: 100%;
+    font-size: 15px;
+    line-height: 1.5;
+  }
+
+  .txtLine span {
+    font-size: 16px;
+  }
+
+  /* 底部输入框和按钮区域 */
   .bottomInputWrapper {
-    width: 95vw;
-    left: 4px;
-    gap: 7px;
-    bottom: 30px;
+    margin-left: 0;
+    width: 100%;
+    flex-direction: column;
+    /* 垂直排列 */
+    align-items: center;
+    gap: 30px;
+    /* 增加输入框和按钮之间的间距 */
+    position: static;
+    /* 移除定位 */
+  }
+
+  /* 邮箱输入框容器 */
+  .bottomInputWrapper>div:first-child {
+    width: 100% !important;
+    margin-right: 0;
   }
 
   .inputEmail {
-    width: 40vw;
-    min-width: 90px;
-    max-width: 140px;
+    width: 100%;
+    /* 占满宽度 */
+    max-width: none;
+    margin-right: 0;
+    height: 48px;
+    /* 增加高度更易点击 */
+    font-size: 16px;
+    /* 防止iOS缩放 */
+  }
+
+  /* 按钮容器 */
+  .btnWithDogWrap {
+    width: 100%;
+    margin-top: 15px;
+    /* 额外增加一些顶部空间 */
+  }
+
+  .duduDog {
+    top: -42px;
+    /* 调整dudu位置 */
   }
 
   .notifyBtn {
-    width: 76px;
-    font-size: 10px;
+    width: 100%;
+    /* 按钮占满宽度 */
+    height: 48px;
+    font-size: 16px;
+    margin-left: 0;
+  }
+
+  .errorTip {
+    bottom: -25px;
+    left: 0;
+    width: 100%;
+    text-align: center;
   }
 }
