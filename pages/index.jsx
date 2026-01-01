@@ -176,7 +176,7 @@ export default function Home() {
         ]
       },
       impact: {
-        heading: '3x Creativity. 90 Mins Focus. Real STEAM Skills',
+        heading: 'Creativity, Focus, and Real Thinking.',
         stats: [
           {
             title: '3x Creativity Boost',
@@ -428,10 +428,17 @@ export default function Home() {
 
         <section className="hero-block">
           <div className="hero-backdrop" aria-hidden="true">
+            {/* 移动端图片 */}
+            <img
+              src="/assets/ima/HeroImageMobile.webp"
+              alt=""
+              className="hero-background-image md:hidden"
+            />
+            {/* PC端图片 */}
             <img
               src="/assets/image/HeroImage1230.webp"
               alt=""
-              className="hero-background-image"
+              className="hero-background-image hidden md:block"
             />
           </div>
 
@@ -784,9 +791,7 @@ export default function Home() {
           </div>
           <div className="content-container">
             <h2>
-              <span className="impact-heading-line1 md:hidden">3x Creativity. 90 Mins</span>
-              <span className="impact-heading-line2 md:hidden">Focus. Real STEAM Skills</span>
-              <span className="hidden md:inline">{copy.impact.heading}</span>
+              <span>{copy.impact.heading}</span>
             </h2>
             <div className="impact-grid">
               {copy.impact.stats.map((stat, index) => (
@@ -983,10 +988,30 @@ export default function Home() {
         }
 
         .hero-background-image {
-          display: block;
           width: 100%;
           height: auto;
           /* 保持 SVG 原始比例自适应宽度 */
+        }
+        
+        /* 强制覆盖可能的其他样式，确保移动端隐藏PC图片，PC端隐藏移动端图片 */
+        /* PC端图片默认隐藏，仅在md及以上显示 */
+        .hero-background-image.hidden.md\:block {
+          display: none;
+        }
+        @media (min-width: 768px) {
+          .hero-background-image.hidden.md\:block {
+            display: block;
+          }
+        }
+        
+        /* 移动端图片默认显示，仅在md及以上隐藏 */
+        .hero-background-image.md\:hidden {
+          display: block;
+        }
+        @media (min-width: 768px) {
+          .hero-background-image.md\:hidden {
+            display: none;
+          }
         }
 
         .hero-shell {
@@ -2281,19 +2306,11 @@ export default function Home() {
           }
         }
 
-        /* Impact Section 标题分行 */
-        .impact-heading-line1,
-        .impact-heading-line2 {
-          display: block;
-        }
-
-        @media (min-width: 768px) {
-          .impact-heading-line1::after {
-            content: ' ';  /* PC端：单行显示 */
-          }
-          
+        /* Impact Section 标题分行 - 仅移动端生效 */
+        @media (max-width: 767px) {
+          .impact-heading-line1,
           .impact-heading-line2 {
-            display: inline;
+            display: block;
           }
         }
 
