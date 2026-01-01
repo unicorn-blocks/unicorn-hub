@@ -63,7 +63,8 @@ export default function Home() {
         speechBubble: "Hi! I'm Sparky!"
       },
       steps: {
-        heading: 'Spark Creativity Through Adventure And Let Them Shine',
+        heading: 'Spark Creativity Through Adventure',
+        headingLine2: 'And Let Them Shine',
         subheading: 'With Sparky, Kids Create, Parents Relax.',
         cards: [
           {
@@ -491,7 +492,7 @@ export default function Home() {
             <div className="section-heading text-center">
               <h2 style={{ textAlign: 'center', margin: '0 auto', width: '100%' }}>
                 <span className="steps-heading-line1">{copy.steps.heading}</span>
-                <span className="steps-heading-line2">{copy.steps.headingLine2}</span>
+                <span className="steps-heading-line2 hidden md:block">{copy.steps.headingLine2}</span>
               </h2>
               <p>{copy.steps.subheading}</p>
             </div>
@@ -1185,6 +1186,13 @@ export default function Home() {
         .steps-heading-line1,
         .steps-heading-line2 {
           display: block;
+        }
+
+        /* 强制在移动端隐藏第二行 */
+        @media (max-width: 767px) {
+          .steps-heading-line2 {
+            display: none !important;
+          }
         }
 
         @media (min-width: 1024px) {
