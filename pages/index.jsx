@@ -1320,10 +1320,32 @@ export default function Home() {
           bottom: -50px;
           left: 50%;
           transform: translateX(-50%) rotate(-50deg) scaleX(-1);
-          width: 100px;
-          height: 100px;
+          width: 80px;  /* 缩小箭头尺寸 */
+          height: 80px;
           pointer-events: none;
           z-index: 3;
+        }
+        
+        @media (max-width: 767px) {
+          .steps-grid {
+            margin-top: 24px !important; /* 缩小标题和第一张图的间距 */
+          }
+          
+          .step-connector {
+            bottom: -30px; /* 向上移动箭头，缩小图片间距 */
+            width: 70px;
+            height: 70px;
+          }
+          
+          /* 减少图片本身容器的高度占用 */
+          .step-image-full {
+             min-height: 480px !important;
+          }
+          
+          /* 调整负margin来拉近卡片间距 */
+          .step-item + .step-item {
+            margin-top: -20px;
+          }
         }
 
         @media (min-width: 768px) {
