@@ -38,7 +38,7 @@
   top: 0;
   width: 719px;
   height: 435px;
-  background: #FCD77F;
+  background: #FFEDE0;
   border-radius: 12px;
   z-index: 2;
   box-shadow: 0 6px 28px 2px rgba(0, 0, 0, 0.16);
@@ -51,8 +51,8 @@
 
 .closeBtn {
   position: absolute;
-  right: 28px;
-  top: 24px;
+  right: 10px;
+  top: 10px;
   font-size: 38px;
   font-weight: 400;
   color: #222;
@@ -69,13 +69,7 @@
 }
 
 .plane {
-  position: absolute;
-  left: -62px;
-  top: -44px;
-  width: 151px !important;
-  height: 161px !important;
-  z-index: 4;
-  clip-path: inset(0 5px 6px 0);
+  display: none !important;
 }
 
 .reserveTitle {
@@ -89,11 +83,7 @@
   font-weight: 1000;
   letter-spacing: 0.02em;
   color: #54545C;
-  text-shadow:
-    2px 2px 0 #fff,
-    -2px -2px 0 #fff,
-    2px -2px 0 #fff,
-    -2px 2px 0 #fff;
+  text-shadow: none;
   position: relative;
   z-index: 5;
 }
@@ -117,16 +107,12 @@
 }
 
 .txtLine span {
-  color: #54545C;
+  color: #9B8ED8;
   font-weight: 1000;
   font-family: 'Rubik', 'Arial', sans-serif;
   font-size: 28px;
   letter-spacing: 0.02em;
-  text-shadow:
-    2px 2px 0 #fff,
-    -2px -2px 0 #fff,
-    2px -2px 0 #fff,
-    -2px 2px 0 #fff;
+  text-shadow: none;
 }
 
 .discount {
@@ -225,7 +211,7 @@
   align-items: center;
   justify-content: center;
   padding: 0;
-  background: #2F2737;
+  background: linear-gradient(90deg, #F7AEBF 0%, #9b90da 100%);
   color: #fff;
   font-weight: 600;
   cursor: pointer;
@@ -357,31 +343,30 @@
     flex-direction: column;
     align-items: flex-start;
     /* 左对齐 */
+    background: #FFEDE0;
   }
 
   .plane {
-    left: -20px;
-    top: -20px;
-    width: 60px !important;
-    height: 64px !important;
+    display: none !important;
   }
 
   .closeBtn {
-    top: 10px;
-    right: 15px;
+    top: -2px;
+    right: -2px;
     font-size: 30px;
   }
 
   /* 标题左对齐，去除margin-left */
   .reserveTitle {
-    margin-top: 35px;
-    margin-left: 20px;
+    margin-top: 2px;
+    margin-left: 0;
     /* 标题整体右移 */
     font-size: 26px;
     line-height: 1.2;
-    text-align: left;
+    text-align: center;
     width: 100%;
-    padding-right: 10px;
+    padding-right: 0;
+    text-shadow: none;
   }
 
   /* 文本区域 */
@@ -400,7 +385,9 @@
   }
 
   .txtLine span {
-    font-size: 16px;
+    font-size: 17px;
+    text-shadow: none;
+    color: #9B8ED8;
   }
 
   /* 底部输入框和按钮区域 */
@@ -451,6 +438,7 @@
     height: 48px;
     font-size: 16px;
     margin-left: 0;
+    background: linear-gradient(90deg, #F7AEBF 0%, #9b90da 100%);
   }
 
   .errorTip {
