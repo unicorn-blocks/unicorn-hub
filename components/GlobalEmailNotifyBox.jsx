@@ -91,7 +91,7 @@ export default function GlobalEmailNotifyBox() {
         background: '#FCD77F',
         border: `${BLACK_BORDER}px solid #111`,
         borderRadius: OUTER_RADIUS,
-        display: 'flex',
+        // display: 'flex', // Removed as it's handled by tailwind class
         alignItems: 'center',
         zIndex: 1001,
         justifyContent: 'center',

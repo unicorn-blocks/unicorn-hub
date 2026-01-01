@@ -1067,11 +1067,13 @@ export default function Home() {
           color: var(--color-primary-dark);  /* 移动端：#0F192A */
           font-weight: 800;
           text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff;
+          font-size: clamp(2.5rem, 5vw, 4rem); /* 增大移动端字体与Creating一致 */
         }
 
         @media (min-width: 768px) {
           .hero-title-primary {
             color: #54545C;  /* PC端：恢复原色 */
+            font-size: inherit; /* PC端恢复继承h1大小 */
           }
         }
 
@@ -1080,6 +1082,16 @@ export default function Home() {
           color: #f7ad3b;
           font-weight: 800;
           text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff;
+          font-size: clamp(2.5rem, 5vw, 4rem); /* 增大移动端字体 */
+          margin-top: 5px; /* 增加移动端行间距 */
+        }
+        }
+        
+        @media (min-width: 768px) {
+           .hero-title-accent {
+             margin-top: 0; 
+             font-size: clamp(2.2rem, 4vw, 3.5rem);
+           }
         }
 
         .hero-description-wrapper {
@@ -1111,10 +1123,36 @@ export default function Home() {
         }
 
         .hero-badge-row {
-          display: inline-flex;
+          display: flex; /* 改为flex以确保宽度控制 */
           align-items: center;
-          gap: 12px;
           margin-top: 0;
+          flex-direction: column; /* 默认垂直排列 (Mobile First) */
+          gap: 8px;
+          width: 100%; /* 占满容器以便居中 */
+          justify-content: center;
+        }
+
+        /* 移动端隐藏分隔符 */
+        @media (max-width: 767px) {
+           .hero-badge-separator {
+             display: none;
+           }
+           .hero-badge-row {
+             flex-direction: column !important; /* 强制垂直排列 */
+             align-items: center;
+           }
+        }
+        
+        @media (min-width: 768px) {
+           .hero-badge-row {
+             display: inline-flex; /* PC端恢复为inline-flex */
+             width: auto;
+             flex-direction: row;
+             gap: 12px;
+           }
+           .hero-badge-separator {
+             display: inline;
+           }
         }
 
         .hero-badge {
