@@ -59,12 +59,12 @@ export default function BlueTopBar() {
           .blue-top-bar-text {
             font-size: 1.1rem;
             font-weight: 700;
-            color: #000000;
+            color: #5A4A7A;
             white-space: nowrap;
           }
 
           .blue-top-bar-btn {
-            background: #2F2737;
+            background: linear-gradient(90deg, #F7AEBF 0%, #9b90da 100%);
             color: #fff;
             height: 36px;
             padding: 0 14px;
