@@ -205,8 +205,8 @@ export default function Home() {
             titleLine1: 'Steam',
             titleLine2: 'Problem Solving',
             description:
-              'Learning engineering without knowing it. Sparky guides them to solve structural problems to advance the story. They learn physics and math naturally while saving the day.',
-            descriptionMobile: 'Learning Engineering without knowing it. Sparky guides them to solve structural problems to advance the story. They learn Physics and Math naturally while saving the day.'
+              'Guided by Sparky, kids learn engineering naturally through play.',
+            descriptionMobile: 'Guided by Sparky, kids learn engineering naturally through play.'
           }
         ]
       },
@@ -2385,6 +2385,13 @@ export default function Home() {
           z-index: 1;
         }
 
+        @media (max-width: 767px) {
+          .impact-section {
+            padding-top: 80px;
+            padding-bottom: 50px;
+          }
+        }
+
         .impact-section::after {
           content: '';
           position: absolute;
@@ -2606,6 +2613,12 @@ export default function Home() {
           height: 135px;
           background: #E9F5EB;
           z-index: -1;
+        }
+
+        @media (max-width: 767px) {
+          .story-section::before {
+            display: none !important;
+          }
         }
 
         .story-section h2 {
