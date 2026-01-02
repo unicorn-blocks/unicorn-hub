@@ -2618,6 +2618,12 @@ export default function Home() {
           white-space: normal;
         }
 
+        @media (max-width: 767px) {
+          .story-section h2 {
+            margin-top: -60px; /* Move title up on mobile */
+          }
+        }
+
         @media (min-width: 768px) {
           .story-section h2 {
             color: #54545C;  /* PC端：恢复原色 */
@@ -2748,7 +2754,7 @@ export default function Home() {
         @media (max-width: 767px) {
           .story-card {
             flex-direction: column;
-            gap: 16px;
+            gap: 10px;
           }
 
           /* 移动端隐藏 PC 端图片 */
@@ -2760,16 +2766,18 @@ export default function Home() {
             background: rgba(255, 255, 255, 1);
             border-radius: 20px;
             box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.1);
-            padding: 20px;
+            padding: 0 20px 10px 20px;
             min-height: auto;
+            margin-top: -25px;
           }
 
           /* 移动端：图片和标题在同一行 */
           .story-card-header {
             display: flex;
-            align-items: flex-start;
+            align-items: center;
             gap: 12px;
             margin-bottom: 12px;
+            margin-top: 35px;
           }
 
           .story-card-image-mobile {
@@ -3271,7 +3279,7 @@ export default function Home() {
           }
 
           .story-panels {
-            gap: 18px;
+            gap: 60px;
           }
 
 
