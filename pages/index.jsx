@@ -1783,6 +1783,13 @@ export default function Home() {
           z-index: 3;
         }
 
+        @media (max-width: 767px) {
+          .family-section {
+            padding-top: 50px;
+            padding-bottom: 50px;
+          }
+        }
+
         @media (min-width: 768px) {
           .family-section {
             background: #FFFEF3;  /* PC端：原色 */
@@ -2068,6 +2075,13 @@ export default function Home() {
           z-index: 0;
         }
 
+        @media (max-width: 767px) {
+          .privacy-section {
+            padding-top: 50px;
+            padding-bottom: 50px;
+          }
+        }
+
         @media (min-width: 768px) {
           .privacy-section {
             background: #FFFCF9;  /* PC端：原色 */
@@ -2077,6 +2091,12 @@ export default function Home() {
         .privacy-heading {
           text-align: center;
           padding-top: 80px;
+        }
+
+        @media (max-width: 767px) {
+          .privacy-heading {
+            padding-top: 0;
+          }
         }
 
         .privacy-heading h2 {
@@ -2598,6 +2618,13 @@ export default function Home() {
           z-index: 10;
         }
 
+        @media (max-width: 767px) {
+          .story-section {
+            padding-top: 50px;
+            padding-bottom: 50px;
+          }
+        }
+
         @media (min-width: 768px) {
           .story-section {
             background: #FFF6D0;  /* PC端：原色 */
@@ -2633,7 +2660,7 @@ export default function Home() {
 
         @media (max-width: 767px) {
           .story-section h2 {
-            margin-top: -60px; /* Move title up on mobile */
+            margin-top: 0;
           }
         }
 
@@ -2958,6 +2985,13 @@ export default function Home() {
           background: #fff;
         }
 
+        @media (max-width: 767px) {
+          .faq-section {
+            padding-top: 50px;
+            padding-bottom: 50px;
+          }
+        }
+
         .faq-section h2 {
           text-align: center;
           font-size: clamp(2rem, 3vw, 3rem);
@@ -3278,13 +3312,17 @@ export default function Home() {
           }
 
           .family-stage {
-            padding: 48px 24px;
+            padding: 20px 24px;
             clip-path: polygon(7% 0, 100% 0, 100% 100%, 0 100%, 0 18%);
           }
 
           .family-mosaic {
             grid-template-columns: repeat(3, 1fr);
             gap: 12px;
+          }
+
+          .family-pagination {
+            margin-top: 20px;
           }
 
           .family-card {
