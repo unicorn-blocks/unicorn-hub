@@ -3312,17 +3312,22 @@ export default function Home() {
           }
 
           .family-stage {
-            padding: 20px 24px;
-            clip-path: polygon(7% 0, 100% 0, 100% 100%, 0 100%, 0 18%);
+            padding: 20px 0;
+            clip-path: none;
+          }
+
+          .family-section .content-container {
+            padding: 0;
           }
 
           .family-mosaic {
             grid-template-columns: repeat(3, 1fr);
             gap: 12px;
+            margin-top: 20px;
           }
 
           .family-pagination {
-            margin-top: 20px;
+            display: none;
           }
 
           .family-card {
