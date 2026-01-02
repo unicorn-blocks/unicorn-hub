@@ -2968,7 +2968,7 @@ export default function Home() {
         }
 
         .faq-item.open {
-          border-color: #7d6cf5;
+          /* border-color: #7d6cf5;  Removed blue highlight */
         }
 
         .faq-item button {
@@ -2981,6 +2981,8 @@ export default function Home() {
           border: none;
           font-size: 1.125rem;
           font-weight: 600;
+          outline: none;
+          -webkit-tap-highlight-color: transparent;
         }
 
         .faq-icon {
@@ -2990,7 +2992,7 @@ export default function Home() {
         .faq-answer {
           max-height: 0;
           overflow: hidden;
-          transition: max-height 0.3s ease;
+          transition: max-height 0.15s cubic-bezier(0.4, 0, 0.2, 1), padding-bottom 0.15s cubic-bezier(0.4, 0, 0.2, 1);
           padding: 0 28px;
         }
 
