@@ -778,6 +778,53 @@ export default function Home() {
               </div>
             </div>
 
+            {/* Mobile-only: 复制的两个卡片 */}
+            <div className="privacy-mobile-extra-cards">
+              {/* Copy 1 - Card 2 content */}
+              <div className="privacy-card-row">
+                <div className="privacy-card-with-text">
+                  <div className="privacy-card-bg">
+                    <Image src="/assets/ima/section5-2.svg" alt="" fill className="privacy-bg-image" />
+                  </div>
+                  <div className="privacy-card-icon md:hidden">
+                    <Image src="/assets/ima/section5-22.svg" alt="" width={48} height={48} />
+                  </div>
+                  <div className="privacy-card-content">
+                    <h3 style={{ color: '#383838', fontWeight: 'bold' }}>No Eavesdropping. Ever</h3>
+                    <p style={{ color: '#646464' }}>
+                      Physically OFF Until You Press.
+                      <br />
+                      Mic & Camera are hard-wired to stay OFF.
+                      <br />
+                      They can't see or hear a thing until you actively hold the button.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Copy 2 - Card 3 content */}
+              <div className="privacy-card-row">
+                <div className="privacy-card-with-text">
+                  <div className="privacy-card-bg">
+                    <Image src="/assets/ima/section5-3.svg" alt="" fill className="privacy-bg-image" />
+                  </div>
+                  <div className="privacy-card-icon md:hidden">
+                    <Image src="/assets/ima/section5-33.svg" alt="" width={48} height={48} />
+                  </div>
+                  <div className="privacy-card-content">
+                    <h3 style={{ color: '#383838', fontWeight: 'bold' }}>No Third-Party Ads</h3>
+                    <p style={{ color: '#646464' }}>
+                      A 100% Pure Play Zone.
+                      <br />
+                      Contains No Third-Party Ads, no tracking,
+                      <br />
+                      and no stranger interaction.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             {/* 第二行：两个对话框卡片 */}
             <div className="privacy-cards-row">
               {/* No Eavesdropping. Ever */}
@@ -2124,18 +2171,19 @@ export default function Home() {
         }
 
         .privacy-tag {
-          display: inline-block;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
           color: #20604B;
           font-size: 12px;  /* 减小两号字体 */
           font-weight: 600;
           margin-top: 12px;
           text-align: center;
           min-width: 200px;  /* 增加最小宽度让文字一行显示 */
-          height: 19px;
+          height: 27px;
           border-radius: 10px;
           background: #EAF6F2;
-          padding: 4px 16px;  /* 增加左右padding */
-          line-height: 19px;
+          padding: 0 16px;  /* 只保留左右padding，高度由height控制 */
           white-space: nowrap;  /* 确保一行显示 */
         }
 
@@ -2158,6 +2206,11 @@ export default function Home() {
           align-items: center;
           justify-content: center;
           position: relative;
+        }
+
+        /* Mobile-only extra cards - hidden on PC */
+        .privacy-mobile-extra-cards {
+          display: none;
         }
 
         /* 第二行：两个对话框卡片 */
@@ -2273,14 +2326,12 @@ export default function Home() {
           .privacy-card-row .privacy-card-with-text {
             flex: 1;
             max-width: 100%;
+            min-height: auto;
+            padding-bottom: 0px;
           }
 
           .privacy-illustration {
-            margin-left: 0;
-            position: absolute;  /* 移动端改为绝对定位 */
-            top: 16px;  /* 右上角 */
-            right: 16px;
-            z-index: 3;
+            display: none;
           }
 
           .privacy-illustration-image {
@@ -2288,15 +2339,26 @@ export default function Home() {
           }
 
           .privacy-cards-row {
-            flex-direction: column;
+            display: none;  /* 移动端隐藏原本的 Card 2 和 Card 3 */
           }
 
-          .privacy-card-with-text {
-            min-height: 250px;
+          /* 移动端显示复制的卡片 */
+          .privacy-mobile-extra-cards {
+            display: flex;
+            flex-direction: column;
+            gap: 0px;
+            margin-top: 0px;
           }
+
+          .privacy-mobile-extra-cards .privacy-card-row {
+            margin-top: 25px;
+          }
+
+
 
           .privacy-card-content {
-            padding: 30px 20px;
+            padding: 30px 20px 30px 80px;
+            text-align: left;
           }
 
           /* 移动端：隐藏 PC 端背景图片，显示白色卡片 */
@@ -2309,6 +2371,9 @@ export default function Home() {
             border-radius: 20px;
             box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.1);
             padding: 24px;
+            padding-top: 0 !important;
+            align-items: flex-start !important;
+            min-height: 200px;
             position: relative;
           }
 
@@ -2316,7 +2381,7 @@ export default function Home() {
           .privacy-card-icon {
             position: absolute;
             top: 30px;  /* 与 privacy-card-content 的 padding-top 对齐 */
-            left: 20px;  /* 与 privacy-card-content 的 padding-left 对齐 */
+            left: 30px;  /* 与 privacy-card-content 的 padding-left 对齐 */
             z-index: 2;
             width: 48px;
             height: 48px;
@@ -2362,7 +2427,7 @@ export default function Home() {
             font-size: 18px;
             line-height: 30px;
             letter-spacing: 0;
-            text-align: left;
+            text-align: center;
             color: transparent;
           }
 
@@ -2372,6 +2437,15 @@ export default function Home() {
             font-family: 'Rubik', sans-serif;
             font-size: 14px;
             line-height: 1.6;
+            text-align: left;
+            margin-top: 30px;
+            margin-left: -35px;
+            margin-right: -40px;
+          }
+
+          /* 移动端：隐藏 br 让文字以一个段落展示 */
+          .privacy-card-row .privacy-card-content p br {
+            display: none;
           }
 
           /* 移动端：减小标题和正文的间距 */
