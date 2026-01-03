@@ -611,7 +611,6 @@ export default function Home() {
                     src="/assets/ima/section3.png"
                     alt="Sparky Adventure Kit"
                     className="kit-media-single-image md:hidden"
-                    style={{ display: 'block' }}
                   />
                   {/* PC端图片 */}
                   <Image src="/assets/ima/组合 673.png" alt="Sparky Adventure Kit" fill className="kit-media-single-image hidden md:block" />
