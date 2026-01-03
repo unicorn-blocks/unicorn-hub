@@ -38,7 +38,7 @@
   top: 0;
   width: 719px;
   height: 435px;
-  background: #FCD77F;
+  background: #FFEDE0;
   border-radius: 12px;
   z-index: 2;
   box-shadow: 0 6px 28px 2px rgba(0, 0, 0, 0.16);
@@ -51,8 +51,8 @@
 
 .closeBtn {
   position: absolute;
-  right: 28px;
-  top: 24px;
+  right: 10px;
+  top: 10px;
   font-size: 38px;
   font-weight: 400;
   color: #222;
@@ -69,13 +69,7 @@
 }
 
 .plane {
-  position: absolute;
-  left: -62px;
-  top: -44px;
-  width: 151px !important;
-  height: 161px !important;
-  z-index: 4;
-  clip-path: inset(0 5px 6px 0);
+  display: none !important;
 }
 
 .reserveTitle {
@@ -89,11 +83,7 @@
   font-weight: 1000;
   letter-spacing: 0.02em;
   color: #54545C;
-  text-shadow:
-    2px 2px 0 #fff,
-    -2px -2px 0 #fff,
-    2px -2px 0 #fff,
-    -2px 2px 0 #fff;
+  text-shadow: none;
   position: relative;
   z-index: 5;
 }
@@ -117,16 +107,12 @@
 }
 
 .txtLine span {
-  color: #54545C;
+  color: #9B8ED8;
   font-weight: 1000;
   font-family: 'Rubik', 'Arial', sans-serif;
   font-size: 28px;
   letter-spacing: 0.02em;
-  text-shadow:
-    2px 2px 0 #fff,
-    -2px -2px 0 #fff,
-    2px -2px 0 #fff,
-    -2px 2px 0 #fff;
+  text-shadow: none;
 }
 
 .discount {
@@ -225,7 +211,7 @@
   align-items: center;
   justify-content: center;
   padding: 0;
-  background: #2F2737;
+  background: linear-gradient(90deg, #F7AEBF 0%, #9b90da 100%);
   color: #fff;
   font-weight: 600;
   cursor: pointer;
@@ -332,66 +318,133 @@
 
 @media (max-width: 600px) {
 
-  .popModalMain,
-  .blackShadow,
+  .popModalMain {
+    padding: 20px;
+    width: 100%;
+    align-items: center;
+    /* 垂直居中 */
+    justify-content: center;
+  }
+
+  .blackShadow {
+    display: none;
+    /* 移动端隐藏阴影层以简化布局 */
+  }
+
   .yellowPanel {
-    width: 100vw !important;
-    min-width: 0;
-    width: 100vw;
-    max-width: none;
+    position: relative;
+    width: 100% !important;
+    max-width: 350px;
     height: auto;
-    min-height: 0;
+    min-height: auto;
+    padding: 24px 20px 30px;
+    /* 上左右下 */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    /* 左对齐 */
+    background: #FFEDE0;
   }
 
-  .reserveTitle {
-    font-size: 26px;
-    line-height: 30px;
-    margin-left: 0;
-  }
-
-  .txtLine,
-  .counterRow {
-    margin-left: 2vw;
-  }
-
-  .txtLine {
-    font-size: 14px;
-  }
-
-  .counterRow {
-    font-size: 14px;
-  }
-
-  .calendar {
-    width: 40px !important;
-    height: 42px !important;
-  }
-
-  .counterRest {
-    font-size: 11px;
+  .plane {
+    display: none !important;
   }
 
   .closeBtn {
-    top: 8px;
-    right: 16px;
+    top: -2px;
+    right: -2px;
+    font-size: 30px;
   }
 
-  .bottomInputWrapperCenter,
+  /* 标题左对齐，去除margin-left */
+  .reserveTitle {
+    margin-top: 2px;
+    margin-left: 0;
+    /* 标题整体右移 */
+    font-size: 26px;
+    line-height: 1.2;
+    text-align: center;
+    width: 100%;
+    padding-right: 0;
+    text-shadow: none;
+  }
+
+  /* 文本区域 */
+  .contentMiddle {
+    margin-top: 16px;
+    margin-bottom: 24px;
+    width: 100%;
+  }
+
+  .txtLine {
+    margin-left: 20px;
+    /* 副标题与标题左侧对齐 */
+    max-width: 100%;
+    font-size: 15px;
+    line-height: 1.5;
+  }
+
+  .txtLine span {
+    font-size: 17px;
+    text-shadow: none;
+    color: #9B8ED8;
+  }
+
+  /* 底部输入框和按钮区域 */
   .bottomInputWrapper {
-    width: 95vw;
-    left: 4px;
-    gap: 7px;
-    bottom: 30px;
+    margin-left: 0;
+    width: 100%;
+    flex-direction: column;
+    /* 垂直排列 */
+    align-items: center;
+    gap: 30px;
+    /* 增加输入框和按钮之间的间距 */
+    position: static;
+    /* 移除定位 */
+  }
+
+  /* 邮箱输入框容器 */
+  .bottomInputWrapper>div:first-child {
+    width: 100% !important;
+    margin-right: 0;
   }
 
   .inputEmail {
-    width: 40vw;
-    min-width: 90px;
-    max-width: 140px;
+    width: 100%;
+    /* 占满宽度 */
+    max-width: none;
+    margin-right: 0;
+    height: 48px;
+    /* 增加高度更易点击 */
+    font-size: 16px;
+    /* 防止iOS缩放 */
+  }
+
+  /* 按钮容器 */
+  .btnWithDogWrap {
+    width: 100%;
+    margin-top: 15px;
+    /* 额外增加一些顶部空间 */
+  }
+
+  .duduDog {
+    top: -42px;
+    /* 调整dudu位置 */
   }
 
   .notifyBtn {
-    width: 76px;
-    font-size: 10px;
+    width: 100%;
+    /* 按钮占满宽度 */
+    height: 48px;
+    font-size: 16px;
+    margin-left: 0;
+    background: linear-gradient(90deg, #F7AEBF 0%, #9b90da 100%);
+  }
+
+  .errorTip {
+    bottom: -25px;
+    left: 0;
+    width: 100%;
+    text-align: center;
   }
 }

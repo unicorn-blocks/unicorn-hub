@@ -63,12 +63,13 @@ export default function Home() {
         speechBubble: "Hi! I'm Sparky!"
       },
       steps: {
-        heading: 'Spark Creativity Through Adventure And Let Them Shine',
+        heading: 'Spark Creativity Through Adventure',
+        headingLine2: 'And Let Them Shine',
         subheading: 'With Sparky, Kids Create, Parents Relax.',
         cards: [
           {
             title: 'Pick To Start',
-            description: 'Pick a Magic Hat. Snap on the hat to unlock the world.',
+            description: 'Pick a Magic Hat to unlock the world.',
             background: '#D8CBFF',
             image: '/assets/ks_pic/space.png'
           },
@@ -176,7 +177,7 @@ export default function Home() {
         ]
       },
       impact: {
-        heading: '3x Creativity. 90 Mins Focus. Real STEAM Skills',
+        heading: 'Creativity, Focus, and Real Thinking.',
         stats: [
           {
             title: '3x Creativity Boost',
@@ -204,8 +205,8 @@ export default function Home() {
             titleLine1: 'Steam',
             titleLine2: 'Problem Solving',
             description:
-              'Learning engineering without knowing it. Sparky guides them to solve structural problems to advance the story. They learn physics and math naturally while saving the day.',
-            descriptionMobile: 'Learning Engineering without knowing it. Sparky guides them to solve structural problems to advance the story. They learn Physics and Math naturally while saving the day.'
+              'Guided by Sparky, kids learn engineering naturally through play.',
+            descriptionMobile: 'Guided by Sparky, kids learn engineering naturally through play.'
           }
         ]
       },
@@ -428,10 +429,17 @@ export default function Home() {
 
         <section className="hero-block">
           <div className="hero-backdrop" aria-hidden="true">
+            {/* 移动端图片 */}
+            <img
+              src="/assets/ima/HeroImageMobile.webp"
+              alt=""
+              className="hero-background-image md:hidden"
+            />
+            {/* PC端图片 */}
             <img
               src="/assets/image/HeroImage1230.webp"
               alt=""
-              className="hero-background-image"
+              className="hero-background-image hidden md:block"
             />
           </div>
 
@@ -484,7 +492,7 @@ export default function Home() {
             <div className="section-heading text-center">
               <h2 style={{ textAlign: 'center', margin: '0 auto', width: '100%' }}>
                 <span className="steps-heading-line1">{copy.steps.heading}</span>
-                <span className="steps-heading-line2">{copy.steps.headingLine2}</span>
+                <span className="steps-heading-line2 hidden md:block">{copy.steps.headingLine2}</span>
               </h2>
               <p>{copy.steps.subheading}</p>
             </div>
@@ -493,14 +501,23 @@ export default function Home() {
               <div className="step-item" style={{ zIndex: 2 }}>
                 <div className="step-card step-card-image-only">
                   <div className="step-image-full" style={{ minHeight: '520px' }}>
-                    {/* 移动端图片 */}
-                    <Image src={getStepsMobileImage(0)} alt="" fill className="step-image-full-item md:hidden" style={{ transform: 'scale(1.15)' }} />
+                    {/* 移动端：分层展示结构 */}
+                    <div className="step-mobile-wrapper md:hidden">
+                      <div className="step-mobile-bg"></div>
+                      <div className="step-mobile-content">
+                        <div className="step-mobile-frame"></div>
+                        <div className="step-mobile-text">
+                          <h3>1. Pick To Start</h3>
+                          <p>Pick a Magic Hat Snap to unlock the world.</p>
+                        </div>
+                      </div>
+                    </div>
                     {/* PC端图片 */}
                     <Image src="/assets/ima/组合 721.png" alt="" fill className="step-image-full-item hidden md:block" style={{ transform: 'scale(1.15)' }} />
                   </div>
                 </div>
-                {/* 第一、二组之间连接矢量 */}
-                <div className="step-connector">
+                {/* 隐藏mobile端的箭头 */}
+                <div className="step-connector hidden md:block">
                   <img src="/assets/ima/Vector_17_913.png" alt="arrow-1" className="step-connector-image" />
                 </div>
               </div>
@@ -509,14 +526,23 @@ export default function Home() {
               <div className="step-item" style={{ zIndex: 1 }}>
                 <div className="step-card step-card-image-only">
                   <div className="step-image-full" style={{ minHeight: '520px' }}>
-                    {/* 移动端图片 */}
-                    <Image src={getStepsMobileImage(1)} alt="" fill className="step-image-full-item md:hidden" style={{ transform: 'scale(1.15)' }} />
+                    {/* 移动端：分层展示结构 - Step 2 */}
+                    <div className="step-mobile-wrapper md:hidden">
+                      <div className="step-mobile-bg"></div>
+                      <div className="step-mobile-content">
+                        <div className="step-mobile-frame"></div>
+                        <div className="step-mobile-text">
+                          <h3>2. Story Sparks Creation</h3>
+                          <p>Every Build is part of a Story.</p>
+                        </div>
+                      </div>
+                    </div>
                     {/* PC端图片 */}
                     <Image src="/assets/ima/bule.png" alt="" fill className="step-image-full-item hidden md:block" style={{ transform: 'scale(1.15)' }} />
                   </div>
                 </div>
-                {/* 二、三组之间连接矢量 */}
-                <div className="step-connector">
+                {/* 隐藏mobile端的箭头 */}
+                <div className="step-connector hidden md:block">
                   <img src="/assets/ima/Vector_17_911.png" alt="arrow-2" className="step-connector-image" />
                 </div>
               </div>
@@ -525,14 +551,23 @@ export default function Home() {
               <div className="step-item" style={{ zIndex: 0 }}>
                 <div className="step-card step-card-image-only">
                   <div className="step-image-full" style={{ minHeight: '520px' }}>
-                    {/* 移动端图片 */}
-                    <Image src={getStepsMobileImage(2)} alt="" fill className="step-image-full-item md:hidden" style={{ transform: 'scale(1.15)' }} />
+                    {/* 移动端：分层展示结构 - Step 3 */}
+                    <div className="step-mobile-wrapper md:hidden">
+                      <div className="step-mobile-bg"></div>
+                      <div className="step-mobile-content">
+                        <div className="step-mobile-frame"></div>
+                        <div className="step-mobile-text">
+                          <h3>3. Create & Understand</h3>
+                          <p>Build and show your creation to Sparky.</p>
+                        </div>
+                      </div>
+                    </div>
                     {/* PC端图片 */}
                     <Image src="/assets/ima/组合 723 (1).png" alt="" fill className="step-image-full-item hidden md:block" style={{ transform: 'scale(1.15)' }} />
                   </div>
                 </div>
-                {/* 三、四组之间连接矢量 */}
-                <div className="step-connector">
+                {/* 隐藏mobile端的箭头 */}
+                <div className="step-connector hidden md:block">
                   <img src="/assets/ima/Vector_17_913.png" alt="arrow-3" className="step-connector-image" />
                 </div>
               </div>
@@ -541,8 +576,17 @@ export default function Home() {
               <div className="step-item" style={{ zIndex: -1 }}>
                 <div className="step-card step-card-image-only">
                   <div className="step-image-full" style={{ minHeight: '520px' }}>
-                    {/* 移动端图片 */}
-                    <Image src={getStepsMobileImage(3)} alt="" fill className="step-image-full-item md:hidden" style={{ transform: 'scale(1.15)' }} />
+                    {/* 移动端：分层展示结构 - Step 4 */}
+                    <div className="step-mobile-wrapper md:hidden">
+                      <div className="step-mobile-bg"></div>
+                      <div className="step-mobile-content">
+                        <div className="step-mobile-frame"></div>
+                        <div className="step-mobile-text">
+                          <h3>4. The Adventure Continues</h3>
+                          <p>The Magic har and Blocks light up to celebrate success!</p>
+                        </div>
+                      </div>
+                    </div>
                     {/* PC端图片 */}
                     <Image src="/assets/ima/green.png" alt="" fill className="step-image-full-item hidden md:block" style={{ transform: 'scale(1.15)' }} />
                   </div>
@@ -563,7 +607,12 @@ export default function Home() {
               <div className="kit-media-block">
                 <div className="kit-media-single">
                   {/* 移动端图片 */}
-                  <Image src="/assets/ima/section3.png" alt="Sparky Adventure Kit" fill className="kit-media-single-image md:hidden" />
+                  <img
+                    src="/assets/ima/section3.png"
+                    alt="Sparky Adventure Kit"
+                    className="kit-media-single-image md:hidden"
+                    style={{ display: 'block' }}
+                  />
                   {/* PC端图片 */}
                   <Image src="/assets/ima/组合 673.png" alt="Sparky Adventure Kit" fill className="kit-media-single-image hidden md:block" />
                 </div>
@@ -574,8 +623,11 @@ export default function Home() {
                     const accent = kitIconPalette[index % kitIconPalette.length];
                     const isOpen = kitPanelOpen[index];
                     const toggleOpen = () => {
-                      const newState = [...kitPanelOpen];
-                      newState[index] = !newState[index];
+                      // Accordion behavior: close all, then open the clicked one (or close if already open)
+                      const newState = [false, false, false, false];
+                      if (!isOpen) {
+                        newState[index] = true;
+                      }
                       setKitPanelOpen(newState);
                     };
 
@@ -613,9 +665,9 @@ export default function Home() {
                           </span>
                         </button>
                         <ul className="kit-panel-content" style={{
-                          maxHeight: isOpen ? '1000px' : '0',
+                          maxHeight: isOpen ? '500px' : '0',
                           overflow: 'hidden',
-                          transition: 'max-height 0.3s ease',
+                          transition: 'max-height 0.15s cubic-bezier(0.4, 0, 0.2, 1), padding 0.15s cubic-bezier(0.4, 0, 0.2, 1)',
                           margin: 0,
                           padding: isOpen ? '12px 0 0 0' : '0'
                         }}>
@@ -726,6 +778,53 @@ export default function Home() {
               </div>
             </div>
 
+            {/* Mobile-only: 复制的两个卡片 */}
+            <div className="privacy-mobile-extra-cards">
+              {/* Copy 1 - Card 2 content */}
+              <div className="privacy-card-row">
+                <div className="privacy-card-with-text">
+                  <div className="privacy-card-bg">
+                    <Image src="/assets/ima/section5-2.svg" alt="" fill className="privacy-bg-image" />
+                  </div>
+                  <div className="privacy-card-icon md:hidden">
+                    <Image src="/assets/ima/section5-22.svg" alt="" width={48} height={48} />
+                  </div>
+                  <div className="privacy-card-content">
+                    <h3 style={{ color: '#383838', fontWeight: 'bold' }}>No Eavesdropping. Ever</h3>
+                    <p style={{ color: '#646464' }}>
+                      Physically OFF Until You Press.
+                      <br />
+                      Mic & Camera are hard-wired to stay OFF.
+                      <br />
+                      They can't see or hear a thing until you actively hold the button.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Copy 2 - Card 3 content */}
+              <div className="privacy-card-row">
+                <div className="privacy-card-with-text">
+                  <div className="privacy-card-bg">
+                    <Image src="/assets/ima/section5-3.svg" alt="" fill className="privacy-bg-image" />
+                  </div>
+                  <div className="privacy-card-icon md:hidden">
+                    <Image src="/assets/ima/section5-33.svg" alt="" width={48} height={48} />
+                  </div>
+                  <div className="privacy-card-content">
+                    <h3 style={{ color: '#383838', fontWeight: 'bold' }}>No Third-Party Ads</h3>
+                    <p style={{ color: '#646464' }}>
+                      A 100% Pure Play Zone.
+                      <br />
+                      Contains No Third-Party Ads, no tracking,
+                      <br />
+                      and no stranger interaction.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             {/* 第二行：两个对话框卡片 */}
             <div className="privacy-cards-row">
               {/* No Eavesdropping. Ever */}
@@ -784,9 +883,7 @@ export default function Home() {
           </div>
           <div className="content-container">
             <h2>
-              <span className="impact-heading-line1 md:hidden">3x Creativity. 90 Mins</span>
-              <span className="impact-heading-line2 md:hidden">Focus. Real STEAM Skills</span>
-              <span className="hidden md:inline">{copy.impact.heading}</span>
+              <span>{copy.impact.heading}</span>
             </h2>
             <div className="impact-grid">
               {copy.impact.stats.map((stat, index) => (
@@ -983,10 +1080,30 @@ export default function Home() {
         }
 
         .hero-background-image {
-          display: block;
           width: 100%;
           height: auto;
           /* 保持 SVG 原始比例自适应宽度 */
+        }
+        
+        /* 强制覆盖可能的其他样式，确保移动端隐藏PC图片，PC端隐藏移动端图片 */
+        /* PC端图片默认隐藏，仅在md及以上显示 */
+        .hero-background-image.hidden.md\:block {
+          display: none;
+        }
+        @media (min-width: 768px) {
+          .hero-background-image.hidden.md\:block {
+            display: block;
+          }
+        }
+        
+        /* 移动端图片默认显示，仅在md及以上隐藏 */
+        .hero-background-image.md\:hidden {
+          display: block;
+        }
+        @media (min-width: 768px) {
+          .hero-background-image.md\:hidden {
+            display: none;
+          }
         }
 
         .hero-shell {
@@ -1003,9 +1120,9 @@ export default function Home() {
           padding-top: calc(var(--nav-height) - clamp(30px, 4vw, 60px));
         }
 
-        @media (min-width: 769px) and (max-width: 1125px) {
+        @media (min-width: 769px) and (max-width: 1200px) {
           .hero-shell {
-            transform: translateY(-40px);
+            transform: translateY(-50px);
           }
         }
 
@@ -1041,11 +1158,13 @@ export default function Home() {
           color: var(--color-primary-dark);  /* 移动端：#0F192A */
           font-weight: 800;
           text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff;
+          font-size: clamp(2.5rem, 5vw, 4rem); /* 增大移动端字体与Creating一致 */
         }
 
         @media (min-width: 768px) {
           .hero-title-primary {
             color: #54545C;  /* PC端：恢复原色 */
+            font-size: inherit; /* PC端恢复继承h1大小 */
           }
         }
 
@@ -1054,6 +1173,16 @@ export default function Home() {
           color: #f7ad3b;
           font-weight: 800;
           text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff;
+          font-size: clamp(2.5rem, 5vw, 4rem); /* 增大移动端字体 */
+          margin-top: 5px; /* 增加移动端行间距 */
+        }
+        }
+        
+        @media (min-width: 768px) {
+           .hero-title-accent {
+             margin-top: 0; 
+             font-size: clamp(2.2rem, 4vw, 3.5rem);
+           }
         }
 
         .hero-description-wrapper {
@@ -1085,10 +1214,36 @@ export default function Home() {
         }
 
         .hero-badge-row {
-          display: inline-flex;
+          display: flex; /* 改为flex以确保宽度控制 */
           align-items: center;
-          gap: 12px;
           margin-top: 0;
+          flex-direction: column; /* 默认垂直排列 (Mobile First) */
+          gap: 8px;
+          width: 100%; /* 占满容器以便居中 */
+          justify-content: center;
+        }
+
+        /* 移动端隐藏分隔符 */
+        @media (max-width: 767px) {
+           .hero-badge-separator {
+             display: none;
+           }
+           .hero-badge-row {
+             flex-direction: column !important; /* 强制垂直排列 */
+             align-items: center;
+           }
+        }
+        
+        @media (min-width: 768px) {
+           .hero-badge-row {
+             display: inline-flex; /* PC端恢复为inline-flex */
+             width: auto;
+             flex-direction: row;
+             gap: 12px;
+           }
+           .hero-badge-separator {
+             display: inline;
+           }
         }
 
         .hero-badge {
@@ -1160,6 +1315,13 @@ export default function Home() {
         .steps-heading-line1,
         .steps-heading-line2 {
           display: block;
+        }
+
+        /* 强制在移动端隐藏第二行 */
+        @media (max-width: 767px) {
+          .steps-heading-line2 {
+            display: none !important;
+          }
         }
 
         @media (min-width: 1024px) {
@@ -1287,10 +1449,44 @@ export default function Home() {
           bottom: -50px;
           left: 50%;
           transform: translateX(-50%) rotate(-50deg) scaleX(-1);
-          width: 100px;
-          height: 100px;
+          width: 80px;  /* 缩小箭头尺寸 */
+          height: 80px;
           pointer-events: none;
           z-index: 3;
+        }
+        
+        @media (max-width: 767px) {
+          .steps-grid {
+            margin-top: 24px !important; /* 缩小标题和第一张图的间距 */
+          }
+          
+          .step-connector {
+            bottom: -30px; /* 向上移动箭头，缩小图片间距 */
+            width: 70px;
+            height: 70px;
+          }
+          
+          /* 减少图片本身容器的高度占用 */
+          /* Mobile specific adjustments for stricter spacing */
+          .steps-section {
+             padding-top: 40px !important;
+             padding-bottom: 20px !important; /* 减少底部留白 */
+          }
+
+          /* 减小.steps-image-full的高度限制 */
+          .step-image-full {
+             min-height: 320px !important;
+          }
+          
+          /* 减小移动端step wrapper的高度 */
+          .step-mobile-wrapper {
+             min-height: 320px !important;
+          }
+          
+          /* 调整负margin来拉近卡片间距 */
+          .step-item + .step-item {
+            margin-top: -20px;
+          }
         }
 
         @media (min-width: 768px) {
@@ -1316,7 +1512,16 @@ export default function Home() {
           padding: 100px 0 90px;
           background: #FFFEF3;
           position: relative;
-          z-index: -2;
+          z-index: 1;
+        }
+
+        @media (max-width: 767px) {
+          .kit-section {
+            padding-top: 50px;
+          }
+          .kit-heading-block {
+            margin-top: 25px;
+          }
         }
 
         .kit-heading-block {
@@ -1331,12 +1536,13 @@ export default function Home() {
           font-weight: 700;
           margin-bottom: 10px;
           text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff;
-          white-space: nowrap;
+          white-space: normal;
         }
 
         @media (min-width: 768px) {
           .kit-heading-block h2 {
             color: #54545C;  /* PC端：恢复原色 */
+            white-space: nowrap;
           }
         }
 
@@ -1349,9 +1555,16 @@ export default function Home() {
 
         .kit-layout {
           display: grid;
-          grid-template-columns: minmax(0, 0.95fr) minmax(0, 1fr);
-          gap: 46px;
+          grid-template-columns: 1fr;
+          gap: 32px;
           align-items: stretch;
+        }
+
+        @media (min-width: 768px) {
+          .kit-layout {
+            grid-template-columns: minmax(0, 0.95fr) minmax(0, 1fr);
+            gap: 46px;
+          }
         }
 
         .kit-media-block {
@@ -1371,11 +1584,6 @@ export default function Home() {
 
         .kit-media-single-image {
           object-fit: contain;
-          object-position: center;
-          width: 100%;
-          height: 100%;
-        }
-        
           object-position: center;
           width: 100%;
           height: 100%;
@@ -1570,6 +1778,12 @@ export default function Home() {
         @media (max-width: 767px) {
           .kit-panel-title-button {
             cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+            outline: none;
+          }
+
+          .kit-panel-row {
+            -webkit-tap-highlight-color: transparent;
           }
 
           .kit-panel-toggle {
@@ -1614,6 +1828,13 @@ export default function Home() {
           position: relative;
           overflow: hidden;
           z-index: 3;
+        }
+
+        @media (max-width: 767px) {
+          .family-section {
+            padding-top: 50px;
+            padding-bottom: 50px;
+          }
         }
 
         @media (min-width: 768px) {
@@ -1901,6 +2122,13 @@ export default function Home() {
           z-index: 0;
         }
 
+        @media (max-width: 767px) {
+          .privacy-section {
+            padding-top: 50px;
+            padding-bottom: 50px;
+          }
+        }
+
         @media (min-width: 768px) {
           .privacy-section {
             background: #FFFCF9;  /* PC端：原色 */
@@ -1910,6 +2138,12 @@ export default function Home() {
         .privacy-heading {
           text-align: center;
           padding-top: 80px;
+        }
+
+        @media (max-width: 767px) {
+          .privacy-heading {
+            padding-top: 0;
+          }
         }
 
         .privacy-heading h2 {
@@ -1937,18 +2171,19 @@ export default function Home() {
         }
 
         .privacy-tag {
-          display: inline-block;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
           color: #20604B;
           font-size: 12px;  /* 减小两号字体 */
           font-weight: 600;
           margin-top: 12px;
           text-align: center;
           min-width: 200px;  /* 增加最小宽度让文字一行显示 */
-          height: 19px;
+          height: 27px;
           border-radius: 10px;
           background: #EAF6F2;
-          padding: 4px 16px;  /* 增加左右padding */
-          line-height: 19px;
+          padding: 0 16px;  /* 只保留左右padding，高度由height控制 */
           white-space: nowrap;  /* 确保一行显示 */
         }
 
@@ -1971,6 +2206,11 @@ export default function Home() {
           align-items: center;
           justify-content: center;
           position: relative;
+        }
+
+        /* Mobile-only extra cards - hidden on PC */
+        .privacy-mobile-extra-cards {
+          display: none;
         }
 
         /* 第二行：两个对话框卡片 */
@@ -2086,14 +2326,12 @@ export default function Home() {
           .privacy-card-row .privacy-card-with-text {
             flex: 1;
             max-width: 100%;
+            min-height: auto;
+            padding-bottom: 0px;
           }
 
           .privacy-illustration {
-            margin-left: 0;
-            position: absolute;  /* 移动端改为绝对定位 */
-            top: 16px;  /* 右上角 */
-            right: 16px;
-            z-index: 3;
+            display: none;
           }
 
           .privacy-illustration-image {
@@ -2101,15 +2339,26 @@ export default function Home() {
           }
 
           .privacy-cards-row {
-            flex-direction: column;
+            display: none;  /* 移动端隐藏原本的 Card 2 和 Card 3 */
           }
 
-          .privacy-card-with-text {
-            min-height: 250px;
+          /* 移动端显示复制的卡片 */
+          .privacy-mobile-extra-cards {
+            display: flex;
+            flex-direction: column;
+            gap: 0px;
+            margin-top: 0px;
           }
+
+          .privacy-mobile-extra-cards .privacy-card-row {
+            margin-top: 25px;
+          }
+
+
 
           .privacy-card-content {
-            padding: 30px 20px;
+            padding: 30px 20px 30px 80px;
+            text-align: left;
           }
 
           /* 移动端：隐藏 PC 端背景图片，显示白色卡片 */
@@ -2122,6 +2371,9 @@ export default function Home() {
             border-radius: 20px;
             box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.1);
             padding: 24px;
+            padding-top: 0 !important;
+            align-items: flex-start !important;
+            min-height: 200px;
             position: relative;
           }
 
@@ -2129,7 +2381,7 @@ export default function Home() {
           .privacy-card-icon {
             position: absolute;
             top: 30px;  /* 与 privacy-card-content 的 padding-top 对齐 */
-            left: 20px;  /* 与 privacy-card-content 的 padding-left 对齐 */
+            left: 30px;  /* 与 privacy-card-content 的 padding-left 对齐 */
             z-index: 2;
             width: 48px;
             height: 48px;
@@ -2175,7 +2427,7 @@ export default function Home() {
             font-size: 18px;
             line-height: 30px;
             letter-spacing: 0;
-            text-align: left;
+            text-align: center;
             color: transparent;
           }
 
@@ -2185,6 +2437,15 @@ export default function Home() {
             font-family: 'Rubik', sans-serif;
             font-size: 14px;
             line-height: 1.6;
+            text-align: left;
+            margin-top: 30px;
+            margin-left: -35px;
+            margin-right: -40px;
+          }
+
+          /* 移动端：隐藏 br 让文字以一个段落展示 */
+          .privacy-card-row .privacy-card-content p br {
+            display: none;
           }
 
           /* 移动端：减小标题和正文的间距 */
@@ -2216,6 +2477,13 @@ export default function Home() {
           background: #E9F5EB;  /* 改为绿色 */
           position: relative;
           z-index: 1;
+        }
+
+        @media (max-width: 767px) {
+          .impact-section {
+            padding-top: 80px;
+            padding-bottom: 50px;
+          }
         }
 
         .impact-section::after {
@@ -2281,19 +2549,11 @@ export default function Home() {
           }
         }
 
-        /* Impact Section 标题分行 */
-        .impact-heading-line1,
-        .impact-heading-line2 {
-          display: block;
-        }
-
-        @media (min-width: 768px) {
-          .impact-heading-line1::after {
-            content: ' ';  /* PC端：单行显示 */
-          }
-          
+        /* Impact Section 标题分行 - 仅移动端生效 */
+        @media (max-width: 767px) {
+          .impact-heading-line1,
           .impact-heading-line2 {
-            display: inline;
+            display: block;
           }
         }
 
@@ -2432,6 +2692,13 @@ export default function Home() {
           z-index: 10;
         }
 
+        @media (max-width: 767px) {
+          .story-section {
+            padding-top: 50px;
+            padding-bottom: 50px;
+          }
+        }
+
         @media (min-width: 768px) {
           .story-section {
             background: #FFF6D0;  /* PC端：原色 */
@@ -2449,6 +2716,12 @@ export default function Home() {
           z-index: -1;
         }
 
+        @media (max-width: 767px) {
+          .story-section::before {
+            display: none !important;
+          }
+        }
+
         .story-section h2 {
           text-align: center;
           font-size: clamp(2.2rem, 4vw, 3.2rem);
@@ -2457,6 +2730,12 @@ export default function Home() {
           color: var(--color-primary-dark);  /* 移动端：#0F192A */
           text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff;
           white-space: normal;
+        }
+
+        @media (max-width: 767px) {
+          .story-section h2 {
+            margin-top: 0;
+          }
         }
 
         @media (min-width: 768px) {
@@ -2589,7 +2868,7 @@ export default function Home() {
         @media (max-width: 767px) {
           .story-card {
             flex-direction: column;
-            gap: 16px;
+            gap: 10px;
           }
 
           /* 移动端隐藏 PC 端图片 */
@@ -2601,16 +2880,18 @@ export default function Home() {
             background: rgba(255, 255, 255, 1);
             border-radius: 20px;
             box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.1);
-            padding: 20px;
+            padding: 0 20px 10px 20px;
             min-height: auto;
+            margin-top: -25px;
           }
 
           /* 移动端：图片和标题在同一行 */
           .story-card-header {
             display: flex;
-            align-items: flex-start;
+            align-items: center;
             gap: 12px;
             margin-bottom: 12px;
+            margin-top: 35px;
           }
 
           .story-card-image-mobile {
@@ -2778,6 +3059,13 @@ export default function Home() {
           background: #fff;
         }
 
+        @media (max-width: 767px) {
+          .faq-section {
+            padding-top: 50px;
+            padding-bottom: 50px;
+          }
+        }
+
         .faq-section h2 {
           text-align: center;
           font-size: clamp(2rem, 3vw, 3rem);
@@ -2809,7 +3097,7 @@ export default function Home() {
         }
 
         .faq-item.open {
-          border-color: #7d6cf5;
+          /* border-color: #7d6cf5;  Removed blue highlight */
         }
 
         .faq-item button {
@@ -2822,6 +3110,8 @@ export default function Home() {
           border: none;
           font-size: 1.125rem;
           font-weight: 600;
+          outline: none;
+          -webkit-tap-highlight-color: transparent;
         }
 
         .faq-icon {
@@ -2831,7 +3121,7 @@ export default function Home() {
         .faq-answer {
           max-height: 0;
           overflow: hidden;
-          transition: max-height 0.3s ease;
+          transition: max-height 0.15s cubic-bezier(0.4, 0, 0.2, 1), padding-bottom 0.15s cubic-bezier(0.4, 0, 0.2, 1);
           padding: 0 28px;
         }
 
@@ -2948,6 +3238,89 @@ export default function Home() {
           }
         }
 
+
+        /* Mobile Layered Step Item Styles */
+        .step-mobile-wrapper {
+          position: relative;
+          width: 90vw; /* Use viewport width for better scaling */
+          max-width: 400px; 
+          margin: 0 auto;
+          height: 100%;
+          min-height: 400px; /* 进一步减小高度 */
+          display: flex;
+          flex-direction: column;
+          border-radius: 32px;
+          overflow: hidden;
+        }
+
+        .step-mobile-bg {
+          position: absolute;
+          inset: 0;
+          z-index: 1;
+        }
+
+        /* Target the Next.js Image component class if needed, or rely on global img styles */
+        .step-mobile-bg-img {
+          object-fit: contain !important; /* Ensure it mimics the original scaling */
+          border-radius: 32px;
+        }
+
+        /* 确保PC端隐藏移动端组件 */
+        @media (min-width: 768px) {
+          .step-mobile-wrapper {
+             display: none !important;
+          }
+        }
+
+        .step-mobile-content {
+          position: relative;
+          z-index: 2;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          width: 100%;
+          height: 100%;
+          padding: 24px; /* 控制 顶边距 & 侧边距 = 24px */
+          box-sizing: border-box;
+          /* transform: rotate(-4deg);  已移除旋转 */
+        }
+
+        .step-mobile-frame {
+          width: 100%; /* 自适应宽度，距离两侧各24px */
+          aspect-ratio: 16 / 9; /* 16:9 比例 */
+          border: 3px solid #FFFFFF;
+          border-radius: 20px;
+          margin-top: 0; 
+          margin-bottom: 24px; /* 底边距 = 24px (等于padding) */
+          box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+          flex-shrink: 0;
+        }
+
+        .step-mobile-text {
+          width: 100%;
+          text-align: center; /* 保持用户当前的居中设置 */
+          padding: 0 4px;
+          /* 移除 margin-top: auto，确保紧跟 frame下方24px处 */
+        }
+
+        .step-mobile-text h3 {
+          color: #13234d; /* Dark Navy matches theme */
+          font-size: 20px;
+          font-weight: 800;
+          margin-bottom: 8px;
+          line-height: 1.2;
+          white-space: nowrap;
+        }
+
+        .step-mobile-text p {
+          color: #6E6E73;
+          font-size: 14px;
+          line-height: 1.4;
+          margin: 0;
+          opacity: 0.9;
+          font-weight: 500;
+        }
+
         @media (max-width: 768px) {
           :root {
             --nav-height: 120px;
@@ -3013,13 +3386,22 @@ export default function Home() {
           }
 
           .family-stage {
-            padding: 48px 24px;
-            clip-path: polygon(7% 0, 100% 0, 100% 100%, 0 100%, 0 18%);
+            padding: 20px 0;
+            clip-path: none;
+          }
+
+          .family-section .content-container {
+            padding: 0;
           }
 
           .family-mosaic {
             grid-template-columns: repeat(3, 1fr);
             gap: 12px;
+            margin-top: 20px;
+          }
+
+          .family-pagination {
+            display: none;
           }
 
           .family-card {
@@ -3027,7 +3409,7 @@ export default function Home() {
           }
 
           .story-panels {
-            gap: 18px;
+            gap: 60px;
           }
 
 

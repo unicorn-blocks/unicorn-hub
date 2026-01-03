@@ -27,8 +27,9 @@ function MyApp({ Component, pageProps }) {
     };
   }, [router.events]);
 
-  // 在checkout和reserve-vip-spot页面不显示GlobalEmailNotifyBox和FloatingJoinButton
+  // 在checkout, reserve-vip-spot, 以及已有BlueTopBar的页面(index, features, faq)不显示FloatingJoinButton
   const shouldShowGlobalEmailBox = router.pathname !== '/checkout' && router.pathname !== '/reserve-vip-spot' && router.pathname !== '/payment/cancel' && router.pathname !== '/payment/success';
+  const shouldShowFloatingButton = shouldShowGlobalEmailBox && !['/', '/features', '/faq'].includes(router.pathname);
 
   return (
     <LanguageProvider>
@@ -37,7 +38,7 @@ function MyApp({ Component, pageProps }) {
       </Head>
       <Component {...pageProps} />
       {shouldShowGlobalEmailBox && <GlobalEmailNotifyBox />}
-      {shouldShowGlobalEmailBox && <FloatingJoinButton />}
+      {shouldShowFloatingButton && <FloatingJoinButton />}
     </LanguageProvider>
   );
 }
