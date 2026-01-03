@@ -1120,9 +1120,9 @@ export default function Home() {
           padding-top: calc(var(--nav-height) - clamp(30px, 4vw, 60px));
         }
 
-        @media (min-width: 769px) and (max-width: 1125px) {
+        @media (min-width: 769px) and (max-width: 1200px) {
           .hero-shell {
-            transform: translateY(-40px);
+            transform: translateY(-50px);
           }
         }
 
