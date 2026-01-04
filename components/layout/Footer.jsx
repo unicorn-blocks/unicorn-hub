@@ -17,7 +17,7 @@ export default function Footer({ onSubscribe, showEmailInput = true }) {
     setFooterEmail('');
     setIsEmailSaved(false);
   }, []);
-  
+
   // 翻译文本
   const translations = {
     footerText: {
@@ -28,7 +28,7 @@ export default function Footer({ onSubscribe, showEmailInput = true }) {
         faq: 'FAQ',
         enterEmail: 'Enter your email here',
         productOf: 'A product of',
-        allRightsReserved: '© 2025 Stardust Echo, LLC. All rights reserved',
+        allRightsReserved: '© 2026 Stardust Echo, LLC. All rights reserved',
         emailError: 'Please provide a valid email address'
         //emailError: '❌'
       },
@@ -39,24 +39,24 @@ export default function Footer({ onSubscribe, showEmailInput = true }) {
         faq: '常见问题',
         enterEmail: '在此输入您的邮箱',
         productOf: '产品由',
-        allRightsReserved: '© 2025 Stardust Echo, LLC. 保留所有权利',
+        allRightsReserved: '© 2026 Stardust Echo, LLC. 保留所有权利',
         emailError: '请提供有效的电子邮箱地址'
       }
     }
   };
-  
+
   const t = translations.footerText[language === 'zh' ? 'zh' : 'en'];
-  
+
   // email 格式校验 - 悬浮框同款
   const isValidEmail = (email) => /\S+@\S+\.\S+/.test(email);
 
   const handleFooterSubmit = async (e) => {
     e.preventDefault();
     setFooterStatus({ message: '', type: '' }); // 重置状态
-    
+
     // 防止重复提交
     if (isProcessing) return;
-    
+
     if (!isValidEmail(footerEmail)) {
       setFooterStatus({
         message: t.emailError,
@@ -64,23 +64,23 @@ export default function Footer({ onSubscribe, showEmailInput = true }) {
       });
       return;
     }
-    
+
     setIsProcessing(true);
-    
+
     try {
       // 使用统一的Google Sheets工具函数
       const { submitEmailToGoogleSheets } = await import('../../lib/googleSheets');
       const result = await submitEmailToGoogleSheets(footerEmail, "footer", "");
-      
+
       if (result.success) {
         // 成功状态仅用于当次展示，不再持久化邮箱
         setIsEmailSaved(true);
-        
+
         setFooterStatus({
           message: 'You have successfully joined our notification list!🎉',
           type: 'success'
         });
-        
+
         // 提交成功后跳转到VIP页面
         setTimeout(() => {
           router.push('/reserve-vip-spot');
@@ -121,7 +121,7 @@ export default function Footer({ onSubscribe, showEmailInput = true }) {
       privacy: '隐私政策'
     }
   };
-  
+
   const footerT = footerTranslations[language === 'zh' ? 'zh' : 'en'];
 
   return (
@@ -140,7 +140,7 @@ export default function Footer({ onSubscribe, showEmailInput = true }) {
               <a href="mailto:support@unicornblocks.ai" className="hover:text-[#7d9ed4] transition-colors" target="_blank" rel="noopener">
                 support@unicornblocks.ai
               </a>
-              <span className="footer-copyright md:ml-10">{t.allRightsReserved}</span>
+              <span className="footer-copyright hidden md:inline md:ml-10">{t.allRightsReserved}</span>
             </div>
           </div>
 
@@ -171,15 +171,15 @@ export default function Footer({ onSubscribe, showEmailInput = true }) {
                     className="footer-submit-btn relative flex items-center justify-center transition-all self-center md:self-auto"
                     style={{ background: 'transparent', border: 'none', padding: 0, cursor: isProcessing ? 'not-allowed' : 'pointer', opacity: isProcessing ? 0.7 : 1 }}
                   >
-                    <img 
-                      src="/assets/ima/Group 83.svg" 
-                      alt="Join Adventure" 
+                    <img
+                      src="/assets/ima/Group 83.svg"
+                      alt="Join Adventure"
                       className="w-full h-full object-contain"
                       style={{ position: 'relative', zIndex: 1 }}
                     />
-                    <span 
+                    <span
                       className="footer-btn-text absolute font-bold text-center whitespace-nowrap"
-                      style={{ 
+                      style={{
                         color: '#fff',
                         lineHeight: '0.8',
                         left: '50%',
@@ -200,12 +200,17 @@ export default function Footer({ onSubscribe, showEmailInput = true }) {
             <div className="footer-welcome-section flex justify-start md:justify-end">
               <div className="w-full md:max-w-[547px]">
                 <p className="footer-welcome-text mb-3 md:mb-4 leading-relaxed md:pl-[150px]">
-                  Welcome to the Adventure ✨<br/>
+                  Welcome to the Adventure ✨<br />
                   You're officially part of the Unicorn Blocks world.
                 </p>
               </div>
             </div>
           )}
+        </div>
+
+        {/* Mobile-only copyright at bottom */}
+        <div className="footer-copyright-mobile md:hidden text-left mt-6">
+          <span className="footer-copyright-mobile-text">{t.allRightsReserved}</span>
         </div>
       </div>
       {/* Footer响应式样式 */}
@@ -226,6 +231,11 @@ export default function Footer({ onSubscribe, showEmailInput = true }) {
         }
         
         .footer-copyright {
+          color: #555;
+        }
+        
+        .footer-copyright-mobile-text {
+          font-size: 12px;
           color: #555;
         }
         

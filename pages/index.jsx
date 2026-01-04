@@ -3113,6 +3113,13 @@ export default function Home() {
           -webkit-tap-highlight-color: transparent;
         }
 
+        /* 移动端FAQ问题标题左对齐 */
+        @media (max-width: 767px) {
+          .faq-item button span:first-child {
+            text-align: left;
+          }
+        }
+
         .faq-icon {
           font-size: 1.5rem;
         }
