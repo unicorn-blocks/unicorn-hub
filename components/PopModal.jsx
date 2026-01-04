@@ -28,10 +28,12 @@ export default function PopModal({ onClose }) {
     setIsProcessing(true);
     setIsHovered(false);
 
-    // 立即跳转，不等待 API 响应
-    router.push('/reserve-vip-spot');
+    // 显示 700ms "Joining" 状态后再跳转
+    setTimeout(() => {
+      router.push('/reserve-vip-spot');
+    }, 700);
 
-    // 后台异步提交（不阻塞跳转）
+    // 后台异步提交（不阻塞）
     import('../lib/googleSheets').then(({ submitEmailToGoogleSheets }) => {
       submitEmailToGoogleSheets(email, "pop-modal", "reserve-pop-modal")
         .then(result => {

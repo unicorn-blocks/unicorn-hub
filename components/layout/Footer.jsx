@@ -68,10 +68,12 @@ export default function Footer({ onSubscribe, showEmailInput = true }) {
 
     setIsProcessing(true);
 
-    // 立即跳转，不等待 API 响应
-    router.push('/reserve-vip-spot');
+    // 显示 700ms 状态后跳转
+    setTimeout(() => {
+      router.push('/reserve-vip-spot');
+    }, 700);
 
-    // 后台异步提交（不阻塞跳转）
+    // 后台异步提交（不阻塞）
     import('../../lib/googleSheets').then(({ submitEmailToGoogleSheets }) => {
       submitEmailToGoogleSheets(footerEmail, "footer", "")
         .then(result => {
