@@ -15,7 +15,7 @@ export default function PopModal({ onClose }) {
 
   const isValidEmail = (email) => /\S+@\S+\.\S+/.test(email);
 
-  // Google Sheets 版提交通知 - 使用统一工具函数
+  // Google Sheets 版提交通知 - 乐观更新：先跳转，后台异步提交
   const handleNotify = async () => {
     // 防止重复提交
     if (isProcessing) return;
@@ -26,30 +26,21 @@ export default function PopModal({ onClose }) {
     }
 
     setIsProcessing(true);
-    setIsHovered(false);  // 立即重置hover状态，让文字变成"Join Adventure"
+    setIsHovered(false);
 
-    try {
-      // 动态导入工具函数
-      const { submitEmailToGoogleSheets } = await import('../lib/googleSheets');
-      const result = await submitEmailToGoogleSheets(email, "pop-modal", "reserve-pop-modal");
+    // 立即跳转，不等待 API 响应
+    router.push('/reserve-vip-spot');
 
-      if (result.success) {
-        setIsEmailSaved(true);
-        setSubmitted(true);
-
-        // 使用 Next.js Router 进行平滑导航
-        setTimeout(() => {
-          router.push('/reserve-vip-spot');
-        }, 2);  // 延迟300毫秒后跳转
-      } else {
-        setError(result.message);
-        setIsProcessing(false);
-      }
-    } catch (err) {
-      console.error('提交错误:', err);
-      setError('Network error');
-      setIsProcessing(false);
-    }
+    // 后台异步提交（不阻塞跳转）
+    import('../lib/googleSheets').then(({ submitEmailToGoogleSheets }) => {
+      submitEmailToGoogleSheets(email, "pop-modal", "reserve-pop-modal")
+        .then(result => {
+          if (!result.success) {
+            console.warn('Email submission failed:', result.message);
+          }
+        })
+        .catch(err => console.error('提交错误:', err));
+    });
   };
 
   // 固定按钮文案

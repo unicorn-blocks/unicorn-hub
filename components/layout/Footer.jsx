@@ -50,9 +50,10 @@ export default function Footer({ onSubscribe, showEmailInput = true }) {
   // email 格式校验 - 悬浮框同款
   const isValidEmail = (email) => /\S+@\S+\.\S+/.test(email);
 
+  // 乐观更新：先跳转，后台异步提交
   const handleFooterSubmit = async (e) => {
     e.preventDefault();
-    setFooterStatus({ message: '', type: '' }); // 重置状态
+    setFooterStatus({ message: '', type: '' });
 
     // 防止重复提交
     if (isProcessing) return;
@@ -67,39 +68,19 @@ export default function Footer({ onSubscribe, showEmailInput = true }) {
 
     setIsProcessing(true);
 
-    try {
-      // 使用统一的Google Sheets工具函数
-      const { submitEmailToGoogleSheets } = await import('../../lib/googleSheets');
-      const result = await submitEmailToGoogleSheets(footerEmail, "footer", "");
+    // 立即跳转，不等待 API 响应
+    router.push('/reserve-vip-spot');
 
-      if (result.success) {
-        // 成功状态仅用于当次展示，不再持久化邮箱
-        setIsEmailSaved(true);
-
-        setFooterStatus({
-          message: 'You have successfully joined our notification list!🎉',
-          type: 'success'
-        });
-
-        // 提交成功后跳转到VIP页面
-        setTimeout(() => {
-          router.push('/reserve-vip-spot');
-        }, 300);//延迟
-      } else {
-        setFooterStatus({
-          message: result.message,
-          type: 'error'
-        });
-        setIsProcessing(false);
-      }
-    } catch (err) {
-      console.error('Footer邮箱提交错误:', err);
-      setFooterStatus({
-        message: '网络错误，请稍后重试',
-        type: 'error'
-      });
-      setIsProcessing(false);
-    }
+    // 后台异步提交（不阻塞跳转）
+    import('../../lib/googleSheets').then(({ submitEmailToGoogleSheets }) => {
+      submitEmailToGoogleSheets(footerEmail, "footer", "")
+        .then(result => {
+          if (!result.success) {
+            console.warn('Footer email submission failed:', result.message);
+          }
+        })
+        .catch(err => console.error('Footer邮箱提交错误:', err));
+    });
   };
 
 
