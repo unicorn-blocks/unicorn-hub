@@ -13,12 +13,5 @@
     "vars": {
         "NEXT_DISABLE_CACHE": "true",
         "PAYMENT_API_BASE": "https://unicornblocks.ai"
-    },
-    // ✅ 本地 preview 用：Miniflare 会模拟这个 R2 bucket（不需要 Cloudflare 真开通）
-    "r2_buckets": [
-        {
-            "binding": "NEXT_INC_CACHE_R2_BUCKET",
-            "bucket_name": "local-next-inc-cache"
-        }
-    ]
+    }
 }
