@@ -6,10 +6,12 @@ import Footer from '../components/layout/Footer';
 import BlueTopBar from '../components/BlueTopBar';
 import ProductCarousel from '../components/ProductCarousel';
 import { useLanguage } from '../context/LanguageContext';
+import KitCategories from '../components/KitCategories';
 
 export default function PreOrder() {
   const { language } = useLanguage();
   const [expandedFaqIndex, setExpandedFaqIndex] = useState([]);
+
 
   // Scarcity state
   const [reservationsCount, setReservationsCount] = useState(436);
@@ -45,6 +47,41 @@ export default function PreOrder() {
           '<strong>The 5-in-1 Adventure Kit</strong><br/>Everything to start. Includes Sparky, 4 themed power-ups, 4 magic blocks, and 100+ classic blocks.',
           '<strong>STEM Learning</strong><br/>Kids build rockets for fun, mastering engineering & creative problem-solving.',
           '<strong>The Gift of Independent Play</strong><br/>Gives you back 100+ minutes of peaceful time to recharge everytime they play.'
+        ]
+      },
+      kit: {
+        categories: [
+          {
+            title: 'Magical Block Buddy: Sparky',
+            highlights: [
+              'Story Sparks Creation — The Magical Block Buddy that turns every build into a story.',
+              'Magic Window — Sees and understands every creative build.',
+              'Smart Brain — Adapts stories to Age (3-8) & Interests.',
+              'Privacy Button — Press to talk. Eyes & ears closed when off.',
+              '7-Hour Playtime — Long-lasting creative sessions.'
+            ]
+          },
+          {
+            title: 'The Magic Hats: 4x Magical Theme Hats',
+            highlights: [
+              'Themes — Magic, Knight, Princess, Vehicle, Animal, Flowers, Fantasy, Buildings.',
+              'Creative Journey — Packed with 30+ stories per hat! Start with 6 Guided Stories to learn the basics, then unlock "Creator Mode" for infnite challenges!'
+            ]
+          },
+          {
+            title: 'The Magic Blocks: 4x Light-Up Magical Blocks',
+            highlights: [
+              'Theme Matched — Each block pairs specifically with one Magic Hat.',
+              'The Magical Prize — Unlocks upon reaching "Creator Mode"—use this glowing magical block to light up your own infnite creations!'
+            ]
+          },
+          {
+            title: '100 Universal Blocks',
+            highlights: [
+              'Limitless Play — Compatible with LEGO® & major brands.',
+              'Kid-Proof — BPA-Free, CPC/FCC Certified. Safe & Durable.'
+            ]
+          }
         ]
       },
       faq: {
@@ -99,6 +136,41 @@ export default function PreOrder() {
           '<strong>5合1冒险套装</strong><br/>开启所需的一切。包含Sparky、4个主题强化道具、4个魔法积木和100+经典积木。',
           '<strong>STEM学习</strong><br/>孩子们为乐趣建造火箭，掌握工程学与创意问题解决。',
           '<strong>独立游戏礼物</strong><br/>每次游戏都给你100+分钟宁静时光来充电。'
+        ]
+      },
+      kit: {
+        categories: [
+          {
+            title: 'Magical Block Buddy: Sparky',
+            highlights: [
+              'Story Sparks Creation — The Magical Block Buddy that turns every build into a story.',
+              'Magic Window — Sees and understands every creative build.',
+              'Smart Brain — Adapts stories to Age (3-8) & Interests.',
+              'Privacy Button — Press to talk. Eyes & ears closed when off.',
+              '7-Hour Playtime — Long-lasting creative sessions.'
+            ]
+          },
+          {
+            title: 'The Magic Hats: 4x Magical Theme Hats',
+            highlights: [
+              'Themes — Magic, Knight, Princess, Vehicle, Animal, Flowers, Fantasy, Buildings.',
+              'Creative Journey — Packed with 30+ stories per hat! Start with 6 Guided Stories to learn the basics, then unlock "Creator Mode" for infnite challenges!'
+            ]
+          },
+          {
+            title: 'The Magic Blocks: 4x Light-Up Magical Blocks',
+            highlights: [
+              'Theme Matched — Each block pairs specifically with one Magic Hat.',
+              'The Magical Prize — Unlocks upon reaching "Creator Mode"—use this glowing magical block to light up your own infnite creations!'
+            ]
+          },
+          {
+            title: '100 Universal Blocks',
+            highlights: [
+              'Limitless Play — Compatible with LEGO® & major brands.',
+              'Kid-Proof — BPA-Free, CPC/FCC Certified. Safe & Durable.'
+            ]
+          }
         ]
       },
       faq: {
@@ -233,19 +305,8 @@ export default function PreOrder() {
                   <div className="vertical-spacer"></div>
 
                   <div className="card-section">
-                    <div className="features-list">
-                      {t.features.items.map((item, index) => (
-                        <div key={index} className="feature-item">
-                          <div className="feature-icon-container">
-                            <span
-                              className="feature-icon"
-                              style={{ WebkitMaskImage: `url(${featureIconUrls[index] || featureIconUrls[0]})`, maskImage: `url(${featureIconUrls[index] || featureIconUrls[0]})` }}
-                              aria-hidden="true"
-                            />
-                          </div>
-                          <p className="feature-text" dangerouslySetInnerHTML={{ __html: item }}></p>
-                        </div>
-                      ))}
+                    <div className="kit-details-block">
+                      {t.kit && t.kit.categories && <KitCategories categories={t.kit.categories} />}
                     </div>
                   </div>
 
@@ -674,10 +735,13 @@ export default function PreOrder() {
             z-index: 1000;
             box-shadow: 0 10px 30px rgba(0,0,0,0.3) !important;
           }
-           /* Add padding to body or main to prevent content being hidden behind button? 
-              User didn't strictly ask, but it's good practice. 
-              However, might be overkill if they just want the button floating. 
-           */
+        }
+
+        /* ===== Kit Section Styles ===== */
+        .kit-details-block {
+          display: flex;
+          flex-direction: column;
+          width: 100%;
         }
 
         .payment-button {

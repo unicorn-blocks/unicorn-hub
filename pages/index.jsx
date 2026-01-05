@@ -11,12 +11,12 @@ import { useLanguage } from '../context/LanguageContext';
 import dynamic from 'next/dynamic'
 import BlueTopBar from '../components/BlueTopBar';
 import { isVipHost } from '../lib/domain';
+import KitCategories from '../components/KitCategories';
 const PopModal = dynamic(() => import('../components/PopModal'), { ssr: false });
 
 export default function Home({ isVip = false }) {
   const [popOpen, setPopOpen] = useState(false);
   const [familyPage, setFamilyPage] = useState(0); // 添加家庭见证页面状态
-  const [kitPanelOpen, setKitPanelOpen] = useState([false, false, false, false]); // Kit Section 展开状态
   // 弹窗只弹一次
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -302,12 +302,6 @@ export default function Home({ isVip = false }) {
   };
 
   const copy = translations[language] || translations.en;
-  const kitIconPalette = [
-    { base: '#feb79c', shadow: 'rgba(254, 183, 156, 0.35)' },
-    { base: '#ffcf6a', shadow: 'rgba(255, 207, 106, 0.35)' },
-    { base: '#b7c3ff', shadow: 'rgba(183, 195, 255, 0.35)' },
-    { base: '#ffa0e1', shadow: 'rgba(255, 160, 225, 0.3)' }
-  ];
   const TESTIMONIALS_DATA = [
     {
       quote: '"So much better than watching TV."',
@@ -724,67 +718,7 @@ export default function Home({ isVip = false }) {
                 </div>
               </div>
               <div className="kit-details-block">
-                <div className="kit-panel">
-                  {copy.kit.categories.map((category, index) => {
-                    const accent = kitIconPalette[index % kitIconPalette.length];
-                    const isOpen = kitPanelOpen[index];
-                    const toggleOpen = () => {
-                      // Accordion behavior: close all, then open the clicked one (or close if already open)
-                      const newState = [false, false, false, false];
-                      if (!isOpen) {
-                        newState[index] = true;
-                      }
-                      setKitPanelOpen(newState);
-                    };
-
-                    return (
-                      <div
-                        className="kit-panel-row"
-                        key={category.title}
-                        style={{ '--kit-accent': accent.base, '--kit-accent-shadow': accent.shadow }}
-                      >
-                        <button
-                          className="kit-panel-title-button"
-                          onClick={toggleOpen}
-                          style={{ width: '100%', textAlign: 'left', background: 'none', border: 'none', padding: 0, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
-                        >
-                          <div className="kit-panel-title" style={{ flex: 1, margin: 0 }}>
-                            <div className="kit-panel-icon">
-                              <Image
-                                src={index === 0 ? '/assets/ima/section3-1.svg' :
-                                  index === 1 ? '/assets/ima/section3-2.svg' :
-                                    index === 2 ? '/assets/ima/section3-3.svg' :
-                                      '/assets/ima/section3-4.svg'}
-                                alt=""
-                                width={40}
-                                height={40}
-                                className="kit-panel-icon-svg"
-                              />
-                            </div>
-                            <h3 style={{ color: isOpen ? '#B589E2' : '#0F172A' }}>{index === 0 ? 'Magical Buddy' :
-                              index === 1 ? 'Magic Hats' :
-                                index === 2 ? 'Magic Blocks' :
-                                  '100 Universal Blocks'}</h3>
-                          </div>
-                          <span className="kit-panel-toggle" style={{ display: 'none', marginLeft: '8px', fontSize: '16px' }}>
-                            {isOpen ? '▲' : '▼'}
-                          </span>
-                        </button>
-                        <ul className="kit-panel-content" style={{
-                          maxHeight: isOpen ? '500px' : '0',
-                          overflow: 'hidden',
-                          transition: 'max-height 0.15s cubic-bezier(0.4, 0, 0.2, 1), padding 0.15s cubic-bezier(0.4, 0, 0.2, 1)',
-                          margin: 0,
-                          padding: isOpen ? '12px 0 0 0' : '0'
-                        }}>
-                          {category.highlights.map((item) => (
-                            <li key={item}>{renderHighlight(item)}</li>
-                          ))}
-                        </ul>
-                      </div>
-                    );
-                  })}
-                </div>
+                <KitCategories categories={copy.kit.categories} />
               </div>
 
             </div>
@@ -1727,144 +1661,6 @@ export default function Home({ isVip = false }) {
           flex-direction: column;
         }
 
-        .kit-panel {
-          background: #F7F3FD;
-          border-radius: 34px;
-          /* 收紧左右内边距，让标题更靠左贴齐图片 */
-          padding: 28px 24px;
-          box-shadow: 0 24px 55px rgba(106, 96, 185, 0.12);
-          display: grid;
-          gap: 18px;
-        }
-
-        /* 移动端白色矩形背景 */
-        @media (max-width: 767px) {
-          .kit-panel {
-            background: rgba(255, 255, 255, 1);
-            border-radius: 20px;
-            box-shadow: inset 0px 4px 4px 0px rgba(235, 223, 247, 0.5), 0px 2px 2px 0px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-          }
-        }
-
-        .kit-panel-row {
-          padding-bottom: 10px;
-        }
-
-        .kit-panel-row:last-child {
-          border-bottom: none;
-          padding-bottom: 0;
-        }
-
-        .kit-panel-title {
-          display: flex;
-          align-items: center;
-          gap: 10px;
-          font-size: 0.95rem;
-          font-weight: 700;
-          margin-bottom: 10px;
-          color: #4b35b4;
-        }
-
-        .kit-panel-title h3 {
-          margin: 0;
-          font-size: 15px;
-          font-weight: 600;
-          font-family: 'Rubik', sans-serif;
-          color: #0F172A;
-          line-height: 30px;
-          letter-spacing: 0;
-          text-align: left;
-        }
-
-        /* 移动端标题颜色 - 展开时为 #B589E2，未展开时为 #0F172A */
-        @media (max-width: 767px) {
-          .kit-panel-title h3 {
-            color: #0F172A;
-          }
-        }
-
-        .kit-panel-icon {
-          width: 40px;
-          height: 40px;
-          position: relative;
-          display: inline-flex;
-          flex-shrink: 0;
-          align-items: center;
-          justify-content: center;
-          margin-left: 0;
-        }
-
-        .kit-panel-icon-svg {
-          display: block;
-          width: 40px;
-          height: 40px;
-          flex-shrink: 0;
-        }
-
-        .kit-panel-row ul {
-          list-style: none;
-          padding: 0;
-          margin: 0;
-          display: grid;
-          gap: 8px;
-        }
-
-        .kit-panel-row ul {
-          margin-left: 30px;
-        }
-
-        .kit-panel-row li {
-          padding-left: 40px; /* 子弹列表整体右移 */
-        }
-
-        /* 移动端展开/收起样式 */
-        @media (max-width: 767px) {
-          .kit-panel-title-button {
-            cursor: pointer;
-            -webkit-tap-highlight-color: transparent;
-            outline: none;
-          }
-
-          .kit-panel-row {
-            -webkit-tap-highlight-color: transparent;
-          }
-
-          .kit-panel-toggle {
-            display: inline-block !important;
-          }
-        }
-
-        /* PC端始终展开 */
-        @media (min-width: 768px) {
-          .kit-panel-toggle {
-            display: none !important;
-          }
-
-          .kit-panel-content {
-            max-height: none !important;
-            overflow: visible !important;
-          }
-        }
-
-        .kit-panel-row li {
-          color: #6C6767;
-          font-size: 0.88rem;
-          line-height: 1.45;
-          white-space: pre-line;
-        }
-
-        .kit-panel-row li strong::first-letter {
-          font-size: 2rem;
-          line-height: 0.88rem;
-          vertical-align: text-bottom;
-          display: inline-block;
-          margin-right: 4px;
-        }
-
-        .kit-panel-row li .kit-text-rest {
-          display: inline;
-        }
 
         .family-section {
           padding: 95px 0 50px;
