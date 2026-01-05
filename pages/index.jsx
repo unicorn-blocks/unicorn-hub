@@ -181,33 +181,29 @@ export default function Home({ isVip = false }) {
         heading: 'Creativity, Focus, and Real Thinking.',
         stats: [
           {
-            title: '3x Creativity Boost',
-            titleLine1: '3x',
-            titleLine2: 'Creativity Boost',
+            title: '3× Creativity',
+            titleLine1: '3×',
+            titleLine2: 'Creativity',
             description:
-              'From simple stacks to complex masterpieces. Testers show a 3x increase in complexity, using more colors, bolder shapes, and richer details than ever before.',
-            descriptionMobile: [
-              'Testers show a 3x increase in complexity,',
-              'using more colors, bolder shapes, and',
-              'richer details than ever before.'
-            ]
+              'Bolder shapes, more colors, richer builds.',
+            descriptionMobile: 'Bolder shapes, more colors, richer builds.'
           },
           {
-            title: '90 Mins Deep Focus',
+            title: '90 mins Deep Focus',
             titleLine1: '90',
             titleLine1Small: 'mins',
             titleLine2: 'Deep Focus',
             description:
-              "Kids build wonderlands. Parents make coffee. Average play time extends to 90 minutes (vs. the usual 15). That's deep flow state for them, and well deserved downtime for you.",
-            descriptionMobile: "Average play time extends to 90 minutes (vs. the usual 15). That's deep flow state for them, and downtime for you."
+              'Kids stay focused longer. You get a real coffee break.',
+            descriptionMobile: 'Kids stay focused longer. You get a real coffee break.'
           },
           {
-            title: 'Steam & Problem Solving',
-            titleLine1: 'Steam',
+            title: 'STEAM Problem Solving',
+            titleLine1: 'STEAM',
             titleLine2: 'Problem Solving',
             description:
-              'Guided by Sparky, kids learn engineering naturally through play.',
-            descriptionMobile: 'Guided by Sparky, kids learn engineering naturally through play.'
+              'Kids learn engineering by building and playing.',
+            descriptionMobile: 'Kids learn engineering by building and playing.'
           }
         ]
       },
@@ -277,37 +273,38 @@ export default function Home({ isVip = false }) {
     { base: '#b7c3ff', shadow: 'rgba(183, 195, 255, 0.35)' },
     { base: '#ffa0e1', shadow: 'rgba(255, 160, 225, 0.3)' }
   ];
-  const familyBlocks = Array.from({ length: 3 }, (_, idx) => {
-    // 使用当前页面的见证内容，如果是数组的数组则使用对应页面，否则使用原来的逻辑
-    const testimonials = Array.isArray(copy.family.testimonials[0])
-      ? copy.family.testimonials[familyPage] || copy.family.testimonials[0]
-      : copy.family.testimonials;
-
-    let testimonial = testimonials[idx % testimonials.length];
-
-    // 根据页面和索引硬编码特定的更改
-    if (familyPage === 1 && idx === 0) {
-      // 第二页的第一个矩形块
-      testimonial = {
-        quote: '"So much better than watching TV."',
-        author: '—Dad of 3-Year- Old'
-      };
-    } else if (familyPage === 2 && idx === 1) {
-      // 第三页的第二个矩形块
-      testimonial = {
-        quote: '"I love that Sparky doesn’t ‘correct’ him. If he says it’s a rocket, Sparky sees a rocket. It really protects his imagination."',
-        author: '—Mom of 5-Year-Old'
-      };
+  const TESTIMONIALS_DATA = [
+    {
+      quote: '"So much better than watching TV."',
+      author: '—Dad of 3-Year- Old'
+    },
+    {
+      quote: "“I love that Sparky doesn’t ‘correct’ him. If he says it’s a rocket, Sparky sees a rocket. It really protects his imagination.”",
+      author: '—Mom of 5-Year-Old'
+    },
+    {
+      quote: '“Pleeease, just five more minutes! I have to light up all the lights on Sparky’s hat!”',
+      author: '—Our Little Builder, 5'
+    },
+    {
+      quote: '“Sparky, I added a swimming pool next to my house.”',
+      author: '—Our Little Builder, 7'
+    },
+    {
+      quote: '“I am amazed. He sat there and built for over an hour straight. No screens, just pure focus.”',
+      author: '—Mom of 6-Year-Old'
+    },
+    {
+      quote: '“I want to try the Unicorn Hat next time!”',
+      author: '—Our Little Builder, 5'
     }
+  ];
 
-    const palette = idx % 2 === 0 ? 'sunset' : 'sky';
-
-    return {
-      ...testimonial,
-      palette,
-      id: `${testimonial.author}-${idx}-${familyPage}`
-    };
-  });
+  const familyBlocks = TESTIMONIALS_DATA.map((t, idx) => ({
+    ...t,
+    palette: idx % 2 === 0 ? 'sunset' : 'sky',
+    id: `testimonial-${idx}`
+  }));
 
   const renderHighlight = (text) => {
     if (!text || typeof text !== 'string') return text;
@@ -776,23 +773,10 @@ export default function Home({ isVip = false }) {
               </div>
               <div className="family-mosaic">
                 {familyBlocks.map((block, index) => {
-                  // 更新见证内容
-                  let updatedQuote = block.quote;
-                  let updatedAuthor = block.author;
-
-                  if (index === 0) {
-                    updatedQuote = '"So much better than watching TV."';
-                    updatedAuthor = '—Dad of 3-Year- Old';
-                  } else if (index === 1) {
-                    updatedQuote = '"I love that Sparky doesn’t ‘correct’ him. If he says it’s a rocket, Sparky sees a rocket. It really protects his imagination."';
-                    updatedAuthor = '—Mom of 5-Year-Old';
-                  } else if (index === 2) {
-                    updatedQuote = '"Pleeease, just five more minutes! I have to light up all the lights on Sparky’s hat!"';
-                    updatedAuthor = '—Our Little Builder, 5';
-                  }
+                  const isHiddenOnPC = !(index >= familyPage * 3 && index < (familyPage + 1) * 3);
 
                   return (
-                    <div className={`family-card ${block.palette}`} key={block.id || `${block.author}-${index}`}>
+                    <div className={`family-card ${block.palette} ${isHiddenOnPC ? 'hidden-pc' : ''}`} key={block.id}>
                       <div className="family-quote-icon">
                         <img src="/assets/ima/逗号.svg" alt="quote" className="quote-icon" />
                       </div>
@@ -805,7 +789,7 @@ export default function Home({ isVip = false }) {
                 })}
               </div>
               <div className="family-pagination">
-                {[0, 1, 2].map((pageIndex) => (
+                {[0, 1].map((pageIndex) => (
                   <button
                     key={pageIndex}
                     className={familyPage === pageIndex ? 'active' : ''}
@@ -2108,13 +2092,25 @@ export default function Home({ isVip = false }) {
           align-self: flex-start;
         }
 
+        @media (min-width: 768px) {
+          .hidden-pc {
+            display: none !important;
+          }
+        }
+
         .family-pagination {
-          margin-top: 46px;
-          display: flex;
-          gap: 12px;
-          justify-content: center;
-          position: relative;
-          z-index: 2;
+          display: none;
+        }
+
+        @media (min-width: 768px) {
+          .family-pagination {
+            margin-top: 46px;
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            position: relative;
+            z-index: 2;
+          }
         }
 
         .family-pagination button {
@@ -2453,6 +2449,7 @@ export default function Home({ isVip = false }) {
             letter-spacing: 0;
             text-align: center;
             color: transparent;
+            margin-left: 20px;
           }
 
           /* 第一行卡片的正文 */
