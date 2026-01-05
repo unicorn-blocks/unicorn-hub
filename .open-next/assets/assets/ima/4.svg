@@ -1,0 +1,66 @@
+<svg viewBox="0 0 31 32" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="31.000000" height="32.000000" fill="none" customFrame="#000000">
+	<defs>
+		<g id="pixso_custom_effect_8">
+			<effect x="0.000000" y="4.000000" visibility="visible" fill="rgb(0,0,0)" fill-opacity="0.25" effectType="dropShadow" stdDeviation="4" radius="0" />
+		</g>
+		<filter id="filter_8" width="17.000000" height="18.000000" x="0.000000" y="14.000000" filterUnits="userSpaceOnUse" customEffect="url(#pixso_custom_effect_8)" color-interpolation-filters="sRGB">
+			<feFlood flood-opacity="0" result="BackgroundImageFix" />
+			<feOffset dx="0.000000" dy="4.000000" in="SourceAlpha" />
+			<feGaussianBlur stdDeviation="1.33333337" />
+			<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0 " />
+			<feBlend result="effect_dropShadow_1" in2="BackgroundImageFix" mode="normal" />
+			<feBlend result="shape" in="SourceGraphic" in2="effect_dropShadow_1" mode="normal" />
+		</filter>
+		<g id="pixso_custom_effect_9">
+			<effect x="0.000000" y="4.000000" visibility="visible" fill="rgb(0,0,0)" fill-opacity="0.25" effectType="dropShadow" stdDeviation="4" radius="0" />
+		</g>
+		<filter id="filter_9" width="17.000000" height="17.000000" x="0.000000" y="1.000000" filterUnits="userSpaceOnUse" customEffect="url(#pixso_custom_effect_9)" color-interpolation-filters="sRGB">
+			<feFlood flood-opacity="0" result="BackgroundImageFix" />
+			<feOffset dx="0.000000" dy="4.000000" in="SourceAlpha" />
+			<feGaussianBlur stdDeviation="1.33333337" />
+			<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0 " />
+			<feBlend result="effect_dropShadow_1" in2="BackgroundImageFix" mode="normal" />
+			<feBlend result="shape" in="SourceGraphic" in2="effect_dropShadow_1" mode="normal" />
+		</filter>
+		<g id="pixso_custom_effect_10">
+			<effect x="0.000000" y="4.000000" visibility="visible" fill="rgb(0,0,0)" fill-opacity="0.25" effectType="dropShadow" stdDeviation="4" radius="0" />
+		</g>
+		<filter id="filter_10" width="18.000000" height="18.000000" x="13.000000" y="14.000000" filterUnits="userSpaceOnUse" customEffect="url(#pixso_custom_effect_10)" color-interpolation-filters="sRGB">
+			<feFlood flood-opacity="0" result="BackgroundImageFix" />
+			<feOffset dx="0.000000" dy="4.000000" in="SourceAlpha" />
+			<feGaussianBlur stdDeviation="1.33333337" />
+			<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0 " />
+			<feBlend result="effect_dropShadow_1" in2="BackgroundImageFix" mode="normal" />
+			<feBlend result="shape" in="SourceGraphic" in2="effect_dropShadow_1" mode="normal" />
+		</filter>
+		<g id="pixso_custom_effect_11">
+			<effect x="0.000000" y="4.000000" visibility="visible" fill="rgb(0,0,0)" fill-opacity="0.25" effectType="dropShadow" stdDeviation="4" radius="0" />
+		</g>
+		<filter id="filter_11" width="18.000000" height="17.000000" x="13.000000" y="1.000000" filterUnits="userSpaceOnUse" customEffect="url(#pixso_custom_effect_11)" color-interpolation-filters="sRGB">
+			<feFlood flood-opacity="0" result="BackgroundImageFix" />
+			<feOffset dx="0.000000" dy="4.000000" in="SourceAlpha" />
+			<feGaussianBlur stdDeviation="1.33333337" />
+			<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0 " />
+			<feBlend result="effect_dropShadow_1" in2="BackgroundImageFix" mode="normal" />
+			<feBlend result="shape" in="SourceGraphic" in2="effect_dropShadow_1" mode="normal" />
+		</filter>
+	</defs>
+	<g id="组合 306">
+		<rect id="矩形 311" width="13.000000" height="13.000000" x="3.000000" y="12.000000" fill="rgb(247,174,191)" />
+		<rect id="矩形 312" width="13.000000" height="12.000000" x="3.000000" y="0.000000" fill="rgb(247,174,191)" />
+		<rect id="矩形 313" width="13.000000" height="13.000000" x="16.000000" y="12.000000" fill="rgb(247,174,191)" />
+		<rect id="矩形 314" width="13.000000" height="12.000000" x="16.000000" y="0.000000" fill="rgb(247,174,191)" />
+		<g filter="url(#filter_8)">
+			<ellipse id="椭圆 69" rx="4.500000" ry="5.000000" cx="8.5" cy="19" fill="rgb(247,174,191)" />
+		</g>
+		<g filter="url(#filter_9)">
+			<circle id="椭圆 70" cx="8.5" cy="5.5" r="4.5" fill="rgb(247,174,191)" />
+		</g>
+		<g filter="url(#filter_10)">
+			<circle id="椭圆 71" cx="22" cy="19" r="5" fill="rgb(247,174,191)" />
+		</g>
+		<g filter="url(#filter_11)">
+			<ellipse id="椭圆 72" rx="5.000000" ry="4.500000" cx="22" cy="5.5" fill="rgb(247,174,191)" />
+		</g>
+	</g>
+</svg>

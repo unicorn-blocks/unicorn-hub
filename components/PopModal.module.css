@@ -224,6 +224,11 @@
   background: #4E81A8;
 }
 
+.notifyBtn:focus {
+  outline: none;
+  background: linear-gradient(90deg, #F7AEBF 0%, #9b90da 100%);
+}
+
 .notifyBtn:active {
   background: #4E81A8;
 }
@@ -438,6 +443,17 @@
     height: 48px;
     font-size: 16px;
     margin-left: 0;
+    background: linear-gradient(90deg, #F7AEBF 0%, #9b90da 100%);
+    -webkit-tap-highlight-color: transparent;
+    transition: background 0s;
+  }
+
+  .notifyBtn:active {
+    background: #4E81A8;
+  }
+
+  .notifyBtn:focus:not(:active) {
+    outline: none;
     background: linear-gradient(90deg, #F7AEBF 0%, #9b90da 100%);
   }
 

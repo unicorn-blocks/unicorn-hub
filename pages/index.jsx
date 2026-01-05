@@ -611,7 +611,6 @@ export default function Home() {
                     src="/assets/ima/section3.png"
                     alt="Sparky Adventure Kit"
                     className="kit-media-single-image md:hidden"
-                    style={{ display: 'block' }}
                   />
                   {/* PC端图片 */}
                   <Image src="/assets/ima/组合 673.png" alt="Sparky Adventure Kit" fill className="kit-media-single-image hidden md:block" />
@@ -3112,6 +3111,13 @@ export default function Home() {
           font-weight: 600;
           outline: none;
           -webkit-tap-highlight-color: transparent;
+        }
+
+        /* 移动端FAQ问题标题左对齐 */
+        @media (max-width: 767px) {
+          .faq-item button span:first-child {
+            text-align: left;
+          }
         }
 
         .faq-icon {
