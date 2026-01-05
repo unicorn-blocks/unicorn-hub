@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 import Navigation from '../components/layout/Navigation';
@@ -10,22 +10,36 @@ import { useLanguage } from '../context/LanguageContext';
 export default function PreOrder() {
   const { language } = useLanguage();
   const [expandedFaqIndex, setExpandedFaqIndex] = useState([]);
-  
+
+  // Scarcity state
+  const [reservationsCount, setReservationsCount] = useState(436);
+  const totalSpots = 500;
+
+  useEffect(() => {
+    // Check if user just purchased (you might set this flag in the success page)
+    const hasPurchased = localStorage.getItem('userHasPurchasedVIP');
+    if (hasPurchased) {
+      setReservationsCount(435);
+    }
+  }, []);
+
   // 硬编码中英文内容
   const translations = {
     en: {
       title: 'Reserve VIP Spot - Unicorn Blocks',
-      pageTitle: 'Limited VIP Spots — $129 (Retail $199)',
-      subtitle: {
-        prefix: 'Reserve yours with a',
-        deposit: '$5 deposit',
-        suffix: '— only 436 of 500 left!'
+      header: {
+        badge: 'Selected VIP',
+        priceVIP: '$149 VIP Price',
+        priceRetail: 'Retail $199',
+        deposit: '$5 to reserve',
+        scarcityPrefix: 'Only',
+        scarcitySuffix: 'VIP spots left'
       },
       ctaButton: 'Claim My VIP Spot!',
       learnMoreButton: 'Learn More',
       trustNote: '✔ Fully Refundable $5 Deposit · ✔ Safe Checkout',
       features: {
-        title: "Unicorn Blocks: Sparky First Adventure",
+        title: "Sparky First Adventure Set",
         items: [
           "<strong>Ages 3-8: The Foundational Years</strong><br/>For curious builders ready to explore creativity and STEM.",
           '<strong>The 5-in-1 Adventure Kit</strong><br/>Everything to start. Includes Sparky, 4 themed power-ups, 4 magic blocks, and 100+ classic blocks.',
@@ -122,7 +136,7 @@ export default function PreOrder() {
       }
     }
   };
-  
+
   // 根据当前语言选择正确的翻译
   const t = translations[language] || translations.en;
   const featureIconUrls = [
@@ -139,10 +153,10 @@ export default function PreOrder() {
       } else {
         set.add(idx);
       }
-      return Array.from(set).sort((a,b)=>a-b);
+      return Array.from(set).sort((a, b) => a - b);
     });
   };
-  
+
 
   return (
     <>
@@ -153,28 +167,51 @@ export default function PreOrder() {
       </Head>
 
       <div className="background-gradient"></div>
-      
+
       {/* 蓝色顶部条 */}
       <BlueTopBar />
-      
+
       {/* 使用导航组件 */}
       {/* <Navigation /> */}
 
       {/* Main Content */}
-      <main className="min-h-screen pt-24 px-4 pb-24">
+      <main className="min-h-screen pt-2 px-4 pb-24">
         <div className="buy-container">
           {/* 页面标题 */}
-          <div className="text-center mb-12 max-w-5xl mx-auto">
-            <h1 className="text-4xl font-bold mb-3" style={{ fontSize: '2.75rem' }}>{t.pageTitle}</h1>
-            <p className="text-lg text-gray-600">
-              {t.subtitle.prefix} <span className="gradient-text">{t.subtitle.deposit}</span> {t.subtitle.suffix}
-            </p>
+
+          {/* Pricing Block Module - Open Layout */}
+          <div className="pricing-block-wrapper">
+            <div className="pricing-block open-style">
+              <div className="pricing-content">
+
+                {/* Row 1: Badge */}
+                <div className="pricing-badge-row">
+                  <div className="pricing-badge">
+                    <span className="wave-emoji">👋</span> {t.header.badge}
+                  </div>
+                </div>
+
+                {/* Row 2: Price + Retail */}
+                <div className="pricing-row-main">
+                  <span className="pricing-vip">{t.header.priceVIP}</span>
+                  <span className="pricing-retail">{t.header.priceRetail}</span>
+                </div>
+
+                {/* Row 3: Deposit + Scarcity */}
+                <div className="pricing-row-sub">
+                  <span className="pricing-deposit-text">{t.header.deposit}</span>
+                  <span className="pricing-scarcity-text">
+                    {t.header.scarcityPrefix} <span className="highlight-number">{reservationsCount}</span> of {totalSpots} {t.header.scarcitySuffix} <span className="scarcity-fire">🔥</span>
+                  </span>
+                </div>
+              </div>
+            </div>
           </div>
 
           {/* 主产品展示区域 */}
           <div className="max-w-6xl mx-auto mb-16">
             <div className="grid grid-cols-1 lg:grid-cols-[4fr_5fr] gap-8 items-stretch">
-              
+
               {/* 左侧：产品轮播图 */}
               <div className="product-showcase">
                 <ProductCarousel />
@@ -186,15 +223,15 @@ export default function PreOrder() {
                   <div className="card-section">
                     <h3 className="value-title">{t.features.title}</h3>
                   </div>
-                  
+
                   <div className="vertical-spacer"></div>
-                  
+
                   <div className="card-section">
                     <div className="title-divider"></div>
                   </div>
-                  
+
                   <div className="vertical-spacer"></div>
-                  
+
                   <div className="card-section">
                     <div className="features-list">
                       {t.features.items.map((item, index) => (
@@ -211,18 +248,18 @@ export default function PreOrder() {
                       ))}
                     </div>
                   </div>
-                  
+
                   <div className="vertical-spacer"></div>
 
                   {/* 行动按钮 */}
                   <div className="card-section">
-                    <button 
+                    <button
                       className="primary-button button-shine"
                       onClick={() => window.location.href = '/payment/stripe-checkout'}
                     >
                       {t.ctaButton}
                     </button>
-                    
+
                     {/* 信任提示 - 绝对定位 */}
                     <div className="trust-indicators">
                       <div className="trust-item">{t.trustNote}</div>
@@ -313,14 +350,152 @@ export default function PreOrder() {
         }
 
         /* ===== 主标题样式 ===== */
-        h1 {
+        /* ===== Pricing Block Styles - Refined Open Style ===== */
+        .pricing-block-wrapper {
+          display: flex;
+          justify-content: center; /* Center the block horizontally to balance L/R margins */
+          margin-bottom: 0.5rem;
+          padding: 0 0.5rem;
+          width: 100%;
+        }
+
+        .pricing-block.open-style {
+          background: transparent;
+          border: none;
+          box-shadow: none;
+          padding: 1rem 0;
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start; /* Ensure block aligns left */
+          width: 100%;
+          max-width: 100%; /* Allow full width */
+          margin: 0;
+        }
+        
+        .pricing-content {
+          display: flex;
+          flex-direction: column;
+          align-items: center; /* Center align content */
+          text-align: center;
+          width: fit-content;
+          max-width: 100%;
+          gap: 0.5rem; /* Consistent spacing between all rows */
+        }
+
+        /* Row 1: Badge */
+        .pricing-badge-row {
+          width: 100%;
+          display: flex;
+          justify-content: center; /* Center align */
+        }
+
+        .pricing-badge {
+          display: inline-flex;
+          align-items: center;
+          gap: 4px;
+          background: linear-gradient(90deg, #F0EEF8 0%, #FBF6FC 100%);
+          color: #4F475D; 
+          border: 1px solid #E9D5FF;
+          font-weight: 700;
+          font-size: 0.75rem; /* Even smaller font */
+          padding: 0.15rem 0.5rem; /* Very compact padding */
+          border-radius: 6px; 
+          box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
           white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          color: #1f2937;
-          font-weight: 800;
-          text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-          letter-spacing: -0.025em;
+        }
+
+        .wave-emoji {
+          font-size: 1.1em;
+        }
+
+        /* Row 2: Main Price */
+        .pricing-row-main {
+          display: flex;
+          align-items: baseline; 
+          justify-content: center; /* Center align */
+          flex-wrap: nowrap; 
+          gap: clamp(8px, 2vw, 16px);
+          width: 100%;
+        }
+        
+        /* Row 3: Sub Info */
+        .pricing-row-sub {
+           display: flex;
+           align-items: center;
+           flex-wrap: nowrap; /* FORCE single line */
+           justify-content: center; /* Center align */
+           gap: clamp(8px, 2vw, 12px); /* Tight fluid gap */
+           width: 100%;
+           white-space: nowrap; /* Prevent text wrapping inside spans */
+        }
+
+        .pricing-deposit-text {
+          font-size: clamp(0.85rem, 2.5vw, 1.25rem); /* Slightly smaller start */
+          font-weight: 500;
+          color: #4B5563;
+          white-space: nowrap;
+        }
+
+        .pricing-scarcity-text {
+          font-size: clamp(0.85rem, 2.5vw, 1.25rem);
+          font-weight: 700;
+          color: #DC2626;
+          display: inline-flex;
+          align-items: center;
+          gap: 4px;
+          white-space: nowrap;
+        }
+
+        .pricing-vip {
+          font-size: clamp(1.6rem, 6vw, 4rem); /* Responsive fluid font size */
+          font-weight: 900;
+          color: #111827;
+          line-height: 1.1;
+          letter-spacing: -0.03em;
+          white-space: nowrap; /* Force single line */
+        }
+
+        .pricing-retail {
+          font-size: clamp(0.9rem, 2.5vw, 1.75rem); /* Responsive fluid font size */
+          color: #9CA3AF;
+          text-decoration: line-through;
+          font-weight: 500;
+          white-space: nowrap; /* Force single line */
+        }
+
+        @media (min-width: 640px) {
+          .pricing-vip {
+             /* font-size handled by clamp */
+          }
+          .pricing-retail {
+             /* font-size handled by clamp */
+          }
+           .pricing-row-secondary {
+             font-size: 1.75rem;
+           }
+        }
+
+        /* PC / Desktop Overrides: Align Header Left */
+        @media (min-width: 1024px) {
+           .pricing-block-wrapper {
+             justify-content: flex-start;
+           }
+           .pricing-content {
+             align-items: flex-start;
+             text-align: left;
+           }
+           .pricing-badge-row {
+             justify-content: flex-start;
+           }
+           .pricing-row-main {
+             justify-content: flex-start;
+           }
+           .pricing-row-sub {
+             justify-content: flex-start;
+           }
+           .value-title {
+             text-align: left;
+           }
         }
 
         /* ===== 产品展示区域 ===== */
@@ -328,7 +503,8 @@ export default function PreOrder() {
           display: flex;
           align-items: stretch;
           justify-content: flex-start;
-          padding: 1rem 0;
+          padding: 0;
+          margin: -5px 0; /* 5px distance top and bottom as requested */
           max-width: 600px;
           width: 100%;
         }
@@ -341,7 +517,7 @@ export default function PreOrder() {
         }
 
         .product-info {
-          padding: 1rem 0;
+          padding: 0rem 0;
           max-width: none;
           display: flex;
           flex-direction: column;
@@ -384,13 +560,13 @@ export default function PreOrder() {
         }
 
         .value-title {
-          font-size: 1.625rem;
+          font-size: clamp(1.5rem, 5vw, 2rem); /* Fluid font size to prevent wrap */
           font-weight: 500;
           color: #111827;
-          margin-bottom: 0;
+          margin-bottom: 10px; /* 10px spacing */
           line-height: 1.2;
           letter-spacing: -0.02em;
-          white-space: pre-line;
+          white-space: nowrap; /* Force single line */
         }
 
         .value-title::after {
@@ -401,7 +577,7 @@ export default function PreOrder() {
           width: 100%;
           height: 1px;
           background: #E5E7EB;
-          margin-bottom: 0;
+          margin-bottom: 10px; /* 10px spacing below divider */
         }
 
         .gradient-text {
