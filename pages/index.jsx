@@ -10,9 +10,10 @@ import { useLanguage } from '../context/LanguageContext';
 
 import dynamic from 'next/dynamic'
 import BlueTopBar from '../components/BlueTopBar';
+import { isVipHost } from '../lib/domain';
 const PopModal = dynamic(() => import('../components/PopModal'), { ssr: false });
 
-export default function Home() {
+export default function Home({ isVip = false }) {
   const [popOpen, setPopOpen] = useState(false);
   const [familyPage, setFamilyPage] = useState(0); // 添加家庭见证页面状态
   const [kitPanelOpen, setKitPanelOpen] = useState([false, false, false, false]); // Kit Section 展开状态
@@ -487,116 +488,120 @@ export default function Home() {
 
         </section>
 
-        <section className="steps-section">
-          <div className="content-container">
-            <div className="section-heading text-center">
-              <h2 style={{ textAlign: 'center', margin: '0 auto', width: '100%' }}>
-                <span className="steps-heading-line1">{copy.steps.heading}</span>
-                <span className="steps-heading-line2 hidden md:block">{copy.steps.headingLine2}</span>
-              </h2>
-              <p>{copy.steps.subheading}</p>
+        {/* Steps Section - 仅 VIP 域名显示 */}
+        {isVip && (
+          <section className="steps-section">
+            <div className="content-container">
+              <div className="section-heading text-center">
+                <h2 style={{ textAlign: 'center', margin: '0 auto', width: '100%' }}>
+                  <span className="steps-heading-line1">{copy.steps.heading}</span>
+                  <span className="steps-heading-line2 hidden md:block">{copy.steps.headingLine2}</span>
+                </h2>
+                <p>{copy.steps.subheading}</p>
+              </div>
+              <div className="steps-grid">
+                {/* 第一组 */}
+                <div className="step-item" style={{ zIndex: 2 }}>
+                  <div className="step-card step-card-image-only">
+                    <div className="step-image-full" style={{ minHeight: '520px' }}>
+                      {/* 移动端：分层展示结构 */}
+                      <div className="step-mobile-wrapper md:hidden">
+                        <div className="step-mobile-bg"></div>
+                        <div className="step-mobile-content">
+                          <div className="step-mobile-frame"></div>
+                          <div className="step-mobile-text">
+                            <h3>1. Pick To Start</h3>
+                            <p>Pick a Magic Hat Snap to unlock the world.</p>
+                          </div>
+                        </div>
+                      </div>
+                      {/* PC端图片 */}
+                      <Image src="/assets/ima/组合 721.png" alt="" fill className="step-image-full-item hidden md:block" style={{ transform: 'scale(1.15)' }} />
+                    </div>
+                  </div>
+                  {/* 隐藏mobile端的箭头 */}
+                  <div className="step-connector hidden md:block">
+                    <img src="/assets/ima/Vector_17_913.png" alt="arrow-1" className="step-connector-image" />
+                  </div>
+                </div>
+
+                {/* 第二组 */}
+                <div className="step-item" style={{ zIndex: 1 }}>
+                  <div className="step-card step-card-image-only">
+                    <div className="step-image-full" style={{ minHeight: '520px' }}>
+                      {/* 移动端：分层展示结构 - Step 2 */}
+                      <div className="step-mobile-wrapper md:hidden">
+                        <div className="step-mobile-bg"></div>
+                        <div className="step-mobile-content">
+                          <div className="step-mobile-frame"></div>
+                          <div className="step-mobile-text">
+                            <h3>2. Story Sparks Creation</h3>
+                            <p>Every Build is part of a Story.</p>
+                          </div>
+                        </div>
+                      </div>
+                      {/* PC端图片 */}
+                      <Image src="/assets/ima/bule.png" alt="" fill className="step-image-full-item hidden md:block" style={{ transform: 'scale(1.15)' }} />
+                    </div>
+                  </div>
+                  {/* 隐藏mobile端的箭头 */}
+                  <div className="step-connector hidden md:block">
+                    <img src="/assets/ima/Vector_17_911.png" alt="arrow-2" className="step-connector-image" />
+                  </div>
+                </div>
+
+                {/* 第三组 */}
+                <div className="step-item" style={{ zIndex: 0 }}>
+                  <div className="step-card step-card-image-only">
+                    <div className="step-image-full" style={{ minHeight: '520px' }}>
+                      {/* 移动端：分层展示结构 - Step 3 */}
+                      <div className="step-mobile-wrapper md:hidden">
+                        <div className="step-mobile-bg"></div>
+                        <div className="step-mobile-content">
+                          <div className="step-mobile-frame"></div>
+                          <div className="step-mobile-text">
+                            <h3>3. Create & Understand</h3>
+                            <p>Build and show your creation to Sparky.</p>
+                          </div>
+                        </div>
+                      </div>
+                      {/* PC端图片 */}
+                      <Image src="/assets/ima/组合 723 (1).png" alt="" fill className="step-image-full-item hidden md:block" style={{ transform: 'scale(1.15)' }} />
+                    </div>
+                  </div>
+                  {/* 隐藏mobile端的箭头 */}
+                  <div className="step-connector hidden md:block">
+                    <img src="/assets/ima/Vector_17_913.png" alt="arrow-3" className="step-connector-image" />
+                  </div>
+                </div>
+
+                {/* 第四组 */}
+                <div className="step-item" style={{ zIndex: -1 }}>
+                  <div className="step-card step-card-image-only">
+                    <div className="step-image-full" style={{ minHeight: '520px' }}>
+                      {/* 移动端：分层展示结构 - Step 4 */}
+                      <div className="step-mobile-wrapper md:hidden">
+                        <div className="step-mobile-bg"></div>
+                        <div className="step-mobile-content">
+                          <div className="step-mobile-frame"></div>
+                          <div className="step-mobile-text">
+                            <h3>4. The Adventure Continues</h3>
+                            <p>The Magic har and Blocks light up to celebrate success!</p>
+                          </div>
+                        </div>
+                      </div>
+                      {/* PC端图片 */}
+                      <Image src="/assets/ima/green.png" alt="" fill className="step-image-full-item hidden md:block" style={{ transform: 'scale(1.15)' }} />
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div className="steps-grid">
-              {/* 第一组 */}
-              <div className="step-item" style={{ zIndex: 2 }}>
-                <div className="step-card step-card-image-only">
-                  <div className="step-image-full" style={{ minHeight: '520px' }}>
-                    {/* 移动端：分层展示结构 */}
-                    <div className="step-mobile-wrapper md:hidden">
-                      <div className="step-mobile-bg"></div>
-                      <div className="step-mobile-content">
-                        <div className="step-mobile-frame"></div>
-                        <div className="step-mobile-text">
-                          <h3>1. Pick To Start</h3>
-                          <p>Pick a Magic Hat Snap to unlock the world.</p>
-                        </div>
-                      </div>
-                    </div>
-                    {/* PC端图片 */}
-                    <Image src="/assets/ima/组合 721.png" alt="" fill className="step-image-full-item hidden md:block" style={{ transform: 'scale(1.15)' }} />
-                  </div>
-                </div>
-                {/* 隐藏mobile端的箭头 */}
-                <div className="step-connector hidden md:block">
-                  <img src="/assets/ima/Vector_17_913.png" alt="arrow-1" className="step-connector-image" />
-                </div>
-              </div>
+          </section>
+        )}
 
-              {/* 第二组 */}
-              <div className="step-item" style={{ zIndex: 1 }}>
-                <div className="step-card step-card-image-only">
-                  <div className="step-image-full" style={{ minHeight: '520px' }}>
-                    {/* 移动端：分层展示结构 - Step 2 */}
-                    <div className="step-mobile-wrapper md:hidden">
-                      <div className="step-mobile-bg"></div>
-                      <div className="step-mobile-content">
-                        <div className="step-mobile-frame"></div>
-                        <div className="step-mobile-text">
-                          <h3>2. Story Sparks Creation</h3>
-                          <p>Every Build is part of a Story.</p>
-                        </div>
-                      </div>
-                    </div>
-                    {/* PC端图片 */}
-                    <Image src="/assets/ima/bule.png" alt="" fill className="step-image-full-item hidden md:block" style={{ transform: 'scale(1.15)' }} />
-                  </div>
-                </div>
-                {/* 隐藏mobile端的箭头 */}
-                <div className="step-connector hidden md:block">
-                  <img src="/assets/ima/Vector_17_911.png" alt="arrow-2" className="step-connector-image" />
-                </div>
-              </div>
-
-              {/* 第三组 */}
-              <div className="step-item" style={{ zIndex: 0 }}>
-                <div className="step-card step-card-image-only">
-                  <div className="step-image-full" style={{ minHeight: '520px' }}>
-                    {/* 移动端：分层展示结构 - Step 3 */}
-                    <div className="step-mobile-wrapper md:hidden">
-                      <div className="step-mobile-bg"></div>
-                      <div className="step-mobile-content">
-                        <div className="step-mobile-frame"></div>
-                        <div className="step-mobile-text">
-                          <h3>3. Create & Understand</h3>
-                          <p>Build and show your creation to Sparky.</p>
-                        </div>
-                      </div>
-                    </div>
-                    {/* PC端图片 */}
-                    <Image src="/assets/ima/组合 723 (1).png" alt="" fill className="step-image-full-item hidden md:block" style={{ transform: 'scale(1.15)' }} />
-                  </div>
-                </div>
-                {/* 隐藏mobile端的箭头 */}
-                <div className="step-connector hidden md:block">
-                  <img src="/assets/ima/Vector_17_913.png" alt="arrow-3" className="step-connector-image" />
-                </div>
-              </div>
-
-              {/* 第四组 */}
-              <div className="step-item" style={{ zIndex: -1 }}>
-                <div className="step-card step-card-image-only">
-                  <div className="step-image-full" style={{ minHeight: '520px' }}>
-                    {/* 移动端：分层展示结构 - Step 4 */}
-                    <div className="step-mobile-wrapper md:hidden">
-                      <div className="step-mobile-bg"></div>
-                      <div className="step-mobile-content">
-                        <div className="step-mobile-frame"></div>
-                        <div className="step-mobile-text">
-                          <h3>4. The Adventure Continues</h3>
-                          <p>The Magic har and Blocks light up to celebrate success!</p>
-                        </div>
-                      </div>
-                    </div>
-                    {/* PC端图片 */}
-                    <Image src="/assets/ima/green.png" alt="" fill className="step-image-full-item hidden md:block" style={{ transform: 'scale(1.15)' }} />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section id="section3" className="kit-section">
+        {/* Kit Section - 仅 VIP 域名显示 */}
+        {isVip && (<section id="section3" className="kit-section">
           <div className="content-container">
             <div className="kit-heading-block">
               <h2>{copy.kit.heading}</h2>
@@ -683,6 +688,7 @@ export default function Home() {
             </div>
           </div>
         </section>
+        )}
 
         <section className="family-section">
           <div className="family-bg-wrapper">
@@ -3446,4 +3452,18 @@ export default function Home() {
       `}</style>
     </>
   );
+}
+
+/**
+ * SSR: 检测请求域名，传递 isVip 给页面组件
+ * - vip.unicornblocks.ai → isVip = true (显示全部内容)
+ * - unicornblocks.ai → isVip = false (隐藏部分内容)
+ */
+export async function getServerSideProps({ req }) {
+  const host = req?.headers?.host || "";
+  return {
+    props: {
+      isVip: isVipHost(host),
+    },
+  };
 }
