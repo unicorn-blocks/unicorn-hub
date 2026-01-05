@@ -1,112 +1,67 @@
-// Next.js API路由 - 代理Google Sheets请求以避免CORS问题
-import { ProxyAgent, fetch as ufetch } from "undici";
-const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbyn8MOU7baUKZ2exFQsLZD6hGs8poE8KpE31vIrpLXgeoLB4EItUzVgn0qTKi9eqmk9/exec";
+// pages/api/submit-email.js  (或你现在实际的 api 路径)
 
-// ✅ 用 socks5h：DNS + 连接都走代理，更稳
-const DEV_PROXY_AGENT = new ProxyAgent("http://127.0.0.1:1082");
+const GOOGLE_SHEET_URL =
+  "https://script.google.com/macros/s/AKfycbyn8MOU7baUKZ2exFQsLZD6hGs8poE8KpE31vIrpLXgeoLB4EItUzVgn0qTKi9eqmk9/exec";
 
 export default async function handler(req, res) {
-  // 只允许POST请求
-  if (req.method !== 'POST') {
-    return res.status(405).json({ success: false, message: 'Method not allowed' });
+  if (req.method !== "POST") {
+    return res.status(405).json({ success: false, message: "Method not allowed" });
   }
 
   try {
     const { email, source, note } = req.body;
 
-    // 验证邮箱
-    if (!email || !email.includes('@')) {
-      return res.status(400).json({ 
-        success: false, 
-        message: '请提供有效的邮箱地址' 
+    if (!email || !email.includes("@")) {
+      return res.status(400).json({ success: false, message: "请提供有效的邮箱地址" });
+    }
+
+    // ✅ 可选：本地开发时用模拟（避免你本机网络/代理问题影响开发）
+    // 你可以在本机运行：MOCK_SHEETS=1 npm run dev
+    const isMock = process.env.MOCK_SHEETS === "1";
+    if (isMock) {
+      await new Promise((r) => setTimeout(r, 300));
+      return res.status(200).json({
+        success: true,
+        message: "您已成功加入我们的通知列表！🎉 (mock)",
       });
     }
 
-    console.log('代理请求到Google Sheets:', { email, source, note });
+    const body = new URLSearchParams({
+      email: email.trim().toLowerCase(),
+      source: source || "api-proxy",
+      note: note || "notify-at-launch",
+      timestamp: new Date().toISOString(),
+    }).toString();
 
-
-/* 
-     // 临时模拟成功响应，用于测试前端功能
-    // 在实际部署时，取消注释下面的真实请求代码，将下列测试代码注释掉
-    
-    // 模拟延迟
-    await new Promise(resolve => setTimeout(resolve, 800));
-    
-    // 模拟成功响应
-    console.log('模拟成功响应 - 邮箱已记录:', email);
-    return res.status(200).json({
-      success: true,
-      message: '您已成功加入我们的通知列表！🎉 (模拟模式)'
-    });
-
-*/
-
-    // 真实的Google Sheets请求代码如下： - 当网络问题解决后取消注释
-
-
-    // 发送请求到Google Apps Script
-    const isDev = process.env.NODE_ENV !== "production";
-
-    const response = await ufetch(GOOGLE_SHEET_URL, {
+    const response = await fetch(GOOGLE_SHEET_URL, {
       method: "POST",
       headers: {
-        "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8"
+        "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
       },
-      body: new URLSearchParams({
-        email: email.trim().toLowerCase(),
-        source: source || "api-proxy",
-        note: note || "notify-at-launch",
-        timestamp: new Date().toISOString()
-      }),
-      dispatcher: isDev ? DEV_PROXY_AGENT : undefined,
-    });    
-    
+      body,
+    });
 
     const text = await response.text();
-    console.log('Google Sheets响应:', { status: response.status, text });
 
     if (!response.ok) {
-      console.error('Google Sheets请求失败:', response.status, text);
       throw new Error(`HTTP ${response.status}: ${text}`);
     }
 
     if (text.includes("OK")) {
       return res.status(200).json({
         success: true,
-        message: '您已成功加入我们的通知列表！🎉'
-      });
-    } else {
-      console.error('Google Sheets响应不包含OK:', text);
-      return res.status(400).json({
-        success: false,
-        message: `提交失败: ${text}`
+        message: "您已成功加入我们的通知列表！🎉",
       });
     }
 
-
-    
-  } catch (error) {
-    console.error('代理请求详细错误:', {
-      name: error.name,
-      message: error.message,
-      stack: error.stack,
-      cause: error.cause
+    return res.status(400).json({
+      success: false,
+      message: `提交失败: ${text}`,
     });
-    
-    let errorMessage = '服务器错误';
-    if (error.name === 'TypeError' && error.message.includes('fetch')) {
-      errorMessage = '无法连接到Google服务器，请检查网络连接';
-    } else if (error.message.includes('ENOTFOUND')) {
-      errorMessage = 'DNS解析失败，无法连接到Google服务器';
-    } else if (error.message.includes('ECONNREFUSED')) {
-      errorMessage = '连接被拒绝，请检查网络设置';
-    } else {
-      errorMessage = `服务器错误: ${error.message}`;
-    }
-    
+  } catch (error) {
     return res.status(500).json({
       success: false,
-      message: errorMessage
+      message: `服务器错误: ${error.message}`,
     });
   }
 }
