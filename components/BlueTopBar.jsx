@@ -1,18 +1,24 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import dynamic from 'next/dynamic';
+import { useRouter } from 'next/router';
+
+import { isVipHost } from '../lib/domain';
 
 const PopModal = dynamic(() => import('./PopModal'), { ssr: false });
 
 export default function BlueTopBar() {
+  const router = useRouter();
   const [showModal, setShowModal] = useState(false);
-  const [isVip, setIsVip] = useState(true); // 默认 VIP 行为
+  const [isVip, setIsVip] = useState(false);
+
+  // 检查是否在预订页面
+  const isReservePage = router.pathname === '/reserve-vip-spot';
 
   // 客户端检测域名
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      const host = window.location.host.toLowerCase().replace(/:\d+$/, '');
-      setIsVip(host === 'vip.unicornblocks.ai');
+      setIsVip(isVipHost(window.location.host));
     }
   }, []);
 
@@ -30,12 +36,21 @@ export default function BlueTopBar() {
           <span className="blue-top-bar-text">Unicorn Blocks</span>
         </div>
 
-        <button
-          className="blue-top-bar-btn"
-          onClick={() => setShowModal(true)}
-        >
-          Join Adventure
-        </button>
+        {isReservePage ? (
+          <button
+            className="blue-top-bar-btn joined"
+            disabled
+          >
+            🎉 Joined
+          </button>
+        ) : (
+          <button
+            className="blue-top-bar-btn"
+            onClick={() => setShowModal(true)}
+          >
+            Join Adventure
+          </button>
+        )}
 
         <style jsx>{`
           .blue-top-bar {
@@ -89,6 +104,19 @@ export default function BlueTopBar() {
 
           .blue-top-bar-btn:hover {
             transform: translateY(-2px);
+          }
+
+          /* Joined 状态样式 */
+          .blue-top-bar-btn.joined {
+            cursor: default;
+            transform: none !important;
+            animation: pop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+          }
+
+          @keyframes pop {
+            0% { transform: scale(0.8); opacity: 0; }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); opacity: 1; }
           }
 
           @media (min-width: 768px) {
