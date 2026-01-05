@@ -364,6 +364,73 @@ export default function Home({ isVip = false }) {
   };
 
 
+  // Impact Section 渲染函数（用于在不同位置渲染）
+  const renderImpactSection = () => (
+    <section className="impact-section">
+      <div className="impact-bg-wrapper">
+        <div className="impact-bg-image impact-bg-bottom" aria-hidden="true">
+          <img src="/assets/ima/Vector_17_927.png" alt="" className="impact-bg-image-item" />
+        </div>
+        <div className="impact-bg-image impact-bg-top" aria-hidden="true">
+          <img src="/assets/ima/Vector_17_928.png" alt="" className="impact-bg-image-item" />
+        </div>
+      </div>
+      <div className="content-container">
+        <h2>
+          <span>{copy.impact.heading}</span>
+        </h2>
+        <div className="impact-grid">
+          {copy.impact.stats.map((stat, index) => (
+            <div className="impact-card" key={stat.title}>
+              <div className="impact-icon-wrapper">
+                {/* 移动端图片 */}
+                <Image
+                  src={index === 0 ? '/assets/ima/section6-1.svg' : index === 1 ? '/assets/ima/section6-2.svg' : '/assets/ima/section6-3.svg'}
+                  alt=""
+                  width={64}
+                  height={64}
+                  className="impact-icon md:hidden"
+                />
+                {/* PC端图片 */}
+                <Image
+                  src={index === 0 ? '/assets/ima/svg 5.svg' : index === 1 ? '/assets/ima/svg 6.svg' : '/assets/ima/svg 7.svg'}
+                  alt=""
+                  width={64}
+                  height={64}
+                  className="impact-icon hidden md:block"
+                />
+              </div>
+              {/* PC端标题 */}
+              <h3 className="hidden md:block">{stat.title}</h3>
+              {/* 移动端标题 */}
+              <h3 className="impact-card-title-mobile md:hidden">
+                <span className="impact-title-line1">
+                  {stat.titleLine1}
+                  {stat.titleLine1Small && <span className="impact-title-small">{stat.titleLine1Small}</span>}
+                </span>
+                <span className="impact-title-line2">{stat.titleLine2}</span>
+              </h3>
+              {/* PC端描述 */}
+              <p className="hidden md:block">{stat.description}</p>
+              {/* 移动端描述 */}
+              <p className="md:hidden">
+                {Array.isArray(stat.descriptionMobile)
+                  ? stat.descriptionMobile.map((line, i) => (
+                    <span key={i}>
+                      {line}
+                      {i < stat.descriptionMobile.length - 1 && <br />}
+                    </span>
+                  ))
+                  : stat.descriptionMobile
+                }
+              </p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+
   return (
     <>
       {popOpen && <PopModal onClose={() => { setPopOpen(false); localStorage.setItem('popModalClosed', '1'); }} />}
@@ -428,7 +495,7 @@ export default function Home({ isVip = false }) {
       <main className="home-root min-h-screen">
         {/* <Navigation /> */}
 
-        <section className="hero-block">
+        <section className={`hero-block ${!isVip ? 'main-site' : ''}`}>
           <div className="hero-backdrop" aria-hidden="true">
             {/* 移动端图片 */}
             <img
@@ -487,6 +554,9 @@ export default function Home({ isVip = false }) {
           </div>
 
         </section>
+
+        {/* Impact Section - 主站时显示在这里（第2位） */}
+        {!isVip && renderImpactSection()}
 
         {/* Steps Section - 仅 VIP 域名显示 */}
         {isVip && (
@@ -748,7 +818,7 @@ export default function Home({ isVip = false }) {
           </div>
         </section>
 
-        <section className="privacy-section">
+        <section className={`privacy-section ${!isVip ? 'main-site' : ''}`}>
           <div className="content-container">
             <div className="privacy-heading">
               <div>
@@ -877,71 +947,10 @@ export default function Home({ isVip = false }) {
           </div>
         </section>
 
-        <section className="impact-section">
-          <div className="impact-bg-wrapper">
-            <div className="impact-bg-image impact-bg-bottom" aria-hidden="true">
-              <img src="/assets/ima/Vector_17_927.png" alt="" className="impact-bg-image-item" />
-            </div>
-            <div className="impact-bg-image impact-bg-top" aria-hidden="true">
-              <img src="/assets/ima/Vector_17_928.png" alt="" className="impact-bg-image-item" />
-            </div>
-          </div>
-          <div className="content-container">
-            <h2>
-              <span>{copy.impact.heading}</span>
-            </h2>
-            <div className="impact-grid">
-              {copy.impact.stats.map((stat, index) => (
-                <div className="impact-card" key={stat.title}>
-                  <div className="impact-icon-wrapper">
-                    {/* 移动端图片 */}
-                    <Image
-                      src={index === 0 ? '/assets/ima/section6-1.svg' : index === 1 ? '/assets/ima/section6-2.svg' : '/assets/ima/section6-3.svg'}
-                      alt=""
-                      width={64}
-                      height={64}
-                      className="impact-icon md:hidden"
-                    />
-                    {/* PC端图片 */}
-                    <Image
-                      src={index === 0 ? '/assets/ima/svg 5.svg' : index === 1 ? '/assets/ima/svg 6.svg' : '/assets/ima/svg 7.svg'}
-                      alt=""
-                      width={64}
-                      height={64}
-                      className="impact-icon hidden md:block"
-                    />
-                  </div>
-                  {/* PC端标题 */}
-                  <h3 className="hidden md:block">{stat.title}</h3>
-                  {/* 移动端标题 */}
-                  <h3 className="impact-card-title-mobile md:hidden">
-                    <span className="impact-title-line1">
-                      {stat.titleLine1}
-                      {stat.titleLine1Small && <span className="impact-title-small">{stat.titleLine1Small}</span>}
-                    </span>
-                    <span className="impact-title-line2">{stat.titleLine2}</span>
-                  </h3>
-                  {/* PC端描述 */}
-                  <p className="hidden md:block">{stat.description}</p>
-                  {/* 移动端描述 */}
-                  <p className="md:hidden">
-                    {Array.isArray(stat.descriptionMobile)
-                      ? stat.descriptionMobile.map((line, i) => (
-                        <span key={i}>
-                          {line}
-                          {i < stat.descriptionMobile.length - 1 && <br />}
-                        </span>
-                      ))
-                      : stat.descriptionMobile
-                    }
-                  </p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
+        {/* Impact Section - VIP站时显示在这里（原位置） */}
+        {isVip && renderImpactSection()}
 
-        <section className="story-section">
+        <section className={`story-section ${!isVip ? 'main-site' : ''}`}>
           <div className="content-container">
             <h2>
               <span className="story-heading-line1">From Dreamers to</span>
@@ -1067,6 +1076,16 @@ export default function Home({ isVip = false }) {
           margin-top: calc(var(--nav-height) * -1);
           overflow: visible;
           background: linear-gradient(90deg, #FEFAE5 0%, #D9F1FC 100%);
+        }
+
+        /* 主站（非VIP）隐藏 hero 底部多余区域 */
+        .hero-block.main-site {
+          margin-bottom: -60px;
+        }
+        @media (min-width: 768px) {
+          .hero-block.main-site {
+            margin-bottom: -80px;
+          }
         }
 
         .hero-block::before {
@@ -2724,6 +2743,13 @@ export default function Home({ isVip = false }) {
         @media (max-width: 767px) {
           .story-section::before {
             display: none !important;
+          }
+        }
+
+        /* 主站PC端：隐藏绿色过渡区域（因为 Impact Section 不在这个位置） */
+        @media (min-width: 768px) {
+          .story-section.main-site::before {
+            display: none;
           }
         }
 
