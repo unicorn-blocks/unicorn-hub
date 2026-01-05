@@ -254,7 +254,7 @@ export default function PreOrder() {
                   {/* 行动按钮 */}
                   <div className="card-section">
                     <button
-                      className="primary-button button-shine"
+                      className="primary-button button-shine sticky-mobile-button"
                       onClick={() => window.location.href = '/payment/stripe-checkout'}
                     >
                       {t.ctaButton}
@@ -646,6 +646,7 @@ export default function PreOrder() {
         }
 
         /* ===== 行动按钮 ===== */
+        /* ===== 行动按钮 ===== */
         .primary-button {
           width: 100%;
           background: linear-gradient(90deg, #F7AEBF 0%, #9b90da 100%);
@@ -659,6 +660,24 @@ export default function PreOrder() {
           transition: all 0.3s ease;
           position: relative;
           overflow: hidden;
+        }
+
+        @media (max-width: 1023px) {
+          .sticky-mobile-button {
+            position: fixed !important;
+            bottom: calc(10px + env(safe-area-inset-bottom)) !important; /* Adapt to Safari bottom bar/Home Indicator */
+            left: 0 !important;
+            right: 0 !important;
+            margin: 0 auto !important;
+            width: calc(100% - 20px) !important;
+            max-width: 500px;
+            z-index: 1000;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3) !important;
+          }
+           /* Add padding to body or main to prevent content being hidden behind button? 
+              User didn't strictly ask, but it's good practice. 
+              However, might be overkill if they just want the button floating. 
+           */
         }
 
         .payment-button {
