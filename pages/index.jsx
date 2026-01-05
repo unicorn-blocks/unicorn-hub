@@ -95,7 +95,7 @@ export default function Home({ isVip = false }) {
         ]
       },
       kit: {
-        heading: 'Everything to Build the Magic.',
+        heading: 'Everything to Build the Magic',
         subheading: "Meet Sparky's Adventure Kit:",
         button: 'Book Now',
         media: '/assets/reserve-vip-spot/adventure-kit.svg',
@@ -155,30 +155,30 @@ export default function Home({ isVip = false }) {
       },
       privacy: {
         /*heading: 'Uncompromising Privacy:',*/
-        subheading: "Your Child's Data. Yours Alone.",
+        subheading: "Your Child's Data. Yours Alone",
         tag: 'COPPA Compliant by Design',
         cards: [
           {
             title: 'All Data Stays Yours',
             description:
-              'Data is automatically wiped and NEVER exposed to third parties. You can permanently delete any history instantly via the app.'
+              'Data is automatically deleted and never shared with third parties. You can review or clear it anytime.'
           },
           {
             title: 'No Eavesdropping. Ever',
             description:
-              'Physically OFF until you press. Mic & Camera are hard-wired to stay OFF. They cannot see or hear a thing until you actively hold the button.'
+              'Mic and camera are physically off by default. They only activate when you press and hold the button.'
           },
           {
             title: 'No Third-Party Ads',
             description: [
-              'A 100% Pure Play Zone. Contains no third-party ads, no tracking,',
-              'and no stranger interaction.'
+              'A safe, distraction-free play space.',
+              'No ads, no tracking, no outside interactions.'
             ]
           }
         ]
       },
       impact: {
-        heading: 'Creativity, Focus, and Real Thinking.',
+        heading: 'Creativity, Focus, and Real Thinking',
         stats: [
           {
             title: '3× Creativity',
@@ -213,13 +213,13 @@ export default function Home({ isVip = false }) {
           {
             title: 'The Team',
             description:
-              '“As kids, we pretended our toys were alive. Now, we use our engineering minds to finally build them, turning the magic we once only imagined into reality for the next generation.”',
+              'We grew up imagining our toys were alive. Now, as engineers, we’re building the magic we once dreamed of—for the next generation.',
             avatars: ['Bruce', 'Bryan']
           },
           {
             title: 'The Science',
             description:
-              'Collaborating with Top Minds. We partnered with engineers and researchers from UPenn, Purdue, and other top universities to craft a play experience that is joyful and positive, ensuring kids love every moment of the adventure.'
+              'Built with guidance from engineers and researchers at UPenn, Purdue, and other top universities—designed to be joyful, positive, and truly engaging for kids.'
           }
         ],
         milestones: [
@@ -238,22 +238,57 @@ export default function Home({ isVip = false }) {
         ]
       },
       faq: {
-        heading: 'Frequently Asked Questions',
+        heading: 'FAQs',
         items: [
           {
-            question: 'What age is Unicorn Blocks suitable for?',
+            question: 'Is the toy safe for children?',
             answer:
-              'Unicorn Blocks is perfectly designed for children aged 3 to 8 years old. The content adapts to their growing skills.'
+              'Absolutely. Unicorn Blocks is designed with safety as a top priority. The camera is disabled by default and can only be activated with explicit parental consent through the app. Parents fully own the data and can view, manage, or permanently delete it at any time.'
           },
           {
-            question: 'Do I need a subscription?',
+            question: 'Is this screen-free?',
             answer:
-              'No subscription is required. Once you reserve your adventure kit, Sparky tells stories, tracks progress, and unlocks Creator Mode without hidden fees.'
+              'Unicorn Blocks is designed to reduce passive screen time. Kids build with real, physical blocks while Sparky responds to what they create—encouraging hands-on play, imagination, and movement instead of scrolling or watching.'
           },
           {
-            question: 'Is it safe for my child?',
+            question: 'What age group are Unicorn Blocks suitable for?',
             answer:
-              'Every block is BPA-free, CPC/FCC certified, and paired with privacy-first voice controls. Parents stay in control from day one.'
+              'Ages 3–8. By setting your child’s age, the experience adapts with age-appropriate stories and difficulty levels, so it always feels just right.'
+          },
+          {
+            question: 'Can multiple children share one set?',
+            answer:
+              'Yes, they can share! For the best experience, we recommend one set per child. Each Sparky becomes a personal companion, and having their own set allows every child to enjoy a fully personalized creative journey.'
+          },
+          {
+            question: 'Does it need Wi-Fi to work?',
+            answer:
+              'You will need Wi-Fi or a hotspot connection to connect and generate new stickers. Once your Stickerbox is connected, you can move it around your home as long as it stays within range.'
+          },
+          {
+            question: 'Is it hard to set up?',
+            answer:
+              'Not at all. Setup takes just a few minutes through the parent app. After that, kids can jump straight into building and playing.'
+          },
+          {
+            question: 'What does my child actually learn?',
+            answer:
+              'Through play, kids develop creativity, spatial thinking, storytelling skills, and early engineering concepts—without it ever feeling like a lesson.'
+          },
+          {
+            question: 'How long will my child stay engaged?',
+            answer:
+              'Many parents are surprised by how long kids stay focused. Sparky encourages continuous building, experimenting, and storytelling, helping play sessions last far longer than traditional blocks.'
+          },
+          {
+            question: 'Will my child outgrow it quickly?',
+            answer:
+              'Unicorn Blocks grows with your child. As kids develop, Sparky introduces new challenges and story depth, keeping play fresh, engaging, and age-appropriate over time.'
+          },
+          {
+            question: 'Is it compatible with other building blocks?',
+            answer:
+              'Yes! Absolutely. Unicorn Blocks are compatible with LEGO®-style blocks, so kids can mix, expand, and build even bigger worlds using the blocks they already love.'
           }
         ]
       },
@@ -826,9 +861,9 @@ export default function Home({ isVip = false }) {
                 <div className="privacy-card-content">
                   <h3 style={{ color: '#383838', fontWeight: 'bold' }}>All Data Stays Yours</h3>
                   <p style={{ color: '#646464', }}>
-                    Data is automatically wiped and NEVER exposed to third parties.
+                    Data is automatically deleted and never shared with third parties.
                     <br />
-                    You can permanently delete any history instantly via the app.
+                    You can review or clear it anytime.
                   </p>
                 </div>
               </div>
@@ -851,11 +886,9 @@ export default function Home({ isVip = false }) {
                   <div className="privacy-card-content">
                     <h3 style={{ color: '#383838', fontWeight: 'bold' }}>No Eavesdropping. Ever</h3>
                     <p style={{ color: '#646464' }}>
-                      Physically OFF Until You Press.
+                      Mic and camera are physically off by default.
                       <br />
-                      Mic & Camera are hard-wired to stay OFF.
-                      <br />
-                      They can't see or hear a thing until you actively hold the button.
+                      They only activate when you press and hold the button.
                     </p>
                   </div>
                 </div>
@@ -873,11 +906,9 @@ export default function Home({ isVip = false }) {
                   <div className="privacy-card-content">
                     <h3 style={{ color: '#383838', fontWeight: 'bold' }}>No Third-Party Ads</h3>
                     <p style={{ color: '#646464' }}>
-                      A 100% Pure Play Zone.
+                      A safe, distraction-free play space.
                       <br />
-                      Contains No Third-Party Ads, no tracking,
-                      <br />
-                      and no stranger interaction.
+                      No ads, no tracking, no outside interactions.
                     </p>
                   </div>
                 </div>
@@ -898,11 +929,9 @@ export default function Home({ isVip = false }) {
                 <div className="privacy-card-content">
                   <h3 style={{ color: '#383838', fontWeight: 'bold' }}>No Eavesdropping. Ever</h3>
                   <p style={{ color: '#646464' }}>
-                    Physically OFF Until You Press.
+                    Mic and camera are physically off by default.
                     <br />
-                    Mic & Camera are hard-wired to stay OFF.
-                    <br />
-                    They can't see or hear a thing until you actively hold the button.
+                    They only activate when you press and hold the button.
                   </p>
                 </div>
               </div>
@@ -919,11 +948,9 @@ export default function Home({ isVip = false }) {
                 <div className="privacy-card-content">
                   <h3 style={{ color: '#383838', fontWeight: 'bold' }}>No Third-Party Ads</h3>
                   <p style={{ color: '#646464' }}>
-                    A 100% Pure Play Zone.
+                    A safe, distraction-free play space.
                     <br />
-                    Contains No Third-Party Ads, no tracking,
-                    <br />
-                    and no stranger interaction.
+                    No ads, no tracking, no outside interactions.
                   </p>
                 </div>
               </div>
@@ -1111,6 +1138,13 @@ export default function Home({ isVip = false }) {
         @media (min-width: 768px) {
           .hero-background-image.md\:hidden {
             display: none;
+          }
+        }
+        
+        /* Fix overlap on iPhone SE/Pro sizes */
+        @media (max-width: 430px) {
+          .hero-background-image.md\:hidden {
+             transform: translateY(45px);
           }
         }
 
@@ -1311,6 +1345,7 @@ export default function Home({ isVip = false }) {
           color: var(--color-primary-dark);  /* 移动端：#0F192A */
           font-weight: 700;
           text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff;
+          line-height: 1.2;
         }
 
         @media (min-width: 768px) {
@@ -1545,6 +1580,7 @@ export default function Home({ isVip = false }) {
           margin-bottom: 10px;
           text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff;
           white-space: normal;
+          line-height: 1.2;
         }
 
         @media (min-width: 768px) {
@@ -2168,7 +2204,7 @@ export default function Home({ isVip = false }) {
 
         .privacy-heading h2 {
           font-size: clamp(2rem, 3vw, 3rem);
-          line-height: 1.3;
+          line-height: 1.2;
           text-align: center;
         }
 
@@ -2562,6 +2598,7 @@ export default function Home({ isVip = false }) {
           text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff;
           margin-top: 10px;
           white-space: normal;
+          line-height: 1.2;
         }
 
         @media (min-width: 768px) {
@@ -2758,6 +2795,7 @@ export default function Home({ isVip = false }) {
           color: var(--color-primary-dark);  /* 移动端：#0F192A */
           text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff;
           white-space: normal;
+          line-height: 1.2;
         }
 
         @media (max-width: 767px) {
@@ -3100,6 +3138,7 @@ export default function Home({ isVip = false }) {
           margin-bottom: 32px;
           color: var(--color-primary-dark);  /* 移动端：#0F172A */
           font-weight: 700;  /* 移动端：加粗 */
+          line-height: 1.2;
         }
 
         @media (min-width: 768px) {
