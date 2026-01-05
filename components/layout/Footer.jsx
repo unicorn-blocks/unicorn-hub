@@ -10,12 +10,22 @@ export default function Footer({ onSubscribe, showEmailInput = true }) {
   const [footerStatus, setFooterStatus] = useState({ message: '', type: '' });
   const [isProcessing, setIsProcessing] = useState(false);
   const [isEmailSaved, setIsEmailSaved] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [isVip, setIsVip] = useState(true); // 默认 VIP 行为
 
   // 页面加载时不再恢复历史邮箱，并清空本地存储
   useEffect(() => {
     clearSavedEmail();
     setFooterEmail('');
     setIsEmailSaved(false);
+  }, []);
+
+  // 客户端检测域名
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const host = window.location.host.toLowerCase().replace(/:\d+$/, '');
+      setIsVip(host === 'vip.unicornblocks.ai');
+    }
   }, []);
 
   // 翻译文本
@@ -68,9 +78,16 @@ export default function Footer({ onSubscribe, showEmailInput = true }) {
 
     setIsProcessing(true);
 
-    // 显示 700ms 状态后跳转
+    // 显示 700ms 状态后执行
     setTimeout(() => {
-      router.push('/reserve-vip-spot');
+      if (isVip) {
+        // VIP站：跳转到VIP页面
+        router.push('/reserve-vip-spot');
+      } else {
+        // 主站：显示成功消息
+        setShowSuccess(true);
+        setIsProcessing(false);
+      }
     }, 700);
 
     // 后台异步提交（不阻塞）
@@ -132,48 +149,54 @@ export default function Footer({ onSubscribe, showEmailInput = true }) {
             <div className="footer-email-section flex justify-start md:justify-end">
               <div className="w-full md:max-w-[547px]">
                 <h3 className="footer-email-title font-semibold mb-3 md:mb-4">
-                  {footerT.joinMagicList}
+                  {showSuccess ? '🎉 Thank You!' : footerT.joinMagicList}
                 </h3>
-                <form onSubmit={handleFooterSubmit} className="footer-email-form flex flex-col md:flex-row md:items-end gap-4 md:gap-0">
-                  <div className="footer-input-wrapper flex-1 w-full md:max-w-[427px] relative">
-                    <input
-                      type="email"
-                      value={footerEmail}
-                      onChange={e => { setFooterEmail(e.target.value); if (footerStatus.message) setFooterStatus({ message: '', type: '' }); }}
-                      placeholder="Enter your email to join"
-                      className="footer-email-input w-full px-0 py-2 border-0 border-b-2 border-gray-300 focus:outline-none focus:border-[#7d9ed4] bg-transparent placeholder-gray-400"
-                      style={{ borderRadius: 0, color: '#54545C', paddingRight: isEmailSaved ? '30px' : '0' }}
-                    />
-                    {isEmailSaved && (
-                      <span className="footer-checkmark">✅</span>
-                    )}
-                  </div>
-                  <button
-                    type="submit"
-                    disabled={isProcessing}
-                    className="footer-submit-btn relative flex items-center justify-center transition-all self-center md:self-auto"
-                    style={{ background: 'transparent', border: 'none', padding: 0, cursor: isProcessing ? 'not-allowed' : 'pointer', opacity: isProcessing ? 0.7 : 1 }}
-                  >
-                    <img
-                      src="/assets/ima/Group 83.svg"
-                      alt="Join Adventure"
-                      className="w-full h-full object-contain"
-                      style={{ position: 'relative', zIndex: 1 }}
-                    />
-                    <span
-                      className="footer-btn-text absolute font-bold text-center whitespace-nowrap"
-                      style={{
-                        color: '#fff',
-                        lineHeight: '0.8',
-                        left: '50%',
-                        transform: 'translateX(-50%)',
-                        zIndex: 2
-                      }}
+                {showSuccess ? (
+                  <p style={{ color: '#666', fontSize: '1rem' }}>
+                    Thank you for Joining! We will notify you when we launch!
+                  </p>
+                ) : (
+                  <form onSubmit={handleFooterSubmit} className="footer-email-form flex flex-col md:flex-row md:items-end gap-4 md:gap-0">
+                    <div className="footer-input-wrapper flex-1 w-full md:max-w-[427px] relative">
+                      <input
+                        type="email"
+                        value={footerEmail}
+                        onChange={e => { setFooterEmail(e.target.value); if (footerStatus.message) setFooterStatus({ message: '', type: '' }); }}
+                        placeholder="Enter your email to join"
+                        className="footer-email-input w-full px-0 py-2 border-0 border-b-2 border-gray-300 focus:outline-none focus:border-[#7d9ed4] bg-transparent placeholder-gray-400"
+                        style={{ borderRadius: 0, color: '#54545C', paddingRight: isEmailSaved ? '30px' : '0' }}
+                      />
+                      {isEmailSaved && (
+                        <span className="footer-checkmark">✅</span>
+                      )}
+                    </div>
+                    <button
+                      type="submit"
+                      disabled={isProcessing}
+                      className="footer-submit-btn relative flex items-center justify-center transition-all self-center md:self-auto"
+                      style={{ background: 'transparent', border: 'none', padding: 0, cursor: isProcessing ? 'not-allowed' : 'pointer', opacity: isProcessing ? 0.7 : 1 }}
                     >
-                      {isProcessing ? 'Joining' : 'Join Adventure'}
-                    </span>
-                  </button>
-                </form>
+                      <img
+                        src="/assets/ima/Group 83.svg"
+                        alt="Join Adventure"
+                        className="w-full h-full object-contain"
+                        style={{ position: 'relative', zIndex: 1 }}
+                      />
+                      <span
+                        className="footer-btn-text absolute font-bold text-center whitespace-nowrap"
+                        style={{
+                          color: '#fff',
+                          lineHeight: '0.8',
+                          left: '50%',
+                          transform: 'translateX(-50%)',
+                          zIndex: 2
+                        }}
+                      >
+                        {isProcessing ? 'Joining' : 'Join Adventure'}
+                      </span>
+                    </button>
+                  </form>
+                )}
               </div>
             </div>
           )}

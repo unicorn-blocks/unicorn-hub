@@ -4,7 +4,7 @@ import Image from 'next/image';
 import styles from './PopModal.module.css';
 // 不再持久化邮箱，本地状态即可
 
-export default function PopModal({ onClose }) {
+export default function PopModal({ onClose, isVip = true }) {
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [error, setError] = useState('');
@@ -12,6 +12,7 @@ export default function PopModal({ onClose }) {
   const [submitted, setSubmitted] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [isEmailSaved, setIsEmailSaved] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
 
   const isValidEmail = (email) => /\S+@\S+\.\S+/.test(email);
 
@@ -28,9 +29,16 @@ export default function PopModal({ onClose }) {
     setIsProcessing(true);
     setIsHovered(false);
 
-    // 显示 700ms "Joining" 状态后再跳转
+    // 显示 700ms "Joining" 状态后执行
     setTimeout(() => {
-      router.push('/reserve-vip-spot');
+      if (isVip) {
+        // VIP站：跳转到VIP页面
+        router.push('/reserve-vip-spot');
+      } else {
+        // 主站：显示成功视图
+        setShowSuccess(true);
+        setIsProcessing(false);
+      }
     }, 700);
 
     // 后台异步提交（不阻塞）
@@ -47,6 +55,26 @@ export default function PopModal({ onClose }) {
 
   // 固定按钮文案
   const btnText = 'Join Adventure';
+
+  // 成功视图（仅主站使用）
+  if (showSuccess) {
+    return (
+      <div className={styles.popModalMask}>
+        <div className={styles.popModalMain}>
+          <div className={styles.blackShadow}></div>
+          <div className={styles.yellowPanel}>
+            <button className={styles.closeBtn} onClick={onClose} aria-label="close">×</button>
+            <div className={styles.successView}>
+              <div className={styles.successEmoji}>🎉</div>
+              <h2 className={styles.successTitle}>Thank You for Joining!</h2>
+              <p className={styles.successText}>We will notify you when we launch!</p>
+              <button className={styles.gotItBtn} onClick={onClose}>Got it!</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={styles.popModalMask}>

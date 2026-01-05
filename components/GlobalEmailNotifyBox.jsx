@@ -8,6 +8,8 @@ export default function GlobalEmailNotifyBox() {
   const [show, setShow] = useState(true);
   const [isEmailSaved, setIsEmailSaved] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [isVip, setIsVip] = useState(true); // 默认 VIP 行为
   const router = useRouter();
 
   // 邮箱验证
@@ -28,6 +30,14 @@ export default function GlobalEmailNotifyBox() {
     return () => window.removeEventListener('scroll', checkFooterInView);
   }, []);
 
+  // 客户端检测域名
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const host = window.location.host.toLowerCase().replace(/:\d+$/, '');
+      setIsVip(host === 'vip.unicornblocks.ai');
+    }
+  }, []);
+
   const handleInputChange = (e) => {
     setEmail(e.target.value);
     if (error) setError('');
@@ -41,9 +51,16 @@ export default function GlobalEmailNotifyBox() {
 
     setIsLoading(true);
 
-    // 显示 700ms "Joining" 状态后再跳转
+    // 显示 700ms "Joining" 状态后执行
     setTimeout(() => {
-      router.push('/reserve-vip-spot');
+      if (isVip) {
+        // VIP站：跳转到VIP页面
+        router.push('/reserve-vip-spot');
+      } else {
+        // 主站：显示成功消息
+        setShowSuccess(true);
+        setIsLoading(false);
+      }
     }, 700);
 
     // 后台异步提交（不阻塞）
@@ -59,6 +76,41 @@ export default function GlobalEmailNotifyBox() {
   };
 
   if (!show) return null;
+
+  // 主站隐藏底部浮动输入框
+  if (!isVip) return null;
+
+  // 成功视图（仅主站使用）
+  if (showSuccess) {
+    return (
+      <div
+        className="hidden md:flex"
+        style={{
+          position: 'fixed',
+          left: 0,
+          right: 0,
+          bottom: 15,
+          margin: '0 auto',
+          width: 420,
+          height: 60,
+          background: 'linear-gradient(90deg, #E8A4B8 0%, #A79BDB 100%)',
+          border: '2px solid #111',
+          borderRadius: 12,
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 1001,
+          boxSizing: 'border-box',
+          boxShadow: '0 3px 10px 0 rgba(39,40,47,0.3)',
+          gap: 10
+        }}
+      >
+        <span style={{ fontSize: 24 }}>🎉</span>
+        <span style={{ color: '#fff', fontWeight: 600, fontSize: 15 }}>
+          Thank you for Joining! We will notify you when we launch!
+        </span>
+      </div>
+    );
+  }
 
   // UI 细节变量
   const OUTER_WIDTH = 420; // 外黄色框更窄些

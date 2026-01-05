@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import dynamic from 'next/dynamic';
 
@@ -6,6 +6,15 @@ const PopModal = dynamic(() => import('./PopModal'), { ssr: false });
 
 export default function BlueTopBar() {
   const [showModal, setShowModal] = useState(false);
+  const [isVip, setIsVip] = useState(true); // 默认 VIP 行为
+
+  // 客户端检测域名
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const host = window.location.host.toLowerCase().replace(/:\d+$/, '');
+      setIsVip(host === 'vip.unicornblocks.ai');
+    }
+  }, []);
 
   return (
     <>
@@ -115,7 +124,7 @@ export default function BlueTopBar() {
           }
         `}</style>
       </div>
-      {showModal && <PopModal onClose={() => setShowModal(false)} />}
+      {showModal && <PopModal isVip={isVip} onClose={() => setShowModal(false)} />}
     </>
   );
 }
