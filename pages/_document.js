@@ -10,14 +10,14 @@ class MyDocument extends Document {
           <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
           <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Jost:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
           <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-          
+
           {/* Favicon 链接 */}
           <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
           <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
           <link rel="shortcut icon" href="/favicon.ico" />
           <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
           <link rel="manifest" href="/site.webmanifest" />
-          
+
           {/* Google Analytics */}
           <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y8SZH3MM6L"></script>
           <script dangerouslySetInnerHTML={{
@@ -41,11 +41,25 @@ s.parentNode.insertBefore(t,s)}(window, document,'script',
 fbq('init', '1192631419547458');
 fbq('track', 'PageView');`
           }} />
+          {/* Microsoft Clarity - Only for non-VIP unicornblocks.ai */}
+          <script type="text/javascript" dangerouslySetInnerHTML={{
+            __html: `
+              (function(c,l,a,r,i,t,y){
+                  // Domain check: only run on unicornblocks.ai (and www.), excluding vip.
+                  var hostname = window.location.hostname;
+                  if (hostname.indexOf('unicornblocks.ai') > -1 && hostname.indexOf('vip.') !== 0) {
+                      c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+                      t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+                      y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+                  }
+              })(window, document, "clarity", "script", "uwul2mcueu");
+            `
+          }} />
         </Head>
-        
+
         <body>
           <noscript>
-            <img height="1" width="1" style={{display: 'none'}} src="https://www.facebook.com/tr?id=1192631419547458&ev=PageView&noscript=1" alt="" />
+            <img height="1" width="1" style={{ display: 'none' }} src="https://www.facebook.com/tr?id=1192631419547458&ev=PageView&noscript=1" alt="" />
           </noscript>
           <Main />
           <NextScript />
