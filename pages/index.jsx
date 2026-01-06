@@ -1134,7 +1134,7 @@ export default function Home({ isVip = false }) {
           color: var(--color-primary-dark);  /* 移动端：#0F192A */
           font-weight: 800;
           text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff;
-          font-size: clamp(2.5rem, 5vw, 4rem); /* 增大移动端字体与Creating一致 */
+          font-size: clamp(1.8rem, 4.5vw, 4rem); /* 缩小移动端字体以防止换行 */
         }
 
         @media (min-width: 768px) {
@@ -1149,10 +1149,10 @@ export default function Home({ isVip = false }) {
           color: #f7ad3b;
           font-weight: 800;
           text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff;
-          font-size: clamp(2.5rem, 5vw, 4rem); /* 增大移动端字体 */
+          font-size: clamp(1.8rem, 4.5vw, 4rem); /* 保持与Not Just Stacking一致 */
           margin-top: 5px; /* 增加移动端行间距 */
         }
-        }
+
         
         @media (min-width: 768px) {
            .hero-title-accent {
