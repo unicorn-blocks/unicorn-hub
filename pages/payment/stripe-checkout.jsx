@@ -15,7 +15,7 @@ export default function StripeCheckout() {
       try {
         // 调用 Stripe Checkout Session API，不传递任何用户信息
         // Stripe 会在 Checkout 页面收集用户信息
-        const response = await fetch('/api/payment/stripe/checkout-session', {
+        const response = await fetch('https://unicornblocks.ai/api/payment/stripe/checkout-session', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'

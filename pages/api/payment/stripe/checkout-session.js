@@ -16,6 +16,22 @@ async function getStripe() {
 }
 
 export default async function handler(req, res) {
+  // CORS 处理
+  const origin = req.headers.origin;
+  const allow = new Set([
+    "https://vip.unicornblocks.ai",
+    "https://unicornblocks.ai",
+    "http://vip.unicornblocks.local:3000",
+    "http://localhost:3000",
+  ]);
+
+  if (allow.has(origin)) res.setHeader("Access-Control-Allow-Origin", origin);
+  res.setHeader("Vary", "Origin");
+  res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+
+  if (req.method === "OPTIONS") return res.status(200).end();
+
   if (req.method !== 'POST') {
     return res.status(405).json({ error: '方法不允许' });
   }
