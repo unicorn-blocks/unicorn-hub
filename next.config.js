@@ -6,11 +6,12 @@ const nextConfig = {
     unoptimized: true,
   },
 
-  // 将 stripe 从 webpack 打包中排除，让 Node.js 在运行时从 node_modules 加载
-  // 这对 Netlify Functions 和本地 Node.js 环境都有效
-  // 将 stripe 从 webpack 打包中排除，让 Node.js 在运行时从 node_modules 加载
-  serverExternalPackages: ['stripe'],
+  // 确保 Next.js 构建包含 stripe（通过 tracing）
+  output: 'standalone',
+
   experimental: {
+    // 将 stripe 从 webpack 打包中排除（虽然有 eval，但以防万一）
+    serverComponentsExternalPackages: ['stripe'],
     outputFileTracingIncludes: {
       '/api/**/*': ['./node_modules/stripe/**/*'],
     },
