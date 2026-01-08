@@ -13,5 +13,14 @@
     "vars": {
         "NEXT_DISABLE_CACHE": "true",
         "PAYMENT_API_BASE": "https://unicornblocks.ai"
-    }
+    },
+    "rules": [
+        {
+            "type": "ESModule",
+            "globs": [
+                "**/*.js"
+            ],
+            "fallthrough": true
+        }
+    ]
 }

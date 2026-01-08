@@ -26,16 +26,14 @@ function shouldBlockWebhook(req) {
 }
 
 async function loadStripeAndDeps() {
-  // eval('require') bypasses Webpack's module resolution
-  const realRequire = eval('require');
-  const Stripe = realRequire('stripe');
-  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+  const stripeServer = await import('../../../lib/stripe-server.js');
+  const stripe = stripeServer.getStripeInstance();
 
   // 这两个本地模块可以用动态 import
   const { updateOrderStatus } = await import('../../../lib/orders');
   const { submitEmailToGoogleSheets } = await import('../../../lib/googleSheets');
 
-  return { stripe, updateOrderStatus, submitEmailToGoogleSheets };
+  return { stripe, updateOrderStatus, submitEmailToGoogleSheets, stripeServer };
 }
 
 export default async function handler(req, res) {

@@ -38,35 +38,14 @@ async function proxyToMain(req, res) {
 }
 
 async function createIntentOnNode(req, res) {
-  // eval('require') bypasses Webpack's module resolution
-  const realRequire = eval('require');
-  const Stripe = realRequire('stripe');
-  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
-
-  const { amount, currency, customer, shipping, metadata } = req.body;
-
-  const paymentIntent = await stripe.paymentIntents.create({
-    amount: Math.round(parseFloat(amount) * 100),
-    currency: currency || "usd",
-    receipt_email: customer?.email,
-    shipping: shipping
-      ? {
-        name: `${shipping.firstName} ${shipping.lastName}`,
-        address: {
-          line1: shipping.address,
-          line2: shipping.address2,
-          city: shipping.city,
-          state: shipping.state,
-          postal_code: shipping.zipCode,
-          country: shipping.country,
-        },
-        phone: shipping.phone,
-      }
-      : undefined,
-    metadata,
-  });
-
-  return res.status(200).json({ clientSecret: paymentIntent.client_secret });
+  try {
+    const stripeServer = await import('../../../lib/stripe-server.js');
+    const result = await stripeServer.createPaymentIntent(req.body || {});
+    return res.status(200).json(result);
+  } catch (error) {
+    console.error('Stripe Intent Error:', error);
+    return res.status(500).json({ error: error.message });
+  }
 }
 
 export default async function handler(req, res) {

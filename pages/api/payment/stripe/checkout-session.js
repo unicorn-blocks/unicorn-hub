@@ -30,16 +30,6 @@ function shouldProxy(req) {
   return isVip || forced || hasBase;
 }
 
-// Helper function to get Stripe instance
-// Uses eval to completely bypass Webpack's static analysis
-// This is necessary because Webpack intercepts all require/import calls
-async function getStripe() {
-  // eval('require') returns the real Node.js require, not Webpack's
-  const realRequire = eval('require');
-  const Stripe = realRequire('stripe');
-  return new Stripe(process.env.STRIPE_SECRET_KEY);
-}
-
 export default async function handler(req, res) {
 
   // 1. CORS Headers
@@ -93,72 +83,10 @@ export default async function handler(req, res) {
 
   // 3. Netlify/Node Logic (Real Stripe Transaction)
   try {
-    const {
-      email,
-      firstName,
-      lastName,
-      zip,
-      leadId = '',
-      amount = 5,
-      currency = 'usd',
-    } = req.body || {};
-
-    const origin = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
-
-    const productImageUrl = process.env.NEXT_PUBLIC_APP_URL
-      ? `${process.env.NEXT_PUBLIC_APP_URL}/assets/checkout/sparky.jpg`
-      : null;
-
-    const sessionConfig = {
-      mode: 'payment',
-      payment_method_types: ['card'],
-      line_items: [
-        {
-          price_data: {
-            currency,
-            product_data: {
-              name: 'VIP Spot Reservation',
-              description: 'Sparky First Adventure',
-              ...(productImageUrl && { images: [productImageUrl] }),
-            },
-            unit_amount: Math.round(Number(amount) * 100),
-          },
-          quantity: 1,
-          adjustable_quantity: { enabled: true, minimum: 1, maximum: 10 },
-        },
-      ],
-      success_url: `${origin}/payment/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${origin}/payment/cancel`,
-      billing_address_collection: 'auto',
-      client_reference_id: leadId || email || 'anonymous',
-      metadata: {
-        leadId: leadId || '',
-        firstName: firstName || '',
-        lastName: lastName || '',
-        zip: zip || '',
-        email: email || '',
-      },
-      payment_intent_data: {
-        metadata: {
-          leadId: leadId || '',
-          firstName: firstName || '',
-          lastName: lastName || '',
-          zip: zip || '',
-          email: email || '',
-        },
-      },
-    };
-
-    if (email) sessionConfig.customer_email = email;
-
-    const stripe = await getStripe();
-    const session = await stripe.checkout.sessions.create(sessionConfig);
-
-    return res.status(200).json({
-      success: true,
-      url: session.url,
-      sessionId: session.id,
-    });
+    // Dynamic import of stripe-server module - now safe for esbuild because the module uses eval('require')
+    const stripeServer = await import('../../../../lib/stripe-server.js');
+    const result = await stripeServer.createCheckoutSession(req.body || {});
+    return res.status(200).json(result);
   } catch (error) {
     console.error('Stripe Checkout Session Error:', error);
     return res.status(500).json({

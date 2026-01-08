@@ -5,17 +5,22 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
+
+  // 将 stripe 从 webpack 打包中排除，让 Node.js 在运行时从 node_modules 加载
+  // 这对 Netlify Functions 和本地 Node.js 环境都有效
+  serverExternalPackages: ['stripe'],
+
   // 禁用 distDir 设置，让 Next.js 使用默认的 .next 目录进行中间构建
   // 默认使用 .next 目录
   // distDir: 'out',
-  
+
   // 添加环境变量配置
   env: {
     MAILCHIMP_API_KEY: process.env.MAILCHIMP_API_KEY,
     MAILCHIMP_LIST_ID: process.env.MAILCHIMP_LIST_ID,
     MAILCHIMP_DATA_CENTER: process.env.MAILCHIMP_DATA_CENTER,
   },
-  
+
   // 添加重写规则
   async rewrites() {
     return [
