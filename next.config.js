@@ -7,14 +7,13 @@ const nextConfig = {
   },
 
   // 确保 Next.js 构建包含 stripe（通过 tracing）
+  // 确保 Next.js 构建包含 stripe（通过 tracing）
   output: 'standalone',
 
   experimental: {
     // 将 stripe 从 webpack 打包中排除（虽然有 eval，但以防万一）
+    // 注意：有了 stripe-server.js 的标准 require，Webpack 会自动包含 stripe 及其依赖
     serverComponentsExternalPackages: ['stripe'],
-    outputFileTracingIncludes: {
-      '/api/**/*': ['./node_modules/stripe/**/*'],
-    },
   },
 
   // 禁用 distDir 设置，让 Next.js 使用默认的 .next 目录进行中间构建
