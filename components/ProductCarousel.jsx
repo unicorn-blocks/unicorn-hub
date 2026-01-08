@@ -13,7 +13,7 @@ export default function ProductCarousel() {
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (!isFullscreen) return;
-      
+
       if (e.key === 'ArrowLeft') {
         goToPrevious();
       } else if (e.key === 'ArrowRight') {
@@ -59,9 +59,9 @@ export default function ProductCarousel() {
             className="carousel-image"
             decoding="async"
           />
-          
+
           {/* 全屏查看按钮 */}
-          <button 
+          <button
             className="carousel-fullscreen-btn"
             onClick={(e) => {
               e.stopPropagation();
@@ -73,9 +73,9 @@ export default function ProductCarousel() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
             </svg>
           </button>
-          
+
           {/* 导航箭头 */}
-          <button 
+          <button
             className="carousel-nav carousel-nav-prev"
             onClick={(e) => {
               e.stopPropagation();
@@ -87,8 +87,8 @@ export default function ProductCarousel() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
           </button>
-          
-          <button 
+
+          <button
             className="carousel-nav carousel-nav-next"
             onClick={(e) => {
               e.stopPropagation();
@@ -107,7 +107,7 @@ export default function ProductCarousel() {
       {isFullscreen && (
         <div className="fullscreen-modal" onClick={closeFullscreen}>
           <div className="fullscreen-content" onClick={(e) => e.stopPropagation()}>
-            <button 
+            <button
               className="fullscreen-close"
               onClick={closeFullscreen}
               aria-label="Close fullscreen"
@@ -116,9 +116,9 @@ export default function ProductCarousel() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
-            
+
             {/* 全屏导航按钮 */}
-            <button 
+            <button
               className="fullscreen-nav fullscreen-nav-prev"
               onClick={(e) => {
                 e.stopPropagation();
@@ -130,8 +130,8 @@ export default function ProductCarousel() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
               </svg>
             </button>
-            
-            <button 
+
+            <button
               className="fullscreen-nav fullscreen-nav-next"
               onClick={(e) => {
                 e.stopPropagation();
@@ -143,17 +143,17 @@ export default function ProductCarousel() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
               </svg>
             </button>
-            
+
             <img
               src={images[currentImage]}
               alt={`Product image ${currentImage + 1}`}
               className="fullscreen-image"
               decoding="async"
             />
-            
+
             {/* 全屏底部导航栏 */}
             <div className="fullscreen-navbar">
-              <button 
+              <button
                 className="fullscreen-nav-btn"
                 onClick={(e) => {
                   e.stopPropagation();
@@ -165,7 +165,7 @@ export default function ProductCarousel() {
                 </svg>
               </button>
               <span className="fullscreen-counter">{currentImage + 1} / {images.length}</span>
-              <button 
+              <button
                 className="fullscreen-nav-btn"
                 onClick={(e) => {
                   e.stopPropagation();
@@ -449,6 +449,21 @@ export default function ProductCarousel() {
         }
 
         @media (max-width: 768px) {
+          .product-carousel {
+            width: 85%;
+            margin: 0 auto;
+          }
+
+          .carousel-wrapper {
+            aspect-ratio: auto !important; /* Allow natural image height */
+            height: auto !important;
+          }
+
+          .carousel-image {
+            position: relative !important; /* Override absolute positioning if any */
+            height: auto !important;
+          }
+        
           .carousel-container {
             padding: 0;
           }

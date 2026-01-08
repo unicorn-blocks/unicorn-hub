@@ -10,7 +10,7 @@ import KitCategories from '../components/KitCategories';
 
 export default function PreOrder() {
   const { language } = useLanguage();
-  const [expandedFaqIndex, setExpandedFaqIndex] = useState([]);
+  const [openFaq, setOpenFaq] = useState(null);
 
 
   // Scarcity state
@@ -217,17 +217,7 @@ export default function PreOrder() {
     '/assets/reserve-vip-spot/stem-education.svg', // creative STEM adventures
     '/assets/reserve-vip-spot/independent-play.svg' // independent play gift
   ];
-  const toggleFaq = (idx) => {
-    setExpandedFaqIndex((current) => {
-      const set = new Set(current);
-      if (set.has(idx)) {
-        set.delete(idx);
-      } else {
-        set.add(idx);
-      }
-      return Array.from(set).sort((a, b) => a - b);
-    });
-  };
+  // toggleFaq is now inline in the button onClick
 
 
   return (
@@ -247,7 +237,7 @@ export default function PreOrder() {
       {/* <Navigation /> */}
 
       {/* Main Content */}
-      <main className="min-h-screen pt-2 px-4 pb-24">
+      <main className="min-h-screen pt-2 pb-24">
         <div className="buy-container">
           {/* 页面标题 */}
 
@@ -281,7 +271,7 @@ export default function PreOrder() {
           </div>
 
           {/* 主产品展示区域 */}
-          <div className="max-w-6xl mx-auto mb-16">
+          <div className="product-section-wrapper">
             <div className="grid grid-cols-1 lg:grid-cols-[4fr_5fr] gap-8 items-stretch">
 
               {/* 左侧：产品轮播图 */}
@@ -333,42 +323,41 @@ export default function PreOrder() {
 
 
           {/* FAQ 区块 */}
-          <div className="max-w-6xl mx-auto mt-10">
+          <div className="faq-section-wrapper">
             <div className="features-card glass-up surface-card">
               <div className="text-center mb-6">
                 <h3 className="text-2xl font-bold mb-2">{t.faq.title}</h3>
                 <div className="w-16 h-1 bg-gradient-to-r from-[#7D9ED4] to-[#F7AEBF] mx-auto rounded-full"></div>
               </div>
-              <div className="space-y-3">
-                {t.faq.items.map((faqItem, idx) => {
-                  const open = expandedFaqIndex.includes(idx);
-                  return (
-                    <div key={idx} className={`faq-item ${open ? 'open' : ''}`}>
-                      <button type="button" className="faq-header" onClick={() => toggleFaq(idx)} aria-expanded={open}>
-                        <span className="faq-q">{faqItem.q}</span>
-                        <span className={`chevron ${open ? 'rotate' : ''}`}>⌄</span>
-                      </button>
-                      <div className="faq-content" style={{ maxHeight: open ? '300px' : '0px' }}>
-                        {faqItem.q.includes('VIP Reservation') || faqItem.q.includes('VIP 预订') ? (
-                          <div className="faq-a-steps">
-                            {faqItem.a.split('\n').map((step, index) => (
-                              <div key={index} className="step-line">
-                                <span className="step-number">{step.split('.')[0]}.</span>
-                                <span className="step-content" dangerouslySetInnerHTML={{
-                                  __html: step.split('.').slice(1).join('.').trim().replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-                                }}></span>
-                              </div>
-                            ))}
-                          </div>
-                        ) : (
-                          <div className="faq-a" dangerouslySetInnerHTML={{
-                            __html: faqItem.a.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>')
-                          }}></div>
-                        )}
-                      </div>
+              <div className="faq-list">
+                {t.faq.items.map((faqItem, idx) => (
+                  <div key={idx} className={`faq-item ${openFaq === idx ? 'open' : ''}`}>
+                    <button type="button" className="faq-header" onClick={() => setOpenFaq(openFaq === idx ? null : idx)} aria-expanded={openFaq === idx}>
+                      <span className="faq-q">{faqItem.q}</span>
+                      <span className="faq-icon" aria-hidden="true">
+                        {openFaq === idx ? '−' : '+'}
+                      </span>
+                    </button>
+                    <div className="faq-answer">
+                      {faqItem.q.includes('VIP Reservation') || faqItem.q.includes('VIP 预订') ? (
+                        <div className="faq-a-steps">
+                          {faqItem.a.split('\n').map((step, index) => (
+                            <div key={index} className="step-line">
+                              <span className="step-number">{step.split('.')[0]}.</span>
+                              <span className="step-content" dangerouslySetInnerHTML={{
+                                __html: step.split('.').slice(1).join('.').trim().replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                              }}></span>
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <p dangerouslySetInnerHTML={{
+                          __html: faqItem.a.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>')
+                        }}></p>
+                      )}
                     </div>
-                  );
-                })}
+                  </div>
+                ))}
               </div>
             </div>
           </div>
@@ -427,7 +416,7 @@ export default function PreOrder() {
           padding: 1rem 0;
           display: flex;
           flex-direction: column;
-          align-items: flex-start; /* Ensure block aligns left */
+          align-items: center; /* Center align the content block */
           width: 100%;
           max-width: 100%; /* Allow full width */
           margin: 0;
@@ -557,6 +546,29 @@ export default function PreOrder() {
            .value-title {
              text-align: left;
            }
+        }
+
+        /* ===== Section Wrappers ===== */
+        .product-section-wrapper {
+          max-width: 72rem; /* 1152px = 6xl */
+          margin: 0 auto 4rem;
+          padding: 0 16px;
+        }
+        
+        .faq-section-wrapper {
+          max-width: 72rem;
+          margin: 2.5rem auto 0;
+          padding: 0 16px;
+        }
+        
+        @media (max-width: 768px) {
+          .product-section-wrapper,
+          .faq-section-wrapper {
+            max-width: 100%;
+            margin-left: 0;
+            margin-right: 0;
+            padding: 0 8px;
+          }
         }
 
         /* ===== 产品展示区域 ===== */
@@ -843,6 +855,13 @@ export default function PreOrder() {
           box-shadow: none;
           padding: 2.5rem;
         }
+        
+        /* Mobile: reduce horizontal padding for features-card */
+        @media (max-width: 768px) {
+          .features-card {
+            padding: 1.5rem 0.5rem;
+          }
+        }
 
         .glass-up {
           background: rgba(255,255,255,0.8);
@@ -895,54 +914,48 @@ export default function PreOrder() {
           color: #111827;
           text-align: left;
         }
+        
+        .faq-icon {
+          font-size: 1.5rem;
+          color: #111827;
+          font-weight: 600;
+        }
 
         .faq-item:hover .faq-q { 
           color: #0f172a; 
         }
 
-        .chevron {
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          width: 20px;
-          height: 20px;
-          margin-left: 0.5rem;
-          font-size: 0;
+
+
+        .faq-answer {
+          max-height: 0;
+          overflow: hidden;
+          transition: max-height 0.15s cubic-bezier(0.4, 0, 0.2, 1), padding-bottom 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+          padding: 0 1.1rem;
         }
 
-        .chevron::before {
-          content: '';
-          width: 14px;
-          height: 14px;
-          background: #9ca3af;
-          transition: transform .2s ease;
-          -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='currentColor'%3E%3Cpath fill-rule='evenodd' d='M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z' clip-rule='evenodd'/%3E%3C/svg%3E") center/14px 14px no-repeat;
-          mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='currentColor'%3E%3Cpath fill-rule='evenodd' d='M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z' clip-rule='evenodd'/%3E%3C/svg%3E") center/14px 14px no-repeat;
+        .faq-item.open .faq-answer {
+          max-height: 300px;
+          padding-bottom: 1rem;
         }
 
-        .chevron.rotate::before {
-          transform: rotate(180deg);
-        }
-
-        .faq-content {
-          transition: max-height .25s ease;
-        }
-
-        .faq-a {
-          padding: 0 1.1rem 1rem 1.1rem;
-          color: #374151;
+        .faq-answer p {
+          color: #4b5563;
           font-size: 0.95rem;
           line-height: 1.6;
-          font-variant-numeric: tabular-nums;
         }
 
-        .faq-a strong {
+        .faq-answer p strong {
           font-weight: 600;
           color: #1f2937;
         }
 
+        .faq-list {
+          display: grid;
+          gap: 12px;
+        }
+
         .faq-a-steps {
-          padding: 0 1.1rem 1rem 1.1rem;
           color: #374151;
           font-size: 0.95rem;
           line-height: 1.6;
@@ -1027,12 +1040,13 @@ export default function PreOrder() {
         /* 小于1024px屏幕 - 单列布局 */
         @media (max-width: 1023px) {
           .buy-container {
-            padding: 0 1rem;
+            padding: 0 16px; /* Match index.jsx content-container mobile padding */
           }
           
           .product-showcase {
             justify-content: center;
             margin: 0 auto;
+            /* Removed restrictive max-height to let aspect ratio control height */
           }
           
           .product-info {
@@ -1041,11 +1055,11 @@ export default function PreOrder() {
             padding: 0;
           }
           
-          .value-proposition-card {
+          .features-card.value-proposition-card {
             display: flex;
             flex-direction: column;
             flex: none;
-            padding: 0;
+            padding: 0; /* Ensure this overrides the .features-card 2.5rem padding */
           }
           
           .card-section:last-child {
@@ -1055,6 +1069,7 @@ export default function PreOrder() {
           .value-title {
             font-size: 1.25rem;
             line-height: 1.3;
+            text-align: center;
           }
           
           .vertical-spacer {
@@ -1107,7 +1122,7 @@ export default function PreOrder() {
           }
           
           .buy-container {
-            padding: 0 1rem;
+            padding: 0 16px; /* Match index.jsx content-container mobile padding */
           }
           
           .product-info {
@@ -1125,6 +1140,7 @@ export default function PreOrder() {
           .value-title {
             font-size: 1.375rem;
             padding-left: 0;
+            text-align: center;
           }
           
           .vertical-spacer {
@@ -1190,6 +1206,80 @@ export default function PreOrder() {
             font-weight: 800;
             color: #111827;
             text-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+          }
+        }
+        
+        /* Mobile width fixes - apply to all small screens */
+        @media (max-width: 768px) {
+          /* Remove max-width constraint for wider sections */
+          .max-w-6xl {
+            max-width: 100% !important;
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+          }
+          
+          /* Remove main element horizontal padding */
+          main.px-4 {
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+          }
+          
+          /* Buy-container padding - match content-container */
+          .buy-container {
+            padding-left: 16px !important;
+            padding-right: 16px !important;
+          }
+          
+          /* Remove grid gap on mobile */
+          .grid.gap-8 {
+            gap: 16px !important;
+          }
+          
+          /* Product info full width */
+          .product-info {
+            width: 100% !important;
+            max-width: 100% !important;
+          }
+          
+          /* Value proposition card - remove any constraints */
+          .value-proposition-card {
+            padding: 0 !important;
+            margin: 0 !important;
+            width: 100% !important;
+          }
+          
+          /* Kit details block full width */
+          .kit-details-block {
+            width: 100% !important;
+            padding: 0 !important;
+            margin: 0 !important;
+          }
+          
+          /* Features card (FAQ wrapper) - minimal padding on mobile */
+          .features-card {
+            padding: 12px 8px !important;
+            border-radius: 16px !important;
+            margin: 0 !important;
+            width: 100% !important;
+            max-width: 100% !important;
+          }
+          
+          /* FAQ section specific - no horizontal padding */
+          .features-card.glass-up.surface-card {
+            padding: 16px 0 !important;
+          }
+          
+          /* FAQ items full width */
+          .faq-item {
+            width: 100% !important;
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+            border-radius: 12px !important;
+          }
+          
+          /* Space between FAQ items */
+          .space-y-3 {
+            padding: 0 !important;
           }
         }
       `}</style>
