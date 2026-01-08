@@ -9,13 +9,8 @@ function isCloudflareRuntime() {
   return !!process.env.PAYMENT_API_BASE || process.env.FORCE_STRIPE_PROXY === '1';
 }
 
-// 关键：避免 bundler 静态看到 "stripe"
-function stripePkg() {
-  return 'stri' + 'pe';
-}
-
 async function getStripe() {
-  const mod = await import(stripePkg());
+  const mod = await import('stripe');
   const Stripe = mod.default ?? mod;
   return new Stripe(process.env.STRIPE_SECRET_KEY);
 }
