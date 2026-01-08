@@ -479,6 +479,29 @@ export default function PreOrder() {
            white-space: nowrap; /* Prevent text wrapping inside spans */
         }
 
+        /* Desktop: Left align pricing block to match image */
+        @media (min-width: 1024px) {
+          .pricing-block-wrapper {
+            justify-content: flex-start;
+            padding-left: 2rem; /* Nudge pricing block right to align with image */
+          }
+          
+          .pricing-block.open-style {
+            align-items: flex-start;
+          }
+          
+          .pricing-content {
+            align-items: flex-start;
+            text-align: left;
+          }
+          
+          .pricing-row-main,
+          .pricing-row-sub, 
+          .pricing-badge-row {
+            justify-content: flex-start;
+          }
+        }
+
         .pricing-deposit-text {
           font-size: clamp(0.85rem, 2.5vw, 1.25rem); /* Slightly smaller start */
           font-weight: 500;
@@ -584,7 +607,7 @@ export default function PreOrder() {
 
         @media (min-width: 1024px) {
           .product-showcase {
-            margin-top: 3.5rem; /* Push image down to align with product details card on desktop */
+            margin-top: 0; /* Align image top with title */
           }
         }
         
