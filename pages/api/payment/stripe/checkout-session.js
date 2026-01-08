@@ -1,22 +1,26 @@
 /**
  * POST /api/payment/stripe/checkout-session
- * Cloudflare: proxy 到主站 Netlify
- * Netlify(Node): 真正调用 Stripe SDK 创建 Checkout Session
+ * Cloudflare: proxy to main site
+ * Netlify(Node): Create Stripe Checkout Session
  */
 
 function isCloudflareRuntime() {
-  // 你约定的 Cloudflare 环境变量
   return !!process.env.PAYMENT_API_BASE || process.env.FORCE_STRIPE_PROXY === '1';
 }
 
+function stripePkg() {
+  return 'stri' + 'pe';
+}
+
 async function getStripe() {
-  const mod = await import('stripe');
+  // Obfuscated import to avoid esbuild resolving "stripe" on Cloudflare
+  const mod = await import(stripePkg());
   const Stripe = mod.default ?? mod;
   return new Stripe(process.env.STRIPE_SECRET_KEY);
 }
 
 export default async function handler(req, res) {
-  // CORS 处理
+  // 1. CORS Headers
   const origin = req.headers.origin;
   const allow = new Set([
     "https://vip.unicornblocks.ai",
@@ -33,43 +37,38 @@ export default async function handler(req, res) {
   if (req.method === "OPTIONS") return res.status(200).end();
 
   if (req.method !== 'POST') {
-    return res.status(405).json({ error: '方法不允许' });
+    return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  // ✅ Cloudflare：直接 proxy 到主站 API（不要走任何 stripe 逻辑）
+  // 2. Cloudflare Proxy Logic
   if (isCloudflareRuntime()) {
-    const base = process.env.PAYMENT_API_BASE;
-    if (!base) return res.status(500).json({ success: false, error: 'PAYMENT_API_BASE 未配置' });
-
-    const upstream = `${base}/api/payment/stripe/checkout-session`;
+    const base = process.env.PAYMENT_API_BASE || "https://unicornblocks.ai";
+    const upstream = `${base.replace(/\/$/, "")}/api/payment/stripe/checkout-session`;
 
     try {
       const r = await fetch(upstream, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          // 可选：透传用户UA/来源，便于日志排查
           'X-Forwarded-Host': req.headers.host || '',
-          'X-Proxy-By': 'cf-pages',
         },
         body: JSON.stringify(req.body || {}),
       });
 
       const text = await r.text();
       res.status(r.status);
-      // 兼容 text/json
       try {
         return res.json(JSON.parse(text));
       } catch {
         return res.send(text);
       }
     } catch (e) {
-      console.error('CF proxy Stripe checkout-session 失败:', e);
-      return res.status(502).json({ success: false, error: e?.message || 'Proxy failed' });
+      console.error('CF Proxy Error:', e);
+      return res.status(502).json({ success: false, error: 'Proxy failed' });
     }
   }
 
-  // ✅ Netlify/Node：真正创建 Stripe Checkout Session
+  // 3. Netlify/Node Logic (Real Stripe Transaction)
   try {
     const {
       email,
@@ -138,10 +137,10 @@ export default async function handler(req, res) {
       sessionId: session.id,
     });
   } catch (error) {
-    console.error('Stripe Checkout Session 错误:', error);
+    console.error('Stripe Checkout Session Error:', error);
     return res.status(500).json({
       success: false,
-      error: error?.message || '创建支付会话失败',
+      error: error?.message || 'Failed to create payment session',
     });
   }
 }
