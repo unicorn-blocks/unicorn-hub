@@ -1,25 +1,47 @@
 /**
  * POST /api/payment/stripe/checkout-session
- * Cloudflare: proxy to main site
- * Netlify(Node): Create Stripe Checkout Session
+ * VIP subdomain (Cloudflare): proxy to main site (Netlify)
+ * Main site (Netlify/Node): Create Stripe Checkout Session directly
  */
 
-function isCloudflareRuntime() {
-  return !!process.env.PAYMENT_API_BASE || process.env.FORCE_STRIPE_PROXY === '1';
+// Reliably get host from request headers (works in both Node and Edge runtimes)
+function getHost(req) {
+  const h =
+    req?.headers?.host ||
+    (typeof req?.headers?.get === 'function' ? req.headers.get('host') : '') ||
+    '';
+  return h.split(':')[0].toLowerCase();
 }
 
-function stripePkg() {
-  return 'stri' + 'pe';
+// Determine if we should proxy based on HOST (not runtime detection)
+// This is more reliable than detecting Cloudflare environment variables
+function shouldProxy(req) {
+  // Prevent infinite proxy loops - if we're receiving a forwarded request, don't proxy again
+  const forwardedFrom = req?.headers?.['x-forwarded-from'];
+  if (forwardedFrom === 'vip-cf') {
+    return false;
+  }
+
+  const host = getHost(req);
+  const isVip = host.startsWith('vip.');
+  const forced = process.env.FORCE_STRIPE_PROXY === '1';
+  const hasBase = !!process.env.PAYMENT_API_BASE;
+
+  return isVip || forced || hasBase;
 }
 
+// Helper function to get Stripe instance
+// Uses eval to completely bypass Webpack's static analysis
+// This is necessary because Webpack intercepts all require/import calls
 async function getStripe() {
-  // Obfuscated import to avoid esbuild resolving "stripe" on Cloudflare
-  const mod = await import(stripePkg());
-  const Stripe = mod.default ?? mod;
+  // eval('require') returns the real Node.js require, not Webpack's
+  const realRequire = eval('require');
+  const Stripe = realRequire('stripe');
   return new Stripe(process.env.STRIPE_SECRET_KEY);
 }
 
 export default async function handler(req, res) {
+
   // 1. CORS Headers
   const origin = req.headers.origin;
   const allow = new Set([
@@ -40,10 +62,11 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  // 2. Cloudflare Proxy Logic
-  if (isCloudflareRuntime()) {
+  // 2. VIP Host Proxy Logic - if request is from vip.*, proxy to Netlify
+  if (shouldProxy(req)) {
     const base = process.env.PAYMENT_API_BASE || "https://unicornblocks.ai";
     const upstream = `${base.replace(/\/$/, "")}/api/payment/stripe/checkout-session`;
+
 
     try {
       const r = await fetch(upstream, {
@@ -51,10 +74,10 @@ export default async function handler(req, res) {
         headers: {
           'Content-Type': 'application/json',
           'X-Forwarded-Host': req.headers.host || '',
+          'X-Forwarded-From': 'vip-cf',  // Prevent infinite proxy loops
         },
         body: JSON.stringify(req.body || {}),
       });
-
       const text = await r.text();
       res.status(r.status);
       try {
@@ -63,7 +86,7 @@ export default async function handler(req, res) {
         return res.send(text);
       }
     } catch (e) {
-      console.error('CF Proxy Error:', e);
+      console.error('[checkout-session] PROXY ERROR:', e.message);
       return res.status(502).json({ success: false, error: 'Proxy failed' });
     }
   }

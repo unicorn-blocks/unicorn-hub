@@ -38,11 +38,9 @@ async function proxyToMain(req, res) {
 }
 
 async function createIntentOnNode(req, res) {
-  // ⚠️ 关键：动态 import，避免 Cloudflare 打包时解析 stripe
-  const stripePkg = "stri" + "pe";
-  const mod = await import(stripePkg);
-  const Stripe = mod.default ?? mod;
-
+  // eval('require') bypasses Webpack's module resolution
+  const realRequire = eval('require');
+  const Stripe = realRequire('stripe');
   const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
   const { amount, currency, customer, shipping, metadata } = req.body;
@@ -77,10 +75,17 @@ export default async function handler(req, res) {
   try {
     const host = getHost(req);
 
-    // 你自己的判定策略：vip.* 或者 Cloudflare runtime 就走代理
+    // Prevent infinite proxy loops - if we're receiving a forwarded request, don't proxy again
+    const forwardedFrom = req?.headers?.['x-forwarded-from'];
+    if (forwardedFrom === 'vip-cf') {
+      return await createIntentOnNode(req, res);
+    }
+
+    // 判定策略：vip.* 或者 Cloudflare runtime 或者有 PAYMENT_API_BASE 就走代理
     const shouldProxy =
       host.startsWith("vip.") ||
       isCloudflareRuntime() ||
+      !!process.env.PAYMENT_API_BASE ||
       process.env.FORCE_STRIPE_PROXY === "1";
 
     if (shouldProxy) {

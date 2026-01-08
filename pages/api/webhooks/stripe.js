@@ -1,28 +1,37 @@
 /**
  * Stripe webhook: 只允许 Netlify(Node) 处理
- * Cloudflare：直接 404 禁用
+ * VIP subdomain (Cloudflare)：直接 404 禁用
  */
 
 export const config = {
   api: { bodyParser: false },
 };
 
-function isCloudflareRuntime() {
-  return !!process.env.PAYMENT_API_BASE || process.env.FORCE_STRIPE_PROXY === '1';
+// Reliably get host from request headers
+function getHost(req) {
+  const h =
+    req?.headers?.host ||
+    (typeof req?.headers?.get === 'function' ? req.headers.get('host') : '') ||
+    '';
+  return h.split(':')[0].toLowerCase();
 }
 
-// 避免 bundler 静态看到 "stripe"
-function stripePkg() {
-  return 'stri' + 'pe';
+// Determine if we should block webhook processing (VIP host should never handle webhooks)
+function shouldBlockWebhook(req) {
+  const host = getHost(req);
+  const isVip = host.startsWith('vip.');
+  const forced = process.env.FORCE_STRIPE_PROXY === '1';
+  const hasBase = !!process.env.PAYMENT_API_BASE;
+  return isVip || forced || hasBase;
 }
 
 async function loadStripeAndDeps() {
-  const stripeMod = await import(stripePkg());
-  const Stripe = stripeMod.default ?? stripeMod;
-
+  // eval('require') bypasses Webpack's module resolution
+  const realRequire = eval('require');
+  const Stripe = realRequire('stripe');
   const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
-  // 这两个你本来是顶层 import 的，本质上都是 Node 侧业务逻辑
+  // 这两个本地模块可以用动态 import
   const { updateOrderStatus } = await import('../../../lib/orders');
   const { submitEmailToGoogleSheets } = await import('../../../lib/googleSheets');
 
@@ -30,8 +39,8 @@ async function loadStripeAndDeps() {
 }
 
 export default async function handler(req, res) {
-  // ✅ Cloudflare：永远不处理 webhook
-  if (isCloudflareRuntime()) {
+  // ✅ VIP subdomain：永远不处理 webhook（让 Netlify 主站处理）
+  if (shouldBlockWebhook(req)) {
     return res.status(404).end();
   }
 
