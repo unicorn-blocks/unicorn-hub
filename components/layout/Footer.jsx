@@ -203,7 +203,7 @@ export default function Footer({ onSubscribe, showEmailInput = true }) {
 
           {/* Welcome message for pages without email input */}
           {!showEmailInput && (
-            <div className="footer-welcome-section flex justify-start md:justify-end">
+            <div className="footer-welcome-section hidden md:flex justify-start md:justify-end">
               <div className="w-full md:max-w-[547px]">
                 <p className="footer-welcome-text mb-3 md:mb-4 leading-relaxed md:pl-[150px]">
                   Welcome to the Adventure ✨<br />

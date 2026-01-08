@@ -300,7 +300,7 @@ export default function PreOrder() {
                     </div>
                   </div>
 
-                  <div className="vertical-spacer"></div>
+                  <div style={{ height: '10px', flex: 'none' }}></div>
 
                   {/* 行动按钮 */}
                   <div className="card-section">
@@ -580,6 +580,12 @@ export default function PreOrder() {
           margin: -5px 0; /* 5px distance top and bottom as requested */
           max-width: 600px;
           width: 100%;
+        }
+
+        @media (min-width: 1024px) {
+          .product-showcase {
+            margin-top: 3.5rem; /* Push image down to align with product details card on desktop */
+          }
         }
         
         .product-showcase .product-carousel {
