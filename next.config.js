@@ -19,14 +19,15 @@ const nextConfig = {
       '/api/**/*': [
         './node_modules/stripe/**/*',
         './node_modules/qs/**/*',
-        './node_modules/side-channel/**/*',
-        './node_modules/es-errors/**/*',
-        './node_modules/object-inspect/**/*',
-        './node_modules/side-channel-list/**/*',
-        './node_modules/side-channel-map/**/*',
-        './node_modules/side-channel-weakmap/**/*',
+        './node_modules/side-channel*/**/*',
+        './node_modules/es-*/**/*',
+        './node_modules/object-*/**/*',
+        './node_modules/function-*/**/*',
+        './node_modules/has-*/**/*',
         './node_modules/call-bind/**/*',
-        './node_modules/get-intrinsic/**/*'
+        './node_modules/get-intrinsic/**/*',
+        './node_modules/define-*/**/*',
+        './node_modules/gopd/**/*'
       ],
     },
   },
