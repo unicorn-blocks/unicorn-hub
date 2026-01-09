@@ -11,9 +11,24 @@ const nextConfig = {
   output: 'standalone',
 
   experimental: {
-    // 将 stripe 从 webpack 打包中排除（虽然有 eval，但以防万一）
-    // 注意：有了 stripe-server.js 的标准 require，Webpack 会自动包含 stripe 及其依赖
+    // 将 stripe 从 webpack 打包中排除以避免 client side 引用问题（虽然服务端有 eval 用于隐藏）
+    // 这里主要是为了让 Webpack 知道我们自己在处理这些包
     serverComponentsExternalPackages: ['stripe'],
+    // 显式包含 stripe 及其所有 sub-dependencies 到 standalone 输出中
+    outputFileTracingIncludes: {
+      '/api/**/*': [
+        './node_modules/stripe/**/*',
+        './node_modules/qs/**/*',
+        './node_modules/side-channel/**/*',
+        './node_modules/es-errors/**/*',
+        './node_modules/object-inspect/**/*',
+        './node_modules/side-channel-list/**/*',
+        './node_modules/side-channel-map/**/*',
+        './node_modules/side-channel-weakmap/**/*',
+        './node_modules/call-bind/**/*',
+        './node_modules/get-intrinsic/**/*'
+      ],
+    },
   },
 
   // 禁用 distDir 设置，让 Next.js 使用默认的 .next 目录进行中间构建
