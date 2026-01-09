@@ -459,7 +459,7 @@ export default function Home({ isVip = false }) {
 
   return (
     <>
-      {popOpen && <PopModal isVip={isVip} onClose={() => { setPopOpen(false); localStorage.setItem('popModalClosed', '1'); }} />}
+      {popOpen && <PopModal isVip={isVip} source="AutoPopModal" onClose={() => { setPopOpen(false); localStorage.setItem('popModalClosed', '1'); }} />}
       <Head>
         <title>{copy.meta.title}</title>
         <meta charSet="UTF-8" />

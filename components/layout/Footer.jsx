@@ -177,7 +177,7 @@ export default function Footer({ onSubscribe, showEmailInput = true }) {
                       style={{ background: 'transparent', border: 'none', padding: 0, cursor: isProcessing ? 'not-allowed' : 'pointer', opacity: isProcessing ? 0.7 : 1 }}
                     >
                       <img
-                        src="/assets/Group 83.svg"
+                        src="/assets/ima/Group 83.svg"
                         alt="Join Adventure"
                         className="w-full h-full object-contain"
                         style={{ position: 'relative', zIndex: 1 }}

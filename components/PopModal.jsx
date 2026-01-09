@@ -4,7 +4,7 @@ import Image from 'next/image';
 import styles from './PopModal.module.css';
 // 不再持久化邮箱，本地状态即可
 
-export default function PopModal({ onClose, isVip = true }) {
+export default function PopModal({ onClose, isVip = true, source = "pop-modal" }) {
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [error, setError] = useState('');
@@ -43,7 +43,9 @@ export default function PopModal({ onClose, isVip = true }) {
 
     // 后台异步提交（不阻塞）
     import('../lib/googleSheets').then(({ submitEmailToGoogleSheets }) => {
-      submitEmailToGoogleSheets(email, "pop-modal", "reserve-pop-modal")
+      // 使用传递进来的 source 参数，如果未传则默认为 pop-modal (虽然上面prop已有默认值，这里保持原本逻辑兼容性)
+      const finalSource = source || "pop-modal";
+      submitEmailToGoogleSheets(email, finalSource, "reserve-pop-modal")
         .then(result => {
           if (!result.success) {
             console.warn('Email submission failed:', result.message);

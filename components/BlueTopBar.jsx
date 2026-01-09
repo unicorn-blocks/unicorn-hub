@@ -152,7 +152,7 @@ export default function BlueTopBar() {
           }
         `}</style>
       </div>
-      {showModal && <PopModal isVip={isVip} onClose={() => setShowModal(false)} />}
+      {showModal && <PopModal isVip={isVip} source="ManualPopModal" onClose={() => setShowModal(false)} />}
     </>
   );
 }
