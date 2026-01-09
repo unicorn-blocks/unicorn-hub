@@ -12,28 +12,6 @@ const nextConfig = {
   output: 'standalone',
 
   experimental: {
-    // 将 stripe 从 webpack 打包中排除以避免 client side 引用问题（虽然服务端有 eval 用于隐藏）
-    // 这里主要是为了让 Webpack 知道我们自己在处理这些包
-    serverComponentsExternalPackages: ['stripe'],
-    // 显式包含 stripe 及其所有 sub-dependencies 到 standalone 输出中
-    outputFileTracingIncludes: {
-      '/api/**/*': [
-        './node_modules/stripe/**/*',
-        './node_modules/qs/**/*',
-        './node_modules/side-channel*/**/*',
-        './node_modules/es-*/**/*',
-        './node_modules/object-*/**/*',
-        './node_modules/function-*/**/*',
-        './node_modules/has-*/**/*',
-        './node_modules/call-bind/**/*',
-        './node_modules/get-*/**/*',
-        './node_modules/for-each/**/*',
-        './node_modules/define-*/**/*',
-        './node_modules/gopd/**/*',
-        './node_modules/math-intrinsics/**/*',
-        './node_modules/dunder-*/**/*'
-      ],
-    },
   },
 
   // 禁用 distDir 设置，让 Next.js 使用默认的 .next 目录进行中间构建
