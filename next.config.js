@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Trigger deployment: fix get-proto
   reactStrictMode: true,
   // 确保静态文件被正确处理
   images: {
