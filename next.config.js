@@ -27,7 +27,9 @@ const nextConfig = {
         './node_modules/call-bind/**/*',
         './node_modules/get-intrinsic/**/*',
         './node_modules/define-*/**/*',
-        './node_modules/gopd/**/*'
+        './node_modules/gopd/**/*',
+        './node_modules/math-intrinsics/**/*',
+        './node_modules/dunder-*/**/*'
       ],
     },
   },
