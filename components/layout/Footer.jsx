@@ -131,7 +131,7 @@ export default function Footer({ onSubscribe, showEmailInput = true }) {
           {/* Logo and Contact */}
           <div className="footer-logo-section">
             <div className="flex items-center mb-3 md:mb-4">
-              <img src="/assets/group 85.svg" alt="Unicorn Blocks Logo" className="h-10 md:h-14" decoding="async" />
+              <img src="/assets/Group 85.svg" alt="Unicorn Blocks Logo" className="h-10 md:h-14" decoding="async" />
             </div>
             <p className="footer-tagline mb-3 md:mb-4 leading-relaxed" style={{ marginTop: '16px' }}>
               A world of blocks, stories, and imagination.
@@ -177,7 +177,7 @@ export default function Footer({ onSubscribe, showEmailInput = true }) {
                       style={{ background: 'transparent', border: 'none', padding: 0, cursor: isProcessing ? 'not-allowed' : 'pointer', opacity: isProcessing ? 0.7 : 1 }}
                     >
                       <img
-                        src="/assets/ima/Group 83.svg"
+                        src="/assets/Group 83.svg"
                         alt="Join Adventure"
                         className="w-full h-full object-contain"
                         style={{ position: 'relative', zIndex: 1 }}
