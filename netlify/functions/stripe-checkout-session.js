@@ -29,7 +29,6 @@ exports.handler = async (event, context) => {
             leadId = '',
             amount = 5,
             currency = 'usd',
-            cancelUrl, // From client side
         } = params;
 
         const origin = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
@@ -57,9 +56,7 @@ exports.handler = async (event, context) => {
                 },
             ],
             success_url: `${origin}/payment/success?session_id={CHECKOUT_SESSION_ID}`,
-            // If client provided a specific cancelUrl (e.g. back to reserve page), use it.
-            // Otherwise use default cancel page.
-            cancel_url: cancelUrl || `${origin}/payment/cancel`,
+            cancel_url: `${origin}/payment/cancel`,
             billing_address_collection: 'auto',
             client_reference_id: leadId || email || 'anonymous',
             metadata: {

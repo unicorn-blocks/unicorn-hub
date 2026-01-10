@@ -1,7 +1,5 @@
-// Direct Handler (No Proxy) to ensure local changes work immediately
-import Stripe from 'stripe';
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+// Pure Proxy: Forward all requests to Netlify Function "stripe-checkout-session"
+// This avoids bundling Stripe in Next.js (Cloudflare compatible)
 
 export default async function handler(req, res) {
   const origin = req.headers.origin;
@@ -13,6 +11,7 @@ export default async function handler(req, res) {
   ]);
 
   if (allow.has(origin)) res.setHeader("Access-Control-Allow-Origin", origin);
+  res.setHeader("Vary", "Origin");
   res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
 
@@ -22,67 +21,34 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
+  // Construct target URL for Netlify Function
+  // On Local Dev: use localhost:8888/.netlify/functions or similar if running netlify dev
+  // On Production: use https://unicornblocks.ai/.netlify/functions/...
+
+  const base = process.env.PAYMENT_API_BASE || "https://unicornblocks.ai";
+  // Trim trailing slash just in case
+  const baseUrl = base.replace(/\/$/, "");
+  const targetUrl = `${baseUrl}/.netlify/functions/stripe-checkout-session`;
+
   try {
-    const {
-      email,
-      firstName,
-      lastName,
-      zip,
-      leadId = '',
-      amount = 5,
-      currency = 'usd',
-      cancelUrl, // From client side
-    } = req.body;
-
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
-
-    const productImageUrl = process.env.NEXT_PUBLIC_APP_URL
-      ? `${process.env.NEXT_PUBLIC_APP_URL}/assets/checkout/sparky.jpg`
-      : null;
-
-    const sessionConfig = {
-      mode: 'payment',
-      payment_method_types: ['card'],
-      line_items: [
-        {
-          price_data: {
-            currency,
-            product_data: {
-              name: 'VIP Spot Reservation',
-              description: 'Sparky First Adventure',
-              ...(productImageUrl && { images: [productImageUrl] }),
-            },
-            unit_amount: Math.round(Number(amount) * 100),
-          },
-          quantity: 1,
-          adjustable_quantity: { enabled: true, minimum: 1, maximum: 10 },
-        },
-      ],
-      success_url: `${appUrl}/payment/success?session_id={CHECKOUT_SESSION_ID}`,
-      // Use the provided cancelUrl or fall back to default
-      cancel_url: cancelUrl || `${appUrl}/payment/cancel`,
-      billing_address_collection: 'auto',
-      client_reference_id: leadId || email || 'anonymous',
-      metadata: {
-        leadId: leadId || '',
-        firstName: firstName || '',
-        lastName: lastName || '',
-        zip: zip || '',
-        email: email || '',
+    const r = await fetch(targetUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
       },
-    };
-
-    if (email) sessionConfig.customer_email = email;
-
-    const session = await stripe.checkout.sessions.create(sessionConfig);
-
-    return res.status(200).json({
-      success: true,
-      url: session.url,
-      sessionId: session.id,
+      body: JSON.stringify(req.body || {}),
     });
-  } catch (error) {
-    console.error('Stripe Checkout Error:', error);
-    return res.status(500).json({ error: error.message });
+
+    const text = await r.text();
+    res.status(r.status);
+
+    // Copy content-type if present
+    const ct = r.headers.get('content-type');
+    if (ct) res.setHeader('Content-Type', ct);
+
+    return res.send(text);
+  } catch (e) {
+    console.error('[checkout-session] PROXY ERROR:', e.message);
+    return res.status(502).json({ success: false, error: 'Proxy connection failed' });
   }
 }

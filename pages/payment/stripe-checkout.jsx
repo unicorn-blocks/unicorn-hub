@@ -15,9 +15,6 @@ export default function StripeCheckout() {
       try {
         // 调用 Stripe Checkout Session API，不传递任何用户信息
         // Stripe 会在 Checkout 页面收集用户信息
-        // 获取当前的 origin，用于 cancel_url 回跳
-        const currentOrigin = window.location.origin;
-
         const response = await fetch('/api/payment/stripe/checkout-session', {
           method: 'POST',
           headers: {
@@ -25,9 +22,7 @@ export default function StripeCheckout() {
           },
           body: JSON.stringify({
             amount: 5,
-            currency: 'usd',
-            // 明确传递 cancelUrl 回到当前域名的 reserve-vip-spot 页面
-            cancelUrl: `${currentOrigin}/reserve-vip-spot`
+            currency: 'usd'
           })
         });
 
