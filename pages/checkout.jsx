@@ -386,7 +386,8 @@ function CheckoutForm() {
         zip: zipCode,
         leadId: leadId,
         amount: 0.5,
-        currency: 'usd'
+        currency: 'usd',
+        returnUrl: window.location.origin
       };
 
       console.log("DEBUG zipCode before pay:", zipCode);

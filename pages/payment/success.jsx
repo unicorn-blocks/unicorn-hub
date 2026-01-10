@@ -96,7 +96,7 @@ export default function PaymentSuccess() {
   return (
     <>
       <Head>
-        <title>{t.title} - Unicorn Blocks</title>
+        <title>{`${t.title} - Unicorn Blocks`}</title>
         <meta charSet="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </Head>
@@ -147,7 +147,8 @@ export default function PaymentSuccess() {
 
               {/* 返回按钮 */}
               <button
-                onClick={() => router.push('/')}
+                type="button"
+                onClick={() => window.location.href = '/'}
                 className="back-button duration-200"
               >
                 {t.backToHome}
@@ -195,8 +196,15 @@ export default function PaymentSuccess() {
           display: flex;
           align-items: center;
           justify-content: center;
-          padding-top: 180px;
-          padding-bottom: 100px;
+          padding-top: 90px;
+          padding-bottom: 50px;
+        }
+
+        @media (max-width: 767px) {
+          .hero-section {
+            padding-top: 60px;
+            padding-bottom: 40px;
+          }
         }
 
         @media (min-width: 1920px) {

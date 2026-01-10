@@ -65,11 +65,11 @@ export default function PaymentCancel() {
       }
       return;
     }
-    
+
     try {
       const { submitEmailToGoogleSheets } = await import('../../lib/googleSheets');
       const result = await submitEmailToGoogleSheets(email, "payment-cancel-footer", "");
-      
+
       if (result.success) {
         if (setFooterStatus) {
           setFooterStatus({
@@ -99,14 +99,14 @@ export default function PaymentCancel() {
   return (
     <>
       <Head>
-        <title>{t.title} - Unicorn Blocks</title>
+        <title>{`${t.title} - Unicorn Blocks`}</title>
         <meta charSet="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </Head>
 
       {/* 使用导航组件 */}
       {/*<Navigation />*/}
-      
+
       <div className="background-gradient"></div>
       <main className="min-h-screen">
         <section className="hero-section relative overflow-hidden">
@@ -121,7 +121,7 @@ export default function PaymentCancel() {
 
               {/* 标题 */}
               <p className="text-[clamp(1.2rem,4vw,2rem)] text-gray-600 mb-8">{t.title}{language === 'zh' ? '' : ' '}{t.subtitle}</p>
-              
+
               {/* 取消消息 */}
               <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-6 max-w-2xl mx-auto mb-8 shadow-lg">
                 <p className="text-lg text-gray-800">{t.message}</p>
@@ -147,14 +147,16 @@ export default function PaymentCancel() {
               {/* 操作按钮 */}
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <button
-                  onClick={() => router.push('/payment/stripe-checkout')}
+                  type="button"
+                  onClick={() => window.location.href = '/payment/stripe-checkout'}
                   className="primary-button duration-200"
                 >
                   {t.tryAgain}
                 </button>
 
                 <button
-                  onClick={() => router.push('/')}
+                  type="button"
+                  onClick={() => window.location.href = '/'}
                   className="primary-button duration-200"
                 >
                   {t.backToHome}
@@ -203,8 +205,15 @@ export default function PaymentCancel() {
           display: flex;
           align-items: center;
           justify-content: center;
-          padding-top: 180px;
-          padding-bottom: 100px;
+          padding-top: 90px;
+          padding-bottom: 50px;
+        }
+
+        @media (max-width: 767px) {
+          .hero-section {
+            padding-top: 60px;
+            padding-bottom: 40px;
+          }
         }
 
         @media (min-width: 1920px) {

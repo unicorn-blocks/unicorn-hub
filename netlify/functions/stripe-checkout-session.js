@@ -33,9 +33,10 @@ exports.handler = async (event, context) => {
             leadId = '',
             amount = 0.5,
             currency = 'usd',
+            returnUrl,
         } = params;
 
-        const origin = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+        const origin = returnUrl || process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
 
         const productImageUrl = process.env.NEXT_PUBLIC_APP_URL
             ? `${process.env.NEXT_PUBLIC_APP_URL}/assets/checkout/sparky.jpg`
