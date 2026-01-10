@@ -12,7 +12,7 @@ import { getSavedEmail } from '../lib/emailStorage';
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
 function CheckoutForm() {
   const { language } = useLanguage();
-  
+
   // 表单状态 - 只保留必需字段
   const [email, setEmail] = useState('');
   const [firstName, setFirstName] = useState('');
@@ -22,33 +22,33 @@ function CheckoutForm() {
   const [paymentMethod, setPaymentMethod] = useState('card');
   const [quantity, setQuantity] = useState(1);
   const [leadId, setLeadId] = useState('');
-  
+
   // UI状态
   const [isProcessing, setIsProcessing] = useState(false);
   const [formStatus, setFormStatus] = useState({ message: '', type: '' });
   const [errors, setErrors] = useState({});
-  
+
   // 在组件挂载时从localStorage读取邮箱
   useEffect(() => {
     console.log('=== Checkout页面 useEffect 开始 ===');
-    
+
     // 检查localStorage中的所有相关key
     if (typeof window !== 'undefined') {
       console.log('所有localStorage keys:', Object.keys(localStorage));
       console.log('unicorn_blocks_user_email:', localStorage.getItem('unicorn_blocks_user_email'));
       console.log('lead_email:', localStorage.getItem('lead_email')); // 检查是否有其他key
     }
-    
+
     const savedEmail = getSavedEmail();
     console.log('getSavedEmail() 返回:', savedEmail);
-    
+
     if (savedEmail) {
       setEmail(savedEmail);
       console.log('设置email状态为:', savedEmail);
     } else {
       console.log('没有找到保存的邮箱');
     }
-    
+
     // 生成或获取 leadId
     if (typeof window !== 'undefined') {
       let storedLeadId = localStorage.getItem('leadId');
@@ -61,14 +61,14 @@ function CheckoutForm() {
       }
       setLeadId(storedLeadId);
     }
-    
+
     console.log('=== Checkout页面 useEffect 结束 ===');
   }, []);
-  
+
   // 验证函数 - 简化版本，只验证4个字段
   const validateField = (name, value) => {
     const newErrors = { ...errors };
-    
+
     switch (name) {
       case 'email':
         if (!value) {
@@ -100,7 +100,7 @@ function CheckoutForm() {
       default:
         break;
     }
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -113,13 +113,13 @@ function CheckoutForm() {
       { name: 'lastName', value: lastName },
       { name: 'zipCode', value: zipCode }
     ];
-    
+
     const newErrors = {};
     let isValid = true;
-    
+
     fieldsToValidate.forEach(field => {
       const { name, value } = field;
-      
+
       switch (name) {
         case 'email':
           if (!value) {
@@ -149,7 +149,7 @@ function CheckoutForm() {
           break;
       }
     });
-    
+
     // 更新错误状态
     setErrors(newErrors);
     return isValid;
@@ -158,13 +158,13 @@ function CheckoutForm() {
   // 错误消息组件
   const ErrorMessage = ({ field }) => {
     if (!errors[field]) return null;
-    
+
     return (
       <div className="error-message">
         <svg className="error-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-          <circle cx="12" cy="12" r="10"/>
-          <line x1="15" y1="9" x2="9" y2="15"/>
-          <line x1="9" y1="9" x2="15" y2="15"/>
+          <circle cx="12" cy="12" r="10" />
+          <line x1="15" y1="9" x2="9" y2="15" />
+          <line x1="9" y1="9" x2="15" y2="15" />
         </svg>
         <span className="error-text">{errors[field]}</span>
       </div>
@@ -175,14 +175,14 @@ function CheckoutForm() {
     en: {
       title: 'Checkout - Unicorn Blocks',
       pageTitle: 'Complete Your VIP Reservation',
-      subtitle: 'Secure your spot with a $5 deposit. Pay the remaining $124 before we ship.',
-      
+      subtitle: 'Secure your spot with a $0.10 deposit. Pay the remaining $124 before we ship.',
+
       // Contact section
       contact: 'Contact Information',
       emailLabel: 'Email Address',
       emailPlaceholder: 'Email',
       newsletterLabel: 'Email me with news and offers',
-      
+
       // Delivery section
       delivery: 'Delivery Information',
       countryLabel: 'Country/Region',
@@ -202,7 +202,7 @@ function CheckoutForm() {
       zipPlaceholder: 'Postal code (optional)',
       phoneLabel: 'Phone Number',
       phonePlaceholder: 'Phone (optional)',
-      
+
       // Payment section
       payment: 'Payment',
       paymentSecurity: 'All transactions are secure and encrypted.',
@@ -212,7 +212,7 @@ function CheckoutForm() {
       paypalDescription: 'After clicking "Pay with PayPal", you will be redirected to PayPal to complete your purchase securely.',
       creditCardDescription: 'Pay securely with your credit or debit card',
       payoneerDescription: 'Pay with Payoneer',
-      
+
       // Order summary
       orderSummary: 'Order Summary',
       productName: 'VIP Spot Reservation',
@@ -228,7 +228,7 @@ function CheckoutForm() {
       // Buttons
       completeOrder: 'Complete Order',
       processing: 'Processing...',
-      
+
       // Validation messages
       emailError: 'Please enter a valid email address',
       firstNameError: 'Please enter your first name',
@@ -238,27 +238,27 @@ function CheckoutForm() {
       zipError: 'Please enter your ZIP code',
       phoneError: 'Please enter your phone number',
       paymentError: 'Please choose a payment method',
-      
+
       // Success/Error messages
       paymentSuccess: 'Payment successful! Check your email for confirmation.',
       paymentFailed: 'Payment failed. Please try again.',
       connectionError: 'Connection error. Please try again.',
-      
+
       // Pricing
-      price: '$5.00',
+      price: '$0.10',
       currency: 'USD'
     },
     zh: {
       title: '结账 - 独角兽积木',
       pageTitle: '完成您的VIP预订',
-      subtitle: '支付$5订金锁定名额。发货前支付剩余$124。',
-      
+      subtitle: '支付$0.10订金锁定名额。发货前支付剩余$124。',
+
       // Contact section
       contact: '联系信息',
       emailLabel: '邮箱地址',
       emailPlaceholder: '邮箱',
       newsletterLabel: '通过邮件接收新闻和优惠信息',
-      
+
       // Delivery section
       delivery: '配送信息',
       countryLabel: '国家/地区',
@@ -278,7 +278,7 @@ function CheckoutForm() {
       zipPlaceholder: '邮编（可选）',
       phoneLabel: '电话号码',
       phonePlaceholder: '电话（可选）',
-      
+
       // Payment section
       payment: '支付',
       paymentSecurity: '所有交易都是安全加密的。',
@@ -288,7 +288,7 @@ function CheckoutForm() {
       paypalDescription: '点击"使用PayPal支付"后，您将被重定向到PayPal安全完成购买。',
       creditCardDescription: '使用信用卡或借记卡安全支付',
       payoneerDescription: '使用Payoneer支付',
-      
+
       // Order summary
       orderSummary: '订单摘要',
       productName: 'VIP名额预订',
@@ -304,7 +304,7 @@ function CheckoutForm() {
       // Buttons
       completeOrder: '完成订单',
       processing: '处理中...',
-      
+
       // Validation messages
       emailError: '请输入有效的邮箱地址',
       firstNameError: '请输入您的名字',
@@ -314,29 +314,29 @@ function CheckoutForm() {
       zipError: '请输入您的邮编',
       phoneError: '请输入您的电话号码',
       paymentError: '请选择支付方式',
-      
+
       // Success/Error messages
       paymentSuccess: '支付成功！请查看邮箱确认信息。',
       paymentFailed: '支付失败，请重试。',
       connectionError: '连接错误，请重试。',
-      
+
       // Pricing
-      price: '$5.00',
+      price: '$0.10',
       currency: 'USD'
     }
   };
-  
+
   // 根据当前语言选择正确的翻译
   const t = translations[language] || translations.en;
-  
-  
+
+
   // 处理支付成功（PayPal返回后）
   const handlePaymentSuccess = (paymentData) => {
     setFormStatus({
       message: t.paymentSuccess,
       type: 'success'
     });
-    
+
     // 重定向到成功页面（带上订单ID）
     setTimeout(() => {
       const orderId = paymentData.internal_order_id || paymentData.order_id;
@@ -352,19 +352,19 @@ function CheckoutForm() {
     });
     setIsProcessing(false);
   };
-  
-  
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     // 重置状态
     setFormStatus({ message: '', type: '' });
-    
+
     // 表单验证
     if (!validateForm()) {
       return;
     }
-    
+
     // 检查是否选择了支付方式
     if (!paymentMethod) {
       setFormStatus({
@@ -373,10 +373,10 @@ function CheckoutForm() {
       });
       return;
     }
-    
+
     // 表单验证通过，调用支付API
     setIsProcessing(true);
-    
+
     try {
       // 准备支付数据 - 简化版本，只发送必需字段
       const paymentData = {
@@ -385,10 +385,10 @@ function CheckoutForm() {
         lastName: lastName,
         zip: zipCode,
         leadId: leadId,
-        amount: 5,
+        amount: 0.1,
         currency: 'usd'
       };
-      
+
       // 调用 Stripe Checkout Session API
       const response = await fetch('/api/payment/stripe/checkout-session', {
         method: 'POST',
@@ -397,9 +397,9 @@ function CheckoutForm() {
         },
         body: JSON.stringify(paymentData)
       });
-      
+
       const data = await response.json();
-      
+
       if (data.success && data.url) {
         // 重定向到 Stripe Checkout 页面
         window.location.href = data.url;
@@ -419,7 +419,7 @@ function CheckoutForm() {
       setIsProcessing(false);
     }
   };
-  
+
   // 处理支付方式选择
   const handlePaymentMethodChange = (method) => {
     setPaymentMethod(method);
@@ -431,14 +431,14 @@ function CheckoutForm() {
   const handleFooterSubmit = async (footerEmail, setFooterStatus) => {
     // 设置 email 状态并触发表单提交
     setEmail(footerEmail);
-    
+
     // Show loading state
     setIsProcessing(true);
-    
+
     try {
       const { submitEmailToGoogleSheets } = await import('../lib/googleSheets');
       const result = await submitEmailToGoogleSheets(footerEmail, "checkout-footer", "");
-      
+
       if (result.success) {
         // 不仅更新主表单状态，也更新页脚状态
         setFormStatus({
@@ -477,7 +477,7 @@ function CheckoutForm() {
         });
       }
     }
-    
+
     setIsProcessing(false);
   };
 
@@ -490,10 +490,10 @@ function CheckoutForm() {
       </Head>
 
       <div className="background-gradient"></div>
-      
+
       {/* 蓝色顶部条 */}
       <BlueTopBar />
-      
+
       {/* 使用导航组件 */}
       {/*<Navigation />*/}
 
@@ -508,19 +508,19 @@ function CheckoutForm() {
 
           {/* 两列布局：左侧表单，右侧订单摘要 */}
           <div className="grid grid-cols-1 lg:grid-cols-[4fr_3fr] gap-8 max-w-6xl mx-auto pt-3">
-            
+
             {/* 左侧：结账表单 */}
             <div className="checkout-form-container surface-card">
               <form onSubmit={handleSubmit} className="checkout-form" noValidate>
-                
+
                 {/* Contact 部分 */}
                 <div className="form-section">
                   <h2 className="section-title">{t.contact}</h2>
-                  
+
                   <div className="form-field">
-                    <input 
-                      type="email" 
-                      id="email" 
+                    <input
+                      type="email"
+                      id="email"
                       className={`form-input ${errors.email ? 'error' : ''}`}
                       value={email}
                       onChange={(e) => {
@@ -537,8 +537,8 @@ function CheckoutForm() {
 
                   <div className="checkbox-field">
                     <label className="checkbox-label">
-                      <input 
-                        type="checkbox" 
+                      <input
+                        type="checkbox"
                         checked={newsletter}
                         onChange={(e) => setNewsletter(e.target.checked)}
                         disabled={isProcessing}
@@ -551,7 +551,7 @@ function CheckoutForm() {
                 {/* Delivery 部分 */}
                 <div className="form-section">
                   <h2 className="section-title">{t.delivery}</h2>
-                  
+
                   {/* 暂时注释 - Country/Region 字段不需要 */}
                   {/*
                   <div className="form-field">
@@ -577,12 +577,12 @@ function CheckoutForm() {
                     <ErrorMessage field="country" />
                   </div>
                   */}
-                  
+
                   <div className="form-row">
                     <div className="form-field">
-                      <input 
-                        type="text" 
-                        id="firstName" 
+                      <input
+                        type="text"
+                        id="firstName"
                         className={`form-input ${errors.firstName ? 'error' : ''}`}
                         value={firstName}
                         onChange={(e) => {
@@ -596,9 +596,9 @@ function CheckoutForm() {
                       <ErrorMessage field="firstName" />
                     </div>
                     <div className="form-field">
-                      <input 
-                        type="text" 
-                        id="lastName" 
+                      <input
+                        type="text"
+                        id="lastName"
                         className={`form-input ${errors.lastName ? 'error' : ''}`}
                         value={lastName}
                         onChange={(e) => {
@@ -612,7 +612,7 @@ function CheckoutForm() {
                       <ErrorMessage field="lastName" />
                     </div>
                   </div>
-                  
+
                   {/* 暂时注释 - Address 字段不需要 */}
                   {/*
                   <div className="form-field">
@@ -632,7 +632,7 @@ function CheckoutForm() {
                     <ErrorMessage field="address" />
                   </div>
                   */}
-                  
+
                   {/* 暂时注释 - Apartment 字段不需要 */}
                   {/*
                   <div className="form-field">
@@ -647,7 +647,7 @@ function CheckoutForm() {
                     />
                   </div>
                   */}
-                  
+
                   {/* 暂时注释 - City 和 State 字段不需要 */}
                   {/*
                   <div className="form-row">
@@ -690,12 +690,12 @@ function CheckoutForm() {
                     )}
                   </div>
                   */}
-                  
+
                   {/* ZIP Code - 保留这个字段 */}
                   <div className="form-field">
-                    <input 
-                      type="text" 
-                      id="zipCode" 
+                    <input
+                      type="text"
+                      id="zipCode"
                       className={`form-input ${errors.zipCode ? 'error' : ''}`}
                       value={zipCode}
                       onChange={(e) => {
@@ -708,7 +708,7 @@ function CheckoutForm() {
                     />
                     <ErrorMessage field="zipCode" />
                   </div>
-                  
+
                   {/* 暂时注释 - Phone 字段不需要 */}
                   {/*
                   <div className="form-field">
@@ -731,10 +731,10 @@ function CheckoutForm() {
                   <div className="payment-method-selector-plaud">
                     {/* Stripe 支付方式 */}
                     <div className="payment-option-plaud">
-                      <input 
-                        type="radio" 
-                        id="card" 
-                        name="paymentMethod" 
+                      <input
+                        type="radio"
+                        id="card"
+                        name="paymentMethod"
                         value="card"
                         checked={paymentMethod === 'card'}
                         onChange={(e) => handlePaymentMethodChange(e.target.value)}
@@ -759,12 +759,12 @@ function CheckoutForm() {
                         <div className="payment-drawer">
                           <div className="drawer-icon">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                              <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
-                              <line x1="1" y1="10" x2="23" y2="10"/>
+                              <rect x="1" y="4" width="22" height="16" rx="2" ry="2" />
+                              <line x1="1" y1="10" x2="23" y2="10" />
                             </svg>
                           </div>
                           <div className="drawer-text">
-                            {language === 'en' 
+                            {language === 'en'
                               ? 'Your payment is processed securely by Stripe. You will be redirected to Stripe Checkout to complete your purchase.'
                               : '您的支付由 Stripe 安全处理。您将被重定向到 Stripe Checkout 完成购买。'
                             }
@@ -775,10 +775,10 @@ function CheckoutForm() {
 
                     {/* PayPal 支付方式 */}
                     <div className="payment-option-plaud">
-                      <input 
-                        type="radio" 
-                        id="paypal" 
-                        name="paymentMethod" 
+                      <input
+                        type="radio"
+                        id="paypal"
+                        name="paymentMethod"
                         value="paypal"
                         checked={paymentMethod === 'paypal'}
                         onChange={(e) => handlePaymentMethodChange(e.target.value)}
@@ -799,10 +799,10 @@ function CheckoutForm() {
                         <div className="payment-drawer">
                           <div className="drawer-icon">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                              <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
-                              <line x1="8" y1="21" x2="16" y2="21"/>
-                              <line x1="12" y1="17" x2="12" y2="21"/>
-                              <path d="M16 8l4 4-4 4"/>
+                              <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
+                              <line x1="8" y1="21" x2="16" y2="21" />
+                              <line x1="12" y1="17" x2="12" y2="21" />
+                              <path d="M16 8l4 4-4 4" />
                             </svg>
                           </div>
                           <div className="drawer-text">
@@ -817,10 +817,10 @@ function CheckoutForm() {
 
                     {/* Payoneer 支付方式 */}
                     <div className="payment-option-plaud">
-                      <input 
-                        type="radio" 
-                        id="payoneer" 
-                        name="paymentMethod" 
+                      <input
+                        type="radio"
+                        id="payoneer"
+                        name="paymentMethod"
                         value="payoneer"
                         checked={paymentMethod === 'payoneer'}
                         onChange={(e) => handlePaymentMethodChange(e.target.value)}
@@ -841,8 +841,8 @@ function CheckoutForm() {
                         <div className="payment-drawer">
                           <div className="drawer-icon">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                              <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
-                              <line x1="1" y1="10" x2="23" y2="10"/>
+                              <rect x="1" y="4" width="22" height="16" rx="2" ry="2" />
+                              <line x1="1" y1="10" x2="23" y2="10" />
                             </svg>
                           </div>
                           <div className="drawer-text">
@@ -865,8 +865,8 @@ function CheckoutForm() {
                 )}
 
                 {/* 提交按钮 */}
-                <button 
-                  type="submit" 
+                <button
+                  type="submit"
                   className="primary-button button-shine checkout-button"
                   disabled={isProcessing}
                 >
@@ -879,13 +879,13 @@ function CheckoutForm() {
             <div className="order-summary-container surface-card">
               <div className="order-summary">
                 <h2 className="summary-title">{t.orderSummary}</h2>
-                
+
                 {/* 产品信息 */}
                 <div className="product-item-clean">
                   <div className="product-image-clean">
-                    <img 
-                      src="/assets/checkout/sparky.jpg" 
-                      alt="Sparky First Adventure" 
+                    <img
+                      src="/assets/checkout/sparky.jpg"
+                      alt="Sparky First Adventure"
                       className="product-image"
                       decoding="async"
                     />
@@ -896,22 +896,22 @@ function CheckoutForm() {
                       <p className="product-variant-clean">{t.productDescription}</p>
                       {/* 数量选择器 - 简洁版本 */}
                       <div className="quantity-selector-clean">
-                        <button 
-                          type="button" 
+                        <button
+                          type="button"
                           className="quantity-btn-clean"
                           onClick={() => setQuantity(Math.max(1, quantity - 1))}
                           disabled={quantity <= 1}
                         >
                           −
                         </button>
-                        <input 
-                          type="text" 
+                        <input
+                          type="text"
                           value={quantity}
                           readOnly
                           className="quantity-input-clean"
                         />
-                        <button 
-                          type="button" 
+                        <button
+                          type="button"
                           className="quantity-btn-clean"
                           onClick={() => setQuantity(quantity + 1)}
                         >
@@ -922,19 +922,19 @@ function CheckoutForm() {
                     <div className="product-price-clean">${(5 * quantity).toFixed(2)}</div>
                   </div>
                 </div>
-                
+
                 {/* 折扣码输入 - 简洁版本 - 预订阶段不显示，正式付款时才显示 */}
                 {typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('type') === 'full' && (
                   <div className="discount-section-clean">
                     <div className="discount-input-group-clean">
-                      <input 
-                        type="text" 
+                      <input
+                        type="text"
                         placeholder={t.discountCode}
                         className="discount-input-clean"
                         disabled={isProcessing}
                       />
-                      <button 
-                        type="button" 
+                      <button
+                        type="button"
                         className="discount-apply-btn-clean"
                         disabled={isProcessing}
                       >
@@ -943,7 +943,7 @@ function CheckoutForm() {
                     </div>
                   </div>
                 )}
-                  
+
                 {/* 价格明细 - 简洁版本 */}
                 <div className="price-breakdown-clean">
                   <div className="price-row-clean">
@@ -963,7 +963,7 @@ function CheckoutForm() {
                       {t.currency} ${(5 * quantity).toFixed(2)}
                     </span>
                   </div>
-                </div>                
+                </div>
               </div>
             </div>
           </div>
@@ -980,7 +980,7 @@ function CheckoutForm() {
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                 </svg>
               </div>
-              <button 
+              <button
                 className="notification-close"
                 onClick={() => setFormStatus({ message: '', type: '' })}
                 aria-label="Close notification"
@@ -2812,7 +2812,7 @@ function CheckoutForm() {
   );
 }
 
-export default function Checkout(){
+export default function Checkout() {
   return (
     <Elements stripe={stripePromise}>
       <CheckoutForm />
