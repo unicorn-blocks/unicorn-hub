@@ -91,6 +91,7 @@ exports.handler = async (event, context) => {
                     '';
 
                 const zipcode = session.metadata?.zip || "";
+                console.log("DEBUG zip from metadata:", session.metadata?.zip, "-> zipcode:", zipcode);
 
                 if (!email) {
                     // 你也可以选择不抛错（避免 Stripe 重试），但建议抛错以免漏单
