@@ -1,7 +1,7 @@
 const Stripe = require('stripe');
 // Import local libs relative to netlify/functions/stripe-webhook.js -> ../../lib/orders
 const { updateOrderStatus } = require('../../lib/orders');
-const { submitEmailToGoogleSheets } = require('../../lib/googleSheets');
+const { submitPaidCouponEmailToGoogleSheets } = require('../../lib/googleSheets');
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
@@ -23,7 +23,7 @@ exports.handler = async (event, context) => {
         return { statusCode: 405, body: 'Method Not Allowed' };
     }
 
-    const sig = event.headers['stripe-signature'];
+    const sig = event.headers['stripe-signature'] || event.headers['Stripe-Signature'];
     let stripeEvent;
 
     try {
@@ -70,10 +70,12 @@ exports.handler = async (event, context) => {
             case 'checkout.session.completed': {
                 const session = stripeEvent.data.object;
                 console.log('=== Stripe Webhook: 支付完成 ===', session.id);
-                const { orderId } = session.metadata || {};
-                const amount = session.amount_total / 100;
-                const currency = session.currency.toUpperCase();
 
+                const { orderId } = session.metadata || {};
+                const amount = (session.amount_total || 0) / 100;
+                const currency = (session.currency || 'usd').toUpperCase();
+
+                // ✅ 1) 先更新订单
                 await updateOrderStatus(orderId, 'paid', {
                     stripeCheckoutSessionId: session.id,
                     amount,
@@ -81,17 +83,29 @@ exports.handler = async (event, context) => {
                     paidAt: new Date().toISOString(),
                 });
                 console.log('Order status updated: paid');
-                // Legacy logic: emails etc handled by updateOrderStatus or auxiliary calls?
-                // In original file: submitEmailToGoogleSheets was passed.
-                // Assuming updateOrderStatus handles DB, we might need to call submitEmail explicitly if it's not in order lib.
-                // The original code passed `submitEmailToGoogleSheets` as dependency to `handleCheckoutSessionCompleted`.
-                // Let's assume we need to call logic here if not internal.
-                // Checking original: handleCheckoutSessionCompleted called updateOrderStatus. 
-                // It implied "You下面的邮件/paidcoupon逻辑".
-                // I will trust updateOrderStatus deals with basics, but I should probably import the logic if it was inline.
-                // The original file imported these libs. So they are external.
+
+                // ✅ 2) 再写 PaidCoupon（关键）
+                const email =
+                    session.customer_details?.email ||
+                    session.customer_email ||
+                    '';
+
+                if (!email) {
+                    // 你也可以选择不抛错（避免 Stripe 重试），但建议抛错以免漏单
+                    throw new Error(`Missing email in checkout.session.completed (session: ${session.id})`);
+                }
+
+                await submitPaidCouponEmailToGoogleSheets({
+                    email,
+                    amount_paid: amount,
+                    stripe_session_id: session.id,
+                    source: 'stripe',
+                });
+
+                console.log('PaidCoupon sheet updated:', email);
                 break;
             }
+
             case 'charge.refunded': {
                 const charge = stripeEvent.data.object;
                 console.log('=== Stripe Webhook: 退款处理 ===');
