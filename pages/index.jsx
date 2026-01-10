@@ -602,7 +602,17 @@ export default function Home({ isVip = false }) {
                       <div className="step-mobile-wrapper md:hidden">
                         <div className="step-mobile-bg"></div>
                         <div className="step-mobile-content">
-                          <div className="step-mobile-frame"></div>
+                          <div className="step-mobile-frame">
+                            <video
+                              src="/assets/steps/step1.mp4"
+                              autoPlay
+                              loop
+                              muted
+                              playsInline
+                              preload="metadata"
+                              style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+                            />
+                          </div>
                           <div className="step-mobile-text">
                             <h3>1. Pick To Start</h3>
                             <p>Pick a Magic Hat Snap to unlock the world.</p>
@@ -611,7 +621,17 @@ export default function Home({ isVip = false }) {
                       </div>
                       {/* PC Structure matching Mobile style */}
                       <div className="step-pc-content hidden md:flex">
-                        <div className="step-pc-frame"></div>
+                        <div className="step-pc-frame">
+                          <video
+                            src="/assets/steps/step1.mp4"
+                            autoPlay
+                            loop
+                            muted
+                            playsInline
+                            preload="metadata"
+                            style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+                          />
+                        </div>
                         <div className="step-pc-text">
                           <h3>1. Pick To Start</h3>
                           <p>Pick a Magic Hat Snap to unlock the world.</p>
@@ -649,7 +669,17 @@ export default function Home({ isVip = false }) {
                       <div className="step-mobile-wrapper md:hidden">
                         <div className="step-mobile-bg"></div>
                         <div className="step-mobile-content">
-                          <div className="step-mobile-frame"></div>
+                          <div className="step-mobile-frame">
+                            <video
+                              src="/assets/steps/step2.mp4"
+                              autoPlay
+                              loop
+                              muted
+                              playsInline
+                              preload="metadata"
+                              style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+                            />
+                          </div>
                           <div className="step-mobile-text">
                             <h3>2. Story Sparks Creation</h3>
                             <p>Every Build is part of a Story.</p>
@@ -658,7 +688,17 @@ export default function Home({ isVip = false }) {
                       </div>
                       {/* PC Structure matching Mobile style */}
                       <div className="step-pc-content hidden md:flex">
-                        <div className="step-pc-frame"></div>
+                        <div className="step-pc-frame">
+                          <video
+                            src="/assets/steps/step2.mp4"
+                            autoPlay
+                            loop
+                            muted
+                            playsInline
+                            preload="metadata"
+                            style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+                          />
+                        </div>
                         <div className="step-pc-text">
                           <h3>2. Story Sparks Creation</h3>
                           <p>Every Build is part of a Story.</p>
@@ -676,7 +716,17 @@ export default function Home({ isVip = false }) {
                       <div className="step-mobile-wrapper md:hidden">
                         <div className="step-mobile-bg"></div>
                         <div className="step-mobile-content">
-                          <div className="step-mobile-frame"></div>
+                          <div className="step-mobile-frame">
+                            <video
+                              src="/assets/steps/step3.mp4"
+                              autoPlay
+                              loop
+                              muted
+                              playsInline
+                              preload="metadata"
+                              style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+                            />
+                          </div>
                           <div className="step-mobile-text">
                             <h3>3. Create & Understand</h3>
                             <p>Build and show your creation to Sparky.</p>
@@ -685,7 +735,17 @@ export default function Home({ isVip = false }) {
                       </div>
                       {/* PC Structure matching Mobile style */}
                       <div className="step-pc-content hidden md:flex">
-                        <div className="step-pc-frame"></div>
+                        <div className="step-pc-frame">
+                          <video
+                            src="/assets/steps/step3.mp4"
+                            autoPlay
+                            loop
+                            muted
+                            playsInline
+                            preload="metadata"
+                            style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+                          />
+                        </div>
                         <div className="step-pc-text">
                           <h3>3. Create & Understand</h3>
                           <p>Build and show your creation to Sparky.</p>
@@ -703,7 +763,17 @@ export default function Home({ isVip = false }) {
                       <div className="step-mobile-wrapper md:hidden">
                         <div className="step-mobile-bg"></div>
                         <div className="step-mobile-content">
-                          <div className="step-mobile-frame"></div>
+                          <div className="step-mobile-frame">
+                            <video
+                              src="/assets/steps/step4.mp4"
+                              autoPlay
+                              loop
+                              muted
+                              playsInline
+                              preload="metadata"
+                              style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+                            />
+                          </div>
                           <div className="step-mobile-text">
                             <h3>4. The Adventure Continues</h3>
                             <p>The Magic har and Blocks light up to celebrate success!</p>
@@ -712,7 +782,17 @@ export default function Home({ isVip = false }) {
                       </div>
                       {/* PC Structure matching Mobile style */}
                       <div className="step-pc-content hidden md:flex">
-                        <div className="step-pc-frame"></div>
+                        <div className="step-pc-frame">
+                          <video
+                            src="/assets/steps/step4.mp4"
+                            autoPlay
+                            loop
+                            muted
+                            playsInline
+                            preload="metadata"
+                            style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+                          />
+                        </div>
                         <div className="step-pc-text">
                           <h3>4. The Adventure Continues</h3>
                           <p>The Magic Hat and Blocks light up to celebrate success!</p>

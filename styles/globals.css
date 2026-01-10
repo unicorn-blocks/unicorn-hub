@@ -639,3 +639,14 @@ select:focus-visible {
   transform: translateZ(0);
   backface-visibility: hidden;
 }
+
+/* Step Section Frames - Added for Video Support */
+.step-mobile-frame,
+.step-pc-frame {
+  aspect-ratio: 16/9;
+  width: 100%;
+  overflow: hidden;
+  border-radius: inherit;
+  position: relative;
+  background-color: #f0f0f0;
+}
