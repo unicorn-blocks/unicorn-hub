@@ -21,6 +21,10 @@ exports.handler = async (event, context) => {
 
     try {
         const params = JSON.parse(event.body);
+
+        console.log("DEBUG create-session raw body:", event.body);
+        console.log("DEBUG create-session params.zip:", params.zip, "params.zipCode:", params.zipCode, "params.zipcode:", params.zipcode);
+        console.log("DEBUG create-session params:", params);
         const {
             email,
             firstName,
@@ -77,9 +81,12 @@ exports.handler = async (event, context) => {
             },
         };
 
+        console.log("DEBUG sessionConfig.metadata:", sessionConfig.metadata);
+
         if (email) sessionConfig.customer_email = email;
 
         const session = await stripe.checkout.sessions.create(sessionConfig);
+        console.log("DEBUG created session id:", session.id);
 
         return {
             statusCode: 200,

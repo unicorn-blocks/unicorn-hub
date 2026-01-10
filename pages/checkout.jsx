@@ -389,6 +389,9 @@ function CheckoutForm() {
         currency: 'usd'
       };
 
+      console.log("DEBUG zipCode before pay:", zipCode);
+      console.log("DEBUG paymentData before fetch:", paymentData);
+
       // 调用 Stripe Checkout Session API
       const response = await fetch('/api/payment/stripe/checkout-session', {
         method: 'POST',
