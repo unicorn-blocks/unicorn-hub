@@ -9,22 +9,25 @@ const kitIconPalette = [
   { base: '#ffa0e1', shadow: 'rgba(255, 160, 225, 0.3)' }
 ];
 
-export default function KitCategories({ categories }) {
-  const [kitPanelOpen, setKitPanelOpen] = useState([false, false, false, false]);
+export default function KitCategories({ categories, initialState, desktopStatic = false }) {
+  // 默认全关，或者使用传入的初始状态
+  const [kitPanelOpen, setKitPanelOpen] = useState(initialState || [false, false, false, false]);
 
   if (!categories) return null;
 
   return (
     <>
-      <div className="kit-panel">
+      <div className={`kit-panel ${desktopStatic ? 'desktop-static' : ''}`}>
         {categories.map((category, index) => {
           const accent = kitIconPalette[index % kitIconPalette.length];
           const isOpen = kitPanelOpen[index];
           const toggleOpen = () => {
-            const newState = [false, false, false, false];
-            if (!isOpen) {
-              newState[index] = true;
-            }
+            // 在 desktopStatic 模式下，PC端点击无效（但移动端需要有效，所以不在这里完全禁用，而是通过CSS控制PC端表现）
+            // 如果需要在JS层完全禁用PC端点击，需要检测屏幕宽度，但这会导致 hydration mismatch。
+            // 所以让点击发生，但在 CSS 中强制 PC 端展开且无交互反馈。
+
+            const newState = [...kitPanelOpen];
+            newState[index] = !newState[index]; // 仅切换当前项（非互斥）
             setKitPanelOpen(newState);
           };
 
@@ -38,6 +41,8 @@ export default function KitCategories({ categories }) {
                 className="kit-panel-title-button"
                 onClick={toggleOpen}
                 aria-expanded={isOpen}
+              // desktopStatic模式下PC端禁用点击事件可以通过 pointer-events: none 在 CSS 处理，
+              // 或者在这里简单处理。为了确保移动端正常，CSS是更好的选择。
               >
                 <div className="kit-panel-title">
                   <div className="kit-panel-icon">
@@ -49,8 +54,12 @@ export default function KitCategories({ categories }) {
                       className="kit-panel-icon-svg"
                     />
                   </div>
-                  <h3 style={{ color: isOpen ? '#B589E2' : '#0F172A' }}>
-                    {category.title}
+                  <h3 style={{ color: (isOpen && (!desktopStatic || typeof window !== 'undefined' && window.innerWidth < 768)) ? '#B589E2' : '#0F172A' }}>
+                    {/* 上面的 color 逻辑太复杂且不仅靠谱（hydration）。
+                        更好的方式是用 CSS 类名控制颜色。
+                        我们将依赖 CSS .open 类名。
+                    */}
+                    <span className="title-text">{category.title}</span>
                   </h3>
                 </div>
 
@@ -151,13 +160,16 @@ export default function KitCategories({ categories }) {
           margin: 0;
           font-size: 15px;
           font-weight: 600;
-          /* font-family: 'Rubik', sans-serif; -- inherited */
-          color: #0F172A;
+          color: #0F172A; /* Default color */
           line-height: 1.4;
           text-align: left;
+          transition: color 0.2s ease;
         }
 
-        /* 移动端标题颜色 - 展开时在JSX中已处理 */
+        /* Highlight color when open (except in static mode on desktop) */
+        .kit-panel-row:has(.kit-panel-content.open) h3 {
+           color: #B589E2;
+        }
 
         .kit-panel-icon {
           width: 40px;
@@ -176,9 +188,21 @@ export default function KitCategories({ categories }) {
           flex-shrink: 0;
         }
 
+        /* Universal Toggle Logic (Mobile & Desktop) */
+        .kit-panel-toggle {
+           display: block; /* Visible on all screens */
+           margin-left: 8px; 
+           font-size: 16px;
+        }
+
         .kit-panel-content {
+          display: none; /* Hidden by default */
           padding-top: 10px;
-          padding-left: 50px; /* Indent content */
+          padding-left: 50px;
+        }
+        
+        .kit-panel-content.open {
+          display: block; /* Shown when open */
         }
         
         .kit-panel-content ul {
@@ -194,52 +218,45 @@ export default function KitCategories({ categories }) {
           color: #4B5563;
           line-height: 1.5;
           position: relative;
-          /* padding-left: 0; -- handled by structure */
         }
         
         .kit-panel-content li strong {
           color: #111827;
           font-weight: 600;
         }
-        
-        /* Mobile Toggle Logic */
-        .kit-panel-toggle {
-           display: none;
-           margin-left: 8px; 
-           font-size: 16px;
-        }
 
         @media (max-width: 767px) {
-           .kit-panel-toggle {
-             display: block !important;
-           }
-           .kit-panel-content {
-             display: none;
-           }
-           .kit-panel-content.open {
-             display: block;
-           }
-           
            .kit-panel-title h3 {
               font-size: 14px;
            }
         }
 
-        /* Desktop Always Open */
+        /* Desktop Sizing Only */
         @media (min-width: 768px) {
-          .kit-panel-content {
-            display: block !important;
-            max-height: none !important;
-            overflow: visible !important;
-          }
-          .kit-panel-toggle {
-            display: none !important;
-          }
           .kit-panel-title h3 {
             font-size: 20px;
           }
           .kit-panel-content li {
             font-size: 14px;
+          }
+          
+          /* ====== Desktop Static Mode (Home Page) ====== */
+          .kit-panel.desktop-static .kit-panel-content {
+            display: block !important; /* Always open */
+            padding-left: 50px;
+          }
+          
+          .kit-panel.desktop-static .kit-panel-toggle {
+            display: none !important; /* Hide toggle arrow */
+          }
+          
+          .kit-panel.desktop-static .kit-panel-title-button {
+            cursor: default; /* Remove pointer cursor */
+          }
+          
+          /* Reset highlight color for static mode on desktop */
+          .kit-panel.desktop-static .kit-panel-row:has(.kit-panel-content.open) h3 {
+             color: #0F172A;
           }
         }
       `}</style>

@@ -52,34 +52,32 @@ export default function PreOrder() {
       kit: {
         categories: [
           {
-            title: 'Magical Block Buddy: Sparky',
+            title: 'Sparky — Your Child’s Creative Story Buddy',
             highlights: [
-              'Story Sparks Creation — The Magical Block Buddy that turns every build into a story.',
-              'Magic Window — Sees and understands every creative build.',
-              'Smart Brain — Adapts stories to Age (3-8) & Interests.',
-              'Privacy Button — Press to talk. Eyes & ears closed when off.',
-              '7-Hour Playtime — Long-lasting creative sessions.'
+              'Sees & Understands — Sparky responds to what kids build and continues the story.',
+              'Privacy-First — Push-to-talk privacy.',
+              'All-Day Play — Up to 7 hours of play.'
             ]
           },
           {
-            title: 'The Magic Hats: 4x Magical Theme Hats',
+            title: '4 Magic Hats = Endless Adventures',
             highlights: [
-              'Themes — Magic, Knight, Princess, Vehicle, Animal, Flowers, Fantasy, Buildings.',
-              'Creative Journey — Packed with 30+ stories per hat! Start with 6 Guided Stories to learn the basics, then unlock "Creator Mode" for infnite challenges!'
+              'New Story Worlds — Each hat unlocks a new story world.',
+              'Guided → Creative — Start guided, then unlock Creator Mode.'
             ]
           },
           {
-            title: 'The Magic Blocks: 4x Light-Up Magical Blocks',
+            title: 'Light-Up Magic Blocks',
             highlights: [
-              'Theme Matched — Each block pairs specifically with one Magic Hat.',
-              'The Magical Prize — Unlocks upon reaching "Creator Mode"—use this glowing magical block to light up your own infnite creations!'
+              'Magical Feedback — Blocks react to stories.',
+              'Unlock the Surprise — Unlock a magical surprise.'
             ]
           },
           {
             title: '100 Universal Blocks',
             highlights: [
-              'Limitless Play — Compatible with LEGO® & major brands.',
-              'Kid-Proof — BPA-Free, CPC/FCC Certified. Safe & Durable.'
+              'LEGO®-Friendly — Works with LEGO®.',
+              'Kid-Proof Design — Safe, durable, kid-proof.'
             ]
           }
         ]
@@ -286,17 +284,13 @@ export default function PreOrder() {
                     <h3 className="value-title">{t.features.title}</h3>
                   </div>
 
-                  <div className="vertical-spacer"></div>
-
                   <div className="card-section">
                     <div className="title-divider"></div>
                   </div>
 
-                  <div className="vertical-spacer"></div>
-
                   <div className="card-section">
                     <div className="kit-details-block">
-                      {t.kit && t.kit.categories && <KitCategories categories={t.kit.categories} />}
+                      {t.kit && t.kit.categories && <KitCategories categories={t.kit.categories} initialState={[true, false, false, false]} />}
                     </div>
                   </div>
 
