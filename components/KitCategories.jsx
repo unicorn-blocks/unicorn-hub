@@ -3,98 +3,98 @@ import Image from 'next/image';
 import { getKitIcon } from '../lib/content';
 
 const kitIconPalette = [
-    { base: '#feb79c', shadow: 'rgba(254, 183, 156, 0.35)' },
-    { base: '#ffcf6a', shadow: 'rgba(255, 207, 106, 0.35)' },
-    { base: '#b7c3ff', shadow: 'rgba(183, 195, 255, 0.35)' },
-    { base: '#ffa0e1', shadow: 'rgba(255, 160, 225, 0.3)' }
+  { base: '#feb79c', shadow: 'rgba(254, 183, 156, 0.35)' },
+  { base: '#ffcf6a', shadow: 'rgba(255, 207, 106, 0.35)' },
+  { base: '#b7c3ff', shadow: 'rgba(183, 195, 255, 0.35)' },
+  { base: '#ffa0e1', shadow: 'rgba(255, 160, 225, 0.3)' }
 ];
 
 export default function KitCategories({ categories }) {
-    const [kitPanelOpen, setKitPanelOpen] = useState([false, false, false, false]);
+  const [kitPanelOpen, setKitPanelOpen] = useState([false, false, false, false]);
 
-    if (!categories) return null;
+  if (!categories) return null;
 
-    return (
-        <>
-            <div className="kit-panel">
-                {categories.map((category, index) => {
-                    const accent = kitIconPalette[index % kitIconPalette.length];
-                    const isOpen = kitPanelOpen[index];
-                    const toggleOpen = () => {
-                        const newState = [false, false, false, false];
-                        if (!isOpen) {
-                            newState[index] = true;
-                        }
-                        setKitPanelOpen(newState);
-                    };
+  return (
+    <>
+      <div className="kit-panel">
+        {categories.map((category, index) => {
+          const accent = kitIconPalette[index % kitIconPalette.length];
+          const isOpen = kitPanelOpen[index];
+          const toggleOpen = () => {
+            const newState = [false, false, false, false];
+            if (!isOpen) {
+              newState[index] = true;
+            }
+            setKitPanelOpen(newState);
+          };
 
+          return (
+            <div
+              className="kit-panel-row"
+              key={category.title}
+              style={{ '--kit-accent': accent.base, '--kit-accent-shadow': accent.shadow }}
+            >
+              <button
+                className="kit-panel-title-button"
+                onClick={toggleOpen}
+                aria-expanded={isOpen}
+              >
+                <div className="kit-panel-title">
+                  <div className="kit-panel-icon">
+                    <Image
+                      src={getKitIcon(index)}
+                      alt=""
+                      width={40}
+                      height={40}
+                      className="kit-panel-icon-svg"
+                    />
+                  </div>
+                  <h3 style={{ color: isOpen ? '#B589E2' : '#0F172A' }}>
+                    {category.title}
+                  </h3>
+                </div>
+
+                {/* Mobile Toggle Indicator */}
+                <div className="kit-panel-toggle">
+                  {isOpen ? (
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                      <path d="M18 15L12 9L6 15" stroke="#4B5563" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  ) : (
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                      <path d="M6 9L12 15L18 9" stroke="#4B5563" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  )}
+                </div>
+              </button>
+
+              <div className={`kit-panel-content ${isOpen ? 'open' : ''}`}>
+                <ul>
+                  {category.highlights.map((item, idx) => {
+                    const parts = item.split('—').map(s => s.trim());
+                    const title = parts[0];
+                    const desc = parts[1];
+                    const hasDesc = !!desc;
                     return (
-                        <div
-                            className="kit-panel-row"
-                            key={category.title}
-                            style={{ '--kit-accent': accent.base, '--kit-accent-shadow': accent.shadow }}
-                        >
-                            <button
-                                className="kit-panel-title-button"
-                                onClick={toggleOpen}
-                                aria-expanded={isOpen}
-                            >
-                                <div className="kit-panel-title">
-                                    <div className="kit-panel-icon">
-                                        <Image
-                                            src={getKitIcon(index)}
-                                            alt=""
-                                            width={40}
-                                            height={40}
-                                            className="kit-panel-icon-svg"
-                                        />
-                                    </div>
-                                    <h3 style={{ color: isOpen ? '#B589E2' : '#0F172A' }}>
-                                        {category.title}
-                                    </h3>
-                                </div>
-
-                                {/* Mobile Toggle Indicator */}
-                                <div className="kit-panel-toggle">
-                                    {isOpen ? (
-                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                                            <path d="M18 15L12 9L6 15" stroke="#4B5563" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                                        </svg>
-                                    ) : (
-                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                                            <path d="M6 9L12 15L18 9" stroke="#4B5563" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                                        </svg>
-                                    )}
-                                </div>
-                            </button>
-
-                            <div className={`kit-panel-content ${isOpen ? 'open' : ''}`}>
-                                <ul>
-                                    {category.highlights.map((item, idx) => {
-                                        const parts = item.split('—').map(s => s.trim());
-                                        const title = parts[0];
-                                        const desc = parts[1];
-                                        const hasDesc = !!desc;
-                                        return (
-                                            <li key={idx}>
-                                                {hasDesc ? (
-                                                    <>
-                                                        <strong>{title}</strong> — {desc}
-                                                    </>
-                                                ) : (
-                                                    title
-                                                )}
-                                            </li>
-                                        );
-                                    })}
-                                </ul>
-                            </div>
-                        </div>
+                      <li key={idx}>
+                        {hasDesc ? (
+                          <>
+                            <strong>{title}</strong> — {desc}
+                          </>
+                        ) : (
+                          title
+                        )}
+                      </li>
                     );
-                })}
+                  })}
+                </ul>
+              </div>
             </div>
+          );
+        })}
+      </div>
 
-            <style jsx>{`
+      <style jsx>{`
         .kit-panel {
           background: #F7F3FD; 
           border-radius: 34px;
@@ -235,8 +235,14 @@ export default function KitCategories({ categories }) {
           .kit-panel-toggle {
             display: none !important;
           }
+          .kit-panel-title h3 {
+            font-size: 20px;
+          }
+          .kit-panel-content li {
+            font-size: 14px;
+          }
         }
       `}</style>
-        </>
-    );
+    </>
+  );
 }
