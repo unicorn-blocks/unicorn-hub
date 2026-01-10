@@ -38,10 +38,10 @@ export default function BlueTopBar() {
 
         {isReservePage ? (
           <button
-            className="blue-top-bar-btn joined"
-            disabled
+            className="blue-top-bar-btn"
+            onClick={() => window.location.href = '/payment/stripe-checkout'}
           >
-            🎉 Joined
+            Claim My VIP Spot!
           </button>
         ) : (
           <button

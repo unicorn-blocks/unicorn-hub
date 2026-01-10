@@ -73,7 +73,30 @@ exports.handler = async (event) => {
             bodyPayload = Buffer.from(event.body, "base64").toString("utf-8");
         }
 
-        stripeEvent = stripe.webhooks.constructEvent(bodyPayload, sig, webhookSecret);
+        // ✅ 支持多个 webhook secret（逗号分隔：live,test）
+        const secrets = String(webhookSecret)
+            .split(",")
+            .map((s) => s.trim())
+            .filter(Boolean);
+
+        let verified = false;
+        let lastError;
+
+        for (const secret of secrets) {
+            try {
+                stripeEvent = stripe.webhooks.constructEvent(bodyPayload, sig, secret);
+                verified = true;
+                break;
+            } catch (err) {
+                lastError = err;
+            }
+        }
+
+        if (!verified) {
+            console.error("❌ Webhook verification failed with all secrets");
+            throw lastError || new Error("Webhook verification failed");
+        }
+
         console.log("✅ Webhook Verified:", stripeEvent.type);
     } catch (err) {
         console.error("❌ Webhook Verify Error:", err.message);
