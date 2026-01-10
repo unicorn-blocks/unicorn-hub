@@ -8,21 +8,53 @@ import ProductCarousel from '../components/ProductCarousel';
 import { useLanguage } from '../context/LanguageContext';
 import KitCategories from '../components/KitCategories';
 
-export default function PreOrder() {
+// Backend: Fetch data at build time / incrementally
+export async function getStaticProps() {
+  const REMAINING_API = 'https://script.google.com/macros/s/AKfycbyC8hgXKH7L9JJf2JpFvfDhrjyO00saKSEs3enX1ppC8RzkHn7PZnuBGmkhH7jhFJmwNg/exec';
+  let remaining = 500;
+
+  try {
+    const res = await fetch(REMAINING_API);
+    const data = await res.json();
+    if (typeof data.remaining === 'number') {
+      remaining = data.remaining;
+    }
+  } catch (error) {
+    console.error('ISR Fetch Error:', error);
+  }
+
+  return {
+    props: {
+      initialRemaining: remaining,
+    },
+    // Next.js will invalidate the cache when a request comes in
+    // at most once every 60 seconds.
+    revalidate: 60,
+  };
+}
+
+export default function PreOrder({ initialRemaining }) {
   const { language } = useLanguage();
   const [openFaq, setOpenFaq] = useState(null);
 
 
-  // Scarcity state
-  const [reservationsCount, setReservationsCount] = useState(436);
+  // Scarcity state: Init with server-provided data (fast!), fallback to 500
+  const [reservationsCount, setReservationsCount] = useState(typeof initialRemaining === 'number' ? initialRemaining : 500);
   const totalSpots = 500;
+  const REMAINING_API = 'https://script.google.com/macros/s/AKfycbyC8hgXKH7L9JJf2JpFvfDhrjyO00saKSEs3enX1ppC8RzkHn7PZnuBGmkhH7jhFJmwNg/exec';
 
   useEffect(() => {
-    // Check if user just purchased (you might set this flag in the success page)
-    const hasPurchased = localStorage.getItem('userHasPurchasedVIP');
-    if (hasPurchased) {
-      setReservationsCount(435);
-    }
+    // Client-side refresh (keep data fresh)
+    fetch(REMAINING_API)
+      .then(res => res.json())
+      .then(data => {
+        if (typeof data.remaining === 'number') {
+          setReservationsCount(data.remaining);
+        }
+      })
+      .catch(() => {
+        // silently fail, we have initial data
+      });
   }, []);
 
   // 硬编码中英文内容

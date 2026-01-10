@@ -6,6 +6,9 @@ const { submitPaidCouponEmailToGoogleSheets } = require('../../lib/googleSheets'
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
 
+// 简单的内存幂等缓存 (Global outside handler for warm starts)
+const processedSessions = new Set();
+
 exports.handler = async (event, context) => {
     if (event.httpMethod === 'OPTIONS') {
         return {
@@ -112,6 +115,32 @@ exports.handler = async (event, context) => {
                 });
 
                 console.log('PaidCoupon sheet updated:', email);
+
+                // ✅ 3) 购买成功后，扣减 VIP 名额 (Google Sheets)
+                // 简单的内存幂等 (针对 Lambda Warm Start 重试)
+                if (processedSessions.has(session.id)) {
+                    console.log('⚠️ Session already processed for decrement:', session.id);
+                } else if (session.payment_status === 'paid') {
+                    const execUrl = process.env.GS_REMAINING_EXEC_URL;
+                    if (execUrl) {
+                        try {
+                            console.log('🔻 Triggering VIP Remaining decrement...');
+                            // 即使 GAS 脚本不需要 body，传一些上下文是个好习惯 (Edit: User requested simple POST)
+                            await fetch(execUrl, { method: 'POST' });
+                            console.log('✅ VIP Remaining decremented');
+                            processedSessions.add(session.id);
+
+                            // 防止内存泄漏 (虽然 Lambda 会销毁，但以防万一)
+                            if (processedSessions.size > 500) processedSessions.clear();
+                        } catch (err) {
+                            console.error('❌ Failed to decrement VIP count:', err);
+                            // 不抛出错误，以免阻断 updateOrderStatus 或导致无限重试
+                        }
+                    } else {
+                        console.log('ℹ️ No GS_REMAINING_EXEC_URL configured, skipping decrement');
+                    }
+                }
+
                 break;
             }
 
