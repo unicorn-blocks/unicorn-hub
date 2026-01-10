@@ -175,7 +175,7 @@ function CheckoutForm() {
     en: {
       title: 'Checkout - Unicorn Blocks',
       pageTitle: 'Complete Your VIP Reservation',
-      subtitle: 'Secure your spot with a $0.10 deposit. Pay the remaining $124 before we ship.',
+      subtitle: 'Secure your spot with a $0.50 deposit. Pay the remaining $124 before we ship.',
 
       // Contact section
       contact: 'Contact Information',
@@ -245,13 +245,13 @@ function CheckoutForm() {
       connectionError: 'Connection error. Please try again.',
 
       // Pricing
-      price: '$0.10',
+      price: '$0.50',
       currency: 'USD'
     },
     zh: {
       title: '结账 - 独角兽积木',
       pageTitle: '完成您的VIP预订',
-      subtitle: '支付$0.10订金锁定名额。发货前支付剩余$124。',
+      subtitle: '支付$0.50订金锁定名额。发货前支付剩余$124。',
 
       // Contact section
       contact: '联系信息',
@@ -321,7 +321,7 @@ function CheckoutForm() {
       connectionError: '连接错误，请重试。',
 
       // Pricing
-      price: '$0.10',
+      price: '$0.50',
       currency: 'USD'
     }
   };
@@ -385,7 +385,7 @@ function CheckoutForm() {
         lastName: lastName,
         zip: zipCode,
         leadId: leadId,
-        amount: 0.1,
+        amount: 0.5,
         currency: 'usd'
       };
 

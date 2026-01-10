@@ -21,7 +21,7 @@ export default function StripeCheckout() {
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
-            amount: 0.1,
+            amount: 0.5,
             currency: 'usd'
           })
         });
