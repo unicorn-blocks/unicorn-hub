@@ -1,185 +1,157 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 export default function ProductCarousel() {
   const [currentImage, setCurrentImage] = useState(0);
-  const [isFullscreen, setIsFullscreen] = useState(false);
   const images = [
     '/assets/reserve-vip-spot/toy-1.jpg',
     '/assets/reserve-vip-spot/toy-2.jpg'
   ];
 
 
-  // 键盘导航
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (!isFullscreen) return;
-
-      if (e.key === 'ArrowLeft') {
-        goToPrevious();
-      } else if (e.key === 'ArrowRight') {
-        goToNext();
-      } else if (e.key === 'Escape') {
-        closeFullscreen();
-      }
-    };
-
-    if (isFullscreen) {
-      document.addEventListener('keydown', handleKeyDown);
-      return () => document.removeEventListener('keydown', handleKeyDown);
-    }
-  }, [isFullscreen]);
-
   const goToSlide = (index) => {
     setCurrentImage(index);
   };
 
   const goToPrevious = () => {
-    setCurrentImage((prev) => (prev - 1 + images.length) % images.length);
+    setCurrentImage((prev) => Math.max(0, prev - 1));
   };
 
   const goToNext = () => {
-    setCurrentImage((prev) => (prev + 1) % images.length);
+    setCurrentImage((prev) => Math.min(images.length - 1, prev + 1));
   };
 
-  const handleImageClick = () => {
-    setIsFullscreen(true);
+  // Drag state
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragOffset, setDragOffset] = useState(0);
+  const startX = useRef(0);
+
+  const handleDragStart = (e) => {
+    // Only allow left mouse button or touch
+    if (e.type.includes('mouse') && e.button !== 0) return;
+
+    setIsDragging(true);
+    startX.current = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
   };
 
-  const closeFullscreen = () => {
-    setIsFullscreen(false);
+  const handleDragMove = (e) => {
+    if (!isDragging) return;
+
+    const x = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
+    const diff = x - startX.current;
+
+    // Apply resistance if dragging out of bounds
+    if (
+      (currentImage === 0 && diff > 0) ||
+      (currentImage === images.length - 1 && diff < 0)
+    ) {
+      setDragOffset(diff * 0.3);
+    } else {
+      setDragOffset(diff);
+    }
+  };
+
+  const handleDragEnd = () => {
+    if (!isDragging) return;
+    setIsDragging(false);
+
+    const threshold = 50; // Threshold to trigger slide
+    if (dragOffset < -threshold) {
+      goToNext();
+    } else if (dragOffset > threshold) {
+      goToPrevious();
+    }
+    setDragOffset(0);
   };
 
   return (
     <div className="product-carousel">
       <div className="carousel-container">
-        <div className="carousel-wrapper" onClick={handleImageClick}>
-          <img
-            src={images[currentImage]}
-            alt={`Product image ${currentImage + 1}`}
-            className="carousel-image"
-            decoding="async"
-          />
-
-          {/* 全屏查看按钮 */}
-          <button
-            className="carousel-fullscreen-btn"
-            onClick={(e) => {
-              e.stopPropagation();
-              handleImageClick();
+        <div
+          className="carousel-wrapper"
+          onTouchStart={handleDragStart}
+          onTouchMove={handleDragMove}
+          onTouchEnd={handleDragEnd}
+        >
+          <div
+            className="carousel-track"
+            style={{
+              transform: `translateX(calc(-${currentImage * 100}% + ${dragOffset}px))`,
+              transition: isDragging ? 'none' : 'transform 0.3s cubic-bezier(0.25, 1, 0.5, 1)'
             }}
-            aria-label="View fullscreen"
           >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
-            </svg>
-          </button>
+            {images.map((src, index) => (
+              <div key={index} className="carousel-slide">
+                <img
+                  src={src}
+                  alt={`Product image ${index + 1}`}
+                  className="carousel-image"
+                  draggable={false}
+                />
+              </div>
+            ))}
+          </div>
 
-          {/* 导航箭头 */}
+          {/* 导航箭头 - Removed Fullscreen button */}
           <button
             className="carousel-nav carousel-nav-prev"
+            style={{ display: currentImage === 0 ? 'none' : 'flex' }}
             onClick={(e) => {
               e.stopPropagation();
               goToPrevious();
             }}
             aria-label="Previous image"
           >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            <svg
+              className="carousel-icon"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="#000000"
+              style={{ minWidth: '24px', minHeight: '24px' }}
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
             </svg>
           </button>
 
           <button
             className="carousel-nav carousel-nav-next"
+            style={{ display: currentImage === images.length - 1 ? 'none' : 'flex' }}
             onClick={(e) => {
               e.stopPropagation();
               goToNext();
             }}
             aria-label="Next image"
           >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            <svg
+              className="carousel-icon"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="#000000"
+              style={{ minWidth: '24px', minHeight: '24px' }}
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
             </svg>
           </button>
-        </div>
-      </div>
 
-      {/* 全屏预览模态框 */}
-      {isFullscreen && (
-        <div className="fullscreen-modal" onClick={closeFullscreen}>
-          <div className="fullscreen-content" onClick={(e) => e.stopPropagation()}>
-            <button
-              className="fullscreen-close"
-              onClick={closeFullscreen}
-              aria-label="Close fullscreen"
-            >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
-
-            {/* 全屏导航按钮 */}
-            <button
-              className="fullscreen-nav fullscreen-nav-prev"
-              onClick={(e) => {
-                e.stopPropagation();
-                goToPrevious();
-              }}
-              aria-label="Previous image"
-            >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-              </svg>
-            </button>
-
-            <button
-              className="fullscreen-nav fullscreen-nav-next"
-              onClick={(e) => {
-                e.stopPropagation();
-                goToNext();
-              }}
-              aria-label="Next image"
-            >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
-            </button>
-
-            <img
-              src={images[currentImage]}
-              alt={`Product image ${currentImage + 1}`}
-              className="fullscreen-image"
-              decoding="async"
-            />
-
-            {/* 全屏底部导航栏 */}
-            <div className="fullscreen-navbar">
+          {/* Indicators */}
+          <div className="carousel-indicators">
+            {images.map((_, index) => (
               <button
-                className="fullscreen-nav-btn"
+                key={index}
+                className={`carousel-indicator ${index === currentImage ? 'active' : ''}`}
                 onClick={(e) => {
                   e.stopPropagation();
-                  goToPrevious();
+                  goToSlide(index);
                 }}
-              >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                </svg>
-              </button>
-              <span className="fullscreen-counter">{currentImage + 1} / {images.length}</span>
-              <button
-                className="fullscreen-nav-btn"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  goToNext();
-                }}
-              >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
-              </button>
-            </div>
+                aria-label={`Go to slide ${index + 1}`}
+              />
+            ))}
           </div>
         </div>
-      )}
+      </div>
 
       <style jsx>{`
         .product-carousel {
@@ -204,7 +176,27 @@ export default function ProductCarousel() {
           border-radius: 0;
           overflow: hidden;
           background: #f8fafc;
-          cursor: pointer;
+          cursor: default;
+          touch-action: pan-y;
+          user-select: none;
+          -webkit-user-select: none;
+        }
+
+        .carousel-track {
+          display: flex;
+          height: 100%;
+          transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+          width: 100%;
+        }
+
+        .carousel-slide {
+          min-width: 100%;
+          width: 100%;
+          height: 100%;
+          flex-shrink: 0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
         }
 
         .carousel-image {
@@ -212,34 +204,37 @@ export default function ProductCarousel() {
           height: 100%;
           object-fit: cover;
           object-position: center;
-          transition: opacity 0.5s ease-in-out;
+          display: block;
         }
 
         .carousel-nav {
           position: absolute;
           top: 50%;
           transform: translateY(-50%);
-          background: rgba(255, 255, 255, 0.04);
-          backdrop-filter: blur(8px);
-          -webkit-backdrop-filter: blur(8px);
-          border: 1px solid rgba(255, 255, 255, 0.16);
+          background: rgba(255, 255, 255, 0.9);
+          border: 1px solid rgba(0, 0, 0, 0.05);
           border-radius: 50%;
-          width: 32px;
-          height: 32px;
+          width: 40px;
+          height: 40px;
           display: flex;
           align-items: center;
           justify-content: center;
           cursor: pointer;
-          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-          box-shadow: 0 10px 28px rgba(15, 23, 42, 0.10);
-          color: #374151;
+          transition: all 0.2s ease;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+          color: #000000;
           z-index: 10;
+        }
+        
+        /* Force SVG visibility */
+        .carousel-icon {
+           display: block;
         }
 
         .carousel-nav:hover {
-          background: rgba(255, 255, 255, 0.06);
-          box-shadow: 0 14px 36px rgba(15, 23, 42, 0.14);
-          transform: translateY(-50%) translateY(-1px);
+          background: #ffffff;
+          transform: translateY(-50%) scale(1.05);
+          box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
         }
 
         .carousel-nav-prev {
@@ -251,57 +246,40 @@ export default function ProductCarousel() {
         }
 
         .carousel-indicators {
-          display: flex;
-          justify-content: center;
-          gap: 8px;
-          margin-top: 0;
-        }
-
-        .carousel-indicator {
-          width: 8px;
-          height: 8px;
-          border-radius: 50%;
-          border: none;
-          background: rgba(156, 163, 175, 0.4);
-          cursor: pointer;
-          transition: background-color 0.2s ease;
-        }
-
-        .carousel-indicator.active {
-          background: #7D9ED4;
-          transform: none;
-        }
-
-        .carousel-indicator:hover {
-          background: rgba(125, 158, 212, 0.6);
-        }
-
-        /* 全屏查看按钮 */
-        .carousel-fullscreen-btn {
           position: absolute;
-          top: 8px;
-          right: 8px;
-          background: rgba(255, 255, 255, 0.04);
-          backdrop-filter: blur(8px);
-          -webkit-backdrop-filter: blur(8px);
-          border: 1px solid rgba(255, 255, 255, 0.16);
-          border-radius: 6px;
-          width: 28px;
-          height: 28px;
+          bottom: 12px;
+          left: 50%;
+          transform: translateX(-50%);
           display: flex;
-          align-items: center;
-          justify-content: center;
-          cursor: pointer;
-          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-          box-shadow: 0 10px 28px rgba(15, 23, 42, 0.10);
-          color: #374151;
+          gap: 6px;
           z-index: 10;
         }
 
-        .carousel-fullscreen-btn:hover {
-          background: rgba(255, 255, 255, 0.06);
-          box-shadow: 0 14px 36px rgba(15, 23, 42, 0.14);
-          transform: translateY(-1px);
+        .carousel-indicator {
+          width: 7px !important;
+          height: 7px !important;
+          min-width: 7px !important;
+          max-width: 7px !important;
+          min-height: 7px !important;
+          max-height: 7px !important;
+          padding: 0 !important;
+          margin: 0 !important;
+          border-radius: 50%;
+          border: none;
+          background: rgba(255, 255, 255, 0.5);
+          cursor: pointer;
+          transition: all 0.3s ease;
+          box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .carousel-indicator.active {
+          background: #ffffff;
+          transform: scale(1.3);
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .carousel-indicator:hover {
+          background: rgba(255, 255, 255, 0.8);
         }
 
         /* 全屏预览样式 */
@@ -469,8 +447,7 @@ export default function ProductCarousel() {
           }
 
           .carousel-nav {
-            width: 36px;
-            height: 36px;
+            display: none !important;
           }
 
           .carousel-nav-prev {
