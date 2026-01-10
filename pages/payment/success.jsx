@@ -12,16 +12,15 @@ export default function PaymentSuccess() {
   // 硬编码中英文内容
   const translations = {
     en: {
-      title: 'Payment Successful!',
-      subtitle: 'Thank you for your purchase',
-      message: 'Your payment has been processed successfully. You will receive a confirmation email shortly.',
-      voucher: 'Your $40 discount voucher has been sent to your email and will be available when our product launches.',
+      title: 'Payment Successful',
+      subtitle: 'You’re officially on the VIP list',
+      voucher: 'Your $149 VIP price is locked in. You’ll receive the private shopping link before launch.',
       nextSteps: 'What happens next?',
       steps: [
-        'Check your email for discount voucher',
-        'Keep your email address updated',
-        'We\'ll notify you when the product launches',
-        'Use your $40 discount voucher at checkout'
+        'Check your email for your VIP confirmation.',
+        'Get behind-the-scenes access and exclusive updates.',
+        'We’ll notify you when the product launches.',
+        'Complete your purchase and receive priority delivery.'
       ],
       backToHome: 'Back to Home',
       emailError: 'Please provide a valid email address',
@@ -63,11 +62,11 @@ export default function PaymentSuccess() {
       }
       return;
     }
-    
+
     try {
       const { submitEmailToGoogleSheets } = await import('../../lib/googleSheets');
       const result = await submitEmailToGoogleSheets(email, "payment-success-footer", "");
-      
+
       if (result.success) {
         if (setFooterStatus) {
           setFooterStatus({
@@ -104,7 +103,7 @@ export default function PaymentSuccess() {
 
       {/* 使用导航组件 */}
       {/*<Navigation />*/}
-      
+
       <div className="background-gradient"></div>
       <main className="min-h-screen">
         <section className="hero-section relative overflow-hidden">
@@ -119,16 +118,11 @@ export default function PaymentSuccess() {
 
               {/* 标题 */}
               <p className="text-[clamp(1.2rem,4vw,2rem)] text-gray-600 mb-8">{t.title}{language === 'zh' ? '' : ' '}{t.subtitle}</p>
-              
+
               {/* 成功消息 */}
-              <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-6 max-w-2xl mx-auto mb-8 shadow-lg">
-                <p className="text-lg text-gray-800 mb-4">{t.message}</p>
-                <div className="inline-flex items-center bg-gradient-to-r from-green-50 to-emerald-50 text-green-700 px-4 py-2 rounded-full text-sm font-medium border border-green-200">
-                  <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
-                  </svg>
-                  {t.voucher}
-                </div>
+              <div className="inline-flex items-center bg-gradient-to-r from-green-50 to-emerald-50 text-green-700 px-6 py-4 rounded-xl text-base font-medium border border-green-200 mb-8 shadow-sm max-w-2xl mx-auto">
+                <span className="mr-3 text-xl">🔒</span>
+                {t.voucher}
               </div>
 
               {/* 下一步说明 */}
@@ -138,8 +132,11 @@ export default function PaymentSuccess() {
                   {t.steps.map((step, index) => (
                     <div key={index} className="bg-white/60 backdrop-blur-sm rounded-2xl p-4 shadow-lg">
                       <div className="flex items-center">
-                        <div className="w-8 h-8 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-full flex items-center justify-center mr-4 flex-shrink-0">
-                          <span className="text-blue-600 font-bold text-sm">{index + 1}</span>
+                        <div
+                          className="w-8 h-8 rounded-full flex items-center justify-center mr-4 flex-shrink-0"
+                          style={{ background: 'linear-gradient(135deg, #F7AEBF 0%, #9b90da 100%)' }}
+                        >
+                          <span className="text-white font-bold text-sm">{index + 1}</span>
                         </div>
                         <p className="text-gray-700 text-sm">{step}</p>
                       </div>
