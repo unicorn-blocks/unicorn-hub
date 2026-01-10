@@ -45,14 +45,29 @@ fbq('track', 'PageView');`
           <script type="text/javascript" dangerouslySetInnerHTML={{
             __html: `
               (function(c,l,a,r,i,t,y){
-                  // Domain check: only run on unicornblocks.ai (and www.), excluding vip.
+                  // Domain check: only run on unicornblocks.ai (and www.)
                   var hostname = window.location.hostname;
-                  if (hostname.indexOf('unicornblocks.ai') > -1 && hostname.indexOf('vip.') !== 0) {
+                  if (hostname === 'unicornblocks.ai' || hostname === 'www.unicornblocks.ai') {
                       c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
                       t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
                       y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
                   }
-              })(window, document, "clarity", "script", "uwul2mcueu");
+              })(window, document, "clarity", "script", "k7w618641j");
+            `
+          }} />
+
+          {/* Microsoft Clarity - Only for vip.unicornblocks.ai */}
+          <script type="text/javascript" dangerouslySetInnerHTML={{
+            __html: `
+              (function(c,l,a,r,i,t,y){
+                  // Domain check: only run on vip.unicornblocks.ai
+                  var hostname = window.location.hostname;
+                  if (hostname === 'vip.unicornblocks.ai') {
+                      c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+                      t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+                      y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+                  }
+              })(window, document, "clarity", "script", "uzdzugn9r7");
             `
           }} />
         </Head>
