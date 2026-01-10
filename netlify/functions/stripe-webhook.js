@@ -90,6 +90,8 @@ exports.handler = async (event, context) => {
                     session.customer_email ||
                     '';
 
+                const zipcode = session.metadata?.zip || "";
+
                 if (!email) {
                     // 你也可以选择不抛错（避免 Stripe 重试），但建议抛错以免漏单
                     throw new Error(`Missing email in checkout.session.completed (session: ${session.id})`);
@@ -99,6 +101,7 @@ exports.handler = async (event, context) => {
                     email,
                     amount_paid: amount,
                     stripe_session_id: session.id,
+                    zipcode,
                     source: 'stripe',
                 });
 
