@@ -2,7 +2,8 @@ import { useState, useEffect, useRef } from 'react';
 
 export default function ProductCarousel() {
   const [currentImage, setCurrentImage] = useState(0);
-  const images = [
+  // Define image sets
+  const desktopImages = [
     '/assets/reserve-vip-spot/0.webp',
     '/assets/reserve-vip-spot/1.webp',
     '/assets/reserve-vip-spot/5.png',
@@ -11,6 +12,34 @@ export default function ProductCarousel() {
     '/assets/reserve-vip-spot/4.webp',
     '/assets/reserve-vip-spot/6.png'
   ];
+
+  // Mobile images exclude the last one (6.png)
+  const mobileImages = [
+    '/assets/reserve-vip-spot/0.webp',
+    '/assets/reserve-vip-spot/1.webp',
+    '/assets/reserve-vip-spot/5.png',
+    '/assets/reserve-vip-spot/2.webp',
+    '/assets/reserve-vip-spot/3.png',
+    '/assets/reserve-vip-spot/4.webp'
+  ];
+
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 1024); // using 1024 consistent with other breakpoints for "desktop vs mobile layout"? 
+      // Wait, standard mobile breakpoint is usually 768. Let's check KitCarousel logic. 
+      // KitCarousel logic is window.innerWidth < 768. I will follow that.
+    };
+
+    // Initial check
+    checkMobile();
+
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  const images = isMobile ? mobileImages : desktopImages;
 
 
   const goToSlide = (index) => {

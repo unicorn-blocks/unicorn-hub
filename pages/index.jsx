@@ -824,7 +824,7 @@ export default function Home({ isVip = false }) {
                           </div>
                           <div className="step-mobile-text">
                             <h3>4. The Adventure Continues</h3>
-                            <p>The Magic har and Blocks light up to celebrate success!</p>
+                            <p>The Magic Hat and Blocks light up to celebrate success!</p>
                           </div>
                         </div>
                       </div>
@@ -873,8 +873,7 @@ export default function Home({ isVip = false }) {
                         '/assets/kit/mobile/5.png',
                         '/assets/kit/mobile/2.webp',
                         '/assets/kit/mobile/3.png',
-                        '/assets/kit/mobile/4.webp',
-                        '/assets/kit/mobile/6.png'
+                        '/assets/kit/mobile/4.webp'
                       ]}
                       desktopImages={[
                         '/assets/kit/desktop/0.webp',
