@@ -17,7 +17,7 @@ export default function PaymentSuccess() {
       voucher: 'Your $149 VIP price is locked in. You’ll receive the private shopping link before launch.',
       nextSteps: 'What happens next?',
       steps: [
-        'Check your email for your VIP confirmation.',
+        'Confirmation email will arrive shortly.',
         'Get behind-the-scenes access and exclusive updates.',
         'We’ll notify you when the product launches.',
         'Complete your purchase and receive priority delivery.'
@@ -36,7 +36,7 @@ export default function PaymentSuccess() {
       voucher: '您的40美元折扣券已发送到您的邮箱，产品发布后即可使用。',
       nextSteps: '接下来会发生什么？',
       steps: [
-        '查看邮箱中的折扣券',
+        'You will receive your confirmation email shortly.',
         '保持邮箱地址更新',
         '产品发布时我们会通知您',
         '在结账时使用您的40美元折扣券'

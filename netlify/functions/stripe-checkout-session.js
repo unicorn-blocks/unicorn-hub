@@ -31,7 +31,7 @@ exports.handler = async (event, context) => {
             lastName,
             zip,
             leadId = '',
-            amount = 0.5,
+            amount = 5,
             currency = 'usd',
             returnUrl,
         } = params;
