@@ -3,8 +3,13 @@ import { useState, useEffect, useRef } from 'react';
 export default function ProductCarousel() {
   const [currentImage, setCurrentImage] = useState(0);
   const images = [
-    '/assets/reserve-vip-spot/toy-1.jpg',
-    '/assets/reserve-vip-spot/toy-2.jpg'
+    '/assets/reserve-vip-spot/0.webp',
+    '/assets/reserve-vip-spot/1.webp',
+    '/assets/reserve-vip-spot/5.png',
+    '/assets/reserve-vip-spot/2.webp',
+    '/assets/reserve-vip-spot/3.png',
+    '/assets/reserve-vip-spot/4.webp',
+    '/assets/reserve-vip-spot/6.png'
   ];
 
 
@@ -433,11 +438,12 @@ export default function ProductCarousel() {
           }
 
           .carousel-wrapper {
-            aspect-ratio: auto !important; /* Allow natural image height */
+            aspect-ratio: 1/1;
             height: auto !important;
           }
 
           .carousel-image {
+            object-fit: cover;
             position: relative !important; /* Override absolute positioning if any */
             height: auto !important;
           }

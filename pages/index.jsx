@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import Head from 'next/head';
 import Image from 'next/image';
+import KitCarousel from '../components/KitCarousel';
 import Link from 'next/link';
 import Navigation from '../components/layout/Navigation';
 import Footer from '../components/layout/Footer';
@@ -818,14 +819,26 @@ export default function Home({ isVip = false }) {
               <div className="kit-layout">
                 <div className="kit-media-block">
                   <div className="kit-media-single">
-                    {/* 移动端图片 */}
-                    <img
-                      src="/assets/ima/section3.png"
-                      alt="Sparky Adventure Kit"
-                      className="kit-media-single-image md:hidden"
+                    <KitCarousel
+                      mobileImages={[
+                        '/assets/kit/mobile/0.webp',
+                        '/assets/kit/mobile/1.webp',
+                        '/assets/kit/mobile/5.png',
+                        '/assets/kit/mobile/2.webp',
+                        '/assets/kit/mobile/3.png',
+                        '/assets/kit/mobile/4.webp',
+                        '/assets/kit/mobile/6.png'
+                      ]}
+                      desktopImages={[
+                        '/assets/kit/desktop/0.webp',
+                        '/assets/kit/desktop/1.webp',
+                        '/assets/kit/desktop/5.png',
+                        '/assets/kit/desktop/2.webp',
+                        '/assets/kit/desktop/3.png',
+                        '/assets/kit/desktop/4.webp',
+                        '/assets/kit/desktop/6.png'
+                      ]}
                     />
-                    {/* PC端图片 */}
-                    <Image src="/assets/ima/组合 673.png" alt="Sparky Adventure Kit" fill className="kit-media-single-image hidden md:block" />
                   </div>
                 </div>
                 <div className="kit-details-block">
@@ -1656,6 +1669,7 @@ export default function Home({ isVip = false }) {
           .kit-layout {
             grid-template-columns: minmax(0, 0.95fr) minmax(0, 1fr);
             gap: 46px;
+            align-items: start;
           }
         }
 
@@ -1670,8 +1684,17 @@ export default function Home({ isVip = false }) {
         .kit-media-single {
           position: relative;
           width: 100%;
-          height: 100%;
-          min-height: 500px;
+          /* Mobile default */
+          height: auto;
+          aspect-ratio: 4/5;
+        }
+
+        @media (min-width: 768px) {
+          .kit-media-single {
+            height: auto;
+            aspect-ratio: 1 / 1;
+            max-width: 612px;
+          }
         }
 
         .kit-media-single-image {
