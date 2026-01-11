@@ -92,8 +92,9 @@ export default function PreOrder({ initialRemaining }) {
             ]
           },
           {
-            title: '4 Magic Hats = Endless Adventures',
+            title: 'The Magic Hats: 4x Magical Theme Hats',
             highlights: [
+              'Choose 4 from 7 story worlds — Forest · Ocean · Desert · Castle · Princess · Unicorn · Space',
               'New Story Worlds — Each hat unlocks a new story world.',
               'Guided → Creative — Start guided, then unlock Creator Mode.'
             ]
@@ -119,7 +120,7 @@ export default function PreOrder({ initialRemaining }) {
         items: [
           {
             q: 'How does the VIP Reservation work?',
-            a: 'Step 1. Lock Your Price: Pay **$5 now** to secure the limited **$129 VIP deal** (Retail Price: $199).\nStep 2. Go behind-the-scenes. **See** exclusive updates, **meet** our team, and **watch** the creation process unfold — all designed to **unlock limitless creativity**.\nStep 3. Pay & Receive: We\'ll notify you before shipping, then automatically charge the remaining **$124** for priority delivery.'
+            a: 'Step 1. Lock Your Price: Pay **$5 today** to reserve the **$149 VIP price** (Retail price: $199).\nStep 2. **Get Exclusive Access**: **See** behind-the-scenes updates, and **follow** the product as it comes to life — all designed to **spark creativity**.\nStep 3. Pay & Receive: Before shipping, we’ll notify you and charge the remaining **$145**. Your order ships with **priority delivery**.'
           },
           {
             q: 'What if I change my mind?',
@@ -135,15 +136,43 @@ export default function PreOrder({ initialRemaining }) {
           },
           {
             q: 'Can multiple children share one set?',
-            a: 'Yes, they can share! However, for the **best experience**, we recommend one per child. The AI bonds as a personal "best friend," and having their own set ensures each child gets a fully personalized creative journey.'
+            a: 'Yes, they can share! For the best experience, we recommend one set per child. Each Sparky becomes a personal companion, and having their own set allows every child to enjoy a fully personalized creative journey.'
           },
           {
             q: 'When will I pay the remaining amount?',
-            a: 'We will send you a friendly email reminder about **14 days before shipping**. You can then choose to **pay the remaining $124 manually**, or opt for automatic payment for a hands-free experience.'
+            a: 'We will send you a friendly email reminder about **14 days before shipping**. You can then choose to **pay the remaining $145 manually**, or opt for automatic payment for a hands-free experience.'
           },
           {
             q: 'When will I receive the product?',
             a: 'Great innovation takes time. Our estimated ship date is mid-2026. By joining us now, you\'re not just reserve-vip-spoting — you\'re becoming an insider on our journey to create something extraordinary. You\'ll receive exclusive behind-the-scenes updates as we bring this product to life.'
+          },
+          {
+            q: 'Is this screen-free?',
+            a: 'Unicorn Blocks is designed to reduce passive screen time. Kids build with real, physical blocks while Sparky responds to what they create—encouraging hands-on play, imagination, and movement instead of scrolling or watching.'
+          },
+          {
+            q: 'Does it need Wi-Fi to work?',
+            a: 'You will need Wi-Fi or a hotspot connection to connect and generate new stories. Once your Sparky is connected, you can move it around your home as long as it stays within range.'
+          },
+          {
+            q: 'Is it hard to set up?',
+            a: 'Not at all. Setup takes just a few minutes through the parent app. After that, kids can jump straight into building and playing.'
+          },
+          {
+            q: 'What does my child actually learn?',
+            a: 'Through play, kids develop creativity, spatial thinking, storytelling skills, and early engineering concepts—without it ever feeling like a lesson.'
+          },
+          {
+            q: 'How long will my child stay engaged?',
+            a: 'Many parents are surprised by how long kids stay focused. Sparky encourages continuous building, experimenting, and storytelling, helping play sessions last far longer than traditional blocks.'
+          },
+          {
+            q: 'Will my child outgrow it quickly?',
+            a: 'Unicorn Blocks grows with your child. As kids develop, Sparky introduces new challenges and story depth, keeping play fresh, engaging, and age-appropriate over time.'
+          },
+          {
+            q: 'Is it compatible with other building blocks?',
+            a: 'Yes! Absolutely. Unicorn Blocks are compatible with LEGO®-style blocks, so kids can mix, expand, and build even bigger worlds using the blocks they already love.'
           }
         ]
       }
@@ -183,6 +212,7 @@ export default function PreOrder({ initialRemaining }) {
           {
             title: 'The Magic Hats: 4x Magical Theme Hats',
             highlights: [
+              'Choose 4 from 7 story worlds — Forest · Ocean · Desert · Castle · Princess · Unicorn · Space',
               'Themes — Magic, Knight, Princess, Vehicle, Animal, Flowers, Fantasy, Buildings.',
               'Creative Journey — Packed with 30+ stories per hat! Start with 6 Guided Stories to learn the basics, then unlock "Creator Mode" for infnite challenges!'
             ]
@@ -233,6 +263,34 @@ export default function PreOrder({ initialRemaining }) {
           {
             q: '我什么时候能收到产品？',
             a: '伟大的创新需要时间。预计发货时间为2026年年中。现在加入，你不仅是在预订，更将成为共创见证者，我们会持续发送幕后进展。'
+          },
+          {
+            q: '这是无屏幕的吗？',
+            a: 'Unicorn Blocks 旨在减少被动屏幕时间。孩子们使用真实的物理积木进行搭建，而 Sparky 会对他们创造的内容做出反应——鼓励动手游戏、想象力和运动，而不是刷屏或看视频。'
+          },
+          {
+            q: '它需要 Wi-Fi 才能工作吗？',
+            a: '你需要 Wi-Fi 或热点连接来连接并生成新故事。一旦你的 Sparky 连接上了，只要通过 App 操作，你就可以在家中任何信号覆盖范围内使用它。'
+          },
+          {
+            q: '设置很难吗？',
+            a: '一点也不。通过家长 App 设置只需几分钟。之后，孩子们就可以直接开始搭建和玩耍了。'
+          },
+          {
+            q: '孩子到底能学到什么？',
+            a: '通过游戏，孩子们可以发展创造力、空间思维、讲故事的技巧和早期工程概念——而且完全不会感觉像是在上课。'
+          },
+          {
+            q: '孩子的注意力能保持多久？',
+            a: '许多父母都惊讶于孩子能保持如此长时间的专注。Sparky 鼓励持续的搭建、实验和讲故事，帮助游戏时间持续得比传统积木长得多。'
+          },
+          {
+            q: '孩子会很快就不玩了吗？',
+            a: '独角兽积木会随孩子一起成长。随着孩子能力的提升，Sparky 会由浅入深地引入新挑战和更复杂的故事，确保游戏内容始终新鲜有趣，且适合不同年龄阶段。'
+          },
+          {
+            q: '它兼容其他积木吗？',
+            a: '是的，完全兼容！独角兽积木兼容乐高®式积木，所以孩子们可以将它们混合使用、扩展，利用已有的积木构建更宏大的世界。'
           }
         ]
       }

@@ -19,29 +19,72 @@ export default function Home({ isVip = false }) {
   const [popOpen, setPopOpen] = useState(false);
   const [familyPage, setFamilyPage] = useState(0); // 添加家庭见证页面状态
   // 弹窗只弹一次
+  // 弹窗逻辑：滚动到底部 OR 停留3秒
+  const popTimerRef = useState(null); // actually useRef is better but I can use a local var in useEffect scope if I don't need it elsewhere, simpler to use useRef globally in component or just vars in useEffect closure if no re-renders mess it up.
+  // Actually, to be safe across re-renders (though this useEffect is [] dependency), I'll use refs inside the component body or just let the closure handle it if [] is true.
+  // But let's use refs to be React-clean.
+  const timerRef = useState(null); // misuse of useState, wait.
+
   useEffect(() => {
     if (typeof window === 'undefined') return;
+
     // const closed = localStorage.getItem('popModalClosed');
     // if (closed) return;
-    // 监听滚动到section3
+
+    let timerId = null;
+    let hasTriggered = false;
+
+    function triggerModal() {
+      if (hasTriggered) return;
+      hasTriggered = true;
+      setPopOpen(true);
+      if (timerId) clearTimeout(timerId);
+      window.removeEventListener('scroll', handleScroll);
+    }
+
     function handleScroll() {
-      // Use the class name for the section ensures we track the container
+      if (hasTriggered) return;
+
       const section3 = document.querySelector('.kit-section') || document.querySelector('img[alt="Everything to Build the Magic."]');
       if (!section3) return;
       const rect = section3.getBoundingClientRect();
-      // Trigger when the bottom of the section enters the viewport (is fully scrolled to)
-      // or if we have already scrolled past it (rect.bottom < window.innerHeight)
-      if (rect.bottom <= window.innerHeight) {
-        setPopOpen(true);
-        window.removeEventListener('scroll', handleScroll);
+      const windowHeight = window.innerHeight;
+
+      // 1. Existing Logic: Scroll to bottom of section
+      if (rect.bottom <= windowHeight) {
+        triggerModal();
+        return;
+      }
+
+      // 2. New Logic: Dwell for 3 seconds
+      // Check if section is significantly visible (e.g., more than 10% or just intersecting?)
+      // User said "stay in kit section". Let's assume "is visible on screen".
+      const isVisible = rect.top < windowHeight && rect.bottom > 0;
+
+      if (isVisible) {
+        if (!timerId) {
+          timerId = setTimeout(() => {
+            triggerModal();
+          }, 3000);
+        }
+      } else {
+        if (timerId) {
+          clearTimeout(timerId);
+          timerId = null;
+        }
       }
     }
+
     window.addEventListener('scroll', handleScroll);
-    handleScroll();
-    return () => window.removeEventListener('scroll', handleScroll);
+    handleScroll(); // check initial state
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      if (timerId) clearTimeout(timerId);
+    };
   }, []);
   const { language } = useLanguage();
-  const [openFaq, setOpenFaq] = useState(0);
+  const [openFaq, setOpenFaq] = useState(null);
 
   const translations = {
     en: {
@@ -116,6 +159,7 @@ export default function Home({ isVip = false }) {
           {
             title: '4 Magic Hats = Endless Adventures',
             highlights: [
+              'Choose 4 from 7 story worlds — Forest · Ocean · Desert · Castle · Princess · Unicorn · Space',
               'New Story Worlds — Each hat unlocks a new story world.',
               'Guided → Creative — Start guided, then unlock Creator Mode.'
             ]
@@ -928,9 +972,6 @@ export default function Home({ isVip = false }) {
                     You can review or clear it anytime.
                   </p>
                 </div>
-              </div>
-              <div className="privacy-illustration">
-                <Image src="/assets/ima/Rectangle_17_1101.png" alt="" width={400} height={400} className="privacy-illustration-image" />
               </div>
             </div>
 
@@ -2225,8 +2266,8 @@ export default function Home({ isVip = false }) {
 
         /* 第一行的第一个卡片 - 放大并设置 z-index */
         .privacy-card-row .privacy-card-with-text {
-          flex: 0 0 80%;
-          max-width: 1190px;
+          flex: 0 0 100%;
+          max-width: 1404px; /* Align with bottom row (690+690+24) */
           min-height: 350px;
           z-index: 1;
           align-items: center;

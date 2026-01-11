@@ -80,9 +80,10 @@ export default function KitCategories({ categories, initialState, desktopStatic 
               <div className={`kit-panel-content ${isOpen ? 'open' : ''}`}>
                 <ul>
                   {category.highlights.map((item, idx) => {
-                    const parts = item.split('—').map(s => s.trim());
-                    const title = parts[0];
-                    const desc = parts[1];
+                    const parts = item.split('—');
+                    const title = parts[0].trim();
+                    const descRaw = parts.slice(1).join('—');
+                    const desc = descRaw ? descRaw.replace(/^[ \t]+|[ \t]+$/g, '') : '';
                     const hasDesc = !!desc;
                     return (
                       <li key={idx}>
@@ -218,6 +219,7 @@ export default function KitCategories({ categories, initialState, desktopStatic 
           color: #4B5563;
           line-height: 1.5;
           position: relative;
+          white-space: pre-wrap;
         }
         
         .kit-panel-content li strong {
