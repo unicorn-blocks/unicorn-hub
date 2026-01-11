@@ -25,10 +25,13 @@ export default function Home({ isVip = false }) {
     // if (closed) return;
     // 监听滚动到section3
     function handleScroll() {
-      const section3 = document.querySelector('img[alt="Everything to Build the Magic."]') || document.querySelector('section[id*="section3"]');
+      // Use the class name for the section ensures we track the container
+      const section3 = document.querySelector('.kit-section') || document.querySelector('img[alt="Everything to Build the Magic."]');
       if (!section3) return;
       const rect = section3.getBoundingClientRect();
-      if (rect.top < window.innerHeight && rect.bottom > 0) {
+      // Trigger when the bottom of the section enters the viewport (is fully scrolled to)
+      // or if we have already scrolled past it (rect.bottom < window.innerHeight)
+      if (rect.bottom <= window.innerHeight) {
         setPopOpen(true);
         window.removeEventListener('scroll', handleScroll);
       }
