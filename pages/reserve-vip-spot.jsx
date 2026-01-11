@@ -152,7 +152,7 @@ export default function PreOrder({ initialRemaining }) {
           },
           {
             q: 'Does it need Wi-Fi to work?',
-            a: 'You will need Wi-Fi or a hotspot connection to connect and generate new stories. Once your Sparky is connected, you can move it around your home as long as it stays within range.'
+            a: 'You will need Wi-Fi to connect and generate new stories. Once your Sparky is connected, you can move it around your home as long as it stays within range.'
           },
           {
             q: 'Is it hard to set up?',

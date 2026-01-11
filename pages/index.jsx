@@ -309,7 +309,7 @@ export default function Home({ isVip = false }) {
           {
             question: 'Does it need Wi-Fi to work?',
             answer:
-              'You will need Wi-Fi or a hotspot connection to connect and generate new stickers. Once your Stickerbox is connected, you can move it around your home as long as it stays within range.'
+              'You will need Wi-Fi to connect and generate new stories. Once your Sparky is connected, you can move it around your home as long as it stays within range.'
           },
           {
             question: 'Is it hard to set up?',
