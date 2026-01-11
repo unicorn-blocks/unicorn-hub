@@ -1,0 +1,60 @@
+
+> unicorn-subscribe-backend@1.0.0 build
+> next build
+
+  ▲ Next.js 14.2.35
+  - Environments: .env.local
+
+   Linting and checking validity of types ...
+   Creating an optimized production build ...
+
+warn - The safelist pattern `/^text-\[.+\]/` doesn't match any Tailwind CSS classes.
+warn - Fix this pattern or remove it from your `safelist` configuration.
+warn - https://tailwindcss.com/docs/content-configuration#safelisting-classes
+
+warn - The safelist pattern `/^bg-\[.+\]/` doesn't match any Tailwind CSS classes.
+warn - Fix this pattern or remove it from your `safelist` configuration.
+warn - https://tailwindcss.com/docs/content-configuration#safelisting-classes
+
+warn - The safelist pattern `/^hover:text-\[.+\]/` doesn't match any Tailwind CSS classes.
+warn - Fix this pattern or remove it from your `safelist` configuration.
+warn - https://tailwindcss.com/docs/content-configuration#safelisting-classes
+
+warn - The safelist pattern `/^hover:bg-\[.+\]/` doesn't match any Tailwind CSS classes.
+warn - Fix this pattern or remove it from your `safelist` configuration.
+warn - https://tailwindcss.com/docs/content-configuration#safelisting-classes
+ ✓ Compiled successfully
+   Collecting page data ...
+   Generating static pages (0/14) ...
+ReferenceError: useEffect is not defined
+    at h (/Users/bruceliu/Documents/UnicornBlocksCode/LandingPage/unicorn-hub/.next/server/pages/payment/success.js:1:622)
+    at Wc (/Users/bruceliu/Documents/UnicornBlocksCode/LandingPage/unicorn-hub/node_modules/react-dom/cjs/react-dom-server.browser.production.min.js:68:44)
+    at Zc (/Users/bruceliu/Documents/UnicornBlocksCode/LandingPage/unicorn-hub/node_modules/react-dom/cjs/react-dom-server.browser.production.min.js:70:253)
+    at Z (/Users/bruceliu/Documents/UnicornBlocksCode/LandingPage/unicorn-hub/node_modules/react-dom/cjs/react-dom-server.browser.production.min.js:76:89)
+    at $c (/Users/bruceliu/Documents/UnicornBlocksCode/LandingPage/unicorn-hub/node_modules/react-dom/cjs/react-dom-server.browser.production.min.js:78:98)
+    at bd (/Users/bruceliu/Documents/UnicornBlocksCode/LandingPage/unicorn-hub/node_modules/react-dom/cjs/react-dom-server.browser.production.min.js:77:404)
+    at Z (/Users/bruceliu/Documents/UnicornBlocksCode/LandingPage/unicorn-hub/node_modules/react-dom/cjs/react-dom-server.browser.production.min.js:76:217)
+    at Zc (/Users/bruceliu/Documents/UnicornBlocksCode/LandingPage/unicorn-hub/node_modules/react-dom/cjs/react-dom-server.browser.production.min.js:74:209)
+    at Z (/Users/bruceliu/Documents/UnicornBlocksCode/LandingPage/unicorn-hub/node_modules/react-dom/cjs/react-dom-server.browser.production.min.js:76:89)
+    at Zc (/Users/bruceliu/Documents/UnicornBlocksCode/LandingPage/unicorn-hub/node_modules/react-dom/cjs/react-dom-server.browser.production.min.js:70:481)
+
+Error occurred prerendering page "/payment/success". Read more: https://nextjs.org/docs/messages/prerender-error
+
+ReferenceError: useEffect is not defined
+    at h (/Users/bruceliu/Documents/UnicornBlocksCode/LandingPage/unicorn-hub/.next/server/pages/payment/success.js:1:622)
+    at Wc (/Users/bruceliu/Documents/UnicornBlocksCode/LandingPage/unicorn-hub/node_modules/react-dom/cjs/react-dom-server.browser.production.min.js:68:44)
+    at Zc (/Users/bruceliu/Documents/UnicornBlocksCode/LandingPage/unicorn-hub/node_modules/react-dom/cjs/react-dom-server.browser.production.min.js:70:253)
+    at Z (/Users/bruceliu/Documents/UnicornBlocksCode/LandingPage/unicorn-hub/node_modules/react-dom/cjs/react-dom-server.browser.production.min.js:76:89)
+    at $c (/Users/bruceliu/Documents/UnicornBlocksCode/LandingPage/unicorn-hub/node_modules/react-dom/cjs/react-dom-server.browser.production.min.js:78:98)
+    at bd (/Users/bruceliu/Documents/UnicornBlocksCode/LandingPage/unicorn-hub/node_modules/react-dom/cjs/react-dom-server.browser.production.min.js:77:404)
+    at Z (/Users/bruceliu/Documents/UnicornBlocksCode/LandingPage/unicorn-hub/node_modules/react-dom/cjs/react-dom-server.browser.production.min.js:76:217)
+    at Zc (/Users/bruceliu/Documents/UnicornBlocksCode/LandingPage/unicorn-hub/node_modules/react-dom/cjs/react-dom-server.browser.production.min.js:74:209)
+    at Z (/Users/bruceliu/Documents/UnicornBlocksCode/LandingPage/unicorn-hub/node_modules/react-dom/cjs/react-dom-server.browser.production.min.js:76:89)
+    at Zc (/Users/bruceliu/Documents/UnicornBlocksCode/LandingPage/unicorn-hub/node_modules/react-dom/cjs/react-dom-server.browser.production.min.js:70:481)
+   Generating static pages (3/14) 
+   Generating static pages (6/14) 
+   Generating static pages (10/14) 
+ ✓ Generating static pages (14/14)
+
+> Export encountered errors on following paths:
+	/payment/success

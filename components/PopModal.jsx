@@ -49,6 +49,14 @@ export default function PopModal({ onClose, isVip = true, source = "pop-modal" }
         .then(result => {
           if (!result.success) {
             console.warn('Email submission failed:', result.message);
+          } else {
+            // Track Lead with Session Deduplication
+            if (typeof window !== 'undefined' && !sessionStorage.getItem('lead_tracked_session')) {
+              import('../lib/fbq').then(({ trackLead }) => {
+                trackLead();
+                sessionStorage.setItem('lead_tracked_session', '1');
+              });
+            }
           }
         })
         .catch(err => console.error('提交错误:', err));

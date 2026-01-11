@@ -1,4 +1,5 @@
 import { useRouter } from 'next/router';
+import { useEffect } from 'react';
 import Head from 'next/head';
 import Navigation from '../../components/layout/Navigation';
 import Footer from '../../components/layout/Footer';
@@ -8,6 +9,41 @@ import { safeApiCall } from '../../lib/api';
 export default function PaymentSuccess() {
   const router = useRouter();
   const { language } = useLanguage();
+
+  useEffect(() => {
+    // 1. Get session_id from URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const sessionId = urlParams.get('session_id');
+
+    // Strict Trigger: Must have session_id (No Manual Visits)
+    if (!sessionId) return;
+
+    // 2. Deduplication: specific to this session_id
+    const storageKey = `purchase_tracked_${sessionId}`;
+    if (localStorage.getItem(storageKey)) return;
+
+    // 3. Fetch Dynamic Amount from Backend Proxy
+    // Note: Requires backend Netlify function "stripe-retrieve-session"
+    fetch('/api/payment/stripe/retrieve-session', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ sessionId })
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.amount_total) {
+          // Stripe returns amount in cents
+          const value = data.amount_total / 100;
+          const currency = data.currency?.toUpperCase() || 'USD';
+
+          import('../../lib/fbq').then(({ trackPurchase }) => {
+            trackPurchase(value, currency);
+            localStorage.setItem(storageKey, '1');
+          });
+        }
+      })
+      .catch(err => console.error('Error tracking purchase:', err));
+  }, []);
 
   // 硬编码中英文内容
   const translations = {
