@@ -65,13 +65,13 @@ export default function PreOrder({ initialRemaining }) {
         badge: 'Selected VIP',
         priceVIP: '$149 VIP Price',
         priceRetail: 'Retail $199',
-        deposit: '$5 to reserve',
+        deposit: '$0.50 to reserve',
         scarcityPrefix: 'Only',
         scarcitySuffix: 'VIP spots left'
       },
       ctaButton: 'Claim My VIP Spot!',
       learnMoreButton: 'Learn More',
-      trustNote: '✔ Fully Refundable $5 Deposit · ✔ Safe Checkout',
+      trustNote: '✔ Fully Refundable $0.50 Deposit · ✔ Safe Checkout',
       features: {
         title: "Sparky First Adventure Set",
         items: [
@@ -120,11 +120,11 @@ export default function PreOrder({ initialRemaining }) {
         items: [
           {
             q: 'How does the VIP Reservation work?',
-            a: 'Step 1. Lock Your Price: Pay **$5 today** to reserve the **$149 VIP price** (Retail price: $199).\nStep 2. **Get Exclusive Access**: **See** behind-the-scenes updates, and **follow** the product as it comes to life — all designed to **spark creativity**.\nStep 3. Pay & Receive: Before shipping, we’ll notify you and charge the remaining **$145**. Your order ships with **priority delivery**.'
+            a: 'Step 1. Lock Your Price: Pay **$0.50 today** to reserve the **$149 VIP price** (Retail price: $199).\nStep 2. **Get Exclusive Access**: **See** behind-the-scenes updates, and **follow** the product as it comes to life — all designed to **spark creativity**.\nStep 3. Pay & Receive: Before shipping, we’ll notify you and charge the remaining **$148.5**. Your order ships with **priority delivery**.'
           },
           {
             q: 'What if I change my mind?',
-            a: 'No worries! Your $5 deposit is fully refundable anytime before we ship your product — no questions asked.'
+            a: 'No worries! Your $0.50 deposit is fully refundable anytime before we ship your product — no questions asked.'
           },
           {
             q: 'Is the toy safe for children?',
@@ -140,7 +140,7 @@ export default function PreOrder({ initialRemaining }) {
           },
           {
             q: 'When will I pay the remaining amount?',
-            a: 'We will send you a friendly email reminder about **14 days before shipping**. You can then choose to **pay the remaining $145 manually**, or opt for automatic payment for a hands-free experience.'
+            a: 'We will send you a friendly email reminder about **14 days before shipping**. You can then choose to **pay the remaining $148.5 manually**, or opt for automatic payment for a hands-free experience.'
           },
           {
             q: 'When will I receive the product?',
@@ -182,12 +182,12 @@ export default function PreOrder({ initialRemaining }) {
       pageTitle: '限量VIP名额 — $129（零售价$199）',
       subtitle: {
         prefix: '',
-        deposit: '$5订金',
+        deposit: '$0.50订金',
         suffix: '预订 — 仅剩436个名额，共500个！'
       },
       ctaButton: '我要锁定VIP名额！',
       learnMoreButton: '了解更多',
-      trustNote: '✔ $5订金可随时全额退款 · ✔ 安全支付',
+      trustNote: '✔ $0.50订金可随时全额退款 · ✔ 安全支付',
       features: {
         title: '独角兽积木：Sparky首次冒险',
         items: [
@@ -238,11 +238,11 @@ export default function PreOrder({ initialRemaining }) {
         items: [
           {
             q: 'VIP 预订如何运作？',
-            a: '步骤1. 锁定价格：现在支付**$5**，锁定限量**$129 VIP优惠**（零售价$199）。\n步骤2. 幕后直达：**获取**独家进展、**认识**团队、**见证**创造过程——一切旨在**释放无限创意**。\n步骤3. 支付并收货：发货前我们会通知你，并自动收取剩余**$124**，享受优先发货。'
+            a: '步骤1. 锁定价格：现在支付**$0.50**，锁定限量**$129 VIP优惠**（零售价$199）。\n步骤2. 幕后直达：**获取**独家进展、**认识**团队、**见证**创造过程——一切旨在**释放无限创意**。\n步骤3. 支付并收货：发货前我们会通知你，并自动收取剩余**$128.5**，享受优先发货。'
           },
           {
             q: '如果我改变主意怎么办？',
-            a: '不用担心！在我们发货前，你的$5订金可随时全额退款，无需理由。'
+            a: '不用担心！在我们发货前，你的$0.50订金可随时全额退款，无需理由。'
           },
           {
             q: '这款玩具对儿童安全吗？',
@@ -258,7 +258,7 @@ export default function PreOrder({ initialRemaining }) {
           },
           {
             q: '何时支付剩余金额？',
-            a: '发货前约**14天**我们会发送温馨邮件提醒。你可以选择**手动支付剩余$124**，或开启自动支付，轻松无忧。'
+            a: '发货前约**14天**我们会发送温馨邮件提醒。你可以选择**手动支付剩余$128.5**，或开启自动支付，轻松无忧。'
           },
           {
             q: '我什么时候能收到产品？',
