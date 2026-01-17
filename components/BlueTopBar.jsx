@@ -41,7 +41,7 @@ export default function BlueTopBar() {
             className="blue-top-bar-btn"
             onClick={() => window.location.href = '/payment/stripe-checkout'}
           >
-            Claim My VIP Spot!
+            Lock My VIP Price
           </button>
         ) : (
           <button

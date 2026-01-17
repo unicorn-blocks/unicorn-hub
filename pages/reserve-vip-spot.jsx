@@ -62,14 +62,14 @@ export default function PreOrder({ initialRemaining }) {
     en: {
       title: 'Reserve VIP Spot - Unicorn Blocks',
       header: {
-        badge: 'Selected VIP',
-        priceVIP: '$149 VIP Price',
-        priceRetail: 'Retail $199',
-        deposit: '$5 to reserve',
+        badge: 'Selected VIP', // Badge (Not rendered in new design but kept for reference)
+        priceVIP: 'Lock Your VIP Price',
+        priceRetail: '', // Unused
+        deposit: 'Secure the $149 VIP price (retail $199) with a fully refundable $5 deposit.',
         scarcityPrefix: 'Only',
         scarcitySuffix: 'VIP spots left'
       },
-      ctaButton: 'Claim My VIP Spot!',
+      ctaButton: 'Lock My VIP Price',
       learnMoreButton: 'Learn More',
       trustNote: '✔ Fully Refundable $5 Deposit · ✔ Safe Checkout',
       features: {
@@ -334,25 +334,23 @@ export default function PreOrder({ initialRemaining }) {
             <div className="pricing-block open-style">
               <div className="pricing-content">
 
-                {/* Row 1: Badge */}
-                <div className="pricing-badge-row">
-                  <div className="pricing-badge">
-                    <span className="wave-emoji">👋</span> {t.header.badge}
-                  </div>
-                </div>
-
-                {/* Row 2: Price + Retail */}
+                {/* Row 1: Title */}
                 <div className="pricing-row-main">
                   <span className="pricing-vip">{t.header.priceVIP}</span>
-                  <span className="pricing-retail">{t.header.priceRetail}</span>
                 </div>
 
-                {/* Row 3: Deposit + Scarcity */}
+                {/* Row 2 & 3: Body + Scarcity */}
                 <div className="pricing-row-sub">
-                  <span className="pricing-deposit-text">{t.header.deposit}</span>
-                  <span className="pricing-scarcity-text">
+                  <div className="pricing-deposit-text">
+                    {language === 'zh' ? (
+                      t.header.deposit
+                    ) : (
+                      <>Lock the <span className="highlight-price">$149</span> VIP price (<span className="retail-price">retail $199</span>) with a fully refundable <span className="highlight-price">$5</span> deposit.</>
+                    )}
+                  </div>
+                  <div className="pricing-scarcity-text">
                     {t.header.scarcityPrefix} <span className="highlight-number">{reservationsCount}</span> of {totalSpots} {t.header.scarcitySuffix} <span className="scarcity-fire">🔥</span>
-                  </span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -552,15 +550,8 @@ export default function PreOrder({ initialRemaining }) {
           width: 100%;
         }
         
-        /* Row 3: Sub Info */
-        .pricing-row-sub {
-           display: flex;
-           align-items: center;
-           flex-wrap: nowrap; /* FORCE single line */
-           justify-content: center; /* Center align */
-           gap: clamp(8px, 2vw, 12px); /* Tight fluid gap */
+           /* Removed styling that conflicted with new structure */
            width: 100%;
-           white-space: nowrap; /* Prevent text wrapping inside spans */
         }
 
         /* Desktop: Left align pricing block to match image */
@@ -579,28 +570,66 @@ export default function PreOrder({ initialRemaining }) {
             text-align: left;
           }
           
-          .pricing-row-main,
-          .pricing-row-sub, 
-          .pricing-badge-row {
             justify-content: flex-start;
           }
+        }
+        
+        .pricing-row-sub {
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Center on Mobile */
+            gap: 8px;
+            white-space: normal;
+        }
+
+        @media (min-width: 1024px) {
+            .pricing-row-sub {
+                align-items: flex-start; /* Left on Desktop */
+            }
+            .pricing-deposit-text {
+                text-align: left;
+            }
+        }
+
+        .highlight-price {
+            color: #111827; /* Changed from purple to black per request */
+            font-weight: 800;
+            font-size: 1.1em;
+        }
+
+        .retail-price {
+            color: #9CA3AF;
+            text-decoration: line-through;
+            text-decoration-thickness: 1.5px;
+            font-weight: 600;
+            margin: 0 2px;
         }
 
         .pricing-deposit-text {
           font-size: clamp(0.85rem, 2.5vw, 1.25rem); /* Slightly smaller start */
           font-weight: 500;
           color: #4B5563;
-          white-space: nowrap;
+          line-height: 1.5;
+          text-align: center; /* Center on Mobile by default */
         }
 
         .pricing-scarcity-text {
           font-size: clamp(0.85rem, 2.5vw, 1.25rem);
           font-weight: 700;
           color: #DC2626;
-          display: inline-flex;
+          display: flex; /* Changed from inline-flex to flex for width control if needed, but flex in flex-col centers nicely */
+          justify-content: center; /* Ensure internal content (icon) is centered */
           align-items: center;
           gap: 4px;
           white-space: nowrap;
+          width: 100%; /* Take full width to ensure text-align/justify works if parent isn't constraining it tightness */
+        }
+        
+        @media (min-width: 1024px) {
+            .pricing-scarcity-text {
+                justify-content: flex-start;
+                width: auto;
+            }
         }
 
         .pricing-vip {
