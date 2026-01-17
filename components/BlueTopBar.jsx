@@ -48,7 +48,7 @@ export default function BlueTopBar() {
             className="blue-top-bar-btn"
             onClick={() => setShowModal(true)}
           >
-            Join Adventure
+            Unlock VIP Access
           </button>
         )}
 

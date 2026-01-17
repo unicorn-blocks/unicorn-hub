@@ -219,7 +219,7 @@ export default function GlobalEmailNotifyBox() {
           cursor: isLoading ? 'not-allowed' : 'pointer'
         }}
       >
-        {isLoading ? 'Joining' : 'Join Adventure'}
+        {isLoading ? 'Joining' : 'Unlock VIP Access'}
       </button>
       {/* 右侧 12px 间距 */}
       <div style={{ width: 12, height: CONTROL_HEIGHT }} />

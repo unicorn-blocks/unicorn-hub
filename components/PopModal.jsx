@@ -64,7 +64,7 @@ export default function PopModal({ onClose, isVip = true, source = "pop-modal" }
   };
 
   // 固定按钮文案
-  const btnText = 'Join Adventure';
+  const btnText = 'Unlock VIP Access →';
 
   // 成功视图（仅主站使用）
   if (showSuccess) {
@@ -103,12 +103,12 @@ export default function PopModal({ onClose, isVip = true, source = "pop-modal" }
           <Image src="/assets/ima/Image copy 1.png" alt="airplane" width={151} height={161} className={styles.plane} />
           {/* 大标题 */}
           <h2 className={styles.reserveTitle}>
-            <span>Exclusive VIP <br className="md:hidden" />Invitation 💌</span>
+            <span>Unlock VIP Access</span>
           </h2>
           {/* 内容区域 - hover时不再隐藏 */}
           <div className={styles.contentMiddle}>
             <div className={styles.txtLine}>
-              Get <span>Launch Updates</span>, <span>Early-Bird Perks</span>, and the first access to our <span>Exclusive VIP Price</span>.
+              Get early access — then reserve your VIP price with a <span>refundable $5 deposit.</span>
             </div>
           </div>
           {/* 底部输入区块 - hover时位置不再改变 */}

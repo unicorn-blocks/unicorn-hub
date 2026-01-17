@@ -200,7 +200,7 @@ export default function Footer({ onSubscribe, showEmailInput = true }) {
                           zIndex: 2
                         }}
                       >
-                        {isProcessing ? 'Joining' : 'Join Adventure'}
+                        {isProcessing ? 'Joining' : 'Unlock VIP Access'}
                       </span>
                     </button>
                   </form>
