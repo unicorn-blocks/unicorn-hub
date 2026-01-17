@@ -108,7 +108,7 @@ export default function PopModal({ onClose, isVip = true, source = "pop-modal" }
           {/* 内容区域 - hover时不再隐藏 */}
           <div className={styles.contentMiddle}>
             <div className={styles.txtLine}>
-              Get early access — then reserve your VIP price with a <span>refundable $5 deposit.</span>
+              Get <span>early updates</span>, and later have the chance to secure <span>VIP pricing</span> with a small, refundable deposit.
             </div>
           </div>
           {/* 底部输入区块 - hover时位置不再改变 */}
