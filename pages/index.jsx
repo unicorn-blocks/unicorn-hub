@@ -15,9 +15,11 @@ import { isVipHost } from '../lib/domain';
 import KitCategories from '../components/KitCategories';
 const PopModal = dynamic(() => import('../components/PopModal'), { ssr: false });
 
+
 export default function Home({ isVip = false }) {
   const [popOpen, setPopOpen] = useState(false);
   const [familyPage, setFamilyPage] = useState(0); // 添加家庭见证页面状态
+
   // 弹窗只弹一次
   // 弹窗逻辑：滚动到底部 OR 停留3秒
   const popTimerRef = useState(null); // actually useRef is better but I can use a local var in useEffect scope if I don't need it elsewhere, simpler to use useRef globally in component or just vars in useEffect closure if no re-renders mess it up.
@@ -348,6 +350,23 @@ export default function Home({ isVip = false }) {
   };
 
   const copy = translations[language] || translations.en;
+
+
+  // Google Sheets 版订阅 Footer - 使用统一工具函数
+  const handleFooterSubmit = async (email, setFooterStatus) => {
+    // 动态导入工具函数
+    const { submitEmailToGoogleSheets } = await import('../lib/googleSheets');
+
+    const result = await submitEmailToGoogleSheets(email, "index-footer", "");
+
+    if (setFooterStatus) {
+      setFooterStatus({
+        message: result.success ? copy.messages.subscribeSuccess : result.message,
+        type: result.success ? 'success' : 'error'
+      });
+    }
+  };
+
   const TESTIMONIALS_DATA = [
     {
       quote: '"So much better than watching TV."',
@@ -420,22 +439,6 @@ export default function Home({ isVip = false }) {
     );
   };
 
-  // Google Sheets 版订阅 Footer - 使用统一工具函数
-  const handleFooterSubmit = async (email, setFooterStatus) => {
-    // 动态导入工具函数
-    const { submitEmailToGoogleSheets } = await import('../lib/googleSheets');
-
-    const result = await submitEmailToGoogleSheets(email, "index-footer", "");
-
-    if (setFooterStatus) {
-      setFooterStatus({
-        message: result.success ? copy.messages.subscribeSuccess : result.message,
-        type: result.success ? 'success' : 'error'
-      });
-    }
-  };
-
-
   // Impact Section 渲染函数（用于在不同位置渲染）
   const renderImpactSection = () => (
     <section className="impact-section">
@@ -502,6 +505,9 @@ export default function Home({ isVip = false }) {
       </div>
     </section>
   );
+
+
+
 
   return (
     <>
@@ -687,26 +693,6 @@ export default function Home({ isVip = false }) {
                       </div>
                     </div>
                   </div>
-                  {/* Arrow Logic: 
-                  Step 1 -> 2 (Right)
-                  Step 2 -> 4 (Down) 
-                  Step 3 -> 4 (Right)
-                  This is tricky in 2x2. 
-                  Standard Z flow: 1->2 (Row 1), 3->4 (Row 2). 
-                  Usually 2->3 is the diagonal or wrap.
-                  However, standard grid flow is 1,2,3,4.
-                  Let's keep the existing arrow for 1->2 for now if it makes sense, but the user didn't explicitly ask for arrows, just the "form".
-                  The prompt said "Step 1 top-left, Step 2 top-right...". 
-                  The old code had an arrow `Vector_17_913.png`. 
-                  Let's keep the arrow div but maybe we need to adjust styling later. 
-                  For now I will comment it out or leave it? User asked to "delete current image", likely referring to the big main image.
-                  The arrow is separate. I will leave it for now but it might look weird.
-                  Actually, the user said "4 steps...". 
-                  Let's focus on the cards first.
-              */}
-                  {/* <div className="step-connector hidden md:block">
-                <img src="/assets/ima/Vector_17_913.png" alt="arrow-1" className="step-connector-image" />
-              </div> */ }
                 </div>
 
                 {/* 第二组 */}

@@ -7,6 +7,10 @@ import BlueTopBar from '../components/BlueTopBar';
 import ProductCarousel from '../components/ProductCarousel';
 import { useLanguage } from '../context/LanguageContext';
 import { proceedToCheckout } from '../lib/fbq';
+import TestimonialsSection from '../components/sections/TestimonialsSection';
+import ImpactSection from '../components/sections/ImpactSection';
+import StepsSection from '../components/sections/StepsSection';
+import PrivacySection from '../components/sections/PrivacySection';
 import KitCategories from '../components/KitCategories';
 
 // Backend: Fetch data at build time / incrementally
@@ -404,6 +408,16 @@ export default function PreOrder({ initialRemaining }) {
             </div>
           </div>
 
+
+        </div>
+
+        {/* New Sections inserted from reuse */}
+        <TestimonialsSection />
+        <ImpactSection />
+        <StepsSection style={{ marginTop: 0 }} />
+        <PrivacySection />
+
+        <div className="buy-container">
 
           {/* FAQ 区块 */}
           <div className="faq-section-wrapper">
