@@ -3,7 +3,8 @@ import Image from 'next/image';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 
-import { isVipHost } from '../lib/domain';
+import { isVipHost, isVipDomain } from '../lib/domain';
+import { proceedToCheckout } from '../lib/fbq';
 
 const PopModal = dynamic(() => import('./PopModal'), { ssr: false });
 
@@ -39,7 +40,7 @@ export default function BlueTopBar() {
         {isReservePage ? (
           <button
             className="blue-top-bar-btn"
-            onClick={() => window.location.href = '/payment/stripe-checkout'}
+            onClick={proceedToCheckout}
           >
             Lock My VIP Price
           </button>

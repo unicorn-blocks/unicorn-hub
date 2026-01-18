@@ -6,6 +6,7 @@ import Footer from '../components/layout/Footer';
 import BlueTopBar from '../components/BlueTopBar';
 import ProductCarousel from '../components/ProductCarousel';
 import { useLanguage } from '../context/LanguageContext';
+import { proceedToCheckout } from '../lib/fbq';
 import KitCategories from '../components/KitCategories';
 
 // Backend: Fetch data at build time / incrementally
@@ -388,7 +389,7 @@ export default function PreOrder({ initialRemaining }) {
                   <div className="card-section">
                     <button
                       className="primary-button button-shine sticky-mobile-button"
-                      onClick={() => window.location.href = '/payment/stripe-checkout'}
+                      onClick={proceedToCheckout}
                     >
                       {t.ctaButton}
                     </button>
