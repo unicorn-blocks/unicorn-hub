@@ -70,7 +70,7 @@ export default function PreOrder({ initialRemaining }) {
         badge: 'Selected VIP', // Badge (Not rendered in new design but kept for reference)
         priceVIP: 'Lock Your VIP Price',
         priceRetail: '', // Unused
-        deposit: 'Secure the $149 VIP price (retail $199) with a fully refundable $5 deposit.',
+        deposit: 'Secure the $149 VIP price (retail $199) with a $5 fully refundable deposit.',
         scarcityPrefix: 'Only',
         scarcitySuffix: 'VIP spots left'
       },
@@ -350,7 +350,7 @@ export default function PreOrder({ initialRemaining }) {
                     {language === 'zh' ? (
                       t.header.deposit
                     ) : (
-                      <>Lock the <span className="highlight-price">$149</span> VIP price (<span className="retail-price">retail $199</span>) with a fully refundable <span className="highlight-price">$5</span> deposit.</>
+                      <>Secure the <span className="highlight-price">$149</span> VIP price (<span className="retail-price">retail $199</span>) with a <span className="highlight-price">$5</span> fully refundable deposit.</>
                     )}
                   </div>
                   <div className="pricing-scarcity-text">

@@ -375,6 +375,106 @@ export default function StepsSection({ className = '', style = {} }) {
            white-space: nowrap; /* Display on single line */
         }
 
+        /* ========= Mobile Layered Step Item Styles (copied from homepage) ========= */
+        .step-mobile-wrapper {
+          position: relative;
+          width: 90vw;
+          max-width: 400px;
+          margin: 0 auto;
+          height: 100%;
+          min-height: 400px;
+          display: flex;
+          flex-direction: column;
+          border-radius: 32px;
+          overflow: hidden;
+        }
+
+        .step-mobile-bg {
+          position: absolute;
+          inset: 0;
+          z-index: 1;
+        }
+
+        /* Hide mobile wrapper on PC */
+        @media (min-width: 768px) {
+          .step-mobile-wrapper {
+            display: none !important;
+          }
+        }
+
+        .step-mobile-content {
+          position: relative;
+          z-index: 2;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          width: 100%;
+          height: 100%;
+          padding: 24px;
+          box-sizing: border-box;
+        }
+
+        .step-mobile-frame {
+          width: 100%;
+          aspect-ratio: 16 / 9;
+          border: 3px solid #FFFFFF;
+          border-radius: 20px;
+          margin-top: 0;
+          margin-bottom: 24px;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+          flex-shrink: 0;
+          overflow: hidden;
+        }
+
+        .step-mobile-text {
+          width: 100%;
+          text-align: center;
+          padding: 0 4px;
+        }
+
+        .step-mobile-text h3 {
+          color: #13234d;
+          font-size: 20px;
+          font-weight: 800;
+          margin-bottom: 8px;
+          line-height: 1.2;
+          white-space: nowrap;
+        }
+
+        .step-mobile-text p {
+          color: #6E6E73;
+          font-size: 14px;
+          line-height: 1.4;
+          margin: 0;
+          opacity: 0.9;
+          font-weight: 500;
+        }
+
+        /* ========= Mobile Spacing Overrides ========= */
+        @media (max-width: 767px) {
+          .steps-grid {
+            margin-top: 24px !important;
+          }
+          
+          .steps-section {
+            padding-top: 40px !important;
+            padding-bottom: 20px !important;
+          }
+
+          .step-image-full {
+            min-height: 320px !important;
+          }
+          
+          .step-mobile-wrapper {
+            min-height: 320px !important;
+          }
+          
+          /* Reduce gap between steps */
+          .step-item + .step-item {
+            margin-top: -20px;
+          }
+        }
+
       `}</style>
     </section>
   );

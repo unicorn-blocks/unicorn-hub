@@ -107,8 +107,51 @@ export default function TestimonialsSection() {
 
         @media (max-width: 767px) {
           .family-section {
-            padding-top: 50px;
-            padding-bottom: 50px;
+            padding-top: 50px !important;
+            padding-bottom: 50px !important;
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+          }
+          
+          /* Mobile overrides - FORCE zero horizontal distance from screen edges */
+          .family-section .content-container {
+            padding: 0 !important;
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+            max-width: 100vw !important;
+            width: 100vw !important;
+            margin: 0 !important;
+          }
+          
+          .family-stage {
+            padding: 20px 0 !important;
+            clip-path: none !important;
+          }
+          
+          .family-header {
+            padding: 0 16px !important;
+          }
+          
+          .family-header h2 {
+            white-space: nowrap !important;
+          }
+          
+          .family-mosaic {
+            padding: 40px 0 0 !important;
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+            gap: 12px !important;
+            width: 100vw !important;
+            max-width: 100vw !important;
+          }
+          
+          .family-card {
+            width: calc(100vw - 32px) !important;
+            flex: 0 0 calc(100vw - 32px) !important;
+            min-width: 280px !important;
+            max-width: unset !important;
+            padding: 28px 24px !important;
+            margin-left: 0 !important;
           }
         }
 
