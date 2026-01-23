@@ -14,26 +14,16 @@ import PrivacySection from '../components/sections/PrivacySection';
 import KitCategories from '../components/KitCategories';
 
 // Backend: Fetch data at build time / incrementally
+// Backend: Fetch data at build time / incrementally
 export async function getStaticProps() {
-  const REMAINING_API = 'https://script.google.com/macros/s/AKfycbyC8hgXKH7L9JJf2JpFvfDhrjyO00saKSEs3enX1ppC8RzkHn7PZnuBGmkhH7jhFJmwNg/exec';
-  let remaining = 500;
-
-  try {
-    const res = await fetch(REMAINING_API);
-    const data = await res.json();
-    if (typeof data.remaining === 'number') {
-      remaining = data.remaining;
-    }
-  } catch (error) {
-    console.error('ISR Fetch Error:', error);
-  }
+  // Optimization: Do NOT fetch from Google Script here to avoid blocking page load (2-3s).
+  // We will fetch client-side instead.
 
   return {
     props: {
-      initialRemaining: remaining,
+      initialRemaining: null, // Start with null to show loading state
     },
-    // Next.js will invalidate the cache when a request comes in
-    // at most once every 60 seconds.
+    // Keep revalidate (even if mostly static) to allow regenerating if we change code/logic
     revalidate: 60,
   };
 }
@@ -44,22 +34,24 @@ export default function PreOrder({ initialRemaining }) {
   const [isCheckingOut, setIsCheckingOut] = useState(false);
 
 
-  // Scarcity state: Init with server-provided data (fast!), fallback to 500
-  const [reservationsCount, setReservationsCount] = useState(typeof initialRemaining === 'number' ? initialRemaining : 500);
+  // Scarcity state: Init with null to show loading spinner
+  const [reservationsCount, setReservationsCount] = useState(null);
   const totalSpots = 500;
   const REMAINING_API = 'https://script.google.com/macros/s/AKfycbyC8hgXKH7L9JJf2JpFvfDhrjyO00saKSEs3enX1ppC8RzkHn7PZnuBGmkhH7jhFJmwNg/exec';
 
   useEffect(() => {
-    // Client-side refresh (keep data fresh)
+    // Client-side fetch
     fetch(REMAINING_API)
       .then(res => res.json())
       .then(data => {
         if (typeof data.remaining === 'number') {
           setReservationsCount(data.remaining);
+        } else {
+          setReservationsCount(500); // Fallback
         }
       })
       .catch(() => {
-        // silently fail, we have initial data
+        setReservationsCount(500); // Fallback on error
       });
   }, []);
 
@@ -391,7 +383,16 @@ export default function PreOrder({ initialRemaining }) {
                     )}
                   </div>
                   <div className="pricing-scarcity-text">
-                    {t.header.scarcityPrefix} <span className="highlight-number">{reservationsCount}</span> of {totalSpots} {t.header.scarcitySuffix} <span className="scarcity-fire">🔥</span>
+                    {t.header.scarcityPrefix} <span className="highlight-number">
+                      {reservationsCount === null ? (
+                        <svg className="animate-spin inline-block h-5 w-5 text-[#dc2626] align-middle -mt-1 ml-1 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                      ) : (
+                        reservationsCount
+                      )}
+                    </span> of {totalSpots} {t.header.scarcitySuffix} <span className="scarcity-fire">🔥</span>
                   </div>
                 </div>
               </div>

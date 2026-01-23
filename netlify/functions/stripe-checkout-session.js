@@ -47,6 +47,8 @@ exports.handler = async (event, context) => {
             ? 'https://vip.unicornblocks.ai/assets/checkout/sparky.webp'
             : `${appUrl}/assets/checkout/sparky.webp`;
 
+        console.log('DEBUG IMAGE:', { appUrl, isLocal, productImageUrl });
+
         const sessionConfig = {
             mode: 'payment',
             payment_method_types: ['card'],
