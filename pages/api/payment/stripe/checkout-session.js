@@ -28,6 +28,11 @@ export default async function handler(req, res) {
       const path = require('path');
       const functionPath = path.resolve(process.cwd(), 'netlify/functions/stripe-checkout-session.js');
 
+      // Clear cache in dev to enable hot reload for this module
+      if (require.cache[functionPath]) {
+        delete require.cache[functionPath];
+      }
+
       // Use eval('require') to prevent Webpack from bundling this in production (Cloudflare)
       const { handler: netlifyHandler } = eval('require')(functionPath);
 

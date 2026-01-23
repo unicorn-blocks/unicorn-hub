@@ -50,6 +50,12 @@ exports.handler = async (event, context) => {
         console.log('DEBUG IMAGE:', { appUrl, isLocal, productImageUrl });
 
         const sessionConfig = {
+            submit_type: 'pay',
+            custom_text: {
+                submit: {
+                    message: '🌟 Trusted by 100+ families building creativity through play'
+                }
+            },
             mode: 'payment',
             payment_method_types: ['card'],
             line_items: [
@@ -57,8 +63,8 @@ exports.handler = async (event, context) => {
                     price_data: {
                         currency,
                         product_data: {
-                            name: 'VIP Spot Reservation',
-                            description: 'Sparky First Adventure',
+                            name: 'Lock $149 VIP Price — Fully Refundable',
+                            description: 'Reserve now. Decide later. Cancel anytime.',
                             ...(productImageUrl && { images: [productImageUrl] }),
                         },
                         unit_amount: Math.round(Number(amount) * 100),
