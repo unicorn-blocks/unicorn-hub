@@ -6,7 +6,7 @@ import Footer from '../components/layout/Footer';
 import BlueTopBar from '../components/BlueTopBar';
 import ProductCarousel from '../components/ProductCarousel';
 import { useLanguage } from '../context/LanguageContext';
-import { proceedToCheckout } from '../lib/fbq';
+import { trackInitiateCheckout } from '../lib/fbq';
 import TestimonialsSection from '../components/sections/TestimonialsSection';
 import ImpactSection from '../components/sections/ImpactSection';
 import StepsSection from '../components/sections/StepsSection';
@@ -41,6 +41,7 @@ export async function getStaticProps() {
 export default function PreOrder({ initialRemaining }) {
   const { language } = useLanguage();
   const [openFaq, setOpenFaq] = useState(null);
+  const [isCheckingOut, setIsCheckingOut] = useState(false);
 
 
   // Scarcity state: Init with server-provided data (fast!), fallback to 500
@@ -61,6 +62,42 @@ export default function PreOrder({ initialRemaining }) {
         // silently fail, we have initial data
       });
   }, []);
+
+  const handleFastCheckout = async () => {
+    if (isCheckingOut) return;
+    setIsCheckingOut(true);
+
+    // Track Pixel/GA
+    trackInitiateCheckout();
+
+    try {
+      // Call Create Session API directly
+      const res = await fetch('/api/payment/stripe/checkout-session', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          amount: 5,
+          currency: 'usd' // Explicitly set USD
+        })
+      });
+
+      const data = await res.json();
+
+      if (data.success && data.url) {
+        // Redirect to Stripe
+        window.location.href = data.url;
+      } else {
+        alert('Could not initiate checkout. Please try again.');
+        setIsCheckingOut(false);
+      }
+    } catch (err) {
+      console.error('Fast Checkout Error:', err);
+      alert('Connection error. Please check your network.');
+      setIsCheckingOut(false);
+    }
+  };
 
   // 硬编码中英文内容
   const translations = {
@@ -392,10 +429,19 @@ export default function PreOrder({ initialRemaining }) {
                   {/* 行动按钮 */}
                   <div className="card-section">
                     <button
-                      className="primary-button button-shine sticky-mobile-button"
-                      onClick={proceedToCheckout}
+                      className={`primary-button button-shine sticky-mobile-button ${isCheckingOut ? 'opacity-80 cursor-wait' : ''}`}
+                      onClick={handleFastCheckout}
+                      disabled={isCheckingOut}
                     >
-                      {t.ctaButton}
+                      {isCheckingOut ? (
+                        <span className="flex items-center justify-center gap-2">
+                          <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                          </svg>
+                          Processing...
+                        </span>
+                      ) : t.ctaButton}
                     </button>
 
                     {/* 信任提示 - 绝对定位 */}
