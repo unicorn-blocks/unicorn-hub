@@ -31,13 +31,13 @@ export async function getStaticProps() {
 export default function PreOrder({ initialRemaining }) {
   const { language } = useLanguage();
   const [openFaq, setOpenFaq] = useState(null);
-  const [isCheckingOut, setIsCheckingOut] = useState(false);
+  const [checkoutSource, setCheckoutSource] = useState(null);
 
 
   // Scarcity state: Init with null to show loading spinner
   const [reservationsCount, setReservationsCount] = useState(null);
   const totalSpots = 500;
-  const REMAINING_API = 'https://script.google.com/macros/s/AKfycbyC8hgXKH7L9JJf2JpFvfDhrjyO00saKSEs3enX1ppC8RzkHn7PZnuBGmkhH7jhFJmwNg/exec';
+  const REMAINING_API = '/api/stock-count';
 
   useEffect(() => {
     // Client-side fetch
@@ -55,9 +55,9 @@ export default function PreOrder({ initialRemaining }) {
       });
   }, []);
 
-  const handleFastCheckout = async () => {
-    if (isCheckingOut) return;
-    setIsCheckingOut(true);
+  const handleFastCheckout = async (source) => {
+    if (checkoutSource) return;
+    setCheckoutSource(source);
 
     // Track Pixel/GA
     trackInitiateCheckout();
@@ -82,12 +82,12 @@ export default function PreOrder({ initialRemaining }) {
         window.location.href = data.url;
       } else {
         alert('Could not initiate checkout. Please try again.');
-        setIsCheckingOut(false);
+        setCheckoutSource(null);
       }
     } catch (err) {
       console.error('Fast Checkout Error:', err);
       alert('Connection error. Please check your network.');
-      setIsCheckingOut(false);
+      setCheckoutSource(null);
     }
   };
 
@@ -353,7 +353,7 @@ export default function PreOrder({ initialRemaining }) {
       <div className="background-gradient"></div>
 
       {/* 蓝色顶部条 */}
-      <BlueTopBar onCheckout={handleFastCheckout} />
+      <BlueTopBar onCheckout={() => handleFastCheckout('top')} isLoading={checkoutSource === 'top'} />
 
       {/* 使用导航组件 */}
       {/* <Navigation /> */}
@@ -430,11 +430,11 @@ export default function PreOrder({ initialRemaining }) {
                   {/* 行动按钮 */}
                   <div className="card-section">
                     <button
-                      className={`primary-button button-shine sticky-mobile-button ${isCheckingOut ? 'opacity-80 cursor-wait' : ''}`}
-                      onClick={handleFastCheckout}
-                      disabled={isCheckingOut}
+                      className={`primary-button button-shine sticky-mobile-button ${checkoutSource ? 'opacity-80 cursor-wait' : ''}`}
+                      onClick={() => handleFastCheckout('bottom')}
+                      disabled={!!checkoutSource}
                     >
-                      {isCheckingOut ? (
+                      {checkoutSource === 'bottom' ? (
                         <span className="flex items-center justify-center gap-2">
                           <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>

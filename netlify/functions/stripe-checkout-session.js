@@ -40,20 +40,16 @@ exports.handler = async (event, context) => {
 
         // Stripe requires a public URL for images. Localhost won't work.
         // Fallback to production URL if current app URL is localhost or missing.
-        const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
-        const isLocal = appUrl.includes('localhost');
+        // Always use the absolute URL for the production image to ensure it works in Stripe
+        const productImageUrl = 'https://vip.unicornblocks.ai/assets/checkout/sparky.webp';
 
-        const productImageUrl = isLocal
-            ? 'https://vip.unicornblocks.ai/assets/checkout/sparky.webp'
-            : `${appUrl}/assets/checkout/sparky.webp`;
-
-        console.log('DEBUG IMAGE:', { appUrl, isLocal, productImageUrl });
+        console.log('DEBUG IMAGE:', { productImageUrl });
 
         const sessionConfig = {
             submit_type: 'pay',
             custom_text: {
                 submit: {
-                    message: '🌟 Trusted by 100+ families building creativity through play'
+                    message: '🌟 Trusted by 400+ families building creativity through play'
                 }
             },
             mode: 'payment',
