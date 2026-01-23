@@ -8,7 +8,7 @@ import { proceedToCheckout } from '../lib/fbq';
 
 const PopModal = dynamic(() => import('./PopModal'), { ssr: false });
 
-export default function BlueTopBar() {
+export default function BlueTopBar({ onCheckout }) {
   const router = useRouter();
   const [showModal, setShowModal] = useState(false);
   const [isVip, setIsVip] = useState(false);
@@ -22,6 +22,14 @@ export default function BlueTopBar() {
       setIsVip(isVipHost(window.location.host));
     }
   }, []);
+
+  const handleCheckoutClick = () => {
+    if (onCheckout) {
+      onCheckout();
+    } else {
+      proceedToCheckout();
+    }
+  };
 
   return (
     <>
@@ -40,7 +48,7 @@ export default function BlueTopBar() {
         {isReservePage ? (
           <button
             className="blue-top-bar-btn"
-            onClick={proceedToCheckout}
+            onClick={handleCheckoutClick}
           >
             Lock My VIP Price
           </button>

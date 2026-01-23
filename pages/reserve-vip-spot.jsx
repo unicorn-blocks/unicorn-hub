@@ -353,7 +353,7 @@ export default function PreOrder({ initialRemaining }) {
       <div className="background-gradient"></div>
 
       {/* 蓝色顶部条 */}
-      <BlueTopBar />
+      <BlueTopBar onCheckout={handleFastCheckout} />
 
       {/* 使用导航组件 */}
       {/* <Navigation /> */}
