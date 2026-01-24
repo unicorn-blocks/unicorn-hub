@@ -47,7 +47,7 @@ export default function Home({ isVip = false }) {
     function handleScroll() {
       if (hasTriggered) return;
 
-      const section3 = document.querySelector('.kit-section') || document.querySelector('img[alt="Everything to Build the Magic."]');
+      const section3 = document.querySelector('.impact-section');
       if (!section3) return;
       const rect = section3.getBoundingClientRect();
       const windowHeight = window.innerHeight;
