@@ -67,47 +67,21 @@ export default function PreOrder({ initialRemaining }) {
       .catch(() => {
         // Silently ignore - we already have SSR value
       });
-
-    // Warmup Netlify Stripe function to reduce cold start delay
-    // Uses OPTIONS request - just wakes up the function without creating a session
-    fetch('/api/payment/stripe/checkout-session', { method: 'OPTIONS' })
-      .catch(() => { }); // Silently ignore any errors
   }, []);
 
-  const handleFastCheckout = async (source) => {
+  // Stripe Payment Link (from Stripe Dashboard)
+  // Change this in Dashboard if price changes - no code change needed
+  const STRIPE_PAYMENT_LINK = 'https://buy.stripe.com/4gM3cu0MTch13081pJbbG00';
+
+  const handleFastCheckout = (source) => {
     if (checkoutSource) return;
     setCheckoutSource(source);
 
     // Track Pixel/GA
     trackInitiateCheckout();
 
-    try {
-      // Call Create Session API directly
-      const res = await fetch('/api/payment/stripe/checkout-session', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          amount: 5,
-          currency: 'usd' // Explicitly set USD
-        })
-      });
-
-      const data = await res.json();
-
-      if (data.success && data.url) {
-        // Redirect to Stripe
-        window.location.href = data.url;
-      } else {
-        alert('Could not initiate checkout. Please try again.');
-        setCheckoutSource(null);
-      }
-    } catch (err) {
-      console.error('Fast Checkout Error:', err);
-      alert('Connection error. Please check your network.');
-      setCheckoutSource(null);
-    }
+    // Direct redirect to pre-generated Payment Link (much faster than Checkout Session)
+    window.location.href = STRIPE_PAYMENT_LINK;
   };
 
   // 硬编码中英文内容
