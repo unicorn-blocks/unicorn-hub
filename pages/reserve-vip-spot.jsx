@@ -13,18 +13,35 @@ import StepsSection from '../components/sections/StepsSection';
 import PrivacySection from '../components/sections/PrivacySection';
 import KitCategories from '../components/KitCategories';
 
-// Backend: Fetch data at build time / incrementally
-// Backend: Fetch data at build time / incrementally
+// ISR (Incremental Static Regeneration): Fast load + near-realtime data
+// - Build/revalidate: Fetch from Google Script → cache result
+// - User opens page: Instantly shows cached value (极快)
+// - Client-side: Silent refresh for absolute latest
+const FALLBACK_REMAINING = 97; // Used only if Google Script completely fails
+const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyC8hgXKH7L9JJf2JpFvfDhrjyO00saKSEs3enX1ppC8RzkHn7PZnuBGmkhH7jhFJmwNg/exec';
+
 export async function getStaticProps() {
-  // Optimization: Do NOT fetch from Google Script here to avoid blocking page load (2-3s).
-  // We will fetch client-side instead.
+  let initialRemaining = FALLBACK_REMAINING;
+
+  // Skip slow Google Script fetch in development (client-side will refresh anyway)
+  if (process.env.NODE_ENV === 'production') {
+    try {
+      // Fetch during build/revalidation (not blocking user request in production)
+      const res = await fetch(GOOGLE_SCRIPT_URL);
+      const data = await res.json();
+      if (typeof data.remaining === 'number') {
+        initialRemaining = data.remaining;
+      }
+    } catch (err) {
+      console.log('[ISR] Google Script fetch failed, using fallback:', FALLBACK_REMAINING);
+    }
+  }
 
   return {
     props: {
-      initialRemaining: null, // Start with null to show loading state
+      initialRemaining,
     },
-    // Keep revalidate (even if mostly static) to allow regenerating if we change code/logic
-    revalidate: 60,
+    revalidate: 60, // Re-fetch every 60 seconds in background (production only)
   };
 }
 
@@ -34,25 +51,27 @@ export default function PreOrder({ initialRemaining }) {
   const [checkoutSource, setCheckoutSource] = useState(null);
 
 
-  // Scarcity state: Init with null to show loading spinner
-  const [reservationsCount, setReservationsCount] = useState(null);
+  // Scarcity state: Initialize with SSR value (instant display, no spinner)
+  const [reservationsCount, setReservationsCount] = useState(initialRemaining ?? FALLBACK_REMAINING);
   const totalSpots = 500;
-  const REMAINING_API = '/api/stock-count';
 
   useEffect(() => {
-    // Client-side fetch
-    fetch(REMAINING_API)
+    // Silent background refresh for fresh stock count (non-blocking)
+    fetch('/api/stock-count')
       .then(res => res.json())
       .then(data => {
-        if (typeof data.remaining === 'number') {
+        if (typeof data.remaining === 'number' && data.remaining !== reservationsCount) {
           setReservationsCount(data.remaining);
-        } else {
-          setReservationsCount(500); // Fallback
         }
       })
       .catch(() => {
-        setReservationsCount(500); // Fallback on error
+        // Silently ignore - we already have SSR value
       });
+
+    // Warmup Netlify Stripe function to reduce cold start delay
+    // Uses OPTIONS request - just wakes up the function without creating a session
+    fetch('/api/payment/stripe/checkout-session', { method: 'OPTIONS' })
+      .catch(() => { }); // Silently ignore any errors
   }, []);
 
   const handleFastCheckout = async (source) => {
