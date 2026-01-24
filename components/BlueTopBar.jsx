@@ -47,7 +47,7 @@ export default function BlueTopBar({ onCheckout, isLoading }) {
 
         {isReservePage ? (
           <button
-            className="blue-top-bar-btn"
+            className="blue-top-bar-btn reserve-btn"
             onClick={handleCheckoutClick}
             disabled={isLoading}
           >
@@ -59,7 +59,7 @@ export default function BlueTopBar({ onCheckout, isLoading }) {
                 </svg>
                 Processing...
               </span>
-            ) : 'Lock My VIP Price'}
+            ) : 'Reserve My VIP Price'}
           </button>
         ) : (
           <button
@@ -166,6 +166,13 @@ export default function BlueTopBar({ onCheckout, isLoading }) {
           @media (max-width: 360px) {
             .blue-top-bar-text {
               display: none; /* 屏幕太窄时隐藏文字，只留LOGO */
+            }
+          }
+
+          /* Mobile adjustment for reserve page button */
+          @media (max-width: 767px) {
+            .reserve-btn {
+              margin-right: -5px;
             }
           }
         `}</style>

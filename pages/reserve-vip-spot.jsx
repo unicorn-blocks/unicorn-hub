@@ -96,7 +96,7 @@ export default function PreOrder({ initialRemaining }) {
         scarcityPrefix: 'Only',
         scarcitySuffix: 'VIP spots left'
       },
-      ctaButton: 'Lock My VIP Price',
+      ctaButton: 'Reserve My VIP Price',
       learnMoreButton: 'Learn More',
       trustNote: '✔ Fully Refundable $5 Deposit · ✔ Safe Checkout',
       features: {
@@ -146,20 +146,12 @@ export default function PreOrder({ initialRemaining }) {
         title: 'FAQ',
         items: [
           {
-            q: 'How does the VIP Reservation work?',
-            a: 'Step 1. Lock Your Price: Pay **$5 today** to reserve the **$149 VIP price** (Retail price: $199).\nStep 2. **Get Exclusive Access**: **See** behind-the-scenes updates, and **follow** the product as it comes to life — all designed to **spark creativity**.\nStep 3. Pay & Receive: Before shipping, we’ll notify you and charge the remaining **$145**. Your order ships with **priority delivery**.'
-          },
-          {
-            q: 'What if I change my mind?',
-            a: 'No worries! Your $5 deposit is fully refundable anytime before we ship your product — no questions asked.'
+            q: 'What age group are Unicorn blocks suitable for?',
+            a: '**Ages 3-8.** We personalize the fun! By setting your child\'s age, the system switches between story modes and difficulty levels to deliver an experience that\'s just right for them.'
           },
           {
             q: 'Is the toy safe for children?',
             a: '**Absolutely!** Our building blocks include a camera that fosters creativity. However, it is **disabled by default and requires explicit parental consent through our app to activate**. You own all data, with the ability to view, manage, and permanently delete it at any time.'
-          },
-          {
-            q: 'What age group are Unicorn blocks suitable for?',
-            a: '**Ages 3-8.** We personalize the fun! By setting your child\'s age, the system switches between story modes and difficulty levels to deliver an experience that\'s just right for them.'
           },
           {
             q: 'Can multiple children share one set?',
@@ -212,7 +204,7 @@ export default function PreOrder({ initialRemaining }) {
         deposit: '$5订金',
         suffix: '预订 — 仅剩436个名额，共500个！'
       },
-      ctaButton: '我要锁定VIP名额！',
+      ctaButton: 'Reserve My VIP Price',
       learnMoreButton: '了解更多',
       trustNote: '✔ $5订金可随时全额退款 · ✔ 安全支付',
       features: {
@@ -264,20 +256,12 @@ export default function PreOrder({ initialRemaining }) {
         title: '常见问题',
         items: [
           {
-            q: 'VIP 预订如何运作？',
-            a: '步骤1. 锁定价格：现在支付**$5**，锁定限量**$129 VIP优惠**（零售价$199）。\n步骤2. 幕后直达：**获取**独家进展、**认识**团队、**见证**创造过程——一切旨在**释放无限创意**。\n步骤3. 支付并收货：发货前我们会通知你，并自动收取剩余**$124**，享受优先发货。'
-          },
-          {
-            q: '如果我改变主意怎么办？',
-            a: '不用担心！在我们发货前，你的$5订金可随时全额退款，无需理由。'
+            q: '适合多大年龄的孩子？',
+            a: '**适合3-8岁**。我们会根据你设置的年龄在故事模式与难度之间切换，为孩子提供恰到好处的体验。'
           },
           {
             q: '这款玩具对儿童安全吗？',
             a: '**当然安全！**积木内置的摄像头用于激发创造力，但**默认关闭，需在家长App中明确授权后才会启用**。数据完全归你所有，你可随时查看、管理并永久删除。'
-          },
-          {
-            q: '适合多大年龄的孩子？',
-            a: '**适合3-8岁**。我们会根据你设置的年龄在故事模式与难度之间切换，为孩子提供恰到好处的体验。'
           },
           {
             q: '多个孩子可以共用一套吗？',
@@ -406,6 +390,16 @@ export default function PreOrder({ initialRemaining }) {
                 <div className="value-proposition-card">
                   <div className="card-section">
                     <h3 className="value-title">{t.features.title}</h3>
+
+                    {/* Spec Pills */}
+                    <div className="spec-pills-container">
+                      <div className="spec-pill">
+                        <span className="spec-pill-icon">✨</span> Ages 3–8
+                      </div>
+                      <div className="spec-pill">
+                        <span className="spec-pill-icon">🧱</span> Works with LEGO®
+                      </div>
+                    </div>
                   </div>
 
                   <div className="card-section">
@@ -603,6 +597,9 @@ export default function PreOrder({ initialRemaining }) {
           width: fit-content;
           max-width: 100%;
           gap: 0.5rem; /* Consistent spacing between all rows */
+          margin: 0 auto;
+          padding-left: 0;
+          padding-right: 0;
         }
 
         /* Row 1: Badge */
@@ -641,9 +638,7 @@ export default function PreOrder({ initialRemaining }) {
           width: 100%;
         }
         
-           /* Removed styling that conflicted with new structure */
-           width: 100%;
-        }
+
 
         /* Desktop: Left align pricing block to match image */
         @media (min-width: 1024px) {
@@ -661,7 +656,18 @@ export default function PreOrder({ initialRemaining }) {
             text-align: left;
           }
           
+          /* Force rows to left align on desktop */
+          .pricing-badge-row, 
+          .pricing-row-main,
+          .pricing-row-sub,
+          .pricing-deposit-text {
             justify-content: flex-start;
+            align-items: flex-start;
+            text-align: left;
+          }
+          
+          .pricing-row-main {
+             justify-content: flex-start;
           }
         }
         
@@ -673,14 +679,7 @@ export default function PreOrder({ initialRemaining }) {
             white-space: normal;
         }
 
-        @media (min-width: 1024px) {
-            .pricing-row-sub {
-                align-items: flex-start; /* Left on Desktop */
-            }
-            .pricing-deposit-text {
-                text-align: left;
-            }
-        }
+
 
         .highlight-price {
             color: #111827; /* Changed from purple to black per request */
@@ -753,23 +752,8 @@ export default function PreOrder({ initialRemaining }) {
         }
 
         /* PC / Desktop Overrides: Align Header Left */
+        /* PC / Desktop Overrides: Align Header Center (Removed Left Align) */
         @media (min-width: 1024px) {
-           .pricing-block-wrapper {
-             justify-content: flex-start;
-           }
-           .pricing-content {
-             align-items: flex-start;
-             text-align: left;
-           }
-           .pricing-badge-row {
-             justify-content: flex-start;
-           }
-           .pricing-row-main {
-             justify-content: flex-start;
-           }
-           .pricing-row-sub {
-             justify-content: flex-start;
-           }
            .value-title {
              text-align: left;
            }
@@ -987,9 +971,39 @@ export default function PreOrder({ initialRemaining }) {
         .card-section {
           flex-shrink: 0;
         }
-        
         .card-section:last-child {
           position: relative;
+        }
+
+        /* ===== Spec Pills ===== */
+        .spec-pills-container {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 8px;
+          justify-content: flex-start; /* Desktop default: Left aligned */
+          margin-top: 12px;
+          margin-bottom: 16px;
+        }
+
+        .spec-pill {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          padding: 6px 12px;
+          border-radius: 999px;
+          background: linear-gradient(90deg, #F0EEF8 0%, #FBF6FC 100%);
+          border: 1px solid #E9D5FF;
+          color: #4F475D;
+          font-size: 0.85rem;
+          font-weight: 600;
+          line-height: 1;
+          box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+          white-space: nowrap;
+        }
+        
+        .spec-pill-icon {
+           font-size: 1.1em;
+           line-height: 1;
         }
         
         .vertical-spacer {
@@ -1611,6 +1625,18 @@ export default function PreOrder({ initialRemaining }) {
             padding: 0 !important;
             margin: 0 !important;
             width: 100% !important;
+          }
+
+          /* Spec Pills - Mobile Overrides */
+          .spec-pills-container {
+             justify-content: center !important;
+             margin-top: 10px;
+             margin-bottom: 10px; /* Reduced to avoid gap */
+          }
+          
+          .spec-pill {
+             padding: 6px 10px;
+             font-size: 13px;
           }
           
           /* Kit details block full width */
