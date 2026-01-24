@@ -90,7 +90,7 @@ export default function PreOrder({ initialRemaining }) {
       title: 'Reserve VIP Spot - Unicorn Blocks',
       header: {
         badge: 'Selected VIP', // Badge (Not rendered in new design but kept for reference)
-        priceVIP: 'Lock Your VIP Price',
+        priceVIP: 'Reserve Early, Pay Later',
         priceRetail: '', // Unused
         deposit: 'Secure the $149 VIP price (retail $199) with a $5 fully refundable deposit.',
         scarcityPrefix: 'Only',
@@ -452,9 +452,45 @@ export default function PreOrder({ initialRemaining }) {
         </div>
 
         {/* New Sections inserted from reuse */}
+        <StepsSection style={{ marginTop: 0 }} />
+
+        {/* What Happens After You Reserve Section */}
+        <section className="reserve-flow-section">
+          <div className="reserve-flow-container">
+            <h2 className="reserve-flow-title">What Happens After You Reserve</h2>
+            <div className="reserve-flow-card">
+              <div className="reserve-flow-steps">
+                <div className="reserve-flow-step">
+                  <div className="reserve-flow-badge">1</div>
+                  <div className="reserve-flow-content">
+                    <span className="reserve-flow-label">Step 1</span>
+                    <p className="reserve-flow-description">Reserve with a $5 refundable deposit</p>
+                  </div>
+                </div>
+                <div className="reserve-flow-step">
+                  <div className="reserve-flow-badge">2</div>
+                  <div className="reserve-flow-content">
+                    <span className="reserve-flow-label">Step 2</span>
+                    <p className="reserve-flow-description">Your $149 VIP Price (<span className="retail-price">Retail $199</span>) is Locked plus Early Shipping</p>
+                  </div>
+                </div>
+                <div className="reserve-flow-step">
+                  <div className="reserve-flow-badge">3</div>
+                  <div className="reserve-flow-content">
+                    <span className="reserve-flow-label">Step 3</span>
+                    <p className="reserve-flow-description">Before shipping, confirm your order or get a full refund</p>
+                  </div>
+                </div>
+              </div>
+              <div className="reserve-flow-trust">
+                ✅ Fully refundable $5 deposit • ✅ Safe checkout
+              </div>
+            </div>
+          </div>
+        </section>
+
         <TestimonialsSection />
         <ImpactSection />
-        <StepsSection style={{ marginTop: 0 }} />
         <PrivacySection />
 
         <div className="buy-container">
@@ -759,6 +795,138 @@ export default function PreOrder({ initialRemaining }) {
             margin-left: 0;
             margin-right: 0;
             padding: 0 8px;
+          }
+        }
+
+        /* ===== Reserve Flow Section ===== */
+        .reserve-flow-section {
+          padding: 5rem 1rem 3rem;
+          background: linear-gradient(180deg, rgba(235, 241, 255, 0.5) 0%, rgba(255, 237, 228, 0.5) 100%);
+        }
+
+        .reserve-flow-container {
+          max-width: 72rem;
+          margin: 0 auto;
+        }
+
+        .reserve-flow-title {
+          text-align: center;
+          font-size: clamp(1.5rem, 4vw, 2.25rem);
+          font-weight: 800;
+          color: #1f2937;
+          margin-bottom: 1.5rem;
+          letter-spacing: -0.02em;
+        }
+
+        .reserve-flow-card {
+          background: rgba(255, 255, 255, 0.85);
+          backdrop-filter: blur(10px);
+          border-radius: 24px;
+          padding: 2rem 1.5rem;
+          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+          border: 1px solid rgba(255, 255, 255, 0.8);
+        }
+
+        .reserve-flow-steps {
+          display: flex;
+          flex-direction: column;
+          gap: 1.25rem;
+        }
+
+        .reserve-flow-step {
+          display: flex;
+          align-items: flex-start;
+          gap: 1rem;
+          padding: 1rem;
+          background: linear-gradient(135deg, #f8f9ff 0%, #fff8f6 100%);
+          border-radius: 16px;
+        }
+
+        .reserve-flow-badge {
+          flex-shrink: 0;
+          width: 40px;
+          height: 40px;
+          background: linear-gradient(135deg, #F7AEBF 0%, #9b90da 100%);
+          border-radius: 12px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 1.1rem;
+          font-weight: 700;
+          color: white;
+          box-shadow: 0 2px 8px rgba(155, 144, 218, 0.3);
+        }
+
+        .reserve-flow-content {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          gap: 0.25rem;
+        }
+
+        .reserve-flow-label {
+          font-size: 0.75rem;
+          font-weight: 700;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+          color: #9b90da;
+        }
+
+        .reserve-flow-description {
+          font-size: 1rem;
+          font-weight: 500;
+          color: #374151;
+          margin: 0;
+          line-height: 1.5;
+        }
+
+        .reserve-flow-trust {
+          text-align: center;
+          margin-top: 1.5rem;
+          padding-top: 1rem;
+          border-top: 1px solid rgba(0, 0, 0, 0.06);
+          font-size: 0.875rem;
+          font-weight: 500;
+          color: #6b7280;
+        }
+
+        /* Desktop: 3-column grid */
+        @media (min-width: 768px) {
+          .reserve-flow-section {
+            padding: 4rem 2rem;
+          }
+
+          .reserve-flow-card {
+            padding: 2.5rem;
+          }
+
+          .reserve-flow-steps {
+            flex-direction: row;
+            gap: 1.5rem;
+          }
+
+          .reserve-flow-step {
+            flex: 1;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 1.5rem 1rem;
+          }
+
+          .reserve-flow-content {
+            align-items: center;
+          }
+
+          .reserve-flow-badge {
+            width: 56px;
+            height: 56px;
+            font-size: 1.5rem;
+            border-radius: 16px;
+            margin-bottom: 0.5rem;
+          }
+
+          .reserve-flow-description {
+            font-size: 1.05rem;
           }
         }
 
