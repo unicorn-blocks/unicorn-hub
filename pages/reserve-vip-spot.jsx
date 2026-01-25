@@ -77,8 +77,9 @@ export default function PreOrder({ initialRemaining }) {
     if (checkoutSource) return;
     setCheckoutSource(source);
 
-    // Track Pixel/GA
-    trackInitiateCheckout();
+    // Track Pixel/GA with source info
+    // source will be 'top' or 'bottom'
+    trackInitiateCheckout({ content_name: source || 'unknown' });
 
     // Direct redirect to pre-generated Payment Link (much faster than Checkout Session)
     window.location.href = STRIPE_PAYMENT_LINK;
