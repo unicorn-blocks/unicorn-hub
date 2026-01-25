@@ -154,6 +154,10 @@ export default function PreOrder({ initialRemaining }) {
             a: '**Absolutely!** Our building blocks include a camera that fosters creativity. However, it is **disabled by default and requires explicit parental consent through our app to activate**. You own all data, with the ability to view, manage, and permanently delete it at any time.'
           },
           {
+            q: 'When will I receive the product?',
+            a: 'We expect Unicorn Blocks to ship around Children’s Day (early June 2026). Before shipping, we’ll email you to confirm. If it’s not the right time, you can cancel for a full refund — no questions asked.'
+          },
+          {
             q: 'Can multiple children share one set?',
             a: 'Yes, they can share! For the best experience, we recommend one set per child. Each Sparky becomes a personal companion, and having their own set allows every child to enjoy a fully personalized creative journey.'
           },
@@ -161,10 +165,7 @@ export default function PreOrder({ initialRemaining }) {
             q: 'When will I pay the remaining amount?',
             a: 'We will send you a friendly email reminder about **14 days before shipping**. You can then choose to **pay the remaining $145 manually**, or opt for automatic payment for a hands-free experience.'
           },
-          {
-            q: 'When will I receive the product?',
-            a: 'Great innovation takes time. Our estimated ship date is mid-2026. By joining us now, you\'re not just reserve-vip-spoting — you\'re becoming an insider on our journey to create something extraordinary. You\'ll receive exclusive behind-the-scenes updates as we bring this product to life.'
-          },
+
           {
             q: 'Is this screen-free?',
             a: 'Unicorn Blocks is designed to reduce passive screen time. Kids build with real, physical blocks while Sparky responds to what they create—encouraging hands-on play, imagination, and movement instead of scrolling or watching.'
@@ -477,7 +478,7 @@ export default function PreOrder({ initialRemaining }) {
                 </div>
               </div>
               <div className="reserve-flow-trust">
-                ✅ Fully refundable $5 deposit • ✅ Safe checkout
+                ✅ Fully refundable $5 deposit • ✅ 400+ Families Reserved
               </div>
             </div>
           </div>
