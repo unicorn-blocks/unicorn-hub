@@ -4,7 +4,16 @@ import Image from 'next/image';
 import styles from './PopModal.module.css';
 // 不再持久化邮箱，本地状态即可
 
-export default function PopModal({ onClose, isVip = true, source = "pop-modal" }) {
+export default function PopModal({
+  onClose,
+  isVip = true,
+  source = "pop-modal",
+  customTitle,
+  customBody,
+  customCtaText,
+  showEmailInput = true,
+  onAction
+}) {
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [error, setError] = useState('');
@@ -63,8 +72,15 @@ export default function PopModal({ onClose, isVip = true, source = "pop-modal" }
     });
   };
 
-  // 固定按钮文案
-  const btnText = 'Unlock VIP Access →';
+  // 固定按钮文案 (fallback)
+  const btnText = customCtaText || 'Unlock VIP Access →';
+
+  // Handle direct action (no email)
+  const handleActionClick = () => {
+    if (onAction) {
+      onAction();
+    }
+  };
 
   // 成功视图（仅主站使用）
   if (showSuccess) {
@@ -103,53 +119,61 @@ export default function PopModal({ onClose, isVip = true, source = "pop-modal" }
           <Image src="/assets/ima/Image copy 1.png" alt="airplane" width={151} height={161} className={styles.plane} />
           {/* 大标题 */}
           <h2 className={styles.reserveTitle}>
-            <span>Unlock VIP Access</span>
+            <span>{customTitle || 'Unlock VIP Access'}</span>
           </h2>
           {/* 内容区域 - hover时不再隐藏 */}
           <div className={styles.contentMiddle}>
             <div className={styles.txtLine}>
-              Get <span>early updates</span>, and later have the chance to secure <span>VIP pricing</span> with a small, refundable deposit.
+              {customBody || (
+                <>Get <span>early updates</span>, and later have the chance to secure <span>VIP pricing</span> with a small, refundable deposit.</>
+              )}
             </div>
           </div>
           {/* 底部输入区块 - hover时位置不再改变 */}
           <div className={styles.bottomInputWrapper}>
-            {/* 邮箱输入框放左边 */}
-            <div style={{ position: 'relative', width: 281, height: 44 }}>
-              <input
-                type="email"
-                placeholder="Enter your email to join"
-                value={email}
-                onChange={e => {
-                  setEmail(e.target.value); setError(''); setSubmitted(false);
-                }}
-                className={styles.inputEmail}
-                style={{ paddingRight: isEmailSaved ? '40px' : '17px' }}
-                disabled={submitted}
-              />
-              {isEmailSaved && (
-                <span style={{
-                  position: 'absolute',
-                  right: '12px',
-                  top: '50%',
-                  transform: 'translateY(-50%)',
-                  fontSize: '16px',
-                  color: '#10B981',
-                  pointerEvents: 'none'
-                }}>
-                  ✅
-                </span>
-              )}
-            </div>
-            {/* 按钮+dudu置于右边，按钮顶对齐 */}
-            <div className={styles.btnWithDogWrap}>
-              <Image src="/assets/ima/dudu.png" alt="dudu" width={47} height={47} className={styles.duduDog} />
+            {/* 邮箱输入框放左边 - 仅在 showEmailInput 为 true 时显示 */}
+            {showEmailInput && (
+              <div style={{ position: 'relative', width: 281, height: 44 }}>
+                <input
+                  type="email"
+                  placeholder="Enter your email to join"
+                  value={email}
+                  onChange={e => {
+                    setEmail(e.target.value); setError(''); setSubmitted(false);
+                  }}
+                  className={styles.inputEmail}
+                  style={{ paddingRight: isEmailSaved ? '40px' : '17px' }}
+                  disabled={submitted}
+                />
+                {isEmailSaved && (
+                  <span style={{
+                    position: 'absolute',
+                    right: '12px',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    fontSize: '16px',
+                    color: '#10B981',
+                    pointerEvents: 'none'
+                  }}>
+                    ✅
+                  </span>
+                )}
+              </div>
+            )}
+
+            {/* 按钮+dudu置于右边 (或者居中如果没输入框) */}
+            <div className={styles.btnWithDogWrap} style={!showEmailInput ? { marginLeft: 'auto', marginRight: 'auto', width: '100%', justifyContent: 'center' } : {}}>
+              {showEmailInput && <Image src="/assets/ima/dudu.png" alt="dudu" width={47} height={47} className={styles.duduDog} />}
               <button
                 className={styles.notifyBtn + (submitted ? ' ' + styles.submitted : '')}
-                style={submitted ? { background: '#4E81A8' } : {}}
-                onClick={handleNotify}
-                disabled={submitted || isProcessing}
+                style={{
+                  ...(submitted ? { background: '#4E81A8' } : {}),
+                  ...(!showEmailInput ? { width: '100%', maxWidth: '300px' } : {})
+                }}
+                onClick={showEmailInput ? handleNotify : handleActionClick}
+                disabled={showEmailInput && (submitted || isProcessing)}
               >
-                {isProcessing ? 'Joining' : btnText}
+                {showEmailInput ? (isProcessing ? 'Joining' : btnText) : btnText}
               </button>
             </div>
             {/* 错误提示 */}

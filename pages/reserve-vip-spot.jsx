@@ -12,6 +12,7 @@ import ImpactSection from '../components/sections/ImpactSection';
 import StepsSection from '../components/sections/StepsSection';
 import PrivacySection from '../components/sections/PrivacySection';
 import KitCategories from '../components/KitCategories';
+import PopModal from '../components/PopModal';
 
 // ISR (Incremental Static Regeneration): Fast load + near-realtime data
 // - Build/revalidate: Fetch from Google Script → cache result
@@ -78,12 +79,46 @@ export default function PreOrder({ initialRemaining }) {
     setCheckoutSource(source);
 
     // Track Pixel/GA with source info
-    // source will be 'top' or 'bottom'
+    // source will be 'top' or 'bottom' or 'pop-modal'
     trackInitiateCheckout({ content_name: source || 'unknown' });
 
     // Direct redirect to pre-generated Payment Link (much faster than Checkout Session)
     window.location.href = STRIPE_PAYMENT_LINK;
   };
+
+  /* Scroll Trigger Logic for PopModal */
+  const [showScrollModal, setShowScrollModal] = useState(false);
+  const [hasTriggeredScrollModal, setHasTriggeredScrollModal] = useState(false); // Ref equivalent
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    let hasTriggered = false; // Local var to prevent double firing in effect cycle
+
+    function triggerModal() {
+      if (hasTriggered) return;
+      hasTriggered = true;
+      setShowScrollModal(true);
+      window.removeEventListener('scroll', handleScroll);
+    }
+
+    function handleScroll() {
+      if (hasTriggered) return;
+
+      const impactSection = document.querySelector('.impact-section');
+      if (!impactSection) return;
+      const rect = impactSection.getBoundingClientRect();
+      const windowHeight = window.innerHeight;
+
+      // Trigger when bottom of impact section enters viewport (or is scrolled past)
+      if (rect.bottom <= windowHeight) {
+        triggerModal();
+      }
+    }
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   // 硬编码中英文内容
   const translations = {
@@ -1676,6 +1711,31 @@ export default function PreOrder({ initialRemaining }) {
           }
         }
       `}</style>
+      {/* Reuse existing sections */}
+      {/* ... */}
+      {/* Reuse existing sections */}
+
+      {/* Scroll Triggered PopModal */}
+      {
+        showScrollModal && (
+          <PopModal
+            onClose={() => setShowScrollModal(false)}
+            isVip={true}
+            source="pop-modal"
+            customTitle="Join VIP Families ❤️"
+            customBody={
+              <>
+                Reserve your <span>$149 VIP price</span> with a <span>$5 refundable deposit</span>
+                <br />
+                ✅ Trusted by <span>400+ families</span>
+              </>
+            }
+            customCtaText="Reserve My VIP Price"
+            showEmailInput={false}
+            onAction={() => handleFastCheckout('pop-modal')}
+          />
+        )
+      }
     </>
   );
 }
