@@ -18,7 +18,7 @@ export default function TestimonialsSection() {
 
   const TESTIMONIALS_DATA = [
     {
-      quote: '"So much better than watching TV."',
+      quote: '"So much better than staring at screens for hours."',
       author: '—Dad of 3-Year- Old'
     },
     {
@@ -126,6 +126,7 @@ export default function TestimonialsSection() {
           .family-stage {
             padding: 20px 0 !important;
             clip-path: none !important;
+            overflow: visible !important;
           }
           
           .family-header {

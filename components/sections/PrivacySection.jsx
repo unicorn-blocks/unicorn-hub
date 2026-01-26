@@ -149,7 +149,7 @@ export default function PrivacySection({ className = '', style = {} }) {
           background: #F3F8FA;  /* 移动端：淡蓝色 */
           margin-top: 0;
           position: relative;
-          z-index: 0;
+          z-index: 2;
         }
 
         @media (max-width: 767px) {
