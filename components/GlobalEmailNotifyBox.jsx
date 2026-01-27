@@ -88,6 +88,9 @@ export default function GlobalEmailNotifyBox() {
   // 主站隐藏底部浮动输入框
   if (!isVip) return null;
 
+  // Double Insurance: Explicitly hide on /preorder page to prevent iPad overlap issues
+  if (router.pathname === '/preorder') return null;
+
   // 成功视图（仅主站使用）
   if (showSuccess) {
     return (
