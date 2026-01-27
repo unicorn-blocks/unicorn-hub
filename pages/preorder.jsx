@@ -82,8 +82,31 @@ export default function PreorderPage({ initialRemaining }) {
     // source will be 'top' or 'bottom' or 'pop-modal'
     trackInitiateCheckout({ content_name: source || 'unknown' });
 
-    // Direct redirect to pre-generated Payment Link (much faster than Checkout Session)
-    window.location.href = STRIPE_PAYMENT_LINK;
+    // Use dynamic Checkout Session API instead of static link
+    fetch('/api/payment/stripe/checkout-session', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        sourcePage: 'preorder', // Signal to backend to use "Pre-order" product name
+        leadId: 'preorder_' + Date.now(), // Basic lead tracking
+        returnUrl: window.location.origin, // Ensure redirects come back to the correct domain/port
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.url) {
+          window.location.href = data.url;
+        } else {
+          console.error('No checkout URL returned:', data);
+          alert('Something went wrong. Please try again.');
+          setCheckoutSource(null);
+        }
+      })
+      .catch((err) => {
+        console.error('Checkout error:', err);
+        alert('Connection error. Please try again.');
+        setCheckoutSource(null);
+      });
   };
 
   /* Scroll Trigger Logic for PopModal */

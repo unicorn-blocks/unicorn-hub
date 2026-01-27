@@ -34,6 +34,7 @@ exports.handler = async (event, context) => {
             amount = 5,
             currency = 'usd',
             returnUrl,
+            sourcePage = '',
         } = params;
 
         const origin = returnUrl || process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
@@ -44,6 +45,20 @@ exports.handler = async (event, context) => {
         const productImageUrl = 'https://vip.unicornblocks.ai/assets/checkout/sparky.webp';
 
         console.log('DEBUG IMAGE:', { productImageUrl });
+
+        // Dynamic Product Name based on Source Page
+        let productName = 'Lock $149 VIP Price — Fully Refundable';
+        if (sourcePage === 'preorder') {
+            productName = 'Pre-order Unicorn Blocks - Fully Refundable';
+        }
+
+        // Dynamic Cancel URL based on Source Page
+        let cancelUrl = `${origin}/payment/cancel`;
+        if (sourcePage === 'preorder') {
+            cancelUrl = `${origin}/preorder`;
+        } else if (sourcePage === 'reserve') {
+            cancelUrl = `${origin}/reserve-vip-spot`;
+        }
 
         const sessionConfig = {
             submit_type: 'pay',
@@ -59,18 +74,17 @@ exports.handler = async (event, context) => {
                     price_data: {
                         currency,
                         product_data: {
-                            name: 'Lock $149 VIP Price — Fully Refundable',
-                            description: 'Reserve now. Decide later. Cancel anytime.',
+                            name: productName,
+                            description: 'Unicorn Blocks VIP Bundle · $5 to secure your $149 VIP price · Cancel anytime',
                             ...(productImageUrl && { images: [productImageUrl] }),
                         },
                         unit_amount: Math.round(Number(amount) * 100),
                     },
                     quantity: 1,
-                    adjustable_quantity: { enabled: true, minimum: 1, maximum: 10 },
                 },
             ],
             success_url: `${origin}/payment/success?session_id={CHECKOUT_SESSION_ID}`,
-            cancel_url: `${origin}/payment/cancel`,
+            cancel_url: cancelUrl,
             billing_address_collection: 'auto',
             client_reference_id: leadId || email || 'anonymous',
             metadata: {
