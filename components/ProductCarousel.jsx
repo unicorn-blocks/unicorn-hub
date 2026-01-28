@@ -3,11 +3,15 @@ import { useState, useEffect, useRef } from 'react';
 export default function ProductCarousel() {
   const [currentImage, setCurrentImage] = useState(0);
   // Define image sets
+  // Define image sets
+  // Define image sets
   const desktopImages = [
-    '/assets/reserve-vip-spot/0.webp',
-    '/assets/reserve-vip-spot/1.webp',
+    '/assets/kit/desktop/Sparky.webp',
+    '/assets/kit/desktop/0.webp',
+    '/assets/kit/desktop/MagicalHats.webp',
+    '/assets/kit/desktop/magical blocks.webp',
+    '/assets/kit/desktop/1.webp',
     '/assets/reserve-vip-spot/5.png',
-    '/assets/reserve-vip-spot/2.webp',
     '/assets/reserve-vip-spot/3.png',
     '/assets/reserve-vip-spot/4.webp',
     '/assets/reserve-vip-spot/6.png'
@@ -15,10 +19,12 @@ export default function ProductCarousel() {
 
   // Mobile images exclude the last one (6.png)
   const mobileImages = [
-    '/assets/reserve-vip-spot/0.webp',
-    '/assets/reserve-vip-spot/1.webp',
+    '/assets/kit/mobile/Sparky.webp',
+    '/assets/kit/mobile/0.webp',
+    '/assets/kit/mobile/MagicalHats.webp',
+    '/assets/kit/mobile/magical blocks.webp',
+    '/assets/kit/mobile/1.webp',
     '/assets/reserve-vip-spot/5.png',
-    '/assets/reserve-vip-spot/2.webp',
     '/assets/reserve-vip-spot/3.png',
     '/assets/reserve-vip-spot/4.webp'
   ];

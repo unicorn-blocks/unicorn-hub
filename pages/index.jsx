@@ -854,6 +854,7 @@ export default function Home({ isVip = false }) {
                   <div className="kit-media-single">
                     <KitCarousel
                       mobileImages={[
+                        '/assets/kit/mobile/Sparky.webp',
                         '/assets/kit/mobile/0.webp',
                         '/assets/kit/mobile/1.webp',
                         '/assets/kit/mobile/5.png',
@@ -862,6 +863,7 @@ export default function Home({ isVip = false }) {
                         '/assets/kit/mobile/4.webp'
                       ]}
                       desktopImages={[
+                        '/assets/kit/desktop/Sparky.webp',
                         '/assets/kit/desktop/0.webp',
                         '/assets/kit/desktop/1.webp',
                         '/assets/kit/desktop/5.png',
