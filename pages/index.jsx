@@ -370,27 +370,29 @@ export default function Home({ isVip = false }) {
   const TESTIMONIALS_DATA = [
     {
       quote: '"So much better than watching TV."',
-      author: '—Dad of 3-Year- Old'
+      author: '—Dad of a 3-year-old who usually asks for a screen after dinner'
     },
     {
-      quote: "“I love that Sparky doesn’t ‘correct’ him. If he says it’s a rocket, Sparky sees a rocket. It really protects his imagination.”",
-      author: '—Mom of 5-Year-Old'
+      quote:
+        "“I love that Sparky doesn’t ‘correct’ him. If he says it’s a rocket, Sparky sees a rocket. It really protects his imagination.”",
+      author: '—Mom of a 5-year-old who loves pretending everything is a spaceship'
     },
     {
-      quote: '“Pleeease, just five more minutes! I have to light up all the lights on Sparky’s hat!”',
-      author: '—Our Little Builder, 5'
+      quote:
+        '“Pleeease, just five more minutes! I have to light up all the lights on Sparky’s hat!”',
+      author: '—Our Little Builder, 6\nStill playing after 90 minutes'
     },
     {
       quote: '“Sparky, I added a swimming pool next to my house.”',
-      author: '—Our Little Builder, 7'
+      author: '—Our Little Builder, 7\nCreated a different swimming pool each time'
     },
     {
       quote: '“I am amazed. He sat there and built for over an hour straight. No screens, just pure focus.”',
-      author: '—Mom of 6-Year-Old'
+      author: '—Mom of a 6-year-old who normally switches toys every 10 minutes'
     },
     {
       quote: '“I want to try the Unicorn Hat next time!”',
-      author: '—Our Little Builder, 5'
+      author: '—Our Little Builder, 4\nAlready thinking about the next build'
     }
   ];
 
