@@ -214,7 +214,7 @@ export default function PreorderPage({ initialRemaining }) {
           },
           {
             q: 'When will I receive the product?',
-            a: 'We expect Unicorn Blocks to ship around Children’s Day (early June 2026). Before shipping, we’ll email you to confirm. If it’s not the right time, you can cancel for a full refund — no questions asked.'
+            a: 'We expect Unicorn Blocks to ship around April 2026. Before shipping, we’ll email you to confirm. If it’s not the right time, you can cancel for a full refund — no questions asked.'
           },
           {
             q: 'Can multiple children share one set?',
@@ -532,7 +532,7 @@ export default function PreorderPage({ initialRemaining }) {
                   <div className="reserve-flow-badge">3</div>
                   <div className="reserve-flow-content">
                     <span className="reserve-flow-label">Step 3</span>
-                    <p className="reserve-flow-description">Before shipping, confirm your order — or cancel for a full refund</p>
+                    <p className="reserve-flow-description">Before shipping (April 2026), we’ll email you to confirm — or cancel for a full refund.</p>
                   </div>
                 </div>
               </div>
