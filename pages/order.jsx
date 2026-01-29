@@ -151,11 +151,11 @@ export default function OrderPage({ initialRemaining }) {
         badge: 'Selected VIP', // Badge (Not rendered in new design but kept for reference)
         priceVIP: 'Not Just Stacking-Creating!',
         priceRetail: '', // Unused
-        deposit: "Meet Sparky：The magical block buddy who tells a story to inspire kids' creative building",
+        deposit: "Meet Sparky：The magical block buddy who tells stories to inspire kids' creative building",
         scarcityPrefix: 'Only',
         scarcitySuffix: 'VIP bundles remaining'
       },
-      ctaButton: 'Pre-Order Now for $5',
+      ctaButton: 'Order Now',
       learnMoreButton: 'Learn More',
       trustNote: '✔ Fully Refundable $5 Deposit · ✔ Safe Checkout',
       features: {
@@ -422,20 +422,16 @@ export default function OrderPage({ initialRemaining }) {
                     {language === 'zh' ? (
                       t.header.deposit
                     ) : (
-                      <>Meet Sparky：The magical block buddy who tells a story to inspire kids' creative building</>
+                      <>Meet Sparky：The magical block buddy who tells stories to inspire kids' creative building</>
                     )}
                   </div>
-                  <div className="pricing-scarcity-text">
-                    {t.header.scarcityPrefix} <span className="highlight-number">
-                      {reservationsCount === null ? (
-                        <svg className="animate-spin inline-block h-5 w-5 text-[#dc2626] align-middle -mt-1 ml-1 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                        </svg>
-                      ) : (
-                        reservationsCount
-                      )}
-                    </span> of {totalSpots} {t.header.scarcitySuffix} <span className="scarcity-fire">🔥</span>
+                  <div className="spec-pills-container">
+                    <div className="spec-pill">
+                      <span className="spec-pill-icon">✨</span> Ages 3–8
+                    </div>
+                    <div className="spec-pill">
+                      <span className="spec-pill-icon">🧱</span> Works with LEGO®
+                    </div>
                   </div>
                 </div>
               </div>
@@ -457,14 +453,34 @@ export default function OrderPage({ initialRemaining }) {
                   <div className="card-section">
                     <h3 className="value-title">{t.features.title}</h3>
 
-                    {/* Spec Pills */}
-                    <div className="spec-pills-container">
-                      <div className="spec-pill">
-                        <span className="spec-pill-icon">✨</span> Ages 3–8
+                    {/* Spec Pills Moved to Header */}
+
+                    {/* Price Block */}
+                    <div className="price-block">
+                      <div className="price-row">
+                        <span className="current-price">$199</span>
+                        <span className="original-price">$249</span>
+                        <span className="save-badge">Save $50</span>
                       </div>
-                      <div className="spec-pill">
-                        <span className="spec-pill-icon">🧱</span> Works with LEGO®
+                    </div>
+
+                    {/* Review Rating */}
+                    <div
+                      className="rating-action"
+                      onClick={() => document.getElementById('our-family')?.scrollIntoView({ behavior: 'smooth' })}
+                      role="button"
+                      tabIndex={0}
+                    >
+                      <span className="rating-score">4.8</span>
+                      <div className="rating-stars-container">
+                        <span className="star filled">★</span>
+                        <span className="star filled">★</span>
+                        <span className="star filled">★</span>
+                        <span className="star filled">★</span>
+                        <span className="star partial">★</span>
                       </div>
+                      <span className="rating-text">400+ reviews</span>
+                      <span className="rating-arrow">^</span>
                     </div>
                   </div>
 
@@ -474,7 +490,7 @@ export default function OrderPage({ initialRemaining }) {
 
                   <div className="card-section">
                     <div className="kit-details-block">
-                      {t.kit && t.kit.categories && <KitCategories categories={t.kit.categories} initialState={[true, false, false, false]} />}
+                      {t.kit && t.kit.categories && <KitCategories categories={t.kit.categories} initialState={[false, false, false, false]} />}
                     </div>
                   </div>
 
@@ -482,21 +498,33 @@ export default function OrderPage({ initialRemaining }) {
 
                   {/* 行动按钮 */}
                   <div className="card-section">
-                    <button
-                      className={`primary-button button-shine sticky-mobile-button ${checkoutSource ? 'opacity-80 cursor-wait' : ''}`}
-                      onClick={() => handleFastCheckout('bottom')}
-                      disabled={!!checkoutSource}
-                    >
-                      {checkoutSource === 'bottom' ? (
-                        <span className="flex items-center justify-center gap-2">
-                          <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                          </svg>
-                          Processing...
-                        </span>
-                      ) : t.ctaButton}
-                    </button>
+                    <div className="mobile-sticky-wrapper">
+                      {/* Stock Indicator - Moved above button */}
+                      <div className="flex items-center justify-center gap-1.5 mb-1 text-xs font-medium text-[#DC2626] bg-white/95 backdrop-blur-sm px-3 py-1 rounded-full shadow-sm w-fit mx-auto">
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#DC2626]"></span>
+                        Only 3 VIP Bundles Remaining
+                      </div>
+
+                      <button
+                        className={`primary-button button-shine ${checkoutSource ? 'opacity-80 cursor-wait' : ''}`}
+                        onClick={() => handleFastCheckout('bottom')}
+                        disabled={!!checkoutSource}
+                      >
+                        {checkoutSource === 'bottom' ? (
+                          <span className="flex items-center justify-center gap-2">
+                            <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                            Processing...
+                          </span>
+                        ) : (
+                          <div className="flex items-center justify-center gap-1 leading-tight text-sm sm:text-base">
+                            <span className="font-bold">Order Now</span>
+                          </div>
+                        )}
+                      </button>
+                    </div>
 
                     {/* 信任提示 - 绝对定位 */}
                     <div className="trust-indicators">
@@ -637,7 +665,7 @@ export default function OrderPage({ initialRemaining }) {
         .pricing-block-wrapper {
           display: flex;
           justify-content: center; /* Center the block horizontally to balance L/R margins */
-          margin-bottom: 0.5rem;
+          margin-bottom: 0; /* Reduced from 0.5rem */
           padding: 0 0.5rem;
           width: 100%;
         }
@@ -646,7 +674,7 @@ export default function OrderPage({ initialRemaining }) {
           background: transparent;
           border: none;
           box-shadow: none;
-          padding: 1rem 0;
+          padding: 0.25rem 0; /* Reduced from 1rem 0 */
           display: flex;
           flex-direction: column;
           align-items: center; /* Center align the content block */
@@ -662,7 +690,9 @@ export default function OrderPage({ initialRemaining }) {
           text-align: center;
           width: fit-content;
           max-width: 100%;
-          gap: 0.5rem; /* Consistent spacing between all rows */
+          width: fit-content;
+          max-width: 100%;
+          gap: 2px; /* Reduced from 0.5rem to minimize title-to-tags gap */
           margin: 0 auto;
           padding-left: 0;
           padding-right: 0;
@@ -723,13 +753,14 @@ export default function OrderPage({ initialRemaining }) {
           }
           
           /* Force rows to left align on desktop */
-          .pricing-badge-row, 
-          .pricing-row-main,
-          .pricing-row-sub,
-          .pricing-deposit-text {
             justify-content: flex-start;
             align-items: flex-start;
             text-align: left;
+          }
+
+          .pricing-row-sub {
+             width: 100%; /* Force full width to match Title so tags can center */
+             align-items: center; /* Center children (pills container) */
           }
           
           .pricing-row-main {
@@ -740,8 +771,8 @@ export default function OrderPage({ initialRemaining }) {
         .pricing-row-sub {
             display: flex;
             flex-direction: column;
-            align-items: center; /* Center on Mobile */
-            gap: 8px;
+            align-items: flex-start; /* Left align on Mobile too */
+            gap: 4px; 
             white-space: normal;
         }
 
@@ -762,6 +793,7 @@ export default function OrderPage({ initialRemaining }) {
         }
 
         .pricing-deposit-text {
+          display: none; /* Hidden as requested */
           font-size: clamp(0.85rem, 2.5vw, 1.25rem); /* Slightly smaller start */
           font-weight: 500;
           color: #4B5563;
@@ -1046,9 +1078,10 @@ export default function OrderPage({ initialRemaining }) {
           display: flex;
           flex-wrap: wrap;
           gap: 8px;
-          justify-content: flex-start; /* Desktop default: Left aligned */
-          margin-top: 12px;
-          margin-bottom: 16px;
+          justify-content: center; /* Centered as requested */
+          width: 100%; /* Ensure full width for centering */
+          margin-top: 0px; /* Reduced to 0 to minimize top gap */
+          margin-bottom: 2px; /* Small bottom gap to match visual balance */
         }
 
         .spec-pill {
@@ -1066,6 +1099,16 @@ export default function OrderPage({ initialRemaining }) {
           box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
           white-space: nowrap;
         }
+
+        /* Desktop: Ensure tags remain centered despite parent left-align */
+        @media (min-width: 1024px) {
+          .spec-pills-container {
+            justify-content: center !important;
+            margin-left: auto;
+            margin-right: auto;
+            width: 100%;
+          }
+        }
         
         .spec-pill-icon {
            font-size: 1.1em;
@@ -1081,7 +1124,7 @@ export default function OrderPage({ initialRemaining }) {
           font-size: clamp(1.5rem, 5vw, 2rem); /* Fluid font size to prevent wrap */
           font-weight: 500;
           color: #111827;
-          margin-bottom: 10px; /* 10px spacing */
+          margin-bottom: 4px; /* Reduced from 10px */
           line-height: 1.2;
           letter-spacing: -0.02em;
           white-space: nowrap; /* Force single line */
@@ -1177,7 +1220,7 @@ export default function OrderPage({ initialRemaining }) {
           background: linear-gradient(90deg, #F7AEBF 0%, #9b90da 100%);
           color: white;
           font-weight: 500;
-          padding: 0.875rem 2rem;
+          padding: 0.75rem 1rem; /* Reduced padding for height */
           border-radius: 12px;
           border: none;
           font-size: 1rem;
@@ -1188,7 +1231,7 @@ export default function OrderPage({ initialRemaining }) {
         }
 
         @media (max-width: 1023px) {
-          .sticky-mobile-button {
+          .mobile-sticky-wrapper {
             position: fixed !important;
             bottom: calc(10px + env(safe-area-inset-bottom)) !important; /* Adapt to Safari bottom bar/Home Indicator */
             left: 0 !important;
@@ -1197,7 +1240,13 @@ export default function OrderPage({ initialRemaining }) {
             width: calc(100% - 20px) !important;
             max-width: 500px;
             z-index: 1000;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3) !important;
+            background: transparent; /* Removed background */
+            padding: 0; /* Removed padding */
+            pointer-events: none; /* Let clicks pass through empty space */
+          }
+          /* Re-enable pointer events for children */
+          .mobile-sticky-wrapper > * {
+            pointer-events: auto;
           }
         }
 
@@ -1275,6 +1324,164 @@ export default function OrderPage({ initialRemaining }) {
           cursor: not-allowed;
         }
 
+        /* ===== Price Block Styles ===== */
+        .price-block {
+          margin-bottom: 0px; /* Reduced from 4px to tighten gap */
+        }
+        
+        .price-row {
+          display: flex;
+          align-items: baseline;
+          gap: 12px;
+        }
+        
+        .current-price {
+          font-size: clamp(1.5rem, 5vw, 2rem); /* Match Value Title Size */
+          font-weight: 500; /* Match Value Title Weight (removed bold) */
+          color: #111827;
+          line-height: 1;
+        }
+        
+        .original-price {
+          font-size: 1.15rem; /* Reduced from 1.5rem */
+          font-weight: 400;
+          color: #9CA3AF;
+          text-decoration: line-through;
+        }
+        
+        .save-badge {
+          background: #FEF2F2;
+          color: #DC2626;
+          font-weight: 600;
+          font-size: 0.875rem;
+          padding: 4px 8px;
+          border-radius: 6px;
+          align-self: center;
+        }
+
+        /* Mobile override for save-badge */
+        @media (max-width: 768px) {
+          .save-badge {
+             background: transparent;
+             padding: 0;
+          }
+        }
+
+        /* ===== Rating Block Styles ===== */
+        .rating-action {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          cursor: pointer;
+          margin-bottom: 4px; /* Reduced to 4px to match consistent spacing */
+          width: fit-content;
+        }
+        
+        .rating-score {
+          font-weight: 400; /* Normal weight as requested */
+          color: #111827;
+          font-size: 1rem;
+          line-height: 1;
+        }
+        
+        .rating-stars-container {
+          display: flex;
+          align-items: center;
+          gap: 1px;
+        }
+
+        .star {
+          font-size: 1.1rem;
+          line-height: 1;
+        }
+
+        .star.filled {
+          color: #9b90da; /* Theme Purple */
+        }
+
+        .star.partial {
+          background: linear-gradient(90deg, #9b90da 80%, #DBEAFE 80%); /* 80% Purple, 20% Light Grey/White */
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+          color: transparent;
+        }
+
+        .rating-text {
+          font-size: 0.9rem;
+          color: #6B7280; /* Grey text */
+          text-decoration: none; /* No underline */
+          font-weight: 400;
+          margin-left: 2px;
+        }
+        
+        .rating-arrow {
+            font-size: 0.8rem;
+            color: #9CA3AF;
+            transform: rotate(180deg);
+            display: inline-block;
+            margin-left: 4px;
+        }
+        
+        .rating-action:hover .rating-text {
+            color: #111827;
+        }
+        
+        /* Mobile: Ensure it is centered or left aligned as per rest of UI */
+        @media (max-width: 768px) {
+             .rating-action {
+                 /* Inherit flex alignment from parent */
+             }
+        }
+
+        /* ===== Stock Indicator Styles ===== */
+        .stock-indicator {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          margin-bottom: 12px;
+          color: #DC2626;
+          font-weight: 600;
+          font-size: 0.95rem;
+          animation: fadeIn 0.5s ease-out;
+        }
+        
+        .pulsing-dot {
+          width: 8px;
+          height: 8px;
+          background-color: #DC2626;
+          border-radius: 50%;
+          position: relative;
+        }
+        
+        .pulsing-dot::after {
+          content: '';
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          top: 0;
+          left: 0;
+          background-color: #DC2626;
+          border-radius: 50%;
+          animation: pulse-ring 1.5s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+        }
+        
+        @keyframes pulse-ring {
+          0% {
+            transform: scale(0.9);
+            opacity: 1;
+          }
+          100% {
+            transform: scale(2.4);
+            opacity: 0;
+          }
+        }
+        
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(5px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+
         /* ===== 信任提示样式 ===== */
         .trust-indicators {
           position: absolute;
@@ -1339,6 +1546,27 @@ export default function OrderPage({ initialRemaining }) {
         .faq-item:hover { 
           border-color: #e9d5ff; 
           box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+
+        /* ===== Mobile Tweaks ===== */
+        @media (max-width: 768px) {
+          .price-row {
+            justify-content: flex-start; /* Left align on Mobile */
+          }
+        }
+        
+        /* Desktop: Left Align Title & Price */
+        @media (min-width: 1024px) {
+          .value-title {
+            text-align: left;
+          }
+          .price-row {
+            justify-content: flex-start;
+          }
+        }
+
+        @media (max-width: 1023px) {
+           /* Removed fixed stock indicator styles */
         }
 
         .faq-item.open { 
@@ -1521,7 +1749,7 @@ export default function OrderPage({ initialRemaining }) {
           .value-title {
             font-size: 1.25rem;
             line-height: 1.3;
-            text-align: center;
+            text-align: left; /* Left align on Mobile */
           }
           
           .vertical-spacer {
@@ -1592,7 +1820,7 @@ export default function OrderPage({ initialRemaining }) {
           .value-title {
             font-size: 1.375rem;
             padding-left: 0;
-            text-align: center;
+            text-align: left; /* Left align on Mobile */
           }
           
           .vertical-spacer {
