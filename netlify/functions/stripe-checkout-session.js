@@ -48,7 +48,7 @@ exports.handler = async (event, context) => {
 
         // Dynamic Product Name based on Source Page
         let productName = 'Lock $149 VIP Price — Fully Refundable';
-        if (sourcePage === 'preorder') {
+        if (sourcePage === 'preorder' || sourcePage === 'order') {
             productName = 'Pre-order Unicorn Blocks - Fully Refundable';
         }
 
@@ -58,6 +58,8 @@ exports.handler = async (event, context) => {
             cancelUrl = `${origin}/preorder`;
         } else if (sourcePage === 'reserve') {
             cancelUrl = `${origin}/reserve-vip-spot`;
+        } else if (sourcePage === 'order') {
+            cancelUrl = `${origin}/order`;
         }
 
         const sessionConfig = {

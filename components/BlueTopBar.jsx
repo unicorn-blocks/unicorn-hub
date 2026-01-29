@@ -14,7 +14,7 @@ export default function BlueTopBar({ onCheckout, isLoading }) {
   const [isVip, setIsVip] = useState(false);
 
   // 检查是否在预订页面
-  const isReservePage = router.pathname === '/reserve-vip-spot' || router.pathname === '/preorder';
+  const isReservePage = router.pathname === '/reserve-vip-spot' || router.pathname === '/preorder' || router.pathname === '/order';
 
   // 客户端检测域名
   useEffect(() => {
@@ -59,7 +59,7 @@ export default function BlueTopBar({ onCheckout, isLoading }) {
                 </svg>
                 Processing...
               </span>
-            ) : (router.pathname === '/preorder' ? 'Pre-Order Now for $5' : 'Reserve My VIP Price')}
+            ) : ((router.pathname === '/preorder' || router.pathname === '/order') ? 'Pre-Order Now for $5' : 'Reserve My VIP Price')}
           </button>
         ) : (
           <button

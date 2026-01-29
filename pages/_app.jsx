@@ -28,7 +28,7 @@ function MyApp({ Component, pageProps }) {
   }, [router.events]);
 
   // 在checkout, reserve-vip-spot, 以及已有BlueTopBar的页面(index, features, faq)不显示FloatingJoinButton
-  const shouldShowGlobalEmailBox = router.pathname !== '/checkout' && router.pathname !== '/reserve-vip-spot' && router.pathname !== '/preorder' && router.pathname !== '/payment/cancel' && router.pathname !== '/payment/success' && router.pathname !== '/payment/stripe-checkout';
+  const shouldShowGlobalEmailBox = router.pathname !== '/checkout' && router.pathname !== '/reserve-vip-spot' && router.pathname !== '/preorder' && router.pathname !== '/order' && router.pathname !== '/payment/cancel' && router.pathname !== '/payment/success' && router.pathname !== '/payment/stripe-checkout';
   const shouldShowFloatingButton = shouldShowGlobalEmailBox && !['/', '/features', '/faq'].includes(router.pathname);
 
   return (
