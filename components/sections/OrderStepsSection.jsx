@@ -246,7 +246,7 @@ export default function OrderStepsSection({ className = '', style = {} }) {
         /* PC Styles */
         .step-pc-content {
           display: grid;
-          grid-template-rows: 90px 1fr; /* Fixed height for text, rest for image */
+          grid-template-rows: 45px 1fr; /* Reduced height for title only */
           align-items: start;
           width: 100%;
           height: 100%;
@@ -287,15 +287,11 @@ export default function OrderStepsSection({ className = '', style = {} }) {
            font-size: 1.3rem;
            font-weight: 700;
            color: #13234d;
-           margin-bottom: 6px;
+           margin-bottom: 0;
         }
 
         .step-pc-text p {
-           font-size: 1rem;
-           color: #374151;
-           line-height: 1.5;
-           max-width: 100%;
-           margin: 0 auto;
+           display: none; /* Hide subtitle */
         }
 
         /* Mobile Styles */
@@ -364,13 +360,7 @@ export default function OrderStepsSection({ className = '', style = {} }) {
         }
 
         .step-mobile-text p {
-          color: #6E6E73;
-          font-size: 14px;
-          line-height: 1.4;
-          margin: 0;
-          opacity: 0.9;
-          font-weight: 500;
-          white-space: nowrap;
+          display: none; /* Hide subtitle on mobile */
         }
 
         @media (max-width: 767px) {
