@@ -9,7 +9,7 @@ import { useLanguage } from '../context/LanguageContext';
 import { trackInitiateCheckout } from '../lib/fbq';
 import TestimonialsSection from '../components/sections/TestimonialsSection';
 import ImpactSection from '../components/sections/ImpactSection';
-import StepsSection from '../components/sections/StepsSection';
+import OrderStepsSection from '../components/sections/OrderStepsSection';
 import PrivacySection from '../components/sections/PrivacySection';
 import KitCategories from '../components/KitCategories';
 import PopModal from '../components/PopModal';
@@ -540,7 +540,7 @@ export default function OrderPage({ initialRemaining }) {
         </div>
 
         {/* New Sections inserted from reuse */}
-        <StepsSection style={{ marginTop: 0 }} />
+        <OrderStepsSection style={{ marginTop: 0 }} />
 
         {/* What Happens After You Reserve Section */}
         <section className="reserve-flow-section">

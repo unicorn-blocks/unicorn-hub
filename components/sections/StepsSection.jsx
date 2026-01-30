@@ -32,7 +32,7 @@ export default function StepsSection({ className = '', style = {} }) {
           {/* 第一组 */}
           <div className="step-item" style={{ zIndex: 2 }}>
             <div className="step-card step-card-image-only">
-              <div className="step-image-full" style={{ minHeight: '520px' }}>
+              <div className="step-image-full">
                 {/* 移动端：分层展示结构 */}
                 <div className="step-mobile-wrapper md:hidden">
                   <div className="step-mobile-bg"></div>
@@ -79,7 +79,7 @@ export default function StepsSection({ className = '', style = {} }) {
           {/* 第二组 */}
           <div className="step-item" style={{ zIndex: 1 }}>
             <div className="step-card step-card-image-only">
-              <div className="step-image-full" style={{ minHeight: '520px' }}>
+              <div className="step-image-full">
                 <div className="step-mobile-wrapper md:hidden">
                   <div className="step-mobile-bg"></div>
                   <div className="step-mobile-content">
@@ -124,7 +124,7 @@ export default function StepsSection({ className = '', style = {} }) {
           {/* 第三组 */}
           <div className="step-item" style={{ zIndex: 0 }}>
             <div className="step-card step-card-image-only">
-              <div className="step-image-full" style={{ minHeight: '520px' }}>
+              <div className="step-image-full">
                 <div className="step-mobile-wrapper md:hidden">
                   <div className="step-mobile-bg"></div>
                   <div className="step-mobile-content">
@@ -169,7 +169,7 @@ export default function StepsSection({ className = '', style = {} }) {
           {/* 第四组 */}
           <div className="step-item" style={{ zIndex: -1 }}>
             <div className="step-card step-card-image-only">
-              <div className="step-image-full" style={{ minHeight: '520px' }}>
+              <div className="step-image-full">
                 <div className="step-mobile-wrapper md:hidden">
                   <div className="step-mobile-bg"></div>
                   <div className="step-mobile-content">
@@ -302,36 +302,46 @@ export default function StepsSection({ className = '', style = {} }) {
         /* PC: 2x2 Grid with tight spacing */
         @media (min-width: 768px) {
            .steps-grid {
-             grid-template-columns: repeat(2, 1fr);
+             grid-template-columns: repeat(2, minmax(0, 1fr));
              column-gap: 6px;
-             row-gap: 10px; /* Further reduced for tighter rows */
+             row-gap: 10px;
+             align-items: stretch; /* Ensure both items in a row have equal height */
            }
            
-           .steps-section {
-             padding-bottom: 20px; /* Minimal bottom padding */
-           }
-           
-           /* Override inline style to reduce vertical space */
-           .step-image-full {
-             min-height: auto !important;
+           .step-item {
+             display: flex;
+             flex-direction: column;
            }
            
            .step-card {
-             min-height: auto !important;
+             flex: 1;
+             display: flex;
+             flex-direction: column;
+           }
+           
+           .step-image-full {
+             flex: 1;
+             display: flex;
+             flex-direction: column;
+           }
+           
+           .steps-section {
+             padding-bottom: 20px;
            }
         }
 
         .step-item {
           position: relative;
+          min-width: 0; /* Prevent grid blowout */
         }
 
         /* PC Refacted Styles */
         .step-pc-content {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
+          display: grid;
+          grid-template-rows: 1fr 90px; /* Video first (flexible), text second (fixed) */
+          align-items: start;
           width: 100%;
-          height: auto; /* Changed from 100% */
+          height: 100%;
           border-radius: 32px;
           background: transparent;
           padding: 8px;
@@ -357,6 +367,7 @@ export default function StepsSection({ className = '', style = {} }) {
 
         .step-pc-text {
            text-align: center;
+           overflow: hidden; /* Hide any text that exceeds the fixed row height */
         }
 
         .step-pc-text h3 {
@@ -370,9 +381,8 @@ export default function StepsSection({ className = '', style = {} }) {
            font-size: 1rem;
            color: #374151;
            line-height: 1.5;
-           max-width: 100%; /* Allow full width */
+           max-width: 100%;
            margin: 0 auto;
-           white-space: nowrap; /* Display on single line */
         }
 
         /* ========= Mobile Layered Step Item Styles (copied from homepage) ========= */
