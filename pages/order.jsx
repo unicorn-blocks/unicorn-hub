@@ -542,40 +542,42 @@ export default function OrderPage({ initialRemaining }) {
         {/* New Sections inserted from reuse */}
         <OrderStepsSection style={{ marginTop: 0 }} />
 
-        {/* What Happens After You Reserve Section */}
-        <section className="reserve-flow-section">
-          <div className="reserve-flow-container">
-            <h2 className="reserve-flow-title">What Happens Next</h2>
-            <div className="reserve-flow-card">
-              <div className="reserve-flow-steps">
-                <div className="reserve-flow-step">
-                  <div className="reserve-flow-badge">1</div>
-                  <div className="reserve-flow-content">
-                    <span className="reserve-flow-label">Step 1</span>
-                    <p className="reserve-flow-description">Pre-order with a $5 refundable payment</p>
+        {/* What Happens After You Reserve Section - HIDDEN */}
+        {false && (
+          <section className="reserve-flow-section">
+            <div className="reserve-flow-container">
+              <h2 className="reserve-flow-title">What Happens Next</h2>
+              <div className="reserve-flow-card">
+                <div className="reserve-flow-steps">
+                  <div className="reserve-flow-step">
+                    <div className="reserve-flow-badge">1</div>
+                    <div className="reserve-flow-content">
+                      <span className="reserve-flow-label">Step 1</span>
+                      <p className="reserve-flow-description">Pre-order with a $5 refundable payment</p>
+                    </div>
+                  </div>
+                  <div className="reserve-flow-step">
+                    <div className="reserve-flow-badge">2</div>
+                    <div className="reserve-flow-content">
+                      <span className="reserve-flow-label">Step 2</span>
+                      <p className="reserve-flow-description">Your $149 VIP Price (<span className="retail-price">Retail $199</span>) is Locked plus Early Shipping</p>
+                    </div>
+                  </div>
+                  <div className="reserve-flow-step">
+                    <div className="reserve-flow-badge">3</div>
+                    <div className="reserve-flow-content">
+                      <span className="reserve-flow-label">Step 3</span>
+                      <p className="reserve-flow-description">Before shipping (April 2026), we'll email you to confirm — or cancel for a full refund.</p>
+                    </div>
                   </div>
                 </div>
-                <div className="reserve-flow-step">
-                  <div className="reserve-flow-badge">2</div>
-                  <div className="reserve-flow-content">
-                    <span className="reserve-flow-label">Step 2</span>
-                    <p className="reserve-flow-description">Your $149 VIP Price (<span className="retail-price">Retail $199</span>) is Locked plus Early Shipping</p>
-                  </div>
+                <div className="reserve-flow-trust">
+                  ✅ Fully refundable $5 pre-order · ✅ 400+ families pre-ordered
                 </div>
-                <div className="reserve-flow-step">
-                  <div className="reserve-flow-badge">3</div>
-                  <div className="reserve-flow-content">
-                    <span className="reserve-flow-label">Step 3</span>
-                    <p className="reserve-flow-description">Before shipping (April 2026), we’ll email you to confirm — or cancel for a full refund.</p>
-                  </div>
-                </div>
-              </div>
-              <div className="reserve-flow-trust">
-                ✅ Fully refundable $5 pre-order · ✅ 400+ families pre-ordered
               </div>
             </div>
-          </div>
-        </section>
+          </section>
+        )}
 
         <TestimonialsSection />
         <ImpactSection />
