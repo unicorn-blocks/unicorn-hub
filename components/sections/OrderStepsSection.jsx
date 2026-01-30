@@ -4,6 +4,7 @@ import { useLanguage } from '../../context/LanguageContext';
 export default function OrderStepsSection({ className = '', style = {} }) {
   const { language } = useLanguage();
   const [isPlaying, setIsPlaying] = useState(false);
+  const [isMuted, setIsMuted] = useState(true);
   const videoRef = useRef(null);
 
   const togglePlay = () => {
@@ -14,6 +15,14 @@ export default function OrderStepsSection({ className = '', style = {} }) {
         videoRef.current.play();
       }
       setIsPlaying(!isPlaying);
+    }
+  };
+
+  const toggleMute = (e) => {
+    e.stopPropagation();
+    if (videoRef.current) {
+      videoRef.current.muted = !isMuted;
+      setIsMuted(!isMuted);
     }
   };
 
@@ -105,6 +114,7 @@ export default function OrderStepsSection({ className = '', style = {} }) {
                 ref={videoRef}
                 src="/assets/steps/Steps.mp4"
                 loop
+                muted
                 playsInline
                 preload="metadata"
                 style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
@@ -118,6 +128,18 @@ export default function OrderStepsSection({ className = '', style = {} }) {
                   </div>
                 </div>
               )}
+              {/* 静音切换按钮 */}
+              <button className="mute-button" onClick={toggleMute} aria-label={isMuted ? 'Unmute' : 'Mute'}>
+                {isMuted ? (
+                  <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z" />
+                  </svg>
+                ) : (
+                  <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z" />
+                  </svg>
+                )}
+              </button>
             </div>
           </div>
         </div>
@@ -412,6 +434,10 @@ export default function OrderStepsSection({ className = '', style = {} }) {
           background: #fff;
           position: relative;
           cursor: pointer;
+          /* 移除点击时的蓝色高亮 */
+          outline: none;
+          -webkit-tap-highlight-color: transparent;
+          user-select: none;
         }
 
         .video-text {
@@ -457,8 +483,8 @@ export default function OrderStepsSection({ className = '', style = {} }) {
         }
 
         .play-button svg {
-          width: 18px;
-          height: 18px;
+          width: 22px;
+          height: 22px;
           color: #13234d;
           margin-left: 2px;
         }
@@ -476,6 +502,76 @@ export default function OrderStepsSection({ className = '', style = {} }) {
 
           .video-text h3 {
             font-size: 1.25rem;
+          }
+        }
+
+        /* 视频移除蓝色高亮 */
+        video {
+          outline: none;
+          -webkit-tap-highlight-color: transparent;
+          user-select: none;
+        }
+
+        video:focus {
+          outline: none;
+        }
+
+        /* 静音按钮样式 - PC端: 白色背景+黑色图标（与播放按钮一致） */
+        .mute-button {
+          position: absolute;
+          bottom: 12px;
+          right: 12px;
+          width: 28px;
+          height: 28px;
+          background: rgba(255, 255, 255, 0.95);
+          border: none;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          z-index: 10;
+          transition: transform 0.2s ease, box-shadow 0.2s ease;
+          outline: none;
+          -webkit-tap-highlight-color: transparent;
+          padding: 6px;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+          color: #13234d;
+        }
+
+        .mute-button:hover {
+          transform: scale(1.1);
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .mute-button svg {
+          width: 16px;
+          height: 16px;
+        }
+
+        /* Mobile: 去除白色背景，只保留图标 */
+        @media (max-width: 767px) {
+          .mute-button {
+            width: 24px;
+            height: 24px;
+            bottom: 4px;
+            right: 4px;
+            padding: 0;
+            background: transparent;
+            box-shadow: none;
+          }
+
+          .mute-button:hover,
+          .mute-button:focus,
+          .mute-button:active {
+            background: transparent;
+            box-shadow: none;
+            transform: none;
+          }
+
+          .mute-button svg {
+            width: 18px;
+            height: 18px;
           }
         }
       `}</style>
