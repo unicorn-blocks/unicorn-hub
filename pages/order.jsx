@@ -752,6 +752,7 @@ export default function OrderPage({ initialRemaining }) {
           .pricing-content {
             align-items: flex-start;
             text-align: left;
+            gap: 16px; /* Increased gap on desktop to prevent overlap */
           }
           
           /* Force rows to left align on desktop */
@@ -1109,6 +1110,8 @@ export default function OrderPage({ initialRemaining }) {
             margin-left: auto;
             margin-right: auto;
             width: 100%;
+            margin-top: 8px; /* Equal spacing from title above */
+            margin-bottom: 8px; /* Equal spacing to product section below */
           }
         }
         

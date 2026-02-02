@@ -59,7 +59,7 @@ export default function BlueTopBar({ onCheckout, isLoading }) {
                 </svg>
                 Processing...
               </span>
-            ) : ((router.pathname === '/preorder' || router.pathname === '/order') ? 'Pre-Order Now for $5' : 'Reserve My VIP Price')}
+            ) : (router.pathname === '/order' ? 'Order Now' : (router.pathname === '/preorder' ? 'Pre-Order Now for $5' : 'Reserve My VIP Price'))}
           </button>
         ) : (
           <button
