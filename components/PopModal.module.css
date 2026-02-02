@@ -221,7 +221,9 @@
 }
 
 .notifyBtn:hover:not(:disabled) {
-  background: #4E81A8;
+  background: linear-gradient(90deg, #E899AC 0%, #8A7FC9 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px 0 rgba(39, 40, 47, .2);
 }
 
 .notifyBtn:focus {
@@ -230,7 +232,8 @@
 }
 
 .notifyBtn:active {
-  background: #4E81A8;
+  background: linear-gradient(90deg, #E899AC 0%, #8A7FC9 100%);
+  transform: translateY(0);
 }
 
 .notifyBtn.submitted {
@@ -238,9 +241,16 @@
 }
 
 .notifyBtn:disabled {
-  background: #4E81A8;
-  cursor: pointer;
-  opacity: 0.8;
+  background: linear-gradient(90deg, #F7AEBF 0%, #9b90da 100%);
+  cursor: default;
+  opacity: 0.85;
+}
+
+/* Loading state - keep gradient background, no wait cursor */
+.notifyBtn.loading {
+  background: linear-gradient(90deg, #F7AEBF 0%, #9b90da 100%) !important;
+  opacity: 0.85;
+  cursor: default;
 }
 
 .inputEmail {
@@ -494,6 +504,16 @@
 
   100% {
     transform: scale(1);
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
   }
 }
 

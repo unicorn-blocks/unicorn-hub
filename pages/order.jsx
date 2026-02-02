@@ -74,7 +74,7 @@ export default function OrderPage({ initialRemaining }) {
   // Change this in Dashboard if price changes - no code change needed
   const STRIPE_PAYMENT_LINK = 'https://buy.stripe.com/aFa9ASdzF3Kv6ck9WfbbG01';
 
-  const handleFastCheckout = (source) => {
+  const handleFastCheckout = (source, priceAmount = 149) => {
     if (checkoutSource) return;
     setCheckoutSource(source);
 
@@ -90,6 +90,7 @@ export default function OrderPage({ initialRemaining }) {
         sourcePage: 'order', // Signal to backend to use "Pre-order" product name
         leadId: 'order_' + Date.now(), // Basic lead tracking
         returnUrl: window.location.origin, // Ensure redirects come back to the correct domain/port
+        amount: priceAmount, // Dynamic price: 149 for VIP, 199 for regular
       }),
     })
       .then((res) => res.json())
@@ -176,13 +177,19 @@ export default function OrderPage({ initialRemaining }) {
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
+    // Check if modal was already triggered this session
+    const alreadyTriggered = sessionStorage.getItem('vip_modal_triggered') === 'true';
+    if (alreadyTriggered) return;
+
     let hasTriggered = false; // Local var to prevent double firing in effect cycle
 
     function triggerModal() {
       if (hasTriggered) return;
       hasTriggered = true;
+      sessionStorage.setItem('vip_modal_triggered', 'true');
       setShowScrollModal(true);
       window.removeEventListener('scroll', handleScroll);
+      clearTimeout(timeoutId); // Clear the 30s timer if scroll triggered first
     }
 
     function handleScroll() {
@@ -199,8 +206,16 @@ export default function OrderPage({ initialRemaining }) {
       }
     }
 
+    // 30 second timer trigger
+    const timeoutId = setTimeout(() => {
+      triggerModal();
+    }, 30000); // 30 seconds
+
     window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      clearTimeout(timeoutId);
+    };
   }, []);
 
   // 硬编码中英文内容
@@ -450,7 +465,7 @@ export default function OrderPage({ initialRemaining }) {
       <div className="background-gradient"></div>
 
       {/* 蓝色顶部条 */}
-      <BlueTopBar onCheckout={() => handleFastCheckout('top')} isLoading={checkoutSource === 'top'} />
+      <BlueTopBar onCheckout={() => handleFastCheckout('top', 199)} isLoading={checkoutSource === 'top'} />
 
       {/* 使用导航组件 */}
       {/* <Navigation /> */}
@@ -567,7 +582,7 @@ export default function OrderPage({ initialRemaining }) {
 
                       <button
                         className={`primary-button button-shine ${checkoutSource ? 'opacity-80 cursor-wait' : ''}`}
-                        onClick={() => handleFastCheckout('bottom')}
+                        onClick={() => handleFastCheckout('bottom', 199)}
                         disabled={!!checkoutSource}
                       >
                         {checkoutSource === 'bottom' ? (
@@ -2058,10 +2073,11 @@ export default function OrderPage({ initialRemaining }) {
               countdownMinutes={modalProps.countdownMinutes}
               customCtaText={modalProps.customCtaText}
               showEmailInput={false}
-              onAction={() => handleFastCheckout('pop-modal')}
+              onAction={() => handleFastCheckout('pop-modal', vipModalState === 'ACTIVE_1' ? 149 : 199)}
               onCountdownExpire={handleCountdownExpire}
               showTryAgain={modalProps.showTryAgain}
               isExpired={modalProps.isExpired}
+              isLoading={checkoutSource === 'pop-modal'}
             />
           );
         })()

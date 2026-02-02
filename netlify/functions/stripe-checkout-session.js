@@ -46,9 +46,19 @@ exports.handler = async (event, context) => {
 
         console.log('DEBUG IMAGE:', { productImageUrl });
 
-        // Dynamic Product Name based on Source Page
+        // Dynamic Product Name based on Source Page and Amount
         let productName = 'Lock $149 VIP Price — Fully Refundable';
-        if (sourcePage === 'preorder' || sourcePage === 'order') {
+        let productDescription = 'Unicorn Blocks VIP Bundle · $5 to secure your $149 VIP price · Cancel anytime';
+
+        if (sourcePage === 'order') {
+            // Order page: unified product name
+            productName = 'Unicorn Blocks - VIP Price';
+            if (amount >= 199) {
+                productDescription = 'Unicorn Blocks Complete Bundle · Regular Price $249';
+            } else if (amount >= 149) {
+                productDescription = 'Unicorn Blocks VIP Bundle · Special VIP Price $149 (Save $50)';
+            }
+        } else if (sourcePage === 'preorder') {
             productName = 'Pre-order Unicorn Blocks - Fully Refundable';
         }
 
@@ -77,7 +87,7 @@ exports.handler = async (event, context) => {
                         currency,
                         product_data: {
                             name: productName,
-                            description: 'Unicorn Blocks VIP Bundle · $5 to secure your $149 VIP price · Cancel anytime',
+                            description: productDescription,
                             ...(productImageUrl && { images: [productImageUrl] }),
                         },
                         unit_amount: Math.round(Number(amount) * 100),
@@ -87,7 +97,15 @@ exports.handler = async (event, context) => {
             ],
             success_url: `${origin}/payment/success?session_id={CHECKOUT_SESSION_ID}`,
             cancel_url: cancelUrl,
-            billing_address_collection: 'auto',
+            // Address collection
+            billing_address_collection: 'required',
+            shipping_address_collection: {
+                allowed_countries: ['US'], // US only
+            },
+            // Automatic tax calculation (requires Tax Registration in Stripe Dashboard)
+            automatic_tax: {
+                enabled: true,
+            },
             client_reference_id: leadId || email || 'anonymous',
             metadata: {
                 leadId: leadId || '',
