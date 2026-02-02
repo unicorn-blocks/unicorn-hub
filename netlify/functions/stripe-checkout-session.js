@@ -56,7 +56,7 @@ exports.handler = async (event, context) => {
             if (amount >= 199) {
                 productDescription = 'Unicorn Blocks Complete Bundle · Regular Price $249';
             } else if (amount >= 149) {
-                productDescription = 'Unicorn Blocks VIP Bundle · Special VIP Price $149 (Save $50)';
+                productDescription = 'Unicorn Blocks VIP Bundle · Special VIP Price $149 (Save EXTRA $50)';
             }
         } else if (sourcePage === 'preorder') {
             productName = 'Pre-order Unicorn Blocks - Fully Refundable';
