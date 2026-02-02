@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
 import styles from './PopModal.module.css';
@@ -12,7 +12,12 @@ export default function PopModal({
   customBody,
   customCtaText,
   showEmailInput = true,
-  onAction
+  onAction,
+  countdownMinutes = 0,
+  onCountdownExpire,      // NEW: callback when countdown reaches 0
+  showTryAgain = false,   // NEW: show Try Again button instead of CTA
+  onTryAgain,             // NEW: callback for Try Again click
+  isExpired = false,      // NEW: final expired state (no retry)
 }) {
   const router = useRouter();
   const [email, setEmail] = useState('');
@@ -22,6 +27,36 @@ export default function PopModal({
   const [isProcessing, setIsProcessing] = useState(false);
   const [isEmailSaved, setIsEmailSaved] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
+
+  // Countdown timer state
+  const [timeLeft, setTimeLeft] = useState(countdownMinutes * 60); // seconds
+
+  useEffect(() => {
+    if (countdownMinutes <= 0) return;
+
+    const timer = setInterval(() => {
+      setTimeLeft(prev => {
+        if (prev <= 1) {
+          clearInterval(timer);
+          // Trigger callback when countdown expires
+          if (onCountdownExpire) {
+            setTimeout(() => onCountdownExpire(), 0);
+          }
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [countdownMinutes, onCountdownExpire]);
+
+  // Format time as M:SS
+  const formatTime = (seconds) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
 
   const isValidEmail = (email) => /\S+@\S+\.\S+/.test(email);
 
@@ -124,8 +159,15 @@ export default function PopModal({
           {/* 内容区域 - hover时不再隐藏 */}
           <div className={styles.contentMiddle}>
             <div className={styles.txtLine}>
-              {customBody || (
-                <>Get <span>early updates</span>, and later have the chance to secure <span>VIP pricing</span> with a small, refundable deposit.</>
+              {customBody ? customBody : (
+                countdownMinutes > 0 ? (
+                  <>
+                    Complete your order within <span style={{ color: '#DC2626', fontWeight: 700 }}>{formatTime(timeLeft)} </span>
+                    to keep your <span style={{ color: '#DC2626', fontWeight: 700 }}>$50</span> VIP discount.
+                  </>
+                ) : (
+                  <>Get <span>early updates</span>, and later have the chance to secure <span>VIP pricing</span> with a small, refundable deposit.</>
+                )
               )}
             </div>
           </div>
@@ -164,17 +206,40 @@ export default function PopModal({
             {/* 按钮+dudu置于右边 (或者居中如果没输入框) */}
             <div className={styles.btnWithDogWrap} style={!showEmailInput ? { marginLeft: 'auto', marginRight: 'auto', width: '100%', justifyContent: 'center' } : {}}>
               {showEmailInput && <Image src="/assets/ima/dudu.png" alt="dudu" width={47} height={47} className={styles.duduDog} />}
-              <button
-                className={styles.notifyBtn + (submitted ? ' ' + styles.submitted : '')}
-                style={{
-                  ...(submitted ? { background: '#4E81A8' } : {}),
-                  ...(!showEmailInput ? { width: '100%', maxWidth: '300px' } : {})
-                }}
-                onClick={showEmailInput ? handleNotify : handleActionClick}
-                disabled={showEmailInput && (submitted || isProcessing)}
-              >
-                {showEmailInput ? (isProcessing ? 'Joining' : btnText) : btnText}
-              </button>
+
+              {/* Conditional button rendering based on state */}
+              {showTryAgain ? (
+                // EXPIRED_1 state: Show Try Again button
+                <button
+                  className={styles.notifyBtn}
+                  style={{ width: '100%', maxWidth: '300px', background: 'linear-gradient(90deg, #F59E0B 0%, #EF4444 100%)' }}
+                  onClick={onTryAgain}
+                >
+                  🔄 Try Again
+                </button>
+              ) : isExpired ? (
+                // FINAL_EXPIRED state: Show action button with custom text
+                <button
+                  className={styles.notifyBtn}
+                  style={{ width: '100%', maxWidth: '300px' }}
+                  onClick={handleActionClick}
+                >
+                  {btnText}
+                </button>
+              ) : (
+                // ACTIVE states: Normal CTA button
+                <button
+                  className={styles.notifyBtn + (submitted ? ' ' + styles.submitted : '')}
+                  style={{
+                    ...(submitted ? { background: '#4E81A8' } : {}),
+                    ...(!showEmailInput ? { width: '100%', maxWidth: '300px' } : {})
+                  }}
+                  onClick={showEmailInput ? handleNotify : handleActionClick}
+                  disabled={showEmailInput && (submitted || isProcessing)}
+                >
+                  {showEmailInput ? (isProcessing ? 'Joining' : btnText) : btnText}
+                </button>
+              )}
             </div>
             {/* 错误提示 */}
             {error && <div className={styles.errorTip}>{error}</div>}

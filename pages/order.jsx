@@ -113,6 +113,66 @@ export default function OrderPage({ initialRemaining }) {
   const [showScrollModal, setShowScrollModal] = useState(false);
   const [hasTriggeredScrollModal, setHasTriggeredScrollModal] = useState(false); // Ref equivalent
 
+  /* VIP Modal State Machine */
+  // States: ACTIVE_1 | FINAL_EXPIRED
+  const [vipModalState, setVipModalState] = useState('ACTIVE_1');
+
+  // Initialize state from sessionStorage on mount
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const savedState = sessionStorage.getItem('vip_modal_state');
+    if (savedState) {
+      setVipModalState(savedState);
+    }
+  }, []);
+
+  // Persist state to sessionStorage
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    sessionStorage.setItem('vip_modal_state', vipModalState);
+  }, [vipModalState]);
+
+  // Handle countdown expiration - go directly to FINAL_EXPIRED
+  const handleCountdownExpire = () => {
+    if (vipModalState === 'ACTIVE_1') {
+      setVipModalState('FINAL_EXPIRED');
+    }
+  };
+
+  // Get modal props based on current state
+  const getVipModalProps = () => {
+    switch (vipModalState) {
+      case 'ACTIVE_1':
+        return {
+          countdownMinutes: 3,
+          showTryAgain: false,
+          isExpired: false,
+          customTitle: '🎉 $50 VIP Discount Unlocked',
+          customBody: null, // Use default countdown body
+          customCtaText: 'Lock VIP Bundle — $149 (Reg. $199)',
+        };
+      case 'FINAL_EXPIRED':
+        return {
+          countdownMinutes: 0,
+          showTryAgain: false,
+          isExpired: true,
+          customTitle: '❌ Offer No Longer Available',
+          customBody: <>This VIP discount offer has ended. You can still purchase at regular price.</>,
+          customCtaText: 'Order Now',
+        };
+      default:
+        return {
+          countdownMinutes: 3,
+          showTryAgain: false,
+          isExpired: false,
+          customTitle: '🎉 $50 VIP Discount Unlocked',
+          customBody: null,
+          customCtaText: 'Lock VIP Bundle — $149 (Reg. $199)',
+        };
+    }
+  };
+
+
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
@@ -1986,24 +2046,25 @@ export default function OrderPage({ initialRemaining }) {
 
       {/* Scroll Triggered PopModal */}
       {
-        showScrollModal && (
-          <PopModal
-            onClose={() => setShowScrollModal(false)}
-            isVip={true}
-            source="pop-modal"
-            customTitle="Join VIP Families ❤️"
-            customBody={
-              <>
-                Reserve your <span>$149 VIP price</span> with a <span>$5 refundable deposit</span>
-                <br />
-                ✅ Trusted by <span>400+ families</span>
-              </>
-            }
-            customCtaText="Pre-Order Now for $5"
-            showEmailInput={false}
-            onAction={() => handleFastCheckout('pop-modal')}
-          />
-        )
+        showScrollModal && (() => {
+          const modalProps = getVipModalProps();
+          return (
+            <PopModal
+              onClose={() => setShowScrollModal(false)}
+              isVip={true}
+              source="pop-modal"
+              customTitle={modalProps.customTitle}
+              customBody={modalProps.customBody}
+              countdownMinutes={modalProps.countdownMinutes}
+              customCtaText={modalProps.customCtaText}
+              showEmailInput={false}
+              onAction={() => handleFastCheckout('pop-modal')}
+              onCountdownExpire={handleCountdownExpire}
+              showTryAgain={modalProps.showTryAgain}
+              isExpired={modalProps.isExpired}
+            />
+          );
+        })()
       }
     </>
   );
