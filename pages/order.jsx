@@ -232,7 +232,7 @@ export default function OrderPage({ initialRemaining }) {
       },
       ctaButton: 'Order Now',
       learnMoreButton: 'Learn More',
-      trustNote: '✔ Fully Refundable $5 Deposit · ✔ Safe Checkout',
+      trustNote: '✔ Free Shipping · ✔ Fully Refundable · ✔ Safe Checkout',
       features: {
         title: "Unicorn Blocks VIP Bundle",
         items: [
@@ -341,7 +341,7 @@ export default function OrderPage({ initialRemaining }) {
       },
       ctaButton: 'Reserve My VIP Price',
       learnMoreButton: '了解更多',
-      trustNote: '✔ $5订金可随时全额退款 · ✔ 安全支付',
+      trustNote: '✔ 包邮 · ✔ 可随时全额退款 · ✔ 安全支付',
       features: {
         title: '独角兽积木：Sparky首次冒险',
         items: [

@@ -72,11 +72,16 @@ exports.handler = async (event, context) => {
             cancelUrl = `${origin}/order`;
         }
 
+        // Dynamic submit message based on source page
+        const submitMessage = sourcePage === 'order'
+            ? '🚚 FREE Shipping · 🌟 Trusted by 400+ families'
+            : '🌟 Trusted by 400+ families building creativity through play';
+
         const sessionConfig = {
             submit_type: 'pay',
             custom_text: {
                 submit: {
-                    message: '🌟 Trusted by 400+ families building creativity through play'
+                    message: submitMessage
                 }
             },
             mode: 'payment',
@@ -102,6 +107,31 @@ exports.handler = async (event, context) => {
             shipping_address_collection: {
                 allowed_countries: ['US'], // US only
             },
+            // Free shipping for order page
+            ...(sourcePage === 'order' && {
+                shipping_options: [
+                    {
+                        shipping_rate_data: {
+                            type: 'fixed_amount',
+                            fixed_amount: {
+                                amount: 0,
+                                currency: 'usd',
+                            },
+                            display_name: 'Free Shipping',
+                            delivery_estimate: {
+                                minimum: {
+                                    unit: 'business_day',
+                                    value: 5,
+                                },
+                                maximum: {
+                                    unit: 'business_day',
+                                    value: 10,
+                                },
+                            },
+                        },
+                    },
+                ],
+            }),
             // Automatic tax calculation (requires Tax Registration in Stripe Dashboard)
             automatic_tax: {
                 enabled: true,
