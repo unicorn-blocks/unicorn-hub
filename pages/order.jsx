@@ -158,8 +158,8 @@ export default function OrderPage({ initialRemaining }) {
           showTryAgain: false,
           isExpired: true,
           customTitle: '❌ Offer No Longer Available',
-          customBody: <>This VIP discount offer has ended. You can still purchase at regular price.</>,
-          customCtaText: 'Order Now',
+          customBody: <>Your $50 EXTRA discount has expired. You can still get VIP price <span style={{ color: '#DC2626', fontWeight: 700 }}>$199</span> (Reg. $249).</>,
+          customCtaText: 'Order Now — $199 (Reg. $249)',
         };
       default:
         return {
