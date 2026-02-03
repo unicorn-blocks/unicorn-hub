@@ -2073,7 +2073,7 @@ export default function OrderPage({ initialRemaining }) {
               countdownMinutes={modalProps.countdownMinutes}
               customCtaText={modalProps.customCtaText}
               showEmailInput={false}
-              onAction={() => handleFastCheckout('pop-modal', vipModalState === 'ACTIVE_1' ? 149 : 199)}
+              onAction={() => handleFastCheckout(vipModalState === 'ACTIVE_1' ? 'pop-modal-vip' : 'pop-modal-expired', vipModalState === 'ACTIVE_1' ? 149 : 199)}
               onCountdownExpire={handleCountdownExpire}
               showTryAgain={modalProps.showTryAgain}
               isExpired={modalProps.isExpired}
