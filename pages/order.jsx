@@ -142,35 +142,14 @@ export default function OrderPage({ initialRemaining }) {
 
   // Get modal props based on current state
   const getVipModalProps = () => {
-    switch (vipModalState) {
-      case 'ACTIVE_1':
-        return {
-          countdownMinutes: 3,
-          showTryAgain: false,
-          isExpired: false,
-          customTitle: '🎉 $50 VIP Discount Unlocked',
-          customBody: null, // Use default countdown body
-          customCtaText: 'Lock VIP Bundle — $149 (Reg. $199)',
-        };
-      case 'FINAL_EXPIRED':
-        return {
-          countdownMinutes: 0,
-          showTryAgain: false,
-          isExpired: true,
-          customTitle: '❌ Offer No Longer Available',
-          customBody: <>Your $50 EXTRA discount has expired. You can still get VIP price <span style={{ color: '#DC2626', fontWeight: 700 }}>$199</span> (Reg. $249).</>,
-          customCtaText: 'Order Now — $199 (Reg. $249)',
-        };
-      default:
-        return {
-          countdownMinutes: 3,
-          showTryAgain: false,
-          isExpired: false,
-          customTitle: '🎉 $50 VIP Discount Unlocked',
-          customBody: null,
-          customCtaText: 'Lock VIP Bundle — $149 (Reg. $199)',
-        };
-    }
+    return {
+      countdownMinutes: 0,
+      showTryAgain: false,
+      isExpired: false,
+      customTitle: 'Limited offering',
+      customBody: 'Order now and get 50 extra blocks for bigger, more creative builds.',
+      customCtaText: 'Order now',
+    };
   };
 
 
@@ -465,7 +444,7 @@ export default function OrderPage({ initialRemaining }) {
       <div className="background-gradient"></div>
 
       {/* 蓝色顶部条 */}
-      <BlueTopBar onCheckout={() => handleFastCheckout('top', 199)} isLoading={checkoutSource === 'top'} />
+      <BlueTopBar onCheckout={() => handleFastCheckout('top', 149)} isLoading={checkoutSource === 'top'} />
 
       {/* 使用导航组件 */}
       {/* <Navigation /> */}
@@ -533,8 +512,8 @@ export default function OrderPage({ initialRemaining }) {
                     {/* Price Block */}
                     <div className="price-block">
                       <div className="price-row">
-                        <span className="current-price">$199</span>
-                        <span className="original-price">$249</span>
+                        <span className="current-price">$149</span>
+                        <span className="original-price">$199</span>
                         <span className="save-badge">Save $50</span>
                       </div>
                     </div>
@@ -582,7 +561,7 @@ export default function OrderPage({ initialRemaining }) {
 
                       <button
                         className={`primary-button button-shine ${checkoutSource ? 'opacity-80 cursor-wait' : ''}`}
-                        onClick={() => handleFastCheckout('bottom', 199)}
+                        onClick={() => handleFastCheckout('bottom', 149)}
                         disabled={!!checkoutSource}
                       >
                         {checkoutSource === 'bottom' ? (
@@ -2073,7 +2052,7 @@ export default function OrderPage({ initialRemaining }) {
               countdownMinutes={modalProps.countdownMinutes}
               customCtaText={modalProps.customCtaText}
               showEmailInput={false}
-              onAction={() => handleFastCheckout(vipModalState === 'ACTIVE_1' ? 'pop-modal-vip' : 'pop-modal-expired', vipModalState === 'ACTIVE_1' ? 149 : 199)}
+              onAction={() => handleFastCheckout('pop-modal', 149)}
               onCountdownExpire={handleCountdownExpire}
               showTryAgain={modalProps.showTryAgain}
               isExpired={modalProps.isExpired}
