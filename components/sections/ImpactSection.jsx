@@ -7,29 +7,29 @@ export default function ImpactSection() {
 
   const translations = {
     en: {
-      heading: 'Creativity, Focus, and Real Thinking',
+      heading: 'Why parents are Choosing us',
       stats: [
         {
           title: '3× Creativity',
           titleLine1: '3×',
           titleLine2: 'Creativity',
-          description: 'Bolder shapes, more colors, richer builds.',
-          descriptionMobile: 'Bolder shapes, more colors, richer builds.'
+          description: <span>Kids <strong className="text-black font-bold">create their own builds and ideas</strong> — not just follow instructions.</span>,
+          descriptionMobile: <span>Kids <strong className="text-black font-bold">create their own builds and ideas</strong> — not just follow instructions.</span>
         },
         {
           title: '90 mins Deep Focus',
           titleLine1: '90',
           titleLine1Small: 'mins',
           titleLine2: 'Deep Focus',
-          description: 'Kids stay focused longer. You get a real coffee break.',
-          descriptionMobile: 'Kids stay focused longer. You get a real coffee break.'
+          description: <span>One toy that <strong className="text-black font-bold">keeps kids busy and focused</strong> — so you can actually <strong className="text-black font-bold">sit down and drink your coffee</strong>.</span>,
+          descriptionMobile: <span>One toy that <strong className="text-black font-bold">keeps kids busy and focused</strong> — so you can actually <strong className="text-black font-bold">sit down and drink your coffee</strong>.</span>
         },
         {
           title: 'STEAM Problem Solving',
           titleLine1: 'STEAM',
           titleLine2: 'Problem Solving',
-          description: 'Kids learn engineering by building and playing.',
-          descriptionMobile: 'Kids learn engineering by building and playing.'
+          description: <span>Kids learn by <strong className="text-black font-bold">trying, fixing, and building</strong> — not by watching another screen.</span>,
+          descriptionMobile: <span>Kids learn by <strong className="text-black font-bold">trying, fixing, and building</strong> — not by watching another screen.</span>
         }
       ]
     },

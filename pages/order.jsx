@@ -146,8 +146,8 @@ export default function OrderPage({ initialRemaining }) {
       countdownMinutes: 0,
       showTryAgain: false,
       isExpired: false,
-      customTitle: 'Limited offering',
-      customBody: 'Order now and get 50 extra blocks for bigger, more creative builds.',
+      customTitle: '⌛ Limited offering',
+      customBody: <span style={{ color: '#54545C' }}>Order now and get <strong style={{ color: '#9B8ED8', fontWeight: 800, fontSize: '1.2em' }}>50+ extra blocks</strong> for bigger, more creative builds.</span>,
       customCtaText: 'Order now',
     };
   };
@@ -174,21 +174,21 @@ export default function OrderPage({ initialRemaining }) {
     function handleScroll() {
       if (hasTriggered) return;
 
-      const impactSection = document.querySelector('.impact-section');
-      if (!impactSection) return;
-      const rect = impactSection.getBoundingClientRect();
+      const privacySection = document.querySelector('.privacy-section');
+      if (!privacySection) return;
+      const rect = privacySection.getBoundingClientRect();
       const windowHeight = window.innerHeight;
 
-      // Trigger when bottom of impact section enters viewport (or is scrolled past)
-      if (rect.bottom <= windowHeight) {
+      // Trigger when top of privacy section enters viewport (user has scrolled past Impact Section)
+      if (rect.top <= windowHeight) {
         triggerModal();
       }
     }
 
-    // 30 second timer trigger
+    // 60 second timer trigger
     const timeoutId = setTimeout(() => {
       triggerModal();
-    }, 30000); // 30 seconds
+    }, 60000); // 60 seconds
 
     window.addEventListener('scroll', handleScroll);
     return () => {
@@ -266,18 +266,12 @@ export default function OrderPage({ initialRemaining }) {
             q: 'Is the toy safe for children?',
             a: '**Absolutely!** Our building blocks include a camera that fosters creativity. However, it is **disabled by default and requires explicit parental consent through our app to activate**. You own all data, with the ability to view, manage, and permanently delete it at any time.'
           },
-          {
-            q: 'When will I receive the product?',
-            a: 'We expect Unicorn Blocks to ship around April 2026. Before shipping, we’ll email you to confirm. If it’s not the right time, you can cancel for a full refund — no questions asked.'
-          },
+
           {
             q: 'Can multiple children share one set?',
             a: 'Yes, they can share! For the best experience, we recommend one set per child. Each Sparky becomes a personal companion, and having their own set allows every child to enjoy a fully personalized creative journey.'
           },
-          {
-            q: 'When will I pay the remaining amount?',
-            a: 'We will send you a friendly email reminder about **14 days before shipping**. You can then choose to **pay the remaining $145 manually**, or opt for automatic payment for a hands-free experience.'
-          },
+
 
           {
             q: 'Is this screen-free?',

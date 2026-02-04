@@ -28,8 +28,8 @@ export default function OrderStepsSection({ className = '', style = {} }) {
 
   const translations = {
     en: {
-      heading: 'Spark Creativity Through Adventure',
-      headingLine2: 'And Let Them Shine',
+      heading: 'Stories guide kids to',
+      headingLine2: 'create-step by step',
       subheading: 'With Sparky, Kids Create, Parents Relax.',
     },
     zh: {
@@ -55,9 +55,9 @@ export default function OrderStepsSection({ className = '', style = {} }) {
         <div className="section-heading text-center">
           <h2 style={{ textAlign: 'center', margin: '0 auto', width: '100%' }}>
             <span className="steps-heading-line1">{copy.heading}</span>
-            <span className="steps-heading-line2 hidden md:block">{copy.headingLine2}</span>
+            <span className="steps-heading-line2">{copy.headingLine2}</span>
           </h2>
-          <p>{copy.subheading}</p>
+
         </div>
 
         {/* 4 Steps Grid with Images (1:1) */}
@@ -107,7 +107,7 @@ export default function OrderStepsSection({ className = '', style = {} }) {
         <div className="video-section">
           <div className="video-wrapper">
             <div className="video-text">
-              <h3>Story Inspires Creative Building</h3>
+              <h3>How kids are building with stories</h3>
             </div>
             <div className="video-frame" onClick={togglePlay}>
               <video
@@ -195,7 +195,7 @@ export default function OrderStepsSection({ className = '', style = {} }) {
 
         @media (max-width: 767px) {
           .steps-heading-line2 {
-            display: none !important;
+            display: block;
           }
         }
 
@@ -210,7 +210,7 @@ export default function OrderStepsSection({ className = '', style = {} }) {
             display: inline;
           }
           .steps-heading-line2 {
-            display: inline-block; 
+            display: inline; 
           }
         }
 

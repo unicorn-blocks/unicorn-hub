@@ -54,9 +54,9 @@ exports.handler = async (event, context) => {
             // Order page: unified product name
             productName = 'Unicorn Blocks - VIP Price';
             if (amount >= 199) {
-                productDescription = 'Unicorn Blocks Bundle · Regular Price $199';
+                productDescription = 'Unicorn Blocks Bundle · Regular Price $199 · 50+ extra blocks (limited time)';
             } else if (amount >= 149) {
-                productDescription = 'Unicorn Blocks Bundle · Special Price $149 (Regular Price $199)';
+                productDescription = 'Unicorn Blocks Bundle · Special Price $149 (Regular Price $199) · 50+ extra blocks (limited time)';
             }
         } else if (sourcePage === 'preorder') {
             productName = 'Pre-order Unicorn Blocks - Fully Refundable';
@@ -74,8 +74,8 @@ exports.handler = async (event, context) => {
 
         // Dynamic submit message based on source page
         const submitMessage = sourcePage === 'order'
-            ? '🚚 FREE Shipping · 🌟 Trusted by 400+ families'
-            : '🌟 Trusted by 400+ families building creativity through play';
+            ? '🌟 400+ families loved · 🚚 FREE Shipping · 🎁 50+ extra blocks'
+            : '🌟 Loved by 400+ families building creativity through play';
 
         const sessionConfig = {
             submit_type: 'pay',
