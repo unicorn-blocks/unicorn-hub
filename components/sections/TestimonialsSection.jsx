@@ -73,7 +73,7 @@ export default function TestimonialsSection() {
               return (
                 <div className={`family-card ${block.palette} ${isHiddenOnPC ? 'hidden-pc' : ''}`} key={block.id}>
                   <div className="family-quote-icon">
-                    <img src="/assets/ima/逗号.svg" alt="quote" className="quote-icon" />
+                    <img src="/assets/ima/quote-icon.svg" alt="quote" className="quote-icon" />
                   </div>
                   <div className="family-quote">
                     <p>{block.quote}</p>

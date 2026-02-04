@@ -3,132 +3,132 @@ import Image from 'next/image';
 import { useLanguage } from '../../context/LanguageContext';
 
 export default function ImpactSection() {
-    const { language } = useLanguage();
+  const { language } = useLanguage();
 
-    const translations = {
-        en: {
-            heading: 'Creativity, Focus, and Real Thinking',
-            stats: [
-                {
-                    title: '3× Creativity',
-                    titleLine1: '3×',
-                    titleLine2: 'Creativity',
-                    description: 'Bolder shapes, more colors, richer builds.',
-                    descriptionMobile: 'Bolder shapes, more colors, richer builds.'
-                },
-                {
-                    title: '90 mins Deep Focus',
-                    titleLine1: '90',
-                    titleLine1Small: 'mins',
-                    titleLine2: 'Deep Focus',
-                    description: 'Kids stay focused longer. You get a real coffee break.',
-                    descriptionMobile: 'Kids stay focused longer. You get a real coffee break.'
-                },
-                {
-                    title: 'STEAM Problem Solving',
-                    titleLine1: 'STEAM',
-                    titleLine2: 'Problem Solving',
-                    description: 'Kids learn engineering by building and playing.',
-                    descriptionMobile: 'Kids learn engineering by building and playing.'
-                }
-            ]
+  const translations = {
+    en: {
+      heading: 'Creativity, Focus, and Real Thinking',
+      stats: [
+        {
+          title: '3× Creativity',
+          titleLine1: '3×',
+          titleLine2: 'Creativity',
+          description: 'Bolder shapes, more colors, richer builds.',
+          descriptionMobile: 'Bolder shapes, more colors, richer builds.'
         },
-        zh: {
-            heading: '创造力、专注力与真实思考',
-            stats: [
-                {
-                    title: '3倍创造力',
-                    titleLine1: '3倍',
-                    titleLine2: '创造力',
-                    description: '更大胆的造型，更丰富的色彩，更复杂的搭建。',
-                    descriptionMobile: '更大胆的造型，更丰富的色彩，更复杂的搭建。'
-                },
-                {
-                    title: '90分钟深度专注',
-                    titleLine1: '90',
-                    titleLine1Small: '分钟',
-                    titleLine2: '深度专注',
-                    description: '孩子专注玩耍，家长享受真正的咖啡时间。',
-                    descriptionMobile: '孩子专注玩耍，家长享受真正的咖啡时间。'
-                },
-                {
-                    title: 'STEAM 解决问题',
-                    titleLine1: 'STEAM',
-                    titleLine2: '解决问题',
-                    description: '孩子在搭建和玩耍中学习工程思维。',
-                    descriptionMobile: '孩子在搭建和玩耍中学习工程思维。'
-                }
-            ]
+        {
+          title: '90 mins Deep Focus',
+          titleLine1: '90',
+          titleLine1Small: 'mins',
+          titleLine2: 'Deep Focus',
+          description: 'Kids stay focused longer. You get a real coffee break.',
+          descriptionMobile: 'Kids stay focused longer. You get a real coffee break.'
+        },
+        {
+          title: 'STEAM Problem Solving',
+          titleLine1: 'STEAM',
+          titleLine2: 'Problem Solving',
+          description: 'Kids learn engineering by building and playing.',
+          descriptionMobile: 'Kids learn engineering by building and playing.'
         }
-    };
+      ]
+    },
+    zh: {
+      heading: '创造力、专注力与真实思考',
+      stats: [
+        {
+          title: '3倍创造力',
+          titleLine1: '3倍',
+          titleLine2: '创造力',
+          description: '更大胆的造型，更丰富的色彩，更复杂的搭建。',
+          descriptionMobile: '更大胆的造型，更丰富的色彩，更复杂的搭建。'
+        },
+        {
+          title: '90分钟深度专注',
+          titleLine1: '90',
+          titleLine1Small: '分钟',
+          titleLine2: '深度专注',
+          description: '孩子专注玩耍，家长享受真正的咖啡时间。',
+          descriptionMobile: '孩子专注玩耍，家长享受真正的咖啡时间。'
+        },
+        {
+          title: 'STEAM 解决问题',
+          titleLine1: 'STEAM',
+          titleLine2: '解决问题',
+          description: '孩子在搭建和玩耍中学习工程思维。',
+          descriptionMobile: '孩子在搭建和玩耍中学习工程思维。'
+        }
+      ]
+    }
+  };
 
-    const copy = translations[language] || translations.en;
+  const copy = translations[language] || translations.en;
 
-    return (
-        <section className="impact-section">
-            <div className="impact-bg-wrapper">
-                <div className="impact-bg-image impact-bg-bottom" aria-hidden="true">
-                    <img src="/assets/ima/Vector_17_927.png" alt="" className="impact-bg-image-item" />
-                </div>
-                <div className="impact-bg-image impact-bg-top" aria-hidden="true">
-                    <img src="/assets/ima/Vector_17_928.png" alt="" className="impact-bg-image-item" />
-                </div>
+  return (
+    <section className="impact-section">
+      <div className="impact-bg-wrapper">
+        <div className="impact-bg-image impact-bg-bottom" aria-hidden="true">
+          <img src="/assets/ima/Vector_17_927.png" alt="" className="impact-bg-image-item" />
+        </div>
+        <div className="impact-bg-image impact-bg-top" aria-hidden="true">
+          <img src="/assets/ima/Vector_17_928.png" alt="" className="impact-bg-image-item" />
+        </div>
+      </div>
+      <div className="content-container">
+        <h2>
+          <span>{copy.heading}</span>
+        </h2>
+        <div className="impact-grid">
+          {copy.stats.map((stat, index) => (
+            <div className="impact-card" key={stat.title}>
+              <div className="impact-icon-wrapper">
+                {/* 移动端图片 */}
+                <Image
+                  src={index === 0 ? '/assets/ima/section6-1.svg' : index === 1 ? '/assets/ima/section6-2.svg' : '/assets/ima/section6-3.svg'}
+                  alt=""
+                  width={64}
+                  height={64}
+                  className="impact-icon md:hidden"
+                />
+                {/* PC端图片 */}
+                <Image
+                  src={index === 0 ? '/assets/ima/impact-icon-1.svg' : index === 1 ? '/assets/ima/impact-icon-2.svg' : '/assets/ima/impact-icon-3.svg'}
+                  alt=""
+                  width={64}
+                  height={64}
+                  className="impact-icon hidden md:block"
+                />
+              </div>
+              {/* PC端标题 */}
+              <h3 className="hidden md:block">{stat.title}</h3>
+              {/* 移动端标题 */}
+              <h3 className="impact-card-title-mobile md:hidden">
+                <span className="impact-title-line1">
+                  {stat.titleLine1}
+                  {stat.titleLine1Small && <span className="impact-title-small">{stat.titleLine1Small}</span>}
+                </span>
+                <span className="impact-title-line2">{stat.titleLine2}</span>
+              </h3>
+              {/* PC端描述 */}
+              <p className="hidden md:block">{stat.description}</p>
+              {/* 移动端描述 */}
+              <p className="md:hidden">
+                {Array.isArray(stat.descriptionMobile)
+                  ? stat.descriptionMobile.map((line, i) => (
+                    <span key={i}>
+                      {line}
+                      {i < stat.descriptionMobile.length - 1 && <br />}
+                    </span>
+                  ))
+                  : stat.descriptionMobile
+                }
+              </p>
             </div>
-            <div className="content-container">
-                <h2>
-                    <span>{copy.heading}</span>
-                </h2>
-                <div className="impact-grid">
-                    {copy.stats.map((stat, index) => (
-                        <div className="impact-card" key={stat.title}>
-                            <div className="impact-icon-wrapper">
-                                {/* 移动端图片 */}
-                                <Image
-                                    src={index === 0 ? '/assets/ima/section6-1.svg' : index === 1 ? '/assets/ima/section6-2.svg' : '/assets/ima/section6-3.svg'}
-                                    alt=""
-                                    width={64}
-                                    height={64}
-                                    className="impact-icon md:hidden"
-                                />
-                                {/* PC端图片 */}
-                                <Image
-                                    src={index === 0 ? '/assets/ima/svg 5.svg' : index === 1 ? '/assets/ima/svg 6.svg' : '/assets/ima/svg 7.svg'}
-                                    alt=""
-                                    width={64}
-                                    height={64}
-                                    className="impact-icon hidden md:block"
-                                />
-                            </div>
-                            {/* PC端标题 */}
-                            <h3 className="hidden md:block">{stat.title}</h3>
-                            {/* 移动端标题 */}
-                            <h3 className="impact-card-title-mobile md:hidden">
-                                <span className="impact-title-line1">
-                                    {stat.titleLine1}
-                                    {stat.titleLine1Small && <span className="impact-title-small">{stat.titleLine1Small}</span>}
-                                </span>
-                                <span className="impact-title-line2">{stat.titleLine2}</span>
-                            </h3>
-                            {/* PC端描述 */}
-                            <p className="hidden md:block">{stat.description}</p>
-                            {/* 移动端描述 */}
-                            <p className="md:hidden">
-                                {Array.isArray(stat.descriptionMobile)
-                                    ? stat.descriptionMobile.map((line, i) => (
-                                        <span key={i}>
-                                            {line}
-                                            {i < stat.descriptionMobile.length - 1 && <br />}
-                                        </span>
-                                    ))
-                                    : stat.descriptionMobile
-                                }
-                            </p>
-                        </div>
-                    ))}
-                </div>
-            </div>
+          ))}
+        </div>
+      </div>
 
-            <style jsx>{`
+      <style jsx>{`
         .content-container {
           width: 100%;
           max-width: 1200px;
@@ -346,6 +346,6 @@ export default function ImpactSection() {
           }
         }
       `}</style>
-        </section>
-    );
+    </section>
+  );
 }
