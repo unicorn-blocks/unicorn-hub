@@ -102,13 +102,12 @@ exports.handler = async (event, context) => {
             ],
             success_url: `${origin}/payment/success?session_id={CHECKOUT_SESSION_ID}`,
             cancel_url: cancelUrl,
-            // Address collection
-            billing_address_collection: 'required',
-            shipping_address_collection: {
-                allowed_countries: ['US'], // US only
-            },
-            // Free shipping for order page
-            ...(sourcePage === 'order' && {
+            // Address & Tax: Only for Full Order (sourcePage === 'order')
+            ...(sourcePage === 'order' ? {
+                billing_address_collection: 'required',
+                shipping_address_collection: {
+                    allowed_countries: ['US'],
+                },
                 shipping_options: [
                     {
                         shipping_rate_data: {
@@ -131,11 +130,14 @@ exports.handler = async (event, context) => {
                         },
                     },
                 ],
+                automatic_tax: {
+                    enabled: true,
+                },
+            } : {
+                // Preorder / Reserve ($5 deposit) -> Simple checkout without address/tax
+                billing_address_collection: 'auto',
+                automatic_tax: { enabled: false },
             }),
-            // Automatic tax calculation (requires Tax Registration in Stripe Dashboard)
-            automatic_tax: {
-                enabled: true,
-            },
             client_reference_id: leadId || email || 'anonymous',
             metadata: {
                 leadId: leadId || '',
