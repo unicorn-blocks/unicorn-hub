@@ -113,6 +113,7 @@ export default function OrderStepsSection({ className = '', style = {} }) {
               <video
                 ref={videoRef}
                 src="/assets/steps/Steps.mp4"
+                poster="/assets/reserve-vip-spot/4.webp"
                 loop
                 muted
                 playsInline
