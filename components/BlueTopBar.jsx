@@ -65,7 +65,7 @@ export default function BlueTopBar({ onCheckout, isLoading }) {
           </button>
 
 
-          {isReservePage ? (
+          {isReservePage && router.pathname !== '/order' ? (
             <button
               className="blue-top-bar-btn reserve-btn"
               onClick={handleCheckoutClick}
@@ -79,9 +79,9 @@ export default function BlueTopBar({ onCheckout, isLoading }) {
                   </svg>
                   Processing...
                 </span>
-              ) : (router.pathname === '/order' ? 'Order Now' : (router.pathname === '/preorder' ? 'Pre-Order Now for $5' : 'Reserve My VIP Price'))}
+              ) : (router.pathname === '/preorder' ? 'Pre-Order Now for $5' : 'Reserve My VIP Price')}
             </button>
-          ) : (
+          ) : !isReservePage && (
             <button
               className="blue-top-bar-btn"
               onClick={() => setShowModal(true)}
