@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useCart } from '../context/CartContext';
 import Head from 'next/head';
 import Link from 'next/link';
 import Navigation from '../components/layout/Navigation';
@@ -6,7 +7,7 @@ import Footer from '../components/layout/Footer';
 import BlueTopBar from '../components/BlueTopBar';
 import ProductCarousel from '../components/ProductCarousel';
 import { useLanguage } from '../context/LanguageContext';
-import { trackInitiateCheckout } from '../lib/fbq';
+import { trackInitiateCheckout, trackAddToCart } from '../lib/fbq';
 import TestimonialsSection from '../components/sections/TestimonialsSection';
 import ImpactSection from '../components/sections/ImpactSection';
 import OrderStepsSection from '../components/sections/OrderStepsSection';
@@ -50,6 +51,7 @@ export default function OrderPage({ initialRemaining }) {
   const { language } = useLanguage();
   const [openFaq, setOpenFaq] = useState(null);
   const [checkoutSource, setCheckoutSource] = useState(null);
+  const { addToCart } = useCart();
 
 
   // Scarcity state: Initialize with SSR value (instant display, no spinner)
@@ -148,9 +150,12 @@ export default function OrderPage({ initialRemaining }) {
       isExpired: false,
       customTitle: '⌛ Limited offering',
       customBody: <span style={{ color: '#54545C' }}>Order now and get <strong style={{ color: '#9B8ED8', fontWeight: 800, fontSize: '1.2em' }}>50+ extra blocks</strong> for bigger, more creative builds.</span>,
-      customCtaText: 'Order now',
+      customCtaText: 'Add to Cart',
     };
   };
+
+
+
 
 
   useEffect(() => {
@@ -553,8 +558,28 @@ export default function OrderPage({ initialRemaining }) {
                         Only 3 VIP Bundles Remaining
                       </div>
 
+                      {/* Add to Cart Button (Lighter Color #F7AEBF) - Primary on Mobile */}
                       <button
-                        className={`primary-button button-shine ${checkoutSource ? 'opacity-80 cursor-wait' : ''}`}
+                        className="w-full bg-[#F7AEBF] text-white font-medium py-3 rounded-xl shadow-sm transition-all text-sm sm:text-base border-0 outline-none mb-3 button-shine cart-btn"
+                        onClick={() => {
+                          trackAddToCart({
+                            content_name: 'Unicorn Blocks VIP Bundle',
+                            source: 'bottom'
+                          });
+                          addToCart({
+                            id: 'unicorn-blocks-vip',
+                            name: 'Unicorn Blocks VIP Bundle',
+                            price: 149,
+                            image: '/assets/checkout/sparky.webp'
+                          })
+                        }}
+                      >
+                        Add to Cart
+                      </button>
+
+                      {/* Order Now Button (Darker Color #9b90da) - Hidden on Mobile */}
+                      <button
+                        className={`primary-button button-shine hidden md:block ${checkoutSource ? 'opacity-80 cursor-wait' : ''}`}
                         onClick={() => handleFastCheckout('bottom', 149)}
                         disabled={!!checkoutSource}
                       >
@@ -679,6 +704,11 @@ export default function OrderPage({ initialRemaining }) {
       <Footer showEmailInput={false} />
 
       <style jsx global>{`
+        /* Cart Button Hover Effect */
+        .cart-btn:hover {
+          background: linear-gradient(90deg, #F7AEBF 0%, #9b90da 100%) !important;
+        }
+        
         /* ===== 基础样式 ===== */
         body {
           font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
@@ -1270,7 +1300,7 @@ export default function OrderPage({ initialRemaining }) {
         /* ===== 行动按钮 ===== */
         .primary-button {
           width: 100%;
-          background: linear-gradient(90deg, #F7AEBF 0%, #9b90da 100%);
+          background: #9b90da;
           color: white;
           font-weight: 500;
           padding: 0.75rem 1rem; /* Reduced padding for height */
@@ -2046,7 +2076,19 @@ export default function OrderPage({ initialRemaining }) {
               countdownMinutes={modalProps.countdownMinutes}
               customCtaText={modalProps.customCtaText}
               showEmailInput={false}
-              onAction={() => handleFastCheckout('pop-modal', 149)}
+              onAction={() => {
+                trackAddToCart({
+                  content_name: 'Unicorn Blocks VIP Bundle',
+                  source: 'pop-modal'
+                });
+                addToCart({
+                  id: 'unicorn-blocks-vip',
+                  name: 'Unicorn Blocks VIP Bundle',
+                  price: 149,
+                  image: '/assets/checkout/sparky.webp'
+                });
+                setShowScrollModal(false);
+              }}
               onCountdownExpire={handleCountdownExpire}
               showTryAgain={modalProps.showTryAgain}
               isExpired={modalProps.isExpired}

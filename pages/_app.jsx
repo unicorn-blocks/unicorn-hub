@@ -3,6 +3,8 @@ import GlobalEmailNotifyBox from '../components/GlobalEmailNotifyBox';
 import FloatingJoinButton from '../components/FloatingJoinButton';
 import Head from 'next/head';
 import { LanguageProvider } from '../context/LanguageContext';
+import { CartProvider } from '../context/CartContext';
+import CartSidebar from '../components/CartSidebar';
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import * as fbqLib from '../lib/fbq';
@@ -33,12 +35,15 @@ function MyApp({ Component, pageProps }) {
 
   return (
     <LanguageProvider>
-      <Head>
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-      </Head>
-      <Component {...pageProps} />
-      {shouldShowGlobalEmailBox && <GlobalEmailNotifyBox />}
-      {shouldShowFloatingButton && <FloatingJoinButton />}
+      <CartProvider>
+        <Head>
+          <meta name="viewport" content="width=device-width, initial-scale=1" />
+        </Head>
+        <Component {...pageProps} />
+        <CartSidebar />
+        {shouldShowGlobalEmailBox && <GlobalEmailNotifyBox />}
+        {shouldShowFloatingButton && <FloatingJoinButton />}
+      </CartProvider>
     </LanguageProvider>
   );
 }
