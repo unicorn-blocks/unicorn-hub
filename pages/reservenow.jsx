@@ -148,9 +148,18 @@ export default function OrderPage({ initialRemaining }) {
       countdownMinutes: 0,
       showTryAgain: false,
       isExpired: false,
-      customTitle: '⌛ Limited offering',
-      customBody: <span style={{ color: '#54545C' }}>Order now and get <strong style={{ color: '#9B8ED8', fontWeight: 800, fontSize: '1.2em' }}>50+ extra blocks</strong> for bigger, more creative builds.</span>,
-      customCtaText: 'Add to Cart',
+      customTitle: 'Join VIP Families ❤️',
+      customBody: (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '1rem', color: '#374151' }}>
+          <div>
+            Reserve your <span style={{ color: '#9b90da', fontWeight: 700 }}>$149 VIP price</span> <span style={{ color: '#9CA3AF', textDecoration: 'line-through', fontSize: '0.9em', fontWeight: 400 }}>(Reg. $199)</span> with a <span style={{ color: '#9b90da', fontWeight: 700 }}>$2 refundable deposit</span>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontWeight: 400, fontSize: '0.85rem', color: '#6B7280', marginTop: '4px' }}>
+            <span style={{ color: '#10B981', fontSize: '0.9rem' }}>✅</span> Trusted by 400+ families
+          </div>
+        </div>
+      ),
+      customCtaText: 'Reserve Discount for $2',
     };
   };
 
@@ -216,7 +225,7 @@ export default function OrderPage({ initialRemaining }) {
       },
       ctaButton: 'Order Now',
       learnMoreButton: 'Learn More',
-      trustNote: '✔ Free Shipping · ✔ Fully Refundable · ✔ Safe Checkout',
+      trustNote: '✔ Fully Refundable · ✔ Safe Checkout Powered by Stripe',
       features: {
         title: "Unicorn Blocks VIP Bundle",
         items: [
@@ -319,7 +328,7 @@ export default function OrderPage({ initialRemaining }) {
       },
       ctaButton: 'Reserve My VIP Price',
       learnMoreButton: '了解更多',
-      trustNote: '✔ 包邮 · ✔ 可随时全额退款 · ✔ 安全支付',
+      trustNote: '✔ 可随时全额退款 · ✔ 通过 Stripe 安全支付',
       features: {
         title: '独角兽积木：Sparky首次冒险',
         items: [
@@ -443,7 +452,7 @@ export default function OrderPage({ initialRemaining }) {
       <div className="background-gradient"></div>
 
       {/* 蓝色顶部条 */}
-      <BlueTopBar onCheckout={() => handleFastCheckout('top', 149)} isLoading={checkoutSource === 'top'} />
+      <BlueTopBar onCheckout={() => handleFastCheckout('top', 149)} isLoading={checkoutSource === 'top'} showCart={false} />
 
       {/* 使用导航组件 */}
       {/* <Navigation /> */}
@@ -552,34 +561,16 @@ export default function OrderPage({ initialRemaining }) {
                   {/* 行动按钮 */}
                   <div className="card-section">
                     <div className="mobile-sticky-wrapper">
-                      {/* Stock Indicator - Moved above button */}
-                      <div className="flex items-center justify-center gap-1.5 mb-1 text-xs font-medium text-[#DC2626] bg-white/95 backdrop-blur-sm px-3 py-1 rounded-full shadow-sm w-fit mx-auto">
+                      {/* Stock Indicator - Moved above button - HIDDEN */}
+                      <div className="hidden flex items-center justify-center gap-1.5 mb-1 text-xs font-medium text-[#DC2626] bg-white/95 backdrop-blur-sm px-3 py-1 rounded-full shadow-sm w-fit mx-auto">
                         <span className="w-1.5 h-1.5 rounded-full bg-[#DC2626]"></span>
                         Only 3 VIP Bundles Remaining
                       </div>
 
-                      {/* Add to Cart Button (Lighter Color #F7AEBF) - Primary on Mobile */}
+                      {/* Order Now Button - Moved to Top & Visible on Mobile */}
                       <button
-                        className="w-full bg-[#F7AEBF] text-white font-medium py-3 rounded-xl shadow-sm transition-all text-sm sm:text-base border-0 outline-none mb-3 button-shine cart-btn"
-                        onClick={() => {
-                          trackAddToCart({
-                            content_name: 'Unicorn Blocks VIP Bundle',
-                            source: 'bottom'
-                          });
-                          addToCart({
-                            id: 'unicorn-blocks-vip',
-                            name: 'Unicorn Blocks VIP Bundle',
-                            price: 149,
-                            image: '/assets/checkout/sparky.webp'
-                          })
-                        }}
-                      >
-                        Add to Cart
-                      </button>
-
-                      {/* Order Now Button (Darker Color #9b90da) - Hidden on Mobile */}
-                      <button
-                        className={`primary-button button-shine hidden md:block ${checkoutSource ? 'opacity-80 cursor-wait' : ''}`}
+                        className={`w-full primary-button button-shine mb-2 ${checkoutSource ? 'opacity-80 cursor-wait' : ''}`}
+                        style={{ background: 'linear-gradient(90deg, #F7AEBF 0%, #9b90da 100%)', border: 'none' }}
                         onClick={() => handleFastCheckout('bottom', 149)}
                         disabled={!!checkoutSource}
                       >
@@ -593,14 +584,31 @@ export default function OrderPage({ initialRemaining }) {
                           </span>
                         ) : (
                           <div className="flex items-center justify-center gap-1 leading-tight text-sm sm:text-base">
-                            <span className="font-bold">Order Now</span>
+                            <span className="font-bold">Reserve Discount for $2</span>
                           </div>
                         )}
                       </button>
+
+                      {/* No Thanks Button - Styled with gray border, white bg, black text, no pixel tracking */}
+                      <button
+                        className="w-full bg-white text-black font-medium py-2 rounded-xl shadow-sm hover:bg-gray-50 transition-colors text-sm sm:text-base outline-none"
+                        style={{ border: '1px solid #D1D5DB' }}
+                        onClick={() => {
+                          // Removed trackAddToCart pixel event as requested
+                          addToCart({
+                            id: 'unicorn-blocks-vip',
+                            name: 'Unicorn Blocks VIP Bundle',
+                            price: 149,
+                            image: '/assets/checkout/sparky.webp'
+                          })
+                        }}
+                      >
+                        No Thanks
+                      </button>
                     </div>
 
-                    {/* 信任提示 - 绝对定位 */}
-                    <div className="trust-indicators">
+                    {/* 信任提示 */}
+                    <div className="trust-indicators flex flex-col items-center">
                       <div className="trust-item">{t.trustNote}</div>
                     </div>
                   </div>
@@ -710,19 +718,6 @@ export default function OrderPage({ initialRemaining }) {
         }
         
         /* ===== 基础样式 ===== */
-        html, body {
-          overflow-x: hidden !important;
-          width: 100% !important;
-          max-width: 100% !important;
-        }
-        
-        /* Main container overflow fix */
-        .min-h-screen {
-          width: 100% !important;
-          max-width: 100vw !important;
-          overflow-x: hidden !important;
-        }
-        
         body {
           font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
           min-height: 100vh;
@@ -2069,37 +2064,92 @@ export default function OrderPage({ initialRemaining }) {
           .space-y-3 {
             padding: 0 !important;
           }
-          /* Order page: Prevent order-steps-section from independent scrolling */
-          .order-steps-section {
-            overflow: visible !important;
+
+          /* CRITICAL: Fix for small screens (Samsung S7, iPhone SE) */
+          /* Prevent any element from causing horizontal scroll or empty space */
+          html, body {
+            overflow-x: hidden;
+            width: 100%;
+            max-width: 100%;
           }
-        }
-        
-        /* Global order page fixes (outside media query) */
-        .order-steps-section {
-          overflow: visible !important;
-        }
-        
-        
-        /* ROBUST FIX for overflow (iPhone SE, Galaxy) - COMPONENT OVERRIDES */
-        @media (max-width: 520px) {
-          .buy-container, 
-          .pricing-block-wrapper, 
-          .product-section-wrapper, 
-          .footer-responsive,
-          .features-card,
-          .impact-section,
-          .order-steps-section,
-          .family-section,
-          .content-container {
-            width: 100% !important;
-            max-width: 100vw !important;
-            box-sizing: border-box !important;
-            margin-left: 0 !important;
-            margin-right: 0 !important;
-            padding-left: 16px !important;
-            padding-right: 16px !important;
-            overflow: visible !important; /* Prevent independent section scrolling */
+
+          .order-page {
+             width: 100%;
+             max-width: 100vw;
+             overflow-x: hidden;
+          }
+
+          /* ROBUST FIX for overflow (iPhone SE, Galaxy) - COMPONENT OVERRIDES */
+          @media (max-width: 520px) {
+            :global(.buy-container), 
+            :global(.pricing-block-wrapper), 
+            :global(.product-section-wrapper), 
+            :global(.footer-responsive),
+            :global(.features-card),
+            :global(.impact-section),
+            :global(.order-steps-section),
+            :global(.family-section),
+            :global(.content-container) {
+              width: 100% !important;
+              max-width: 100vw !important;
+              box-sizing: border-box !important;
+              margin-left: 0 !important;
+              margin-right: 0 !important;
+              padding-left: 16px !important;
+              padding-right: 16px !important;
+              overflow: visible !important; /* Prevent independent section scrolling */
+            }
+
+            /* Allow footer to stretch but respect padding */
+            :global(.footer-responsive) {
+              padding: 24px 16px !important;
+            }
+
+            /* ALWAYS show TopBar text on reservenow page (override global 360px hide) */
+            :global(.blue-top-bar-text) {
+              display: inline !important;
+              font-size: 14px !important; /* Slightly smaller for tight screens */
+            }
+            
+            /* TopBar layout fix */
+            :global(.blue-top-bar), :global(.blue-top-bar-left) {
+               max-width: 100vw !important;
+               box-sizing: border-box !important;
+            }
+            
+            /* TopBar button sizing */
+            :global(.reserve-btn) {
+              font-size: 12px !important;
+              padding: 0 10px !important;
+              max-width: 150px !important;
+              white-space: nowrap !important;
+            }
+
+            /* Sticky buttons: 15px gap on left and right */
+            .mobile-sticky-wrapper {
+              width: calc(100% - 30px) !important;
+              max-width: calc(100vw - 30px) !important;
+              margin-left: 15px !important;
+              margin-right: 15px !important;
+              box-sizing: border-box !important;
+            }
+            
+            /* Title: Fit on one line, larger font with 30px edge margin */
+            .pricing-vip {
+              white-space: nowrap !important;
+              font-size: clamp(1.1rem, 6vw, 1.75rem) !important; /* Larger base, scales with viewport */
+              line-height: 1.3 !important;
+              max-width: calc(100vw - 60px) !important; /* 30px margin each side */
+              margin-left: auto !important;
+              margin-right: auto !important;
+            }
+            
+            /* Subtitle: Allow wrapping */
+            .pricing-deposit-text {
+              white-space: normal !important;
+              word-wrap: break-word !important;
+              font-size: 0.85rem !important;
+            }
           }
         }
       `}</style>
@@ -2121,17 +2171,12 @@ export default function OrderPage({ initialRemaining }) {
               countdownMinutes={modalProps.countdownMinutes}
               customCtaText={modalProps.customCtaText}
               showEmailInput={false}
+              showSecondaryAction={true}
+              secondaryActionText="No Thanks"
+              onSecondaryAction={() => setShowScrollModal(false)}
+              hideCloseButton={true}
               onAction={() => {
-                trackAddToCart({
-                  content_name: 'Unicorn Blocks VIP Bundle',
-                  source: 'pop-modal'
-                });
-                addToCart({
-                  id: 'unicorn-blocks-vip',
-                  name: 'Unicorn Blocks VIP Bundle',
-                  price: 149,
-                  image: '/assets/checkout/sparky.webp'
-                });
+                handleFastCheckout('pop-modal', 149);
                 setShowScrollModal(false);
               }}
               onCountdownExpire={handleCountdownExpire}

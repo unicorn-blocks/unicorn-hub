@@ -390,7 +390,7 @@ export default function PreOrder({ initialRemaining }) {
       <div className="background-gradient"></div>
 
       {/* 蓝色顶部条 */}
-      <BlueTopBar onCheckout={() => handleFastCheckout('top')} isLoading={checkoutSource === 'top'} />
+      <BlueTopBar onCheckout={() => handleFastCheckout('top')} isLoading={checkoutSource === 'top'} showCart={false} />
 
       {/* 使用导航组件 */}
       {/* <Navigation /> */}

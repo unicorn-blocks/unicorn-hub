@@ -9,14 +9,14 @@ import { useCart } from '../context/CartContext';
 
 const PopModal = dynamic(() => import('./PopModal'), { ssr: false });
 
-export default function BlueTopBar({ onCheckout, isLoading }) {
+export default function BlueTopBar({ onCheckout, isLoading, showCart = true }) {
   const router = useRouter();
   const [showModal, setShowModal] = useState(false);
   const [isVip, setIsVip] = useState(false);
   const { toggleCart, getCartCount } = useCart();
 
   // 检查是否在预订页面
-  const isReservePage = router.pathname === '/reserve-vip-spot' || router.pathname === '/preorder' || router.pathname === '/order';
+  const isReservePage = router.pathname === '/reserve-vip-spot' || router.pathname === '/preorder' || router.pathname === '/order' || router.pathname === '/reservenow';
 
   // 客户端检测域名
   useEffect(() => {
@@ -49,20 +49,22 @@ export default function BlueTopBar({ onCheckout, isLoading }) {
 
         <div className="flex items-center gap-4">
           {/* Cart Icon */}
-          <button
-            onClick={toggleCart}
-            className="relative p-1 text-[#5A4A7A] hover:text-[#7d9ed4] transition-colors"
-            aria-label="Cart"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-            </svg>
-            {getCartCount() > 0 && (
-              <span className="absolute -top-1 -right-1 bg-[#DC2626] text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
-                {getCartCount()}
-              </span>
-            )}
-          </button>
+          {showCart && (
+            <button
+              onClick={toggleCart}
+              className="relative p-1 text-[#5A4A7A] hover:text-[#7d9ed4] transition-colors"
+              aria-label="Cart"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+              </svg>
+              {getCartCount() > 0 && (
+                <span className="absolute -top-1 -right-1 bg-[#DC2626] text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
+                  {getCartCount()}
+                </span>
+              )}
+            </button>
+          )}
 
 
           {isReservePage && router.pathname !== '/order' ? (
@@ -79,7 +81,7 @@ export default function BlueTopBar({ onCheckout, isLoading }) {
                   </svg>
                   Processing...
                 </span>
-              ) : (router.pathname === '/preorder' ? 'Pre-Order Now for $5' : 'Reserve My VIP Price')}
+              ) : (router.pathname === '/preorder' ? 'Pre-Order Now for $5' : (router.pathname === '/reservenow' ? 'Reserve Discount' : 'Reserve My VIP Price'))}
             </button>
           ) : !isReservePage && (
             <button
@@ -104,6 +106,8 @@ export default function BlueTopBar({ onCheckout, isLoading }) {
             padding: 8px 16px;
             z-index: 999;
             height: 60px;
+            box-sizing: border-box; /* Fix for layout issues */
+            margin: 0;
           }
 
           .blue-top-bar-left {

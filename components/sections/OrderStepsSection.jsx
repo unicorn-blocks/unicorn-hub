@@ -160,6 +160,7 @@ export default function OrderStepsSection({ className = '', style = {} }) {
           margin-top: clamp(-120px, -8vw, -60px);
           position: relative;
           z-index: 3;
+          overflow: visible; /* Allow content to show without creating scroll container */
         }
 
         .order-steps-section::after {
@@ -175,7 +176,7 @@ export default function OrderStepsSection({ className = '', style = {} }) {
         }
 
         .section-heading h2 {
-          font-size: clamp(2rem, 3vw, 3rem);
+          font-size: clamp(1.5rem, 6.5vw, 3rem); /* Larger mobile font, scales with viewport */
           margin-bottom: 12px;
           color: #0F192A;
           font-weight: 700;
@@ -186,17 +187,22 @@ export default function OrderStepsSection({ className = '', style = {} }) {
         @media (min-width: 768px) {
           .section-heading h2 {
             color: #54545C;
+            font-size: clamp(2rem, 3vw, 3rem); /* Larger on desktop */
           }
         }
 
+        /* Each line stays on one line - use font scaling instead of wrapping */
         .steps-heading-line1,
         .steps-heading-line2 {
           display: block;
+          white-space: nowrap;
         }
 
-        @media (max-width: 767px) {
-          .steps-heading-line2 {
-            display: block;
+        /* Mobile: ensure proper spacing from edges */
+        @media (max-width: 520px) {
+          .section-heading {
+            padding-left: 16px;
+            padding-right: 16px;
           }
         }
 
@@ -320,9 +326,10 @@ export default function OrderStepsSection({ className = '', style = {} }) {
         /* Mobile Styles */
         .step-mobile-wrapper {
           position: relative;
-          width: 90vw;
+          width: calc(100vw - 40px); /* 20px margin on each side - larger images */
           max-width: 400px;
-          margin: 0 auto;
+          left: 50%;
+          transform: translateX(-50%);
           height: 100%;
           min-height: 400px;
           display: flex;

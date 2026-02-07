@@ -19,6 +19,10 @@ export default function PopModal({
   onTryAgain,             // NEW: callback for Try Again click
   isExpired = false,      // NEW: final expired state (no retry)
   isLoading = false,      // NEW: show loading state on CTA
+  showSecondaryAction = false,
+  secondaryActionText,
+  onSecondaryAction,
+  hideCloseButton = false, // NEW: Hide the close button
 }) {
   const router = useRouter();
   const [email, setEmail] = useState('');
@@ -150,7 +154,7 @@ export default function PopModal({
         {/* 黄色主弹窗 */}
         <div className={styles.yellowPanel}>
           {/* 关闭按钮 */}
-          <button className={styles.closeBtn} onClick={onClose} aria-label="close">×</button>
+          {!hideCloseButton && <button className={styles.closeBtn} onClick={onClose} aria-label="close">×</button>}
           {/* 顶部飞机 */}
           <Image src="/assets/ima/Image copy 1.png" alt="airplane" width={151} height={161} className={styles.plane} />
           {/* 大标题 */}
@@ -256,6 +260,17 @@ export default function PopModal({
                       Processing...
                     </span>
                   ) : showEmailInput ? (isProcessing ? 'Joining' : btnText) : btnText}
+                </button>
+              )}
+
+              {/* Secondary Action Button (Optional) */}
+              {showSecondaryAction && (
+                <button
+                  className="w-full bg-white text-black font-medium py-2 rounded-xl shadow-sm hover:bg-gray-50 transition-colors text-sm sm:text-base outline-none"
+                  style={{ marginTop: '10px', width: '100%', maxWidth: '300px', cursor: 'pointer', border: '1px solid #D1D5DB' }}
+                  onClick={onSecondaryAction}
+                >
+                  {secondaryActionText || 'No Thanks'}
                 </button>
               )}
             </div>
