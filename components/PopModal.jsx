@@ -244,10 +244,7 @@ export default function PopModal({
                 // ACTIVE states: Normal CTA button
                 <button
                   className={styles.notifyBtn + (submitted ? ' ' + styles.submitted : '') + (isLoading ? ' ' + styles.loading : '')}
-                  style={{
-                    ...(submitted ? { background: '#4E81A8' } : {}),
-                    ...(!showEmailInput ? { width: '100%', maxWidth: '300px' } : {})
-                  }}
+                  style={submitted ? { background: '#4E81A8' } : {}}
                   onClick={showEmailInput ? handleNotify : handleActionClick}
                   disabled={(showEmailInput && (submitted || isProcessing)) || isLoading}
                 >
@@ -266,8 +263,7 @@ export default function PopModal({
               {/* Secondary Action Button (Optional) */}
               {showSecondaryAction && (
                 <button
-                  className="w-full bg-white text-black font-medium py-2 rounded-xl shadow-sm hover:bg-gray-50 transition-colors text-sm sm:text-base outline-none"
-                  style={{ marginTop: '10px', width: '100%', maxWidth: '300px', cursor: 'pointer', border: '1px solid #D1D5DB' }}
+                  className={styles.secondaryBtn}
                   onClick={onSecondaryAction}
                 >
                   {secondaryActionText || 'No Thanks'}

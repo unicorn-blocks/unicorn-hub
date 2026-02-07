@@ -76,7 +76,8 @@
 
 .reserveTitle {
   margin: 0;
-  margin-top: 56px;
+  margin-top: 40px;
+  /* Reduced from 56px to balance with bottom padding */
   margin-left: 70px;
   text-align: left;
   font-size: 42px;
@@ -186,8 +187,13 @@
 .btnWithDogWrap {
   position: relative;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  /* Changed from column to row for Desktop */
   align-items: center;
+  justify-content: center;
+  /* Center the buttons */
+  gap: 16px;
+  /* Add gap between buttons */
   margin-left: 0;
   margin-right: 0;
   height: 44px;
@@ -204,15 +210,17 @@
 }
 
 .notifyBtn {
-  width: 178px;
+  width: 260px;
+  /* Increased from 220px to prevent wrapping */
   height: 44px;
   border-radius: 12px;
   border: none;
-  font-size: 16px;
+  font-size: 15px;
+  /* Slightly reduced from 16px */
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0;
+  padding: 0 16px;
   background: linear-gradient(90deg, #F7AEBF 0%, #9b90da 100%);
   color: #fff;
   font-weight: 600;
@@ -220,6 +228,8 @@
   margin-top: 0;
   box-shadow: 0 5px 15px 0 rgba(39, 40, 47, .15);
   transition: background .1s;
+  white-space: nowrap;
+  /* Force single line */
 }
 
 .notifyBtn:hover:not(:disabled) {
@@ -273,6 +283,32 @@
 
 .inputEmail::placeholder {
   color: #A7A7A7;
+}
+
+
+.secondaryBtn {
+  width: 260px;
+  /* Increased from 220px to match primary */
+  height: 44px;
+  border-radius: 12px;
+  border: 1px solid #D1D5DB;
+  background: #fff;
+  color: #000;
+  font-weight: 500;
+  font-size: 15px;
+  /* Slightly reduced */
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 16px;
+  white-space: nowrap;
+  /* Force single line */
+}
+
+.secondaryBtn:hover {
+  background: #f9fafb;
 }
 
 .errorTip {
@@ -354,8 +390,8 @@
     max-width: 350px;
     height: auto;
     min-height: auto;
-    padding: 24px 20px 30px;
-    /* 上左右下 */
+    padding: 24px 32px 24px;
+    /* Increased horizontal padding */
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -380,7 +416,7 @@
     /* 标题整体右移 */
     font-size: 26px;
     line-height: 1.2;
-    text-align: center;
+    text-align: left;
     width: 100%;
     padding-right: 0;
     text-shadow: none;
@@ -389,12 +425,13 @@
   /* 文本区域 */
   .contentMiddle {
     margin-top: 32px;
-    margin-bottom: 18px;
+    margin-bottom: 8px;
+    /* Reduced from 18px */
     width: 100%;
   }
 
   .txtLine {
-    margin-left: 20px;
+    margin-left: 0;
     /* 副标题与标题左侧对齐 */
     max-width: 100%;
     font-size: 15px;
@@ -440,8 +477,14 @@
   /* 按钮容器 */
   .btnWithDogWrap {
     width: 100%;
-    margin-top: 15px;
-    /* 额外增加一些顶部空间 */
+    margin-top: 4px;
+    /* Reduced from 15px */
+    flex-direction: column !important;
+    /* Force column on mobile */
+    height: auto !important;
+    /* Allow height to grow */
+    gap: 12px;
+    /* Gap between stacked buttons */
   }
 
   .duduDog {
@@ -452,12 +495,23 @@
   .notifyBtn {
     width: 100%;
     /* 按钮占满宽度 */
+    max-width: none !important;
+    /* Ensure button fills width to match text alignment */
     height: 48px;
     font-size: 16px;
     margin-left: 0;
     background: linear-gradient(90deg, #F7AEBF 0%, #9b90da 100%);
     -webkit-tap-highlight-color: transparent;
     transition: background 0s;
+  }
+
+  .secondaryBtn {
+    width: 100% !important;
+    max-width: none !important;
+    height: 48px !important;
+    font-size: 16px;
+    margin-top: 0;
+    /* Handled by gap */
   }
 
   .notifyBtn:active {

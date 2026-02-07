@@ -152,9 +152,9 @@ export default function OrderPage({ initialRemaining }) {
       customBody: (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '1rem', color: '#374151' }}>
           <div>
-            Reserve your <span style={{ color: '#9b90da', fontWeight: 700 }}>$149 VIP price</span> <span style={{ color: '#9CA3AF', textDecoration: 'line-through', fontSize: '0.9em', fontWeight: 400 }}>(Reg. $199)</span> with a <span style={{ color: '#9b90da', fontWeight: 700 }}>$2 refundable deposit</span>
+            Reserve your <span style={{ color: '#9b90da', fontWeight: 700 }}>$149 VIP price</span> <span style={{ color: '#9CA3AF', textDecoration: 'line-through', fontSize: '0.9em', fontWeight: 400 }}>($199)</span> with a <span style={{ color: '#9b90da', fontWeight: 700 }}>$2 refundable deposit</span>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontWeight: 400, fontSize: '0.85rem', color: '#6B7280', marginTop: '4px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start', gap: '4px', fontWeight: 400, fontSize: '0.85rem', color: '#6B7280', marginTop: '32px', width: '100%' }}>
             <span style={{ color: '#10B981', fontSize: '0.9rem' }}>✅</span> Trusted by 400+ families
           </div>
         </div>
