@@ -23,6 +23,7 @@ export default function PopModal({
   secondaryActionText,
   onSecondaryAction,
   hideCloseButton = false, // NEW: Hide the close button
+  centerLayout = false, // NEW: Center layout prop
 }) {
   const router = useRouter();
   const [email, setEmail] = useState('');
@@ -126,7 +127,7 @@ export default function PopModal({
   if (showSuccess) {
     return (
       <div className={styles.popModalMask}>
-        <div className={styles.popModalMain}>
+        <div className={styles.popModalMain + (centerLayout ? ' ' + styles.centerLayout : '')}>
           <div className={styles.blackShadow}></div>
           <div className={styles.yellowPanel}>
             <button className={styles.closeBtn} onClick={onClose} aria-label="close">×</button>
@@ -145,7 +146,7 @@ export default function PopModal({
   return (
     <div className={styles.popModalMask}>
       <div
-        className={styles.popModalMain}
+        className={styles.popModalMain + (centerLayout ? ' ' + styles.centerLayout : '')}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >

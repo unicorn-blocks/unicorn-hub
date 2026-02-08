@@ -76,8 +76,7 @@
 
 .reserveTitle {
   margin: 0;
-  margin-top: 40px;
-  /* Reduced from 56px to balance with bottom padding */
+  margin-top: 56px;
   margin-left: 70px;
   text-align: left;
   font-size: 42px;
@@ -126,8 +125,10 @@
 .counterRow {
   margin-top: -1px;
   margin-left: 80px;
+  /* Restored margin */
   display: flex;
   align-items: center;
+  /* Center content */
   font-size: 25px;
   color: #242424;
   gap: 18px;
@@ -165,6 +166,8 @@
   justify-content: flex-start;
   gap: 18px;
   z-index: 5;
+  margin-top: 10px;
+  /* Spacing from content */
 }
 
 .bottomInputWrapperCenter {
@@ -336,6 +339,116 @@
   margin: 0 !important;
 }
 
+/* Center Layout Specifics (New) */
+/* Must use a local class to scope global selectors */
+.centerLayout .yellowPanel {
+  padding-bottom: 30px;
+  justify-content: flex-start;
+  gap: 0;
+}
+
+.centerLayout .reserveTitle {
+  margin-top: 56px;
+  /* Match Order page */
+  margin-left: 70px;
+  text-align: left;
+  margin-bottom: 0;
+  /* Match Order page (no gap to body) */
+  width: auto;
+}
+
+.centerLayout .txtLine {
+  margin-left: 70px;
+  /* Match default left alignment */
+  text-align: left;
+  color: #54545C;
+  /* Match Order Page */
+  font-size: 23px;
+  /* Match Order Page (default) */
+  width: auto;
+  /* Remove width constraint */
+  max-width: 580px;
+  /* Same as default */
+}
+
+.centerLayout .bottomInputWrapper {
+  margin-left: 0;
+  margin-right: 0;
+  justify-content: center;
+  margin-top: 32px;
+  /* Spacing from content */
+  position: relative;
+  width: 100%;
+}
+
+.centerLayout .txtLine :global(.pop-modal-custom-body) {
+  align-items: flex-start;
+  /* Left align content inside wrapper */
+  text-align: left;
+  width: 100%;
+  font-size: 23px !important;
+  /* Match Order Page PC default (23px) */
+  color: #54545C !important;
+  /* Match Order Page */
+  line-height: 1.5;
+}
+
+/* Ensure spans inside custom body inherit the correct size/color (unless inline styled) */
+.centerLayout .txtLine :global(.pop-modal-custom-body) span {
+  font-size: inherit !important;
+  color: inherit;
+  /* Allow inline color to win, but if no inline, inherit parent */
+}
+
+/* Reset the default .txtLine span styling for centerLayout */
+.centerLayout .txtLine span {
+  font-size: inherit !important;
+  font-weight: inherit;
+  font-family: inherit;
+  letter-spacing: inherit;
+  color: inherit;
+}
+
+.centerLayout .txtLine :global(.pop-modal-trust-badge) {
+  position: absolute;
+  bottom: 75px;
+  /* Position above CTA buttons */
+  left: calc(50% - 138px);
+  /* Center over first button (offset by half gap + half second button) */
+  transform: translateX(-50%);
+  margin: 0;
+  width: auto;
+}
+
+/* Global classes for content passed from other pages, scoped to popModalMain */
+.popModalMain :global(.pop-modal-custom-body) {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 1rem;
+  color: #374151;
+  align-items: flex-start;
+  /* Left on PC */
+  text-align: left;
+  margin-left: 0;
+  /* Align with title */
+  margin-bottom: 2px;
+}
+
+.popModalMain :global(.pop-modal-trust-badge) {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  /* Left on PC */
+  gap: 4px;
+  font-weight: 400;
+  font-size: 0.85rem;
+  color: #6B7280;
+  margin-top: 16px;
+  /* Spacing */
+  width: 100%;
+}
+
 @media (max-width: 820px) {
 
   .popModalMain,
@@ -371,6 +484,36 @@
 
 @media (max-width: 600px) {
 
+  /* Mobile Overrides for Content */
+  .popModalMain :global(.pop-modal-custom-body),
+  .centerLayout .txtLine :global(.pop-modal-custom-body) {
+    align-items: flex-start;
+    /* Left on Mobile */
+    text-align: left;
+    margin-left: 0;
+    font-size: 15px !important;
+    /* Reset font size for mobile (override PC !important) */
+  }
+
+  .popModalMain :global(.pop-modal-trust-badge),
+  .centerLayout :global(.pop-modal-trust-badge),
+  .centerLayout .txtLine :global(.pop-modal-trust-badge) {
+    position: static;
+    /* Reset from absolute */
+    transform: none;
+    /* Reset transform */
+    justify-content: flex-start;
+    margin-top: 10px;
+    margin-bottom: 0;
+    /* Will add spacing via contentMiddle */
+    margin-left: 0;
+    width: auto;
+    bottom: auto;
+    left: auto;
+  }
+
+
+
   .popModalMain {
     padding: 20px;
     width: 100%;
@@ -384,19 +527,24 @@
     /* 移动端隐藏阴影层以简化布局 */
   }
 
-  .yellowPanel {
+  .yellowPanel,
+  .centerLayout .yellowPanel {
     position: relative;
     width: 100% !important;
     max-width: 350px;
     height: auto;
     min-height: auto;
-    padding: 24px 32px 24px;
+    padding: 24px 32px 24px !important;
     /* Increased horizontal padding */
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     /* 左对齐 */
     background: #FFEDE0;
+    justify-content: flex-start;
+    /* Reset for mobile */
+    gap: 0;
+    /* Reset gap for mobile */
   }
 
   .plane {
@@ -410,7 +558,8 @@
   }
 
   /* 标题左对齐，去除margin-left */
-  .reserveTitle {
+  .reserveTitle,
+  .centerLayout .reserveTitle {
     margin-top: 2px;
     margin-left: 0;
     /* 标题整体右移 */
@@ -420,22 +569,31 @@
     width: 100%;
     padding-right: 0;
     text-shadow: none;
+    margin-bottom: 0;
   }
 
   /* 文本区域 */
   .contentMiddle {
     margin-top: 32px;
     margin-bottom: 8px;
-    /* Reduced from 18px */
     width: 100%;
   }
 
-  .txtLine {
+  /* Tighter spacing for centerLayout modal */
+  .centerLayout .contentMiddle {
+    margin-top: 16px;
+    margin-bottom: 10px;
+    /* Exact 10px between badge and CTA */
+  }
+
+  .txtLine,
+  .centerLayout .txtLine {
     margin-left: 0;
     /* 副标题与标题左侧对齐 */
     max-width: 100%;
     font-size: 15px;
     line-height: 1.5;
+    width: 100%;
   }
 
   .txtLine span {
@@ -445,16 +603,16 @@
   }
 
   /* 底部输入框和按钮区域 */
-  .bottomInputWrapper {
+  .bottomInputWrapper,
+  .centerLayout .bottomInputWrapper {
     margin-left: 0;
+    margin-top: 0;
+    /* Reset PC margin-top */
     width: 100%;
     flex-direction: column;
-    /* 垂直排列 */
     align-items: center;
-    gap: 30px;
-    /* 增加输入框和按钮之间的间距 */
+    gap: 12px;
     position: static;
-    /* 移除定位 */
   }
 
   /* 邮箱输入框容器 */

@@ -150,16 +150,17 @@ export default function OrderPage({ initialRemaining }) {
       isExpired: false,
       customTitle: 'Join VIP Families ❤️',
       customBody: (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '1rem', color: '#374151' }}>
+        <div className="pop-modal-custom-body">
           <div>
             Reserve your <span style={{ color: '#9b90da', fontWeight: 700 }}>$149 VIP price</span> <span style={{ color: '#9CA3AF', textDecoration: 'line-through', fontSize: '0.9em', fontWeight: 400 }}>($199)</span> with a <span style={{ color: '#9b90da', fontWeight: 700 }}>$2 refundable deposit</span>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start', gap: '4px', fontWeight: 400, fontSize: '0.85rem', color: '#6B7280', marginTop: '32px', width: '100%' }}>
+          <div className="pop-modal-trust-badge">
             <span style={{ color: '#10B981', fontSize: '0.9rem' }}>✅</span> Trusted by 400+ families
           </div>
         </div>
       ),
       customCtaText: 'Reserve Discount for $2',
+      centerLayout: true, // Use centralized layout for this page
     };
   };
 
@@ -2183,6 +2184,7 @@ export default function OrderPage({ initialRemaining }) {
               showTryAgain={modalProps.showTryAgain}
               isExpired={modalProps.isExpired}
               isLoading={checkoutSource === 'pop-modal'}
+              centerLayout={modalProps.centerLayout}
             />
           );
         })()
