@@ -53,6 +53,7 @@ export default function OrderPage({ initialRemaining }) {
   const [openFaq, setOpenFaq] = useState(null);
   const [checkoutSource, setCheckoutSource] = useState(null);
   const [showSurveyModal, setShowSurveyModal] = useState(false);
+  const [surveySource, setSurveySource] = useState(''); // 'bottom' or 'pop-modal'
   const { addToCart } = useCart();
 
 
@@ -598,7 +599,7 @@ export default function OrderPage({ initialRemaining }) {
                       <button
                         className="w-full bg-white text-black font-medium py-2 rounded-xl shadow-sm hover:bg-gray-50 transition-colors text-sm sm:text-base outline-none"
                         style={{ border: '1px solid #D1D5DB' }}
-                        onClick={() => setShowSurveyModal(true)}
+                        onClick={() => { setSurveySource('bottom'); setShowSurveyModal(true); }}
                       >
                         No Thanks
                       </button>
@@ -2172,6 +2173,7 @@ export default function OrderPage({ initialRemaining }) {
               secondaryActionText="No Thanks"
               onSecondaryAction={() => {
                 setShowScrollModal(false);
+                setSurveySource('pop-modal');
                 setShowSurveyModal(true);
               }}
               hideCloseButton={true}
@@ -2194,8 +2196,8 @@ export default function OrderPage({ initialRemaining }) {
         isOpen={showSurveyModal}
         onClose={() => setShowSurveyModal(false)}
         onSubmit={(data) => {
-          // Handle submission
-          const payload = { ...data, timestamp: new Date().toISOString() };
+          // Handle submission - include source to track which button triggered
+          const payload = { ...data, source: surveySource, timestamp: new Date().toISOString() };
 
           fetch('/api/submit-survey', {
             method: 'POST',

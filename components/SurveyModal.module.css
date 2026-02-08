@@ -16,7 +16,7 @@
 .popModalMain {
     position: relative;
     width: 95%;
-    max-width: 600px;
+    max-width: 700px;
     background-color: #ffffff;
     border-radius: 12px;
     padding: 0;
@@ -341,6 +341,9 @@
     font-weight: 600;
     cursor: pointer;
     transition: opacity 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .submitBtn:hover {
