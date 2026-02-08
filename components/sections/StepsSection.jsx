@@ -252,7 +252,7 @@ export default function StepsSection({ className = '', style = {} }) {
 
         @media (min-width: 768px) {
           .section-heading h2 {
-            color: #54545C;  /* PC端：恢复原色 */
+            color: #000000;  /* PC端：变为黑色 */
           }
         }
 

@@ -186,7 +186,7 @@ export default function OrderStepsSection({ className = '', style = {} }) {
 
         @media (min-width: 768px) {
           .section-heading h2 {
-            color: #54545C;
+            color: #000000;
             font-size: clamp(2rem, 3vw, 3rem); /* Larger on desktop */
           }
         }

@@ -82,22 +82,13 @@ export default function ImpactSection({ showSteam = true }) {
         <div className="impact-grid">
           {displayStats.map((stat, index) => (
             <div className="impact-card" key={stat.title}>
-              <div className="impact-icon-wrapper">
-                {/* 移动端图片 */}
+              <div className={`impact-icon-wrapper ${index < 2 ? 'impact-image-wrapper' : ''}`}>
                 <Image
-                  src={index === 0 ? '/assets/ima/section6-1.svg' : index === 1 ? '/assets/ima/section6-2.svg' : '/assets/ima/section6-3.svg'}
+                  src={index === 0 ? '/assets/ima/impact-creativity.webp' : index === 1 ? '/assets/ima/impact-focus.webp' : '/assets/ima/section6-3.svg'}
                   alt=""
-                  width={64}
-                  height={64}
-                  className="impact-icon md:hidden"
-                />
-                {/* PC端图片 */}
-                <Image
-                  src={index === 0 ? '/assets/ima/impact-icon-1.svg' : index === 1 ? '/assets/ima/impact-icon-2.svg' : '/assets/ima/impact-icon-3.svg'}
-                  alt=""
-                  width={64}
-                  height={64}
-                  className="impact-icon hidden md:block"
+                  width={index < 2 ? 400 : 64}
+                  height={index < 2 ? 400 : 64}
+                  className={`impact-icon ${index < 2 ? 'impact-image-large' : ''}`}
                 />
               </div>
               {/* PC端标题 */}
@@ -121,7 +112,7 @@ export default function ImpactSection({ showSteam = true }) {
             </div>
           ))}
         </div>
-      </div>
+      </div >
 
       <style jsx>{`
         .content-container {
@@ -205,7 +196,7 @@ export default function ImpactSection({ showSteam = true }) {
 
         @media (min-width: 768px) {
           .impact-section h2 {
-            color: #54545C;
+            color: #000000;
           }
         }
 
@@ -222,6 +213,7 @@ export default function ImpactSection({ showSteam = true }) {
           .impact-grid {
             grid-template-columns: ${displayStats.length === 2 ? 'repeat(2, minmax(0, 400px))' : 'repeat(3, minmax(0, 1fr))'};
             justify-content: center;
+            gap: 80px;
           }
         }
 
@@ -255,6 +247,21 @@ export default function ImpactSection({ showSteam = true }) {
           justify-content: center;
           margin-bottom: 24px;
         }
+        
+        .impact-image-wrapper {
+          width: calc(100% + 8px) !important;
+          height: auto !important;
+          margin-left: -4px;
+          margin-right: -4px;
+          display: block !important;
+          margin-bottom: 12px !important;
+        }
+
+        .impact-image-large {
+          width: 100% !important;
+          height: auto !important;
+          object-fit: contain !important;
+        }
 
         .impact-icon {
           width: 100%;
@@ -280,7 +287,7 @@ export default function ImpactSection({ showSteam = true }) {
 
         @media (min-width: 768px) {
           .impact-card h3 {
-            color: #54545C;
+            color: #000000;
             background: none;
             -webkit-background-clip: unset;
             -webkit-text-fill-color: unset;
@@ -289,7 +296,7 @@ export default function ImpactSection({ showSteam = true }) {
         }
 
         .impact-card p {
-          color: #4a4a4a;
+          color: #000000;
           text-align: center;
           font-size: 0.8rem;
           font-family: 'Rubik', sans-serif;
@@ -319,6 +326,6 @@ export default function ImpactSection({ showSteam = true }) {
           }
         }
       `}</style>
-    </section>
+    </section >
   );
 }

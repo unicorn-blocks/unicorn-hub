@@ -653,7 +653,7 @@ export default function OrderPage({ initialRemaining }) {
         )}
 
         <TestimonialsSection />
-        <ImpactSection />
+        <ImpactSection showSteam={false} />
         <PrivacySection />
 
         <div className="buy-container">

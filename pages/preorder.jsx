@@ -544,7 +544,7 @@ export default function PreorderPage({ initialRemaining }) {
         </section>
 
         <TestimonialsSection />
-        <ImpactSection />
+        <ImpactSection showSteam={false} />
         <PrivacySection />
 
         <div className="buy-container">
