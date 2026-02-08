@@ -58,6 +58,10 @@ exports.handler = async (event, context) => {
             } else if (amount >= 149) {
                 productDescription = 'Unicorn Blocks Bundle · Special Price $149 (Regular Price $199) · 50+ extra blocks (limited time)';
             }
+        } else if (sourcePage === 'reservenow') {
+            // Reservenow page: simplified checkout
+            productName = 'Unicorn Blocks VIP Bundle';
+            productDescription = 'VIP Bundle Includes: Sparky-Creative Story Buddy, 4x Themed Magical Hats, 4x Light-Up Magical Blocks, 100+ Universal Blocks. Cancel Anytime.';
         } else if (sourcePage === 'preorder') {
             productName = 'Pre-order Unicorn Blocks - Fully Refundable';
         }
@@ -70,12 +74,17 @@ exports.handler = async (event, context) => {
             cancelUrl = `${origin}/reserve-vip-spot`;
         } else if (sourcePage === 'order') {
             cancelUrl = `${origin}/order`;
+        } else if (sourcePage === 'reservenow') {
+            cancelUrl = `${origin}/reservenow`;
         }
 
         // Dynamic submit message based on source page
-        const submitMessage = sourcePage === 'order'
-            ? '🌟 400+ families loved · 🚚 FREE Shipping · 🎁 50+ extra blocks'
-            : '🌟 Loved by 400+ families building creativity through play';
+        let submitMessage = '🌟 Loved by 400+ families building creativity through play';
+        if (sourcePage === 'order') {
+            submitMessage = '🌟 400+ families loved · 🚚 FREE Shipping · 🎁 50+ extra blocks';
+        } else if (sourcePage === 'reservenow') {
+            submitMessage = '🌟 Loved by 400+ families · ✅ Cancel Anytime';
+        }
 
         const sessionConfig = {
             submit_type: 'pay',

@@ -92,7 +92,7 @@ export default function OrderPage({ initialRemaining }) {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        sourcePage: 'order', // Signal to backend to use "Pre-order" product name
+        sourcePage: 'reservenow', // Use simplified checkout without address/tax
         leadId: 'order_' + Date.now(), // Basic lead tracking
         returnUrl: window.location.origin, // Ensure redirects come back to the correct domain/port
         amount: priceAmount, // Dynamic price: 149 for VIP, 199 for regular
@@ -199,8 +199,12 @@ export default function OrderPage({ initialRemaining }) {
       const rect = privacySection.getBoundingClientRect();
       const windowHeight = window.innerHeight;
 
-      // Trigger when top of privacy section enters viewport (user has scrolled past Impact Section)
-      if (rect.top <= windowHeight) {
+      // Trigger when user has scrolled past 60% of the privacy section
+      const sectionHeight = rect.height;
+      const scrolledPast = windowHeight - rect.top; // How much of section is visible/scrolled past
+      const scrollPercentage = scrolledPast / sectionHeight;
+
+      if (scrollPercentage >= 0.6) {
         triggerModal();
       }
     }
@@ -619,47 +623,45 @@ export default function OrderPage({ initialRemaining }) {
         </div>
 
         {/* New Sections inserted from reuse */}
+        <ImpactSection />
         <OrderStepsSection style={{ marginTop: 0 }} />
 
-        {/* What Happens After You Reserve Section - HIDDEN */}
-        {false && (
-          <section className="reserve-flow-section">
-            <div className="reserve-flow-container">
-              <h2 className="reserve-flow-title">What Happens Next</h2>
-              <div className="reserve-flow-card">
-                <div className="reserve-flow-steps">
-                  <div className="reserve-flow-step">
-                    <div className="reserve-flow-badge">1</div>
-                    <div className="reserve-flow-content">
-                      <span className="reserve-flow-label">Step 1</span>
-                      <p className="reserve-flow-description">Pre-order with a $5 refundable payment</p>
-                    </div>
-                  </div>
-                  <div className="reserve-flow-step">
-                    <div className="reserve-flow-badge">2</div>
-                    <div className="reserve-flow-content">
-                      <span className="reserve-flow-label">Step 2</span>
-                      <p className="reserve-flow-description">Your $149 VIP Price (<span className="retail-price">Retail $199</span>) is Locked plus Early Shipping</p>
-                    </div>
-                  </div>
-                  <div className="reserve-flow-step">
-                    <div className="reserve-flow-badge">3</div>
-                    <div className="reserve-flow-content">
-                      <span className="reserve-flow-label">Step 3</span>
-                      <p className="reserve-flow-description">Before shipping (April 2026), we'll email you to confirm — or cancel for a full refund.</p>
-                    </div>
+        {/* What Happens After You Reserve Section */}
+        <section className="reserve-flow-section">
+          <div className="reserve-flow-container">
+            <h2 className="reserve-flow-title">What Happens Next</h2>
+            <div className="reserve-flow-card">
+              <div className="reserve-flow-steps">
+                <div className="reserve-flow-step">
+                  <div className="reserve-flow-badge">1</div>
+                  <div className="reserve-flow-content">
+                    <span className="reserve-flow-label">Step 1</span>
+                    <p className="reserve-flow-description">Pre-order with a $2 refundable payment</p>
                   </div>
                 </div>
-                <div className="reserve-flow-trust">
-                  ✅ Fully refundable $5 pre-order · ✅ 400+ families pre-ordered
+                <div className="reserve-flow-step">
+                  <div className="reserve-flow-badge">2</div>
+                  <div className="reserve-flow-content">
+                    <span className="reserve-flow-label">Step 2</span>
+                    <p className="reserve-flow-description">Your $149 VIP Price (<span className="retail-price">Retail $199</span>) is Locked plus Early Shipping</p>
+                  </div>
+                </div>
+                <div className="reserve-flow-step">
+                  <div className="reserve-flow-badge">3</div>
+                  <div className="reserve-flow-content">
+                    <span className="reserve-flow-label">Step 3</span>
+                    <p className="reserve-flow-description">Before shipping (Jun 2026), we'll email you to confirm — or cancel for a full refund.</p>
+                  </div>
                 </div>
               </div>
+              <div className="reserve-flow-trust">
+                ✅ Fully refundable $2 pre-order · ✅ 400+ families pre-ordered
+              </div>
             </div>
-          </section>
-        )}
+          </div>
+        </section>
 
         <TestimonialsSection />
-        <ImpactSection />
         <PrivacySection />
 
         <div className="buy-container">
