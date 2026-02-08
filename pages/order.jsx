@@ -972,6 +972,11 @@ export default function OrderPage({ initialRemaining }) {
             margin-right: 0;
             padding: 0 8px;
           }
+          
+          .pricing-vip {
+            white-space: normal; /* Allow wrapping on mobile */
+            text-align: center;
+          }
         }
 
         /* ===== Reserve Flow Section ===== */

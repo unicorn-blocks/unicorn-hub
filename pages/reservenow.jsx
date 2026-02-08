@@ -14,6 +14,7 @@ import OrderStepsSection from '../components/sections/OrderStepsSection';
 import PrivacySection from '../components/sections/PrivacySection';
 import KitCategories from '../components/KitCategories';
 import PopModal from '../components/PopModal';
+import SurveyModal from '../components/SurveyModal';
 
 // ISR (Incremental Static Regeneration): Fast load + near-realtime data
 // - Build/revalidate: Fetch from Google Script → cache result
@@ -51,6 +52,7 @@ export default function OrderPage({ initialRemaining }) {
   const { language } = useLanguage();
   const [openFaq, setOpenFaq] = useState(null);
   const [checkoutSource, setCheckoutSource] = useState(null);
+  const [showSurveyModal, setShowSurveyModal] = useState(false);
   const { addToCart } = useCart();
 
 
@@ -453,7 +455,7 @@ export default function OrderPage({ initialRemaining }) {
       <div className="background-gradient"></div>
 
       {/* 蓝色顶部条 */}
-      <BlueTopBar onCheckout={() => handleFastCheckout('top', 149)} isLoading={checkoutSource === 'top'} showCart={false} />
+      <BlueTopBar onCheckout={() => handleFastCheckout('top', 2)} isLoading={checkoutSource === 'top'} showCart={false} />
 
       {/* 使用导航组件 */}
       {/* <Navigation /> */}
@@ -572,7 +574,7 @@ export default function OrderPage({ initialRemaining }) {
                       <button
                         className={`w-full primary-button button-shine mb-2 ${checkoutSource ? 'opacity-80 cursor-wait' : ''}`}
                         style={{ background: 'linear-gradient(90deg, #F7AEBF 0%, #9b90da 100%)', border: 'none' }}
-                        onClick={() => handleFastCheckout('bottom', 149)}
+                        onClick={() => handleFastCheckout('bottom', 2)}
                         disabled={!!checkoutSource}
                       >
                         {checkoutSource === 'bottom' ? (
@@ -594,15 +596,7 @@ export default function OrderPage({ initialRemaining }) {
                       <button
                         className="w-full bg-white text-black font-medium py-2 rounded-xl shadow-sm hover:bg-gray-50 transition-colors text-sm sm:text-base outline-none"
                         style={{ border: '1px solid #D1D5DB' }}
-                        onClick={() => {
-                          // Removed trackAddToCart pixel event as requested
-                          addToCart({
-                            id: 'unicorn-blocks-vip',
-                            name: 'Unicorn Blocks VIP Bundle',
-                            price: 149,
-                            image: '/assets/checkout/sparky.webp'
-                          })
-                        }}
+                        onClick={() => setShowSurveyModal(true)}
                       >
                         No Thanks
                       </button>
@@ -2174,10 +2168,13 @@ export default function OrderPage({ initialRemaining }) {
               showEmailInput={false}
               showSecondaryAction={true}
               secondaryActionText="No Thanks"
-              onSecondaryAction={() => setShowScrollModal(false)}
+              onSecondaryAction={() => {
+                setShowScrollModal(false);
+                setShowSurveyModal(true);
+              }}
               hideCloseButton={true}
               onAction={() => {
-                handleFastCheckout('pop-modal', 149);
+                handleFastCheckout('pop-modal', 2);
                 setShowScrollModal(false);
               }}
               onCountdownExpire={handleCountdownExpire}
@@ -2189,6 +2186,34 @@ export default function OrderPage({ initialRemaining }) {
           );
         })()
       }
+
+      {/* Survey Modal */}
+      <SurveyModal
+        isOpen={showSurveyModal}
+        onClose={() => setShowSurveyModal(false)}
+        onSubmit={(data) => {
+          // Handle submission
+          const payload = { ...data, timestamp: new Date().toISOString() };
+
+          fetch('/api/submit-survey', {
+            method: 'POST',
+            body: JSON.stringify(payload)
+          })
+            .then(res => res.json())
+            .then(result => {
+              if (result.success) {
+                console.log('Survey submitted successfully');
+              } else {
+                console.error('Survey submission failed');
+              }
+            })
+            .catch(err => console.error(err));
+
+          setShowSurveyModal(false);
+          alert('Thank you for your feedback! We appreciate it.');
+        }}
+      />
+
     </>
   );
 }
