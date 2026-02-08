@@ -175,6 +175,7 @@ export default function SurveyModal({ isOpen, onClose, onSubmit }) {
     const [answers, setAnswers] = useState({});
     const [otherInputs, setOtherInputs] = useState({}); // For "Other" text fields
     const [errorMsg, setErrorMsg] = useState('');
+    const [showSuccess, setShowSuccess] = useState(false);
     const [viewportHeight, setViewportHeight] = useState('100%');
 
     // Handle Visual Viewport resizing (keyboard handling on mobile)
@@ -346,6 +347,7 @@ export default function SurveyModal({ isOpen, onClose, onSubmit }) {
             if (onSubmit) {
                 onSubmit(finalData);
             }
+            setShowSuccess(true);
         } else {
             setCurrentStepIndex(prev => prev + 1);
             setErrorMsg(''); // Reset error state for next question
@@ -508,53 +510,82 @@ export default function SurveyModal({ isOpen, onClose, onSubmit }) {
     return (
         <div className={styles.popModalMask}>
             <div className={styles.popModalMain}>
-                {/* Progress Bar */}
-                <div className={styles.progressBarContainer}>
-                    <div className={styles.progressBarFill} style={{ width: `${progressPercentage}%` }}></div>
-                </div>
-
-                {/* Close Button */}
-                <button className={styles.closeBtn} onClick={onClose} aria-label="close">×</button>
-
-                {/* Content */}
-                <div className={styles.modalContent}>
-                    {/* Wrap changing content in a keyed div for animation */}
-                    <div key={currentStepIndex} className={`${styles.fadeIn} ${styles.questionContent}`}>
-                        <div className={styles.questionBadge}>{currentStepIndex + 1}</div>
-
-                        <h2 className={styles.questionText}>
-                            {currentQuestion.text}
-                            {currentQuestion.subtext && (
-                                <div style={{ fontSize: '0.9rem', fontWeight: 400, marginTop: '8px', color: '#6B7280' }}>
-                                    {currentQuestion.subtext}
-                                </div>
-                            )}
-                        </h2>
-
-                        {(currentQuestion.type === 'radio' || currentQuestion.type === 'checkbox') && renderOptions()}
-                        {currentQuestion.type === 'text' && renderTextInput()}
-                        {currentQuestion.type === 'scale' && renderScale()}
-                    </div>
-
-                    <div className={styles.modalFooter}>
-                        {currentStepIndex > 0 && (
-                            <button className={styles.backBtn} onClick={handleBack}>
-                                {/* Back Arrow Icon */}
-                                {/* Back Arrow Icon - Filled */}
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ display: 'block', minWidth: '24px' }}>
-                                    <path d="M15.41 7.41L14 6L8 12L14 18L15.41 16.59L10.83 12L15.41 7.41Z" fill="white" />
-                                </svg>
-                            </button>
-                        )}
-
-                        <button
-                            className={styles.submitBtn}
-                            onClick={() => handleNext()}
-                        >
-                            {isLastQuestion ? 'Submit' : 'OK'}
+                {showSuccess ? (
+                    /* Success Screen */
+                    <div className={styles.successScreen}>
+                        <div className={styles.successIcon}>
+                            <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="40" cy="40" r="40" fill="#10B981" fillOpacity="0.1" />
+                                <circle cx="40" cy="40" r="30" fill="#10B981" fillOpacity="0.2" />
+                                <circle cx="40" cy="40" r="20" fill="#10B981" />
+                                <path d="M32 40L37 45L48 34" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+                            </svg>
+                        </div>
+                        <h2 className={styles.successTitle}>Thank You!</h2>
+                        <p className={styles.successMessage}>
+                            Your feedback helps us create better experiences for families like yours.
+                        </p>
+                        <p className={styles.successSubMessage}>
+                            🎁 Gift card winners will be notified via email.
+                        </p>
+                        <button className={styles.successBtn} onClick={onClose}>
+                            Back to Page
                         </button>
                     </div>
-                </div>
+                ) : (
+                    <>
+                        {/* Progress Bar */}
+                        <div className={styles.progressBarContainer}>
+                            <div className={styles.progressBarFill} style={{ width: `${progressPercentage}%` }}></div>
+                        </div>
+
+                        {/* Close Button */}
+                        <button className={styles.closeBtn} onClick={onClose} aria-label="close">×</button>
+
+                        {/* Content */}
+                        <div className={styles.modalContent}>
+                            {/* Wrap changing content in a keyed div for animation */}
+                            <div key={currentStepIndex} className={`${styles.fadeIn} ${styles.questionContent}`}>
+                                <div className={styles.questionHeader}>
+                                    <div className={styles.questionBadge}>{currentStepIndex + 1}</div>
+                                    <div className={styles.promoBadge}>🎁 Finish to Win $10 Amazon Gift Card</div>
+                                </div>
+
+                                <h2 className={styles.questionText}>
+                                    {currentQuestion.text}
+                                    {currentQuestion.subtext && (
+                                        <div style={{ fontSize: '0.9rem', fontWeight: 400, marginTop: '8px', color: '#6B7280' }}>
+                                            {currentQuestion.subtext}
+                                        </div>
+                                    )}
+                                </h2>
+
+                                {(currentQuestion.type === 'radio' || currentQuestion.type === 'checkbox') && renderOptions()}
+                                {currentQuestion.type === 'text' && renderTextInput()}
+                                {currentQuestion.type === 'scale' && renderScale()}
+                            </div>
+
+                            <div className={styles.modalFooter}>
+                                {currentStepIndex > 0 && (
+                                    <button className={styles.backBtn} onClick={handleBack}>
+                                        {/* Back Arrow Icon */}
+                                        {/* Back Arrow Icon - Filled */}
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ display: 'block', minWidth: '24px' }}>
+                                            <path d="M15.41 7.41L14 6L8 12L14 18L15.41 16.59L10.83 12L15.41 7.41Z" fill="white" />
+                                        </svg>
+                                    </button>
+                                )}
+
+                                <button
+                                    className={styles.submitBtn}
+                                    onClick={() => handleNext()}
+                                >
+                                    {isLastQuestion ? 'Submit' : 'OK'}
+                                </button>
+                            </div>
+                        </div>
+                    </>
+                )}
             </div>
         </div>
     );

@@ -181,6 +181,8 @@ export default function OrderPage({ initialRemaining }) {
 
     function triggerModal() {
       if (hasTriggered) return;
+      // Don't trigger if SurveyModal is active
+      if (showSurveyModal) return;
       hasTriggered = true;
       sessionStorage.setItem('vip_modal_triggered', 'true');
       setShowScrollModal(true);
@@ -212,7 +214,7 @@ export default function OrderPage({ initialRemaining }) {
       window.removeEventListener('scroll', handleScroll);
       clearTimeout(timeoutId);
     };
-  }, []);
+  }, [showSurveyModal]);
 
   // 硬编码中英文内容
   const translations = {
@@ -2208,9 +2210,7 @@ export default function OrderPage({ initialRemaining }) {
               }
             })
             .catch(err => console.error(err));
-
-          setShowSurveyModal(false);
-          alert('Thank you for your feedback! We appreciate it.');
+          // SurveyModal now shows its own success screen and handles close
         }}
       />
 
