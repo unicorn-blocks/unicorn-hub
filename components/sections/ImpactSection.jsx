@@ -2,7 +2,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useLanguage } from '../../context/LanguageContext';
 
-export default function ImpactSection() {
+export default function ImpactSection({ showSteam = true }) {
   const { language } = useLanguage();
 
   const translations = {
@@ -13,16 +13,16 @@ export default function ImpactSection() {
           title: '3× Creativity',
           titleLine1: '3×',
           titleLine2: 'Creativity',
-          description: <span>Kids <strong className="text-black font-bold">create their own builds and ideas</strong> — not just follow instructions.</span>,
-          descriptionMobile: <span>Kids <strong className="text-black font-bold">create their own builds and ideas</strong> — not just follow instructions.</span>
+          description: <span>Kids create freely — not just follow steps.</span>,
+          descriptionMobile: <span>Kids create freely — not just follow steps.</span>
         },
         {
           title: '90 mins Deep Focus',
           titleLine1: '90',
           titleLine1Small: 'mins',
           titleLine2: 'Deep Focus',
-          description: <span>One toy that <strong className="text-black font-bold">keeps kids busy and focused</strong> — so you can actually <strong className="text-black font-bold">sit down and drink your coffee</strong>.</span>,
-          descriptionMobile: <span>One toy that <strong className="text-black font-bold">keeps kids busy and focused</strong> — so you can actually <strong className="text-black font-bold">sit down and drink your coffee</strong>.</span>
+          description: <span>Focused play — without screens.</span>,
+          descriptionMobile: <span>Focused play — without screens.</span>
         },
         {
           title: 'STEAM Problem Solving',
@@ -63,6 +63,7 @@ export default function ImpactSection() {
   };
 
   const copy = translations[language] || translations.en;
+  const displayStats = showSteam ? copy.stats : copy.stats.filter(stat => !stat.title.includes('STEAM'));
 
   return (
     <section className="impact-section">
@@ -79,7 +80,7 @@ export default function ImpactSection() {
           <span>{copy.heading}</span>
         </h2>
         <div className="impact-grid">
-          {copy.stats.map((stat, index) => (
+          {displayStats.map((stat, index) => (
             <div className="impact-card" key={stat.title}>
               <div className="impact-icon-wrapper">
                 {/* 移动端图片 */}
@@ -102,13 +103,7 @@ export default function ImpactSection() {
               {/* PC端标题 */}
               <h3 className="hidden md:block">{stat.title}</h3>
               {/* 移动端标题 */}
-              <h3 className="impact-card-title-mobile md:hidden">
-                <span className="impact-title-line1">
-                  {stat.titleLine1}
-                  {stat.titleLine1Small && <span className="impact-title-small">{stat.titleLine1Small}</span>}
-                </span>
-                <span className="impact-title-line2">{stat.titleLine2}</span>
-              </h3>
+              <h3 className="impact-card-title-mobile md:hidden">{stat.title}</h3>
               {/* PC端描述 */}
               <p className="hidden md:block">{stat.description}</p>
               {/* 移动端描述 */}
@@ -225,7 +220,8 @@ export default function ImpactSection() {
 
         @media (min-width: 768px) {
           .impact-grid {
-            grid-template-columns: repeat(3, minmax(0, 1fr));
+            grid-template-columns: ${displayStats.length === 2 ? 'repeat(2, minmax(0, 400px))' : 'repeat(3, minmax(0, 1fr))'};
+            justify-content: center;
           }
         }
 
@@ -307,42 +303,19 @@ export default function ImpactSection() {
           }
 
           .impact-card-title-mobile {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-bottom: 12px;
-          }
-
-          .impact-title-line1 {
             font-family: 'Rubik', sans-serif;
-            font-size: 32px;
+            font-size: 28px;
             font-weight: 700;
             line-height: 1.2;
+            text-align: center;
             background: linear-gradient(258.25deg, rgba(0, 0, 0, 1), rgba(0, 35, 105, 1) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
             text-fill-color: transparent;
             color: transparent;
-          }
-
-          .impact-title-small {
-            font-size: 20px;
-            font-weight: 400;
-            margin-left: 4px;
-          }
-
-          .impact-title-line2 {
-            font-family: 'Rubik', sans-serif;
-            font-size: 24px;
-            font-weight: 600;
-            line-height: 1.3;
-            background: linear-gradient(258.25deg, rgba(0, 0, 0, 1), rgba(0, 35, 105, 1) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            text-fill-color: transparent;
-            color: transparent;
+            margin-bottom: 12px;
+            display: block;
           }
         }
       `}</style>

@@ -623,7 +623,7 @@ export default function OrderPage({ initialRemaining }) {
         </div>
 
         {/* New Sections inserted from reuse */}
-        <ImpactSection />
+        <ImpactSection showSteam={false} />
         <OrderStepsSection style={{ marginTop: 0 }} />
 
         {/* What Happens After You Reserve Section */}
