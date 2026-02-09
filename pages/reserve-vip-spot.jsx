@@ -74,7 +74,7 @@ export default function PreOrder({ initialRemaining }) {
   // Change this in Dashboard if price changes - no code change needed
   const STRIPE_PAYMENT_LINK = 'https://buy.stripe.com/4gM3cu0MTch13081pJbbG00';
 
-  const handleFastCheckout = (source) => {
+  const handleFastCheckout = async (source) => {
     if (checkoutSource) return;
     setCheckoutSource(source);
 
@@ -82,31 +82,50 @@ export default function PreOrder({ initialRemaining }) {
     // source will be 'top' or 'bottom' or 'pop-modal'
     trackInitiateCheckout({ content_name: source || 'unknown' });
 
-    // Use dynamic Checkout Session API
-    fetch('/api/payment/stripe/checkout-session', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        sourcePage: 'reserve',
-        leadId: 'reserve_' + Date.now(),
-        returnUrl: window.location.origin, // Ensure redirects come back to the correct domain/port
-      }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
+    // Retry logic to handle intermittent Cloudflare 525 SSL errors
+    const maxRetries = 2;
+    const retryDelay = 500; // ms
+
+    for (let attempt = 0; attempt <= maxRetries; attempt++) {
+      try {
+        const res = await fetch('/api/payment/stripe/checkout-session', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            sourcePage: 'reserve',
+            leadId: 'reserve_' + Date.now(),
+            returnUrl: window.location.origin,
+          }),
+        });
+
+        // Retry on server errors (5xx) but not client errors (4xx)
+        if (!res.ok && res.status >= 500 && attempt < maxRetries) {
+          console.log(`[Checkout] Retry ${attempt + 1}/${maxRetries} after ${res.status} error`);
+          await new Promise(r => setTimeout(r, retryDelay));
+          continue;
+        }
+
+        const data = await res.json();
         if (data.url) {
           window.location.href = data.url;
+          return; // Success - exit function
         } else {
-          console.error('No checkout URL returned:', data);
-          alert('Something went wrong. Please try again.');
-          setCheckoutSource(null);
+          throw new Error(data.error || 'No checkout URL returned');
         }
-      })
-      .catch((err) => {
-        console.error('Checkout error:', err);
+      } catch (err) {
+        // On network error, retry if we have attempts left
+        if (attempt < maxRetries) {
+          console.log(`[Checkout] Retry ${attempt + 1}/${maxRetries} after error:`, err.message);
+          await new Promise(r => setTimeout(r, retryDelay));
+          continue;
+        }
+        // Final attempt failed
+        console.error('Checkout error after retries:', err);
         alert('Connection error. Please try again.');
         setCheckoutSource(null);
-      });
+        return;
+      }
+    }
   };
 
   /* Scroll Trigger Logic for PopModal */
