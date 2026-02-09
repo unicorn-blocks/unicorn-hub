@@ -14,7 +14,15 @@ import OrderStepsSection from '../components/sections/OrderStepsSection';
 import PrivacySection from '../components/sections/PrivacySection';
 import KitCategories from '../components/KitCategories';
 import PopModal from '../components/PopModal';
+import { useRouter } from 'next/router';
 import SurveyModal from '../components/SurveyModal';
+
+const PRICING_TIERS = {
+  early: { vip: 129, retail: 199, label: 'Early Bird', sourcePrefix: 'early-' },
+  plus: { vip: 169, retail: 199, label: 'Plus', sourcePrefix: 'plus-' },
+  launch: { vip: 199, retail: 249, label: 'Launch', sourcePrefix: 'launch-' },
+  default: { vip: 149, retail: 199, label: 'Standard', sourcePrefix: '' }
+};
 
 // ISR (Incremental Static Regeneration): Fast load + near-realtime data
 // - Build/revalidate: Fetch from Google Script → cache result
@@ -58,6 +66,18 @@ export default function OrderPage({ initialRemaining }) {
 
 
   // Scarcity state: Initialize with SSR value (instant display, no spinner)
+  // Dynamic Pricing Logic
+  const router = useRouter();
+  const { offer } = router.query;
+  const [currentTier, setCurrentTier] = useState(PRICING_TIERS.default);
+
+  useEffect(() => {
+    if (router.isReady) {
+      const tier = PRICING_TIERS[offer] || PRICING_TIERS.default;
+      setCurrentTier(tier);
+    }
+  }, [router.isReady, offer]);
+
   const [reservationsCount, setReservationsCount] = useState(initialRemaining ?? FALLBACK_REMAINING);
   const totalSpots = 500;
 
@@ -79,13 +99,17 @@ export default function OrderPage({ initialRemaining }) {
   // Change this in Dashboard if price changes - no code change needed
   const STRIPE_PAYMENT_LINK = 'https://buy.stripe.com/aFa9ASdzF3Kv6ck9WfbbG01';
 
-  const handleFastCheckout = async (source, priceAmount = 149) => {
+  const handleFastCheckout = async (source, priceAmount = null) => {
     if (checkoutSource) return;
     setCheckoutSource(source);
 
+    // Combine offer prefix with source (e.g., 'early-bottom')
+    const finalSource = currentTier.sourcePrefix + source;
+    const finalPrice = priceAmount || currentTier.vip;
+
     // Track Pixel/GA with source info
     // source will be 'top' or 'bottom' or 'pop-modal'
-    trackInitiateCheckout({ content_name: source || 'unknown' });
+    trackInitiateCheckout({ content_name: finalSource || 'unknown' });
 
     // Retry logic to handle intermittent Cloudflare 525 SSL errors
     const maxRetries = 2;
@@ -98,9 +122,9 @@ export default function OrderPage({ initialRemaining }) {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             sourcePage: 'reservenow',
-            leadId: 'order_' + Date.now(),
+            leadId: finalSource + '_order_' + Date.now(),
             returnUrl: window.location.origin,
-            amount: priceAmount,
+            amount: finalPrice,
           }),
         });
 
@@ -174,7 +198,7 @@ export default function OrderPage({ initialRemaining }) {
       customBody: (
         <div className="pop-modal-custom-body">
           <div>
-            Reserve your <span style={{ color: '#9b90da', fontWeight: 700 }}>$149 VIP price</span> <span style={{ color: '#9CA3AF', textDecoration: 'line-through', fontSize: '0.9em', fontWeight: 400 }}>($199)</span> with a <span style={{ color: '#9b90da', fontWeight: 700 }}>$2 refundable deposit</span>
+            Reserve your <span style={{ color: '#9b90da', fontWeight: 700 }}>${currentTier.vip} VIP price</span> <span style={{ color: '#9CA3AF', textDecoration: 'line-through', fontSize: '0.9em', fontWeight: 400 }}>(${currentTier.retail})</span> with a <span style={{ color: '#9b90da', fontWeight: 700 }}>$2 refundable deposit</span>
           </div>
           <div className="pop-modal-trust-badge">
             <span style={{ color: '#10B981', fontSize: '0.9rem' }}>✅</span> Trusted by 400+ families
@@ -480,7 +504,7 @@ export default function OrderPage({ initialRemaining }) {
 
       <div className="background-gradient"></div>
 
-      {/* 蓝色顶部条 */}
+      {/* 蓝色顶部条 - Pass dynamic price if needed, usually TopBar has fixed logic or needs update too */}
       <BlueTopBar onCheckout={() => handleFastCheckout('top', 2)} isLoading={checkoutSource === 'top'} showCart={false} />
 
       {/* 使用导航组件 */}
@@ -546,12 +570,12 @@ export default function OrderPage({ initialRemaining }) {
 
                     {/* Spec Pills Moved to Header */}
 
-                    {/* Price Block */}
+                    {/* Price Block - Dynamic */}
                     <div className="price-block">
                       <div className="price-row">
-                        <span className="current-price">$149</span>
-                        <span className="original-price">$199</span>
-                        <span className="save-badge">Save $50</span>
+                        <span className="current-price">${currentTier.vip}</span>
+                        <span className="original-price">${currentTier.retail}</span>
+                        <span className="save-badge">Save ${currentTier.retail - currentTier.vip}</span>
                       </div>
                     </div>
 
@@ -662,7 +686,7 @@ export default function OrderPage({ initialRemaining }) {
                   <div className="reserve-flow-badge">2</div>
                   <div className="reserve-flow-content">
                     <span className="reserve-flow-label">Step 2</span>
-                    <p className="reserve-flow-description">Your $149 VIP Price (<span className="retail-price">Retail $199</span>) is Locked plus Early Shipping</p>
+                    <p className="reserve-flow-description">Your ${currentTier.vip} VIP Price (<span className="retail-price">Retail ${currentTier.retail}</span>) is Locked plus Early Shipping</p>
                   </div>
                 </div>
                 <div className="reserve-flow-step">
@@ -2184,7 +2208,7 @@ export default function OrderPage({ initialRemaining }) {
             <PopModal
               onClose={() => setShowScrollModal(false)}
               isVip={true}
-              source="pop-modal"
+              source={currentTier.sourcePrefix + 'pop-modal'}
               customTitle={modalProps.customTitle}
               customBody={modalProps.customBody}
               countdownMinutes={modalProps.countdownMinutes}
@@ -2218,7 +2242,8 @@ export default function OrderPage({ initialRemaining }) {
         onClose={() => setShowSurveyModal(false)}
         onSubmit={(data) => {
           // Handle submission - include source to track which button triggered
-          const payload = { ...data, source: surveySource, timestamp: new Date().toISOString() };
+          const finalSurveySource = currentTier.sourcePrefix + surveySource;
+          const payload = { ...data, source: finalSurveySource, timestamp: new Date().toISOString() };
 
           fetch('/api/submit-survey', {
             method: 'POST',
