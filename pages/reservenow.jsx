@@ -2181,7 +2181,7 @@ export default function OrderPage({ initialRemaining }) {
               hideCloseButton={true}
               onAction={() => {
                 handleFastCheckout('pop-modal', 2);
-                setShowScrollModal(false);
+                // Modal stays open to show Processing spinner, redirect will happen from handleFastCheckout
               }}
               onCountdownExpire={handleCountdownExpire}
               showTryAgain={modalProps.showTryAgain}
