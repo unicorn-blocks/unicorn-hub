@@ -209,10 +209,10 @@ export default function OrderPage({ initialRemaining }) {
       }
     }
 
-    // 60 second timer trigger
+    // 40 second timer trigger
     const timeoutId = setTimeout(() => {
       triggerModal();
-    }, 60000); // 60 seconds
+    }, 40000); // 40 seconds
 
     window.addEventListener('scroll', handleScroll);
     return () => {
