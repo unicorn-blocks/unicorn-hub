@@ -666,8 +666,8 @@ export default function OrderPage({ initialRemaining }) {
         </div>
 
         {/* New Sections inserted from reuse */}
-        <ImpactSection showSteam={false} />
         <OrderStepsSection style={{ marginTop: 0 }} />
+        <ImpactSection showSteam={false} />
 
         {/* What Happens After You Reserve Section */}
         <section className="reserve-flow-section">
@@ -2240,10 +2240,16 @@ export default function OrderPage({ initialRemaining }) {
       <SurveyModal
         isOpen={showSurveyModal}
         onClose={() => setShowSurveyModal(false)}
-        onSubmit={(data) => {
-          // Handle submission - include source to track which button triggered
+        onSubmit={(data, sessionId) => {
+          // Final submission
           const finalSurveySource = currentTier.sourcePrefix + surveySource;
-          const payload = { ...data, source: finalSurveySource, timestamp: new Date().toISOString() };
+          const payload = {
+            ...data,
+            source: finalSurveySource,
+            timestamp: new Date().toISOString(),
+            sessionId: sessionId, // Ensure this is not undefined
+            isPartial: false
+          };
 
           fetch('/api/submit-survey', {
             method: 'POST',
@@ -2251,14 +2257,27 @@ export default function OrderPage({ initialRemaining }) {
           })
             .then(res => res.json())
             .then(result => {
-              if (result.success) {
-                console.log('Survey submitted successfully');
-              } else {
-                console.error('Survey submission failed');
-              }
+              if (result.success) console.log('Survey submitted successfully');
             })
-            .catch(err => console.error(err));
-          // SurveyModal now shows its own success screen and handles close
+            .catch(err => console.error('Survey submit error:', err));
+        }}
+        onStepSubmit={(data, sessionId) => {
+          // Partial submission (Fire and Forget)
+          const finalSurveySource = currentTier.sourcePrefix + surveySource;
+          const payload = {
+            ...data,
+            source: finalSurveySource,
+            timestamp: new Date().toISOString(),
+            sessionId: sessionId,
+            isPartial: true
+          };
+
+          // Silent background submission
+          fetch('/api/submit-survey', {
+            method: 'POST',
+            body: JSON.stringify(payload),
+            keepalive: true
+          }).catch(err => console.error('Partial submit error:', err));
         }}
       />
 

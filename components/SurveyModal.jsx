@@ -170,13 +170,15 @@ const QUESTIONS = [
     }
 ];
 
-export default function SurveyModal({ isOpen, onClose, onSubmit }) {
+export default function SurveyModal({ isOpen, onClose, onSubmit, onStepSubmit }) {
     const [currentStepIndex, setCurrentStepIndex] = useState(0);
     const [answers, setAnswers] = useState({});
     const [otherInputs, setOtherInputs] = useState({}); // For "Other" text fields
     const [errorMsg, setErrorMsg] = useState('');
     const [showSuccess, setShowSuccess] = useState(false);
     const [viewportHeight, setViewportHeight] = useState('100%');
+    // Generate session ID once per modal open lifecycle
+    const [sessionId] = useState(() => `sess_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`);
 
     // Handle Visual Viewport resizing (keyboard handling on mobile)
     useEffect(() => {
@@ -345,12 +347,31 @@ export default function SurveyModal({ isOpen, onClose, onSubmit }) {
 
             // Submit logic
             if (onSubmit) {
-                onSubmit(finalData);
+                onSubmit(finalData, sessionId);
             }
             setShowSuccess(true);
         } else {
             setCurrentStepIndex(prev => prev + 1);
             setErrorMsg(''); // Reset error state for next question
+
+            // Partial Submit for analytics
+            if (onStepSubmit) {
+                // Compile current data
+                const currentData = { ...answers };
+                if (answerOverride) currentData[currentQuestion.id] = answerOverride;
+
+                // Merge "Other" inputs
+                Object.keys(otherInputs).forEach(key => {
+                    const qAnswer = key === currentQuestion.id && answerOverride ? answerOverride : answers[key];
+                    const question = QUESTIONS.find(q => q.id === key);
+                    const selectedOpt = question?.options?.find(o => o.value === qAnswer);
+                    if (selectedOpt?.hasOtherInput) {
+                        currentData[`${key}_other_text`] = otherInputs[key];
+                    }
+                });
+
+                onStepSubmit(currentData, sessionId);
+            }
         }
     };
 
