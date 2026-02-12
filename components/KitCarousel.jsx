@@ -62,6 +62,10 @@ export default function KitCarousel({ mobileImages, desktopImages }) {
 
     const handleDragMove = (e) => {
         if (!isDragging) return;
+        // Prevent page from scrolling horizontally during carousel swipe
+        if (e.type === 'touchmove') {
+            e.preventDefault();
+        }
         const x = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
         const diff = x - startX.current;
         if ((currentImage === 0 && diff > 0) || (currentImage === images.length - 1 && diff < 0)) {
@@ -79,15 +83,35 @@ export default function KitCarousel({ mobileImages, desktopImages }) {
         else if (dragOffset > threshold) goToPrevious();
         setDragOffset(0);
     };
+    // Use ref to register non-passive touchmove so preventDefault() works
+    const wrapperRef = useRef(null);
+
+    useEffect(() => {
+        const el = wrapperRef.current;
+        if (!el) return;
+        const handler = (e) => {
+            if (!isDragging) return;
+            e.preventDefault();
+            const x = e.touches[0].clientX;
+            const diff = x - startX.current;
+            if ((currentImage === 0 && diff > 0) || (currentImage === images.length - 1 && diff < 0)) {
+                setDragOffset(diff * 0.3);
+            } else {
+                setDragOffset(diff);
+            }
+        };
+        el.addEventListener('touchmove', handler, { passive: false });
+        return () => el.removeEventListener('touchmove', handler);
+    }, [isDragging, currentImage, images.length]);
 
     return (
         <div className="kit-carousel">
             <div
+                ref={wrapperRef}
                 className="kit-carousel-wrapper"
                 onTouchStart={handleDragStart}
-                onTouchMove={handleDragMove}
                 onTouchEnd={handleDragEnd}
-
+                style={{ touchAction: 'pan-y' }}
             >
                 <div
                     className="kit-carousel-track"

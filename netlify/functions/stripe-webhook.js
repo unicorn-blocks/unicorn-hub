@@ -101,6 +101,14 @@ exports.handler = async (event, context) => {
 
                 console.log("DEBUG zipcode:", zipcode);
 
+                // Extract traffic source from client_reference_id
+                // Format: "vip_early-bottom_order_..." or "early-bottom_order_..." or "bottom_order_..."
+                const clientRef = session.client_reference_id || '';
+                // The source is everything before the last "_order_" segment
+                const orderIdx = clientRef.indexOf('_order_');
+                const sourceTag = orderIdx > -1 ? clientRef.substring(0, orderIdx) : 'stripe';
+                console.log("DEBUG source from client_reference_id:", sourceTag);
+
                 if (!email) {
                     // 你也可以选择不抛错（避免 Stripe 重试），但建议抛错以免漏单
                     throw new Error(`Missing email in checkout.session.completed (session: ${session.id})`);
@@ -111,7 +119,7 @@ exports.handler = async (event, context) => {
                     amount_paid: amount,
                     stripe_session_id: session.id,
                     zipcode,
-                    source: 'stripe',
+                    source: sourceTag || 'stripe',
                 });
 
                 console.log('PaidCoupon sheet updated:', email);

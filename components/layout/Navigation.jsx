@@ -48,7 +48,7 @@ export default function Navigation() {
           <Link href="/" className="flex items-center gap-2 nav-logo">
             <img src="/assets/logo_horizontal_white_eng.svg" alt="Unicorn Logo" className="h-12" decoding="async" />
           </Link>
-          
+
           {/* 桌面端导航 */}
           <div className="hidden md:flex items-center mr-auto ml-8">
             <Link href="/features" className={`nav-item transition-all duration-300 font-medium ${router.pathname === '/features' ? 'text-[#7d9ed4] nav-active' : 'text-gray-700 hover:text-[#7d9ed4]'}`}>
@@ -61,27 +61,27 @@ export default function Navigation() {
               {language === 'en' ? 'Contact Us' : '联系我们'}
             </a>
           </div>
-          
+
           {/* 预购按钮（替代语言切换） */}
-          <Link 
-            href="/reserve-vip-spot"
+          <Link
+            href="/reservenow?source=vip"
             className="nav-item preorder-text-gradient transition-all duration-300 mr-4 focus:outline-none"
             aria-label={language === 'en' ? 'Reserve VIP Spot' : '预订VIP名额'}
           >
             {language === 'en' ? 'Reserve VIP Spot' : '预订VIP名额'}
           </Link>
-          
+
           {/* 移动端汉堡菜单按钮 */}
-          <button 
-            className="md:hidden nav-menu-btn flex items-center p-2 text-gray-700 hover:text-[#7d9ed4] transition-all duration-300" 
+          <button
+            className="md:hidden nav-menu-btn flex items-center p-2 text-gray-700 hover:text-[#7d9ed4] transition-all duration-300"
             onClick={toggleMenu}
             aria-label="导航菜单"
           >
-            <svg 
-              className="w-6 h-6" 
-              fill="none" 
-              stroke="currentColor" 
-              viewBox="0 0 24 24" 
+            <svg
+              className="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
               xmlns="http://www.w3.org/2000/svg"
             >
               {isMenuOpen ? (
@@ -92,7 +92,7 @@ export default function Navigation() {
             </svg>
           </button>
         </div>
-        
+
         {/* 移动端下拉菜单 */}
         {isMenuOpen && (
           <div className="nav-mobile-menu md:hidden py-4 flex flex-col space-y-4 absolute right-0 rounded-2xl shadow-2xl p-6 mt-2 w-auto min-w-[220px]">

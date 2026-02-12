@@ -82,8 +82,8 @@ export default function PopModal({
     // 显示 700ms "Joining" 状态后执行
     setTimeout(() => {
       if (isVip) {
-        // VIP站：跳转到VIP页面
-        router.push('/reserve-vip-spot');
+        // VIP站：跳转到新的预定页面并带上来源
+        router.push('/reservenow?source=vip');
       } else {
         // 主站：显示成功视图
         setShowSuccess(true);
@@ -211,7 +211,7 @@ export default function PopModal({
 
             {/* 按钮+dudu置于右边 (或者居中如果没输入框) */}
             <div className={styles.btnWithDogWrap} style={!showEmailInput ? { marginLeft: 'auto', marginRight: 'auto', width: '100%', justifyContent: 'center' } : {}}>
-              {showEmailInput && <Image src="/assets/ima/dudu.png" alt="dudu" width={47} height={47} className={styles.duduDog} />}
+
 
               {/* Conditional button rendering based on state */}
               {showTryAgain ? (

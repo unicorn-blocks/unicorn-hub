@@ -68,15 +68,20 @@ export default function OrderPage({ initialRemaining }) {
   // Scarcity state: Initialize with SSR value (instant display, no spinner)
   // Dynamic Pricing Logic
   const router = useRouter();
-  const { offer } = router.query;
+  const { offer, source: urlSource } = router.query;
   const [currentTier, setCurrentTier] = useState(PRICING_TIERS.default);
+  const [trafficSource, setTrafficSource] = useState(''); // 'vip', 'fb_ads', etc.
 
   useEffect(() => {
     if (router.isReady) {
       const tier = PRICING_TIERS[offer] || PRICING_TIERS.default;
       setCurrentTier(tier);
+      // Capture traffic source from URL (e.g., ?source=vip)
+      if (urlSource) {
+        setTrafficSource(urlSource);
+      }
     }
-  }, [router.isReady, offer]);
+  }, [router.isReady, offer, urlSource]);
 
   const [reservationsCount, setReservationsCount] = useState(initialRemaining ?? FALLBACK_REMAINING);
   const totalSpots = 500;
@@ -103,8 +108,9 @@ export default function OrderPage({ initialRemaining }) {
     if (checkoutSource) return;
     setCheckoutSource(source);
 
-    // Combine offer prefix with source (e.g., 'early-bottom')
-    const finalSource = currentTier.sourcePrefix + source;
+    // Combine traffic source + offer prefix + internal source (e.g., 'vip_early-bottom')
+    const sourcePrefix = trafficSource ? trafficSource + '_' : '';
+    const finalSource = sourcePrefix + currentTier.sourcePrefix + source;
     const finalPrice = priceAmount || currentTier.vip;
 
     // Track Pixel/GA with source info
@@ -2241,8 +2247,9 @@ export default function OrderPage({ initialRemaining }) {
         isOpen={showSurveyModal}
         onClose={() => setShowSurveyModal(false)}
         onSubmit={(data, sessionId) => {
-          // Final submission
-          const finalSurveySource = currentTier.sourcePrefix + surveySource;
+          // Final submission - combine traffic source + offer prefix + internal source
+          const sourcePrefix = trafficSource ? trafficSource + '_' : '';
+          const finalSurveySource = sourcePrefix + currentTier.sourcePrefix + surveySource;
           const payload = {
             ...data,
             source: finalSurveySource,
@@ -2262,8 +2269,9 @@ export default function OrderPage({ initialRemaining }) {
             .catch(err => console.error('Survey submit error:', err));
         }}
         onStepSubmit={(data, sessionId) => {
-          // Partial submission (Fire and Forget)
-          const finalSurveySource = currentTier.sourcePrefix + surveySource;
+          // Partial submission (Fire and Forget) - combine traffic source + offer prefix + internal source
+          const sourcePrefix = trafficSource ? trafficSource + '_' : '';
+          const finalSurveySource = sourcePrefix + currentTier.sourcePrefix + surveySource;
           const payload = {
             ...data,
             source: finalSurveySource,

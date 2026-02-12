@@ -34,7 +34,7 @@ export default function GlobalEmailNotifyBox() {
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const host = window.location.host.toLowerCase().replace(/:\d+$/, '');
-      setIsVip(host === 'vip.unicornblocks.ai');
+      setIsVip(host === 'vip.unicornblocks.ai' || host === 'localhost');
     }
   }, []);
 
@@ -54,8 +54,8 @@ export default function GlobalEmailNotifyBox() {
     // 显示 700ms "Joining" 状态后执行
     setTimeout(() => {
       if (isVip) {
-        // VIP站：跳转到VIP页面
-        router.push('/reserve-vip-spot');
+        // VIP站：跳转到新的预定页面并带上来源
+        router.push('/reservenow?source=vip');
       } else {
         // 主站：显示成功消息
         setShowSuccess(true);
@@ -102,7 +102,8 @@ export default function GlobalEmailNotifyBox() {
           right: 0,
           bottom: 15,
           margin: '0 auto',
-          width: 420,
+          width: 'calc(100% - 30px)',
+          maxWidth: 420,
           height: 60,
           background: 'linear-gradient(90deg, #E8A4B8 0%, #A79BDB 100%)',
           border: '2px solid #111',
@@ -146,12 +147,12 @@ export default function GlobalEmailNotifyBox() {
         right: 0,
         bottom: 15,//到页面底部距离
         margin: '0 auto',
-        width: OUTER_WIDTH,
+        width: 'calc(100% - 30px)',
+        maxWidth: OUTER_WIDTH,
         height: 60,
         background: '#FCD77F',
         border: `${BLACK_BORDER}px solid #111`,
         borderRadius: OUTER_RADIUS,
-        // display: 'flex', // Removed as it's handled by tailwind class
         alignItems: 'center',
         zIndex: 1001,
         justifyContent: 'center',
@@ -160,9 +161,9 @@ export default function GlobalEmailNotifyBox() {
       }}
     >
       {/* 左侧 12px 间距 */}
-      <div style={{ width: SIDE_PAD, height: BOX_HEIGHT }} />
-      {/* 输入框（减小尺寸） */}
-      <div style={{ position: 'relative', width: 281, height: CONTROL_HEIGHT }}>
+      <div style={{ width: SIDE_PAD, flexShrink: 0, height: BOX_HEIGHT }} />
+      {/* 输入框 */}
+      <div style={{ position: 'relative', flex: 1, minWidth: 0, height: CONTROL_HEIGHT }}>
         <input
           type="email"
           value={email}
@@ -176,7 +177,7 @@ export default function GlobalEmailNotifyBox() {
             border: 'none',
             outline: 'none',
             fontSize: FONT_SIZE,
-            color: email ? '#54545C' : '#A7A7A7', // 有输入时使用 #54545C，否则使用 #A7A7A7
+            color: email ? '#54545C' : '#A7A7A7',
             padding: '0 16px',
             paddingRight: isEmailSaved ? '40px' : '16px',
             boxSizing: 'border-box',
@@ -198,13 +199,14 @@ export default function GlobalEmailNotifyBox() {
         )}
       </div>
       {/* 中间gap */}
-      <div style={{ width: GAP }} />
+      <div style={{ width: GAP, flexShrink: 0 }} />
       {/* 按钮 */}
       <button
         onClick={handleNotify}
         disabled={isLoading}
         style={{
           width: 158,
+          flexShrink: 0,
           height: CONTROL_HEIGHT,
           background: '#2F2737',
           color: '#fff',
@@ -212,20 +214,19 @@ export default function GlobalEmailNotifyBox() {
           fontSize: BTN_FONT_SIZE,
           borderRadius: INNER_RADIUS,
           border: 'none',
-          cursor: 'pointer',
+          cursor: isLoading ? 'not-allowed' : 'pointer',
           whiteSpace: 'nowrap',
           overflow: 'hidden',
           textOverflow: 'ellipsis',
           padding: 0,
           lineHeight: `${CONTROL_HEIGHT}px`,
           opacity: isLoading ? 0.7 : 1,
-          cursor: isLoading ? 'not-allowed' : 'pointer'
         }}
       >
         {isLoading ? 'Joining' : 'Unlock VIP Access'}
       </button>
       {/* 右侧 12px 间距 */}
-      <div style={{ width: 12, height: CONTROL_HEIGHT }} />
+      <div style={{ width: 12, flexShrink: 0, height: CONTROL_HEIGHT }} />
       {/* 错误提示 */}
       {error && (
         <div
@@ -235,8 +236,6 @@ export default function GlobalEmailNotifyBox() {
             left: 20,
             color: '#dc2626',
             fontSize: 13,
-
-            //left:200
           }}
         >
           {error}

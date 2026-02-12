@@ -570,7 +570,7 @@ export default function Home({ isVip = false }) {
       <div className="background-gradient" />
 
       {/* 蓝色顶部条 */}
-      <BlueTopBar />
+      <BlueTopBar showCart={!isVip} />
 
       <main className="home-root min-h-screen">
         {/* <Navigation /> */}
@@ -1696,6 +1696,7 @@ export default function Home({ isVip = false }) {
           grid-template-columns: 1fr;
           gap: 32px;
           align-items: stretch;
+          justify-items: center;
         }
 
         @media (min-width: 768px) {
@@ -1711,7 +1712,9 @@ export default function Home({ isVip = false }) {
           flex-direction: column;
           gap: 22px;
           position: relative;
-          padding: 10px 0 0 14px;
+          padding: 10px 0 0 0;
+          margin: 0 auto;
+          width: 100%;
         }
 
         .kit-media-single {
@@ -1719,7 +1722,7 @@ export default function Home({ isVip = false }) {
           width: 100%;
           /* Mobile default */
           height: auto;
-          aspect-ratio: 4/5;
+          aspect-ratio: 1/1;
         }
 
         @media (min-width: 768px) {
