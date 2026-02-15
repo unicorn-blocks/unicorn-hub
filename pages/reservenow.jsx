@@ -243,25 +243,25 @@ export default function OrderPage({ initialRemaining }) {
     function handleScroll() {
       if (hasTriggered) return;
 
-      const privacySection = document.querySelector('.privacy-section');
-      if (!privacySection) return;
-      const rect = privacySection.getBoundingClientRect();
+      const stepSection = document.querySelector('.order-steps-section');
+      if (!stepSection) return;
+      const rect = stepSection.getBoundingClientRect();
       const windowHeight = window.innerHeight;
 
-      // Trigger when user has scrolled past 60% of the privacy section
+      // Trigger when user has scrolled past 45% of the step section
       const sectionHeight = rect.height;
       const scrolledPast = windowHeight - rect.top; // How much of section is visible/scrolled past
       const scrollPercentage = scrolledPast / sectionHeight;
 
-      if (scrollPercentage >= 0.6) {
+      if (scrollPercentage >= 0.45) {
         triggerModal();
       }
     }
 
-    // 40 second timer trigger
+    // 25 second timer trigger
     const timeoutId = setTimeout(() => {
       triggerModal();
-    }, 40000); // 40 seconds
+    }, 25000); // 25 seconds
 
     window.addEventListener('scroll', handleScroll);
     return () => {
@@ -672,7 +672,6 @@ export default function OrderPage({ initialRemaining }) {
         </div>
 
         {/* New Sections inserted from reuse */}
-        <OrderStepsSection style={{ marginTop: 0 }} />
         <ImpactSection showSteam={false} />
 
         {/* What Happens After You Reserve Section */}
@@ -709,6 +708,8 @@ export default function OrderPage({ initialRemaining }) {
             </div>
           </div>
         </section>
+
+        <OrderStepsSection style={{ marginTop: 0 }} />
 
         <TestimonialsSection />
         <PrivacySection />

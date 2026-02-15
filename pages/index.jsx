@@ -237,10 +237,10 @@ export default function Home({ isVip = false }) {
             descriptionMobile: 'Bolder shapes, more colors, richer builds.'
           },
           {
-            title: '90 mins Deep Focus',
+            title: '90 mins Deep Focus Every Time',
             titleLine1: '90',
             titleLine1Small: 'mins',
-            titleLine2: 'Deep Focus',
+            titleLine2: 'Deep Focus Every Time',
             description:
               'Kids stay focused longer. You get a real coffee break.',
             descriptionMobile: 'Kids stay focused longer. You get a real coffee break.'
@@ -1052,6 +1052,8 @@ export default function Home({ isVip = false }) {
 
         {/* Impact Section - VIP站时显示在这里（原位置） */}
         {isVip && renderImpactSection()}
+
+        {/* Story Section */}
 
         <section className={`story-section ${!isVip ? 'main-site' : ''}`}>
           <div className="content-container">
@@ -3232,7 +3234,7 @@ export default function Home({ isVip = false }) {
           }
 
           .kit-media-single {
-            min-height: 400px;
+            min-height: unset;
           }
 
           .family-stage {
@@ -3494,7 +3496,7 @@ export default function Home({ isVip = false }) {
           }
 
           .kit-media-single {
-            min-height: 400px;
+            min-height: unset;
           }
 
           .family-stage {

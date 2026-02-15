@@ -10,19 +10,19 @@ export default function ImpactSection({ showSteam = true }) {
       heading: 'Why parents are Choosing us',
       stats: [
         {
-          title: '3× Creativity',
+          title: 'Open-Ended Creative Play',
           titleLine1: '3×',
           titleLine2: 'Creativity',
-          description: <span>Kids create freely — not just follow steps.</span>,
-          descriptionMobile: <span>Kids create freely — not just follow steps.</span>
+          description: <span>One system. Endless ideas.</span>,
+          descriptionMobile: <span>One system. Endless ideas.</span>
         },
         {
-          title: '90 mins Deep Focus',
+          title: '90 Minutes Every Time',
           titleLine1: '90',
           titleLine1Small: 'mins',
           titleLine2: 'Deep Focus',
-          description: <span>Focused play — without screens.</span>,
-          descriptionMobile: <span>Focused play — without screens.</span>
+          description: <span>Deep Focus - Without Screens.</span>,
+          descriptionMobile: <span>Deep Focus - Without Screens.</span>
         },
         {
           title: 'STEAM Problem Solving',
