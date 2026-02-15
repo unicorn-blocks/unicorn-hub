@@ -13,6 +13,7 @@ import dynamic from 'next/dynamic'
 import BlueTopBar from '../components/BlueTopBar';
 import { isVipHost } from '../lib/domain';
 import KitCategories from '../components/KitCategories';
+import OrderStepsSection from '../components/sections/OrderStepsSection';
 const PopModal = dynamic(() => import('../components/PopModal'), { ssr: false });
 
 
@@ -47,20 +48,18 @@ export default function Home({ isVip = false }) {
     function handleScroll() {
       if (hasTriggered) return;
 
-      const section3 = document.querySelector('.impact-section');
-      if (!section3) return;
-      const rect = section3.getBoundingClientRect();
+      const privacySection = document.querySelector('.privacy-section');
+      if (!privacySection) return;
+      const rect = privacySection.getBoundingClientRect();
       const windowHeight = window.innerHeight;
 
-      // 1. Existing Logic: Scroll to bottom of section
+      // 1. Scroll-to-bottom Logic (Now for Privacy Section)
       if (rect.bottom <= windowHeight) {
         triggerModal();
         return;
       }
 
-      // 2. New Logic: Dwell for 3 seconds
-      // Check if section is significantly visible (e.g., more than 10% or just intersecting?)
-      // User said "stay in kit section". Let's assume "is visible on screen".
+      // 2. Dwell Logic: 3 seconds in Privacy Section
       const isVisible = rect.top < windowHeight && rect.bottom > 0;
 
       if (isVisible) {
@@ -77,12 +76,18 @@ export default function Home({ isVip = false }) {
       }
     }
 
+    // 3. New Global Logic: 40 seconds residency
+    const globalTimeoutId = setTimeout(() => {
+      triggerModal();
+    }, 40000);
+
     window.addEventListener('scroll', handleScroll);
     handleScroll(); // check initial state
 
     return () => {
       window.removeEventListener('scroll', handleScroll);
       if (timerId) clearTimeout(timerId);
+      if (globalTimeoutId) clearTimeout(globalTimeoutId);
     };
   }, []);
   const { language } = useLanguage();
@@ -111,37 +116,6 @@ export default function Home({ isVip = false }) {
           { label: "For Age 3-8", icon: '/assets/image/Vector_17_1385.png' }
         ],
         speechBubble: "Hi! I'm Sparky!"
-      },
-      steps: {
-        heading: 'Spark Creativity Through Adventure',
-        headingLine2: 'And Let Them Shine',
-        subheading: 'With Sparky, Kids Create, Parents Relax.',
-        cards: [
-          {
-            title: 'Pick To Start',
-            description: 'Pick a Magic Hat to unlock the world.',
-            background: '#D8CBFF',
-            image: '/assets/ks_pic/space.png'
-          },
-          {
-            title: 'Story Sparks Creation',
-            description: 'Every build is part of a Story.',
-            background: '#FFD7D0',
-            image: '/assets/ks_pic/room.png'
-          },
-          {
-            title: 'Create & Understand',
-            description: 'Build and show your creation to Sparky.',
-            background: '#FFE7B2',
-            image: '/assets/ks_pic/App-1.png'
-          },
-          {
-            title: 'The Adventure Continues',
-            description: 'The Magic Hat and Block light up to celebrate success!',
-            background: '#CFEFD5',
-            image: '/assets/ks_pic/App-2.png'
-          }
-        ]
       },
       kit: {
         heading: 'Everything to Build the Magic',
@@ -639,208 +613,7 @@ export default function Home({ isVip = false }) {
         {!isVip && renderImpactSection()}
 
         {/* Steps Section - 仅 VIP 域名显示 */}
-        {isVip && (
-          <section className="steps-section">
-            <div className="content-container">
-              <div className="section-heading text-center">
-                <h2 style={{ textAlign: 'center', margin: '0 auto', width: '100%' }}>
-                  <span className="steps-heading-line1">{copy.steps.heading}</span>
-                  <span className="steps-heading-line2 hidden md:block">{copy.steps.headingLine2}</span>
-                </h2>
-                <p>{copy.steps.subheading}</p>
-              </div>
-              <div className="steps-grid">
-                {/* 第一组 */}
-                <div className="step-item" style={{ zIndex: 2 }}>
-                  <div className="step-card step-card-image-only">
-                    <div className="step-image-full" style={{ minHeight: '520px' }}>
-                      {/* 移动端：分层展示结构 */}
-                      <div className="step-mobile-wrapper md:hidden">
-                        <div className="step-mobile-bg"></div>
-                        <div className="step-mobile-content">
-                          <div className="step-mobile-frame">
-                            <video
-                              src="/assets/steps/step1.mp4"
-                              autoPlay
-                              loop
-                              muted
-                              playsInline
-                              preload="metadata"
-                              style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
-                            />
-                          </div>
-                          <div className="step-mobile-text">
-                            <h3>1. Pick To Start</h3>
-                            <p>Pick a Magic Hat Snap to unlock the world.</p>
-                          </div>
-                        </div>
-                      </div>
-                      {/* PC Structure matching Mobile style */}
-                      <div className="step-pc-content hidden md:flex">
-                        <div className="step-pc-frame">
-                          <video
-                            src="/assets/steps/step1.mp4"
-                            autoPlay
-                            loop
-                            muted
-                            playsInline
-                            preload="metadata"
-                            style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
-                          />
-                        </div>
-                        <div className="step-pc-text">
-                          <h3>1. Pick To Start</h3>
-                          <p>Pick a Magic Hat Snap to unlock the world.</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* 第二组 */}
-                <div className="step-item" style={{ zIndex: 1 }}>
-                  <div className="step-card step-card-image-only">
-                    <div className="step-image-full" style={{ minHeight: '520px' }}>
-                      {/* 移动端：分层展示结构 - Step 2 */}
-                      <div className="step-mobile-wrapper md:hidden">
-                        <div className="step-mobile-bg"></div>
-                        <div className="step-mobile-content">
-                          <div className="step-mobile-frame">
-                            <video
-                              src="/assets/steps/step2.mp4"
-                              autoPlay
-                              loop
-                              muted
-                              playsInline
-                              preload="metadata"
-                              style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
-                            />
-                          </div>
-                          <div className="step-mobile-text">
-                            <h3>2. Story Sparks Creation</h3>
-                            <p>Every Build is part of a Story.</p>
-                          </div>
-                        </div>
-                      </div>
-                      {/* PC Structure matching Mobile style */}
-                      <div className="step-pc-content hidden md:flex">
-                        <div className="step-pc-frame">
-                          <video
-                            src="/assets/steps/step2.mp4"
-                            autoPlay
-                            loop
-                            muted
-                            playsInline
-                            preload="metadata"
-                            style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
-                          />
-                        </div>
-                        <div className="step-pc-text">
-                          <h3>2. Story Sparks Creation</h3>
-                          <p>Every Build is part of a Story.</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* 第三组 */}
-                <div className="step-item" style={{ zIndex: 0 }}>
-                  <div className="step-card step-card-image-only">
-                    <div className="step-image-full" style={{ minHeight: '520px' }}>
-                      {/* 移动端：分层展示结构 - Step 3 */}
-                      <div className="step-mobile-wrapper md:hidden">
-                        <div className="step-mobile-bg"></div>
-                        <div className="step-mobile-content">
-                          <div className="step-mobile-frame">
-                            <video
-                              src="/assets/steps/step3.mp4"
-                              autoPlay
-                              loop
-                              muted
-                              playsInline
-                              preload="metadata"
-                              style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
-                            />
-                          </div>
-                          <div className="step-mobile-text">
-                            <h3>3. Create & Understand</h3>
-                            <p>Build and show your creation to Sparky.</p>
-                          </div>
-                        </div>
-                      </div>
-                      {/* PC Structure matching Mobile style */}
-                      <div className="step-pc-content hidden md:flex">
-                        <div className="step-pc-frame">
-                          <video
-                            src="/assets/steps/step3.mp4"
-                            autoPlay
-                            loop
-                            muted
-                            playsInline
-                            preload="metadata"
-                            style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
-                          />
-                        </div>
-                        <div className="step-pc-text">
-                          <h3>3. Create & Understand</h3>
-                          <p>Build and show your creation to Sparky.</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* 第四组 */}
-                <div className="step-item" style={{ zIndex: -1 }}>
-                  <div className="step-card step-card-image-only">
-                    <div className="step-image-full" style={{ minHeight: '520px' }}>
-                      {/* 移动端：分层展示结构 - Step 4 */}
-                      <div className="step-mobile-wrapper md:hidden">
-                        <div className="step-mobile-bg"></div>
-                        <div className="step-mobile-content">
-                          <div className="step-mobile-frame">
-                            <video
-                              src="/assets/steps/step4.mp4"
-                              autoPlay
-                              loop
-                              muted
-                              playsInline
-                              preload="metadata"
-                              style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
-                            />
-                          </div>
-                          <div className="step-mobile-text">
-                            <h3>4. The Adventure Continues</h3>
-                            <p>The Magic Hat and Blocks light up to celebrate success!</p>
-                          </div>
-                        </div>
-                      </div>
-                      {/* PC Structure matching Mobile style */}
-                      <div className="step-pc-content hidden md:flex">
-                        <div className="step-pc-frame">
-                          <video
-                            src="/assets/steps/step4.mp4"
-                            autoPlay
-                            loop
-                            muted
-                            playsInline
-                            preload="metadata"
-                            style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
-                          />
-                        </div>
-                        <div className="step-pc-text">
-                          <h3>4. The Adventure Continues</h3>
-                          <p>The Magic Hat and Blocks light up to celebrate success!</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
-        )}
+        {isVip && <OrderStepsSection style={{ marginTop: 0 }} />}
 
         {/* Kit Section - 仅 VIP 域名显示 */}
         {
@@ -1406,246 +1179,7 @@ export default function Home({ isVip = false }) {
           object-fit: contain;
         }
 
-        .steps-section {
-          padding: 80px 0 0;
-          background: #EEF9FF;
-          margin-top: clamp(-120px, -8vw, -60px);
-          position: relative;
-          z-index: 3;
-        }
 
-        .steps-section::after {
-          content: '';
-          position: absolute;
-          bottom: -50px;
-          left: 0;
-          right: 0;
-          height: 80px;
-          background: #EEF9FF;
-          border-radius: 0 0 50% 50% / 0 0 60px 60px;
-          z-index: 2;
-        }
-
-        .content-container {
-          width: 100%;
-          max-width: 1200px;
-          margin: 0 auto;
-          padding: 0 24px;
-        }
-
-        .section-heading h2 {
-          font-size: clamp(2rem, 3vw, 3rem);
-          margin-bottom: 12px;
-          color: var(--color-primary-dark);  /* 移动端：#0F192A */
-          font-weight: 700;
-          text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff;
-          line-height: 1.2;
-        }
-
-        @media (min-width: 768px) {
-          .section-heading h2 {
-            color: #54545C;  /* PC端：恢复原色 */
-          }
-        }
-
-        /* Steps Section标题分行 */
-        .steps-heading-line1,
-        .steps-heading-line2 {
-          display: block;
-        }
-
-        /* 强制在移动端隐藏第二行 */
-        @media (max-width: 767px) {
-          .steps-heading-line2 {
-            display: none !important;
-          }
-        }
-
-        @media (min-width: 1024px) {
-          .section-heading h2 {
-             display: block; /* Removed flex to allow normal wrapping */
-             width: 100%;
-             white-space: normal; /* Allow wrapping */
-             text-align: center;
-          }
-          .steps-heading-line1 {
-            display: inline;
-          }
-          .steps-heading-line2 {
-            display: inline-block; /* Keep as unit to avoid breaking inside */
-          }
-          .steps-heading-line1::after {
-            content: none;
-          }
-        }
-
-        .section-heading p {
-          font-size: 1.125rem;
-          color: #54545C;
-          font-weight: 400;
-          text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff;
-        }
-
-        .steps-grid {
-          margin-top: 48px;
-          display: grid;
-          grid-template-columns: repeat(4, minmax(0, 1fr));
-          gap: 6px;  /* PC端间距 */
-          position: relative;
-          z-index: 3;
-        }
-
-        .step-item {
-          position: relative;
-        }
-
-        .step-card {
-          position: relative;
-          border-radius: 32px;
-          padding: 24px;
-          min-height: 380px;
-          box-shadow: 0 20px 40px rgba(17, 24, 39, 0.08);
-          display: flex;
-          flex-direction: column;
-          z-index: 1;
-          background: transparent;
-        }
-
-        .step-card-image-only {
-          padding: 0;
-          min-height: auto;
-          overflow: visible;
-          box-shadow: none;
-        }
-
-        .step-image-full {
-          position: relative;
-          width: 100%;
-          height: 100%;
-          min-height: 450px;
-          z-index: 3;
-          overflow: visible;
-        }
-
-        .step-image-full-item {
-          object-fit: contain;
-          border-radius: 32px;
-          width: 100%;
-          height: 100%;
-        }
-
-        .step-image-layered {
-          position: relative;
-          width: 100%;
-          height: 160px;
-          margin-bottom: 16px;
-        }
-
-        .step-image-border {
-          position: absolute;
-          inset: 0;
-          width: 100%;
-          height: 100%;
-          z-index: 1;
-        }
-
-        .step-image-border-item {
-          object-fit: cover;
-          border-radius: 24px;
-        }
-
-        .step-image-inner {
-          position: absolute;
-          top: 20px;
-          left: 20px;
-          right: 20px;
-          bottom: 20px;
-          z-index: 2;
-        }
-
-        .step-image-inner-item {
-          object-fit: cover;
-          border-radius: 16px;
-        }
-
-        .step-body {
-          margin-top: auto;
-        }
-
-        .step-card h3 {
-          font-size: 1.3rem;
-          margin-bottom: 6px;
-        }
-
-        .step-card p {
-          font-size: 1rem;
-          color: #374151;
-        }
-
-        .step-connector {
-          position: absolute;
-          /* 移动端：底部居中，镜像翻转（斜向下） */
-          bottom: -50px;
-          left: 50%;
-          transform: translateX(-50%) rotate(-50deg) scaleX(-1);
-          width: 80px;  /* 缩小箭头尺寸 */
-          height: 80px;
-          pointer-events: none;
-          z-index: 3;
-        }
-        
-        @media (max-width: 767px) {
-          .steps-grid {
-            margin-top: 24px !important; /* 缩小标题和第一张图的间距 */
-          }
-          
-          .step-connector {
-            bottom: -30px; /* 向上移动箭头，缩小图片间距 */
-            width: 70px;
-            height: 70px;
-          }
-          
-          /* 减少图片本身容器的高度占用 */
-          /* Mobile specific adjustments for stricter spacing */
-          .steps-section {
-             padding-top: 40px !important;
-             padding-bottom: 20px !important; /* 减少底部留白 */
-          }
-
-          /* 减小.steps-image-full的高度限制 */
-          .step-image-full {
-             min-height: 320px !important;
-          }
-          
-          /* 减小移动端step wrapper的高度 */
-          .step-mobile-wrapper {
-             min-height: 320px !important;
-          }
-          
-          /* 调整负margin来拉近卡片间距 */
-          .step-item + .step-item {
-            margin-top: -20px;
-          }
-        }
-
-        @media (min-width: 768px) {
-          .step-connector {
-            /* PC端：右侧垂直居中，不旋转 */
-            bottom: auto;
-            left: auto;
-            right: -50px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 150px;
-            height: 90px;
-          }
-        }
-
-        .step-connector-image {
-          width: 100%;
-          height: 100%;
-          object-fit: contain;
-        }
 
         .kit-section {
           padding: 100px 0 90px;
@@ -2242,7 +1776,7 @@ export default function Home({ isVip = false }) {
 
         /* 第二行：两个对话框卡片 */
         .privacy-cards-row {
-          margin-top: -50px;
+          margin-top: -20px;
           display: flex;
           gap: 24px;
           justify-content: center;
@@ -2251,7 +1785,7 @@ export default function Home({ isVip = false }) {
         .privacy-card-with-text {
           position: relative;
           flex: 1;
-          min-height: 300px;
+          min-height: 250px;
           display: flex;
           align-items: flex-start;
           justify-content: center;
@@ -2262,7 +1796,7 @@ export default function Home({ isVip = false }) {
         .privacy-card-row .privacy-card-with-text {
           flex: 0 0 100%;
           max-width: 1404px; /* Align with bottom row (690+690+24) */
-          min-height: 350px;
+          min-height: 280px;
           z-index: 1;
           align-items: center;
           padding-top: 0;
@@ -3397,43 +2931,7 @@ export default function Home({ isVip = false }) {
            text-align: center;
         }
 
-        .step-pc-text h3 {
-           font-size: 24px;
-           font-weight: 800;
-           color: #13234d;
-           margin-bottom: 4px;
-        }
 
-        .step-pc-text p {
-           font-size: 16px;
-           color: #6E6E73;
-           line-height: 1.5;
-           font-weight: 500;
-        }
-
-        /* Ensure 2x2 Grid on PC */
-        @media (min-width: 768px) {
-           .steps-grid {
-             display: grid;
-             grid-template-columns: repeat(2, 1fr);
-             column-gap: 40px;
-             row-gap: 60px; /* Space between row 1 and 2 */
-           }
-           
-           .step-item {
-              width: 100%;
-           }
-           
-           /* Remove min-height constraint from full image wrapper if it interferes */
-           .step-image-full {
-              min-height: auto !important;
-           }
-           
-           /* Reset z-index from previous stacking logic if they don't overlap anymore */
-           .step-item[style] {
-              z-index: auto !important;
-           }
-        }
 
         @media (max-width: 768px) {
           :root {
@@ -3448,15 +2946,11 @@ export default function Home({ isVip = false }) {
           .story-panels,
           .privacy-grid,
           .impact-grid,
-          .steps-grid,
           .timeline-points {
             grid-template-columns: minmax(0, 1fr);
           }
 
-          /* 移动端 Section 2 图片间距更小 */
-          .steps-grid {
-            gap: 8px;
-          }
+
 
           .hero-shell {
             padding: 20px 18px 0;
