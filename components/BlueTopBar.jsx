@@ -9,7 +9,7 @@ import { useCart } from '../context/CartContext';
 
 const PopModal = dynamic(() => import('./PopModal'), { ssr: false });
 
-export default function BlueTopBar({ onCheckout, isLoading, showCart = true }) {
+export default function BlueTopBar({ onCheckout, isLoading, showCart = true, onVipLeadSuccess }) {
   const router = useRouter();
   const [showModal, setShowModal] = useState(false);
   const [isVip, setIsVip] = useState(false);
@@ -201,7 +201,17 @@ export default function BlueTopBar({ onCheckout, isLoading, showCart = true }) {
           }
         `}</style>
       </div>
-      {showModal && <PopModal isVip={isVip} source="ManualPopModal" onClose={() => setShowModal(false)} />}
+      {showModal && (
+        <PopModal
+          isVip={isVip}
+          source="ManualPopModal"
+          onClose={() => setShowModal(false)}
+          onVipLeadSuccess={onVipLeadSuccess ? ((payload) => {
+            setShowModal(false);
+            onVipLeadSuccess(payload);
+          }) : undefined}
+        />
+      )}
     </>
   );
 }

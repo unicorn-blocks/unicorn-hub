@@ -62,6 +62,10 @@ exports.handler = async (event, context) => {
             // Reservenow page: simplified checkout
             productName = 'Unicorn Blocks VIP Bundle';
             productDescription = 'VIP Bundle Includes: Sparky-Creative Story Buddy, 4x Themed Magical Hats, 4x Light-Up Magical Blocks, 100+ Universal Blocks. Cancel Anytime.';
+        } else if (sourcePage === 'index-popup') {
+            // Index post-lead popup: same product details, different cancel return path
+            productName = 'Unicorn Blocks VIP Bundle';
+            productDescription = 'VIP Bundle Includes: Sparky-Creative Story Buddy, 4x Themed Magical Hats, 4x Light-Up Magical Blocks, 100+ Universal Blocks. Cancel Anytime.';
         } else if (sourcePage === 'preorder') {
             productName = 'Pre-order Unicorn Blocks - Fully Refundable';
         }
@@ -76,6 +80,8 @@ exports.handler = async (event, context) => {
             cancelUrl = `${origin}/order`;
         } else if (sourcePage === 'reservenow') {
             cancelUrl = `${origin}/reservenow`;
+        } else if (sourcePage === 'index-popup') {
+            cancelUrl = `${origin}/`;
         }
 
         // Dynamic submit message based on source page
@@ -83,6 +89,8 @@ exports.handler = async (event, context) => {
         if (sourcePage === 'order') {
             submitMessage = '🌟 400+ families loved · 🚚 FREE Shipping · 🎁 50+ extra blocks';
         } else if (sourcePage === 'reservenow') {
+            submitMessage = '🌟 Loved by 400+ families · ✅ Cancel Anytime';
+        } else if (sourcePage === 'index-popup') {
             submitMessage = '🌟 Loved by 400+ families · ✅ Cancel Anytime';
         }
 

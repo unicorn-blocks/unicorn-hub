@@ -9,6 +9,7 @@ export default function PopModal({
   onClose,
   isVip = true,
   source = "pop-modal",
+  onVipLeadSuccess,
   customTitle,
   customBody,
   customCtaText,
@@ -92,8 +93,20 @@ export default function PopModal({
     // 显示 700ms "Joining" 状态后执行
     setTimeout(() => {
       if (isVip) {
-        // VIP站：跳转到新的预定页面并带上来源
-        router.push('/reservenow?source=vip');
+        // VIP站：默认跳转 reservenow；若页面提供回调则交由页面自行分流/后续动作
+        if (onVipLeadSuccess) {
+          try {
+            onVipLeadSuccess({
+              email: normalizedEmail,
+              source: source || "pop-modal",
+            });
+          } catch (err) {
+            console.error('onVipLeadSuccess callback error:', err);
+            router.push('/reservenow?source=vip');
+          }
+        } else {
+          router.push('/reservenow?source=vip');
+        }
       } else {
         // 主站：显示成功视图
         setShowSuccess(true);

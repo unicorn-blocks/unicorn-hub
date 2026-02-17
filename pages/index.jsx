@@ -3,11 +3,13 @@ import Head from 'next/head';
 import Image from 'next/image';
 import KitCarousel from '../components/KitCarousel';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import Navigation from '../components/layout/Navigation';
 import Footer from '../components/layout/Footer';
 import { safeApiCall } from '../lib/api';
 import { getStepsMobileImage } from '../lib/content';
 import { useLanguage } from '../context/LanguageContext';
+import { trackInitiateCheckout } from '../lib/fbq';
 
 import dynamic from 'next/dynamic'
 import BlueTopBar from '../components/BlueTopBar';
@@ -15,11 +17,23 @@ import { isVipHost } from '../lib/domain';
 import KitCategories from '../components/KitCategories';
 import OrderStepsSection from '../components/sections/OrderStepsSection';
 const PopModal = dynamic(() => import('../components/PopModal'), { ssr: false });
+const SurveyModal = dynamic(() => import('../components/SurveyModal'), { ssr: false });
+const PostLeadOfferModal = dynamic(() => import('../components/PostLeadOfferModal'), { ssr: false });
+
+const SURVEY_PREFILL_EMAIL_KEY = 'unicorn_survey_prefill_email';
+const POST_LEAD_AB_STORAGE_KEY = 'ub_postlead_flow_v1';
 
 
 export default function Home({ isVip = false }) {
+  const router = useRouter();
   const [popOpen, setPopOpen] = useState(false);
   const [autoPopSource, setAutoPopSource] = useState('AutoPopModalEvent');
+  const [showPostLeadOfferModal, setShowPostLeadOfferModal] = useState(false);
+  const [showPostLeadSurveyModal, setShowPostLeadSurveyModal] = useState(false);
+  const [postLeadCheckoutSource, setPostLeadCheckoutSource] = useState(null);
+  const [postLeadSurveyEmail, setPostLeadSurveyEmail] = useState('');
+  const [trafficSource, setTrafficSource] = useState('vip');
+  const [postLeadExperiment, setPostLeadExperiment] = useState({ group: null, forced: false });
   const [familyPage, setFamilyPage] = useState(0); // 添加家庭见证页面状态
 
   // 弹窗只弹一次
@@ -92,6 +106,18 @@ export default function Home({ isVip = false }) {
       if (globalTimeoutId) clearTimeout(globalTimeoutId);
     };
   }, []);
+
+  useEffect(() => {
+    if (!router.isReady || typeof window === 'undefined') return;
+    const sourceFromUrl = typeof router.query.source === 'string' ? router.query.source : '';
+    if (sourceFromUrl) {
+      setTrafficSource(sourceFromUrl);
+    }
+    const cachedEmail = sessionStorage.getItem(SURVEY_PREFILL_EMAIL_KEY);
+    if (cachedEmail) {
+      setPostLeadSurveyEmail(cachedEmail);
+    }
+  }, [router.isReady, router.query.source]);
   const { language } = useLanguage();
   const [openFaq, setOpenFaq] = useState(null);
 
@@ -343,6 +369,113 @@ export default function Home({ isVip = false }) {
     }
   };
 
+  const resolvePostLeadExperiment = () => {
+    if (typeof window === 'undefined') {
+      return { group: 'control', forced: false };
+    }
+
+    const params = new URLSearchParams(window.location.search);
+    const forcedGroup = params.get('ab_postlead');
+    if (forcedGroup === 'control' || forcedGroup === 'variant') {
+      return { group: forcedGroup, forced: true };
+    }
+
+    const savedGroup = localStorage.getItem(POST_LEAD_AB_STORAGE_KEY);
+    if (savedGroup === 'control' || savedGroup === 'variant') {
+      return { group: savedGroup, forced: false };
+    }
+
+    const assignedGroup = Math.random() < 0.5 ? 'control' : 'variant';
+    localStorage.setItem(POST_LEAD_AB_STORAGE_KEY, assignedGroup);
+    return { group: assignedGroup, forced: false };
+  };
+
+  const buildIndexPopupSource = (actionName) => {
+    const sourcePrefix = trafficSource ? `${trafficSource}_` : '';
+    const expSuffix = postLeadExperiment.group ? `_${postLeadExperiment.group}` : '';
+    const forcedSuffix = postLeadExperiment.forced ? '_forced' : '';
+    return `${sourcePrefix}index-popup-${actionName}${expSuffix}${forcedSuffix}`;
+  };
+
+  const handleVipLeadSuccess = ({ email: leadEmail }) => {
+    const normalizedEmail = (leadEmail || '').trim().toLowerCase();
+    if (normalizedEmail && typeof window !== 'undefined') {
+      sessionStorage.setItem(SURVEY_PREFILL_EMAIL_KEY, normalizedEmail);
+      setPostLeadSurveyEmail(normalizedEmail);
+    }
+
+    const experiment = resolvePostLeadExperiment();
+    setPostLeadExperiment(experiment);
+
+    if (experiment.group === 'control') {
+      const params = new URLSearchParams();
+      params.set('source', trafficSource || 'vip');
+      params.set('postlead_ab', experiment.group);
+      if (experiment.forced) params.set('ab_forced', '1');
+      router.push(`/reservenow?${params.toString()}`);
+      return;
+    }
+
+    setPopOpen(false);
+    setShowPostLeadOfferModal(true);
+  };
+
+  const handlePostLeadReserve = async () => {
+    if (postLeadCheckoutSource || typeof window === 'undefined') return;
+
+    const sourceTag = buildIndexPopupSource('reserve');
+    setPostLeadCheckoutSource(sourceTag);
+    trackInitiateCheckout({ content_name: sourceTag });
+
+    const leadId = `${sourceTag}_order_${Date.now()}`;
+
+    try {
+      const res = await fetch('/api/payment/stripe/checkout-session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          sourcePage: 'index-popup',
+          leadId,
+          returnUrl: window.location.origin,
+          amount: 2,
+        }),
+      });
+
+      const data = await res.json();
+      if (data.url) {
+        window.location.href = data.url;
+        return;
+      }
+
+      throw new Error(data.error || 'No checkout URL returned');
+    } catch (err) {
+      console.error('Index post-lead checkout error:', err);
+      alert('Connection error. Please try again.');
+      setPostLeadCheckoutSource(null);
+    }
+  };
+
+  const handlePostLeadNoThanks = () => {
+    setShowPostLeadOfferModal(false);
+    setShowPostLeadSurveyModal(true);
+  };
+
+  const submitIndexPopupSurvey = async (data, sessionId, isPartial) => {
+    const payload = {
+      ...data,
+      source: buildIndexPopupSource('survey'),
+      timestamp: new Date().toISOString(),
+      sessionId,
+      isPartial,
+    };
+
+    await fetch('/api/submit-survey', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+      ...(isPartial ? { keepalive: true } : {}),
+    });
+  };
+
   const TESTIMONIALS_DATA = [
     {
       quote: '"So much better than watching TV."',
@@ -489,7 +622,38 @@ export default function Home({ isVip = false }) {
 
   return (
     <>
-      {popOpen && <PopModal isVip={isVip} source={autoPopSource} onClose={() => { setPopOpen(false); localStorage.setItem('popModalClosed', '1'); }} />}
+      {popOpen && (
+        <PopModal
+          isVip={isVip}
+          source={autoPopSource}
+          onVipLeadSuccess={isVip ? handleVipLeadSuccess : undefined}
+          onClose={() => {
+            setPopOpen(false);
+            localStorage.setItem('popModalClosed', '1');
+          }}
+        />
+      )}
+      <PostLeadOfferModal
+        isOpen={showPostLeadOfferModal}
+        onReserve={handlePostLeadReserve}
+        onNoThanks={handlePostLeadNoThanks}
+        isLoading={!!postLeadCheckoutSource}
+      />
+      <SurveyModal
+        isOpen={showPostLeadSurveyModal}
+        prefillEmail={postLeadSurveyEmail}
+        onClose={() => setShowPostLeadSurveyModal(false)}
+        onSubmit={(data, sessionId) => {
+          submitIndexPopupSurvey(data, sessionId, false).catch(err => {
+            console.error('Index popup survey submit error:', err);
+          });
+        }}
+        onStepSubmit={(data, sessionId) => {
+          submitIndexPopupSurvey(data, sessionId, true).catch(err => {
+            console.error('Index popup survey partial submit error:', err);
+          });
+        }}
+      />
       <Head>
         <title>{copy.meta.title}</title>
         <meta charSet="UTF-8" />
@@ -546,7 +710,10 @@ export default function Home({ isVip = false }) {
       <div className="background-gradient" />
 
       {/* 蓝色顶部条 */}
-      <BlueTopBar showCart={!isVip} />
+      <BlueTopBar
+        showCart={!isVip}
+        onVipLeadSuccess={isVip ? handleVipLeadSuccess : undefined}
+      />
 
       <main className="home-root min-h-screen">
         {/* <Navigation /> */}
