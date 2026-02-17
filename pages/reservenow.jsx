@@ -63,7 +63,7 @@ export default function OrderPage({ initialRemaining }) {
   const [openFaq, setOpenFaq] = useState(null);
   const [checkoutSource, setCheckoutSource] = useState(null);
   const [showSurveyModal, setShowSurveyModal] = useState(false);
-  const [surveySource, setSurveySource] = useState(''); // 'bottom' or 'pop-modal'
+  const [surveySource, setSurveySource] = useState(''); // 'bottom' or 'pop-modal-time'/'pop-modal-scroll'
   const [prefillSurveyEmail, setPrefillSurveyEmail] = useState('');
   const { addToCart } = useCart();
 
@@ -129,7 +129,7 @@ export default function OrderPage({ initialRemaining }) {
     const finalPrice = priceAmount || currentTier.vip;
 
     // Track Pixel/GA with source info
-    // source will be 'top' or 'bottom' or 'pop-modal'
+    // source will be 'top' or 'bottom' or 'pop-modal-time'/'pop-modal-scroll'
     trackInitiateCheckout({ content_name: finalSource || 'unknown' });
 
     // Retry logic to handle intermittent Cloudflare 525 SSL errors
@@ -181,7 +181,7 @@ export default function OrderPage({ initialRemaining }) {
 
   /* Scroll Trigger Logic for PopModal */
   const [showScrollModal, setShowScrollModal] = useState(false);
-  const [hasTriggeredScrollModal, setHasTriggeredScrollModal] = useState(false); // Ref equivalent
+  const [autoPopTriggerType, setAutoPopTriggerType] = useState('time');
 
   /* VIP Modal State Machine */
   // States: ACTIVE_1 | FINAL_EXPIRED
@@ -231,6 +231,9 @@ export default function OrderPage({ initialRemaining }) {
     };
   };
 
+  const getAutoPopInternalSource = (triggerType = autoPopTriggerType) =>
+    triggerType === 'scroll' ? 'pop-modal-scroll' : 'pop-modal-time';
+
 
 
 
@@ -244,12 +247,13 @@ export default function OrderPage({ initialRemaining }) {
 
     let hasTriggered = false; // Local var to prevent double firing in effect cycle
 
-    function triggerModal() {
+    function triggerModal(triggerType = 'time') {
       if (hasTriggered) return;
       // Don't trigger if SurveyModal is active
       if (showSurveyModal) return;
       hasTriggered = true;
       sessionStorage.setItem('vip_modal_triggered', 'true');
+      setAutoPopTriggerType(triggerType);
       setShowScrollModal(true);
       window.removeEventListener('scroll', handleScroll);
       clearTimeout(timeoutId); // Clear the 30s timer if scroll triggered first
@@ -269,13 +273,13 @@ export default function OrderPage({ initialRemaining }) {
       const scrollPercentage = scrolledPast / sectionHeight;
 
       if (scrollPercentage >= 0.45) {
-        triggerModal();
+        triggerModal('scroll');
       }
     }
 
     // 25 second timer trigger
     const timeoutId = setTimeout(() => {
-      triggerModal();
+      triggerModal('time');
     }, 25000); // 25 seconds
 
     window.addEventListener('scroll', handleScroll);
@@ -2230,7 +2234,7 @@ export default function OrderPage({ initialRemaining }) {
             <PopModal
               onClose={() => setShowScrollModal(false)}
               isVip={true}
-              source={currentTier.sourcePrefix + 'pop-modal'}
+              source={currentTier.sourcePrefix + getAutoPopInternalSource()}
               customTitle={modalProps.customTitle}
               customBody={modalProps.customBody}
               countdownMinutes={modalProps.countdownMinutes}
@@ -2240,18 +2244,18 @@ export default function OrderPage({ initialRemaining }) {
               secondaryActionText="No Thanks"
               onSecondaryAction={() => {
                 setShowScrollModal(false);
-                setSurveySource('pop-modal');
+                setSurveySource(getAutoPopInternalSource());
                 setShowSurveyModal(true);
               }}
               hideCloseButton={true}
               onAction={() => {
-                handleFastCheckout('pop-modal', 2);
+                handleFastCheckout(getAutoPopInternalSource(), 2);
                 // Modal stays open to show Processing spinner, redirect will happen from handleFastCheckout
               }}
               onCountdownExpire={handleCountdownExpire}
               showTryAgain={modalProps.showTryAgain}
               isExpired={modalProps.isExpired}
-              isLoading={checkoutSource === 'pop-modal'}
+              isLoading={checkoutSource === getAutoPopInternalSource()}
               centerLayout={modalProps.centerLayout}
             />
           );
