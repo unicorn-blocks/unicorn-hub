@@ -19,6 +19,7 @@ const PopModal = dynamic(() => import('../components/PopModal'), { ssr: false })
 
 export default function Home({ isVip = false }) {
   const [popOpen, setPopOpen] = useState(false);
+  const [autoPopSource, setAutoPopSource] = useState('AutoPopModalEvent');
   const [familyPage, setFamilyPage] = useState(0); // 添加家庭见证页面状态
 
   // 弹窗只弹一次
@@ -37,9 +38,10 @@ export default function Home({ isVip = false }) {
     let timerId = null;
     let hasTriggered = false;
 
-    function triggerModal() {
+    function triggerModal(triggerType = 'event') {
       if (hasTriggered) return;
       hasTriggered = true;
+      setAutoPopSource(triggerType === 'scroll' ? 'AutoPopModalScroll' : 'AutoPopModalEvent');
       setPopOpen(true);
       if (timerId) clearTimeout(timerId);
       window.removeEventListener('scroll', handleScroll);
@@ -55,7 +57,7 @@ export default function Home({ isVip = false }) {
 
       // 1. Scroll-to-bottom Logic (Now for Privacy Section)
       if (rect.bottom <= windowHeight) {
-        triggerModal();
+        triggerModal('scroll');
         return;
       }
 
@@ -65,7 +67,7 @@ export default function Home({ isVip = false }) {
       if (isVisible) {
         if (!timerId) {
           timerId = setTimeout(() => {
-            triggerModal();
+            triggerModal('scroll');
           }, 3000);
         }
       } else {
@@ -78,7 +80,7 @@ export default function Home({ isVip = false }) {
 
     // 3. New Global Logic: 40 seconds residency
     const globalTimeoutId = setTimeout(() => {
-      triggerModal();
+      triggerModal('event');
     }, 40000);
 
     window.addEventListener('scroll', handleScroll);
@@ -487,7 +489,7 @@ export default function Home({ isVip = false }) {
 
   return (
     <>
-      {popOpen && <PopModal isVip={isVip} source="AutoPopModal" onClose={() => { setPopOpen(false); localStorage.setItem('popModalClosed', '1'); }} />}
+      {popOpen && <PopModal isVip={isVip} source={autoPopSource} onClose={() => { setPopOpen(false); localStorage.setItem('popModalClosed', '1'); }} />}
       <Head>
         <title>{copy.meta.title}</title>
         <meta charSet="UTF-8" />

@@ -17,11 +17,13 @@ import PopModal from '../components/PopModal';
 import { useRouter } from 'next/router';
 import SurveyModal from '../components/SurveyModal';
 
+const SURVEY_PREFILL_EMAIL_KEY = 'unicorn_survey_prefill_email';
+
 const PRICING_TIERS = {
   early: { vip: 129, retail: 199, label: 'Early Bird', sourcePrefix: 'early-' },
   plus: { vip: 169, retail: 199, label: 'Plus', sourcePrefix: 'plus-' },
   launch: { vip: 199, retail: 249, label: 'Launch', sourcePrefix: 'launch-' },
-  default: { vip: 149, retail: 199, label: 'Standard', sourcePrefix: '' }
+  default: { vip: 149, retail: 249, label: 'Standard', sourcePrefix: '' }
 };
 
 // ISR (Incremental Static Regeneration): Fast load + near-realtime data
@@ -62,6 +64,7 @@ export default function OrderPage({ initialRemaining }) {
   const [checkoutSource, setCheckoutSource] = useState(null);
   const [showSurveyModal, setShowSurveyModal] = useState(false);
   const [surveySource, setSurveySource] = useState(''); // 'bottom' or 'pop-modal'
+  const [prefillSurveyEmail, setPrefillSurveyEmail] = useState('');
   const { addToCart } = useCart();
 
 
@@ -85,6 +88,18 @@ export default function OrderPage({ initialRemaining }) {
 
   const [reservationsCount, setReservationsCount] = useState(initialRemaining ?? FALLBACK_REMAINING);
   const totalSpots = 500;
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    try {
+      const cachedEmail = sessionStorage.getItem(SURVEY_PREFILL_EMAIL_KEY);
+      if (cachedEmail) {
+        setPrefillSurveyEmail(cachedEmail);
+      }
+    } catch (err) {
+      console.warn('Failed to read survey prefill email:', err);
+    }
+  }, []);
 
   useEffect(() => {
     // Silent background refresh for fresh stock count (non-blocking)
@@ -379,7 +394,7 @@ export default function OrderPage({ initialRemaining }) {
     },
     zh: {
       title: '预订VIP名额 - 独角兽积木',
-      pageTitle: '限量VIP名额 — $129（零售价$199）',
+      pageTitle: '限量VIP名额 — $149（零售价$249）',
       subtitle: {
         prefix: '',
         deposit: '$5订金',
@@ -581,7 +596,7 @@ export default function OrderPage({ initialRemaining }) {
                       <div className="price-row">
                         <span className="current-price">${currentTier.vip}</span>
                         <span className="original-price">${currentTier.retail}</span>
-                        <span className="save-badge">Save ${currentTier.retail - currentTier.vip}</span>
+                        <span className="save-badge">$100 off</span>
                       </div>
                     </div>
 
@@ -2246,6 +2261,7 @@ export default function OrderPage({ initialRemaining }) {
       {/* Survey Modal */}
       <SurveyModal
         isOpen={showSurveyModal}
+        prefillEmail={prefillSurveyEmail}
         onClose={() => setShowSurveyModal(false)}
         onSubmit={(data, sessionId) => {
           // Final submission - combine traffic source + offer prefix + internal source

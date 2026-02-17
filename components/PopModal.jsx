@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import Image from 'next/image';
 import styles from './PopModal.module.css';
 // 不再持久化邮箱，本地状态即可
+const SURVEY_PREFILL_EMAIL_KEY = 'unicorn_survey_prefill_email';
 
 export default function PopModal({
   onClose,
@@ -79,6 +80,15 @@ export default function PopModal({
     setIsProcessing(true);
     setIsHovered(false);
 
+    const normalizedEmail = email.trim().toLowerCase();
+    if (typeof window !== 'undefined') {
+      try {
+        sessionStorage.setItem(SURVEY_PREFILL_EMAIL_KEY, normalizedEmail);
+      } catch (err) {
+        console.warn('Failed to cache survey prefill email:', err);
+      }
+    }
+
     // 显示 700ms "Joining" 状态后执行
     setTimeout(() => {
       if (isVip) {
@@ -95,7 +105,7 @@ export default function PopModal({
     import('../lib/googleSheets').then(({ submitEmailToGoogleSheets }) => {
       // 使用传递进来的 source 参数，如果未传则默认为 pop-modal (虽然上面prop已有默认值，这里保持原本逻辑兼容性)
       const finalSource = source || "pop-modal";
-      submitEmailToGoogleSheets(email, finalSource, "reserve-pop-modal")
+      submitEmailToGoogleSheets(normalizedEmail, finalSource, "reserve-pop-modal")
         .then(result => {
           if (!result.success) {
             console.warn('Email submission failed:', result.message);

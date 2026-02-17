@@ -169,8 +169,9 @@ const QUESTIONS = [
         labels: { min: 'Not likely at all', max: 'Extremely likely' }
     }
 ];
+const PROGRESS_REVEAL_AFTER_QUESTION = 5;
 
-export default function SurveyModal({ isOpen, onClose, onSubmit, onStepSubmit }) {
+export default function SurveyModal({ isOpen, onClose, onSubmit, onStepSubmit, prefillEmail = '' }) {
     const [currentStepIndex, setCurrentStepIndex] = useState(0);
     const [answers, setAnswers] = useState({});
     const [otherInputs, setOtherInputs] = useState({}); // For "Other" text fields
@@ -231,15 +232,74 @@ export default function SurveyModal({ isOpen, onClose, onSubmit, onStepSubmit })
         };
     }, [isOpen]);
 
+    // Prefill email question from previous page lead capture (if available).
+    useEffect(() => {
+        if (!isOpen || !prefillEmail) return;
+        setAnswers(prev => {
+            if (prev.q14_email && prev.q14_email.trim() !== '') return prev;
+            return { ...prev, q14_email: prefillEmail };
+        });
+    }, [isOpen, prefillEmail]);
+
     // Determine active questions based on current answers
     const activeQuestions = useMemo(() => {
-        return QUESTIONS.filter(q => !q.condition || q.condition(answers));
+        const filteredQuestions = QUESTIONS.filter(q => !q.condition || q.condition(answers));
+        const selectedReason = answers.q1;
+        const shouldPrioritizePriceQuestions = ['A', 'B', 'C', 'D', 'E'].includes(selectedReason);
+
+        if (!shouldPrioritizePriceQuestions) {
+            return filteredQuestions;
+        }
+
+        const q4 = filteredQuestions.find(q => q.id === 'q4');
+        const q5 = filteredQuestions.find(q => q.id === 'q5');
+        const followupQuestionId = selectedReason === 'B'
+            ? 'q1_b_followup'
+            : selectedReason === 'D'
+                ? 'q1_d_followup'
+                : null;
+        const followupQuestion = followupQuestionId
+            ? filteredQuestions.find(q => q.id === followupQuestionId)
+            : null;
+        const excludedIds = new Set(['q4', 'q5']);
+        if (followupQuestionId) {
+            excludedIds.add(followupQuestionId);
+        }
+        const reordered = [];
+
+        filteredQuestions.forEach(question => {
+            if (question.id === 'q1') {
+                reordered.push(question);
+                if (followupQuestion) reordered.push(followupQuestion);
+                if (q4) reordered.push(q4);
+                if (q5) reordered.push(q5);
+                return;
+            }
+
+            if (!excludedIds.has(question.id)) {
+                reordered.push(question);
+            }
+        });
+
+        return reordered;
     }, [answers]);
 
     const currentQuestion = activeQuestions[currentStepIndex];
     if (!isOpen) return null;
     const isLastQuestion = currentStepIndex === activeQuestions.length - 1;
-    const progressPercentage = ((currentStepIndex + 1) / activeQuestions.length) * 100;
+    const shouldShowProgressBar = currentStepIndex >= PROGRESS_REVEAL_AFTER_QUESTION;
+    const progressPercentage = (() => {
+        if (!shouldShowProgressBar) return 0;
+
+        const revealIndex = PROGRESS_REVEAL_AFTER_QUESTION;
+        const lastIndex = activeQuestions.length - 1;
+        if (lastIndex <= revealIndex) {
+            return currentStepIndex >= lastIndex ? 100 : 50;
+        }
+
+        const ratio = (currentStepIndex - revealIndex) / (lastIndex - revealIndex);
+        return 50 + Math.min(Math.max(ratio, 0), 1) * 50;
+    })();
 
     // Handlers
     const handleAnswer = (value) => {
@@ -556,9 +616,11 @@ export default function SurveyModal({ isOpen, onClose, onSubmit, onStepSubmit })
                 ) : (
                     <>
                         {/* Progress Bar */}
-                        <div className={styles.progressBarContainer}>
-                            <div className={styles.progressBarFill} style={{ width: `${progressPercentage}%` }}></div>
-                        </div>
+                        {shouldShowProgressBar && (
+                            <div className={styles.progressBarContainer}>
+                                <div className={styles.progressBarFill} style={{ width: `${progressPercentage}%` }}></div>
+                            </div>
+                        )}
 
                         {/* Close Button */}
                         <button className={styles.closeBtn} onClick={onClose} aria-label="close">×</button>
