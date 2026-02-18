@@ -312,6 +312,11 @@ export default function Home({ isVip = false }) {
               'Unicorn Blocks is designed to reduce passive screen time. Kids build with real, physical blocks while Sparky responds to what they create—encouraging hands-on play, imagination, and movement instead of scrolling or watching.'
           },
           {
+            question: 'When will I receive it?',
+            answer:
+              'Shipping is planned for June 2026. We’ll email you before shipping to confirm your order, and you can still cancel for a full refund.'
+          },
+          {
             question: 'What age group are Unicorn Blocks suitable for?',
             answer:
               'Ages 3–8. By setting your child’s age, the experience adapts with age-appropriate stories and difficulty levels, so it always feels just right.'

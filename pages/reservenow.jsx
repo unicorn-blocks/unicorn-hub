@@ -358,6 +358,10 @@ export default function OrderPage({ initialRemaining }) {
             q: 'Is the toy safe for children?',
             a: '**Absolutely!** Our building blocks include a camera that fosters creativity. However, it is **disabled by default and requires explicit parental consent through our app to activate**. You own all data, with the ability to view, manage, and permanently delete it at any time.'
           },
+          {
+            q: 'When will I receive it?',
+            a: 'Shipping is planned for June 2026. We’ll email you before shipping to confirm your order, and you can still cancel for a full refund.'
+          },
 
           {
             q: 'Can multiple children share one set?',
