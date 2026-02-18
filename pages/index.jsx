@@ -10,6 +10,12 @@ import { safeApiCall } from '../lib/api';
 import { getStepsMobileImage } from '../lib/content';
 import { useLanguage } from '../context/LanguageContext';
 import { trackInitiateCheckout } from '../lib/fbq';
+import {
+  INDEX_POSTLEAD_RESERVE_CLICK_EVENT,
+  emitIndexPostLeadReserveResult,
+  isIndexPostLeadReserveMode,
+  setIndexPostLeadReserveMode,
+} from '../lib/postLeadReserve';
 
 import dynamic from 'next/dynamic'
 import BlueTopBar from '../components/BlueTopBar';
@@ -34,6 +40,7 @@ export default function Home({ isVip = false }) {
   const [postLeadSurveyEmail, setPostLeadSurveyEmail] = useState('');
   const [trafficSource, setTrafficSource] = useState('vip');
   const [postLeadExperiment, setPostLeadExperiment] = useState({ group: null, forced: false });
+  const [showReserveDiscountCta, setShowReserveDiscountCta] = useState(false);
   const [familyPage, setFamilyPage] = useState(0); // 添加家庭见证页面状态
 
   // 弹窗只弹一次
@@ -116,6 +123,9 @@ export default function Home({ isVip = false }) {
     const cachedEmail = sessionStorage.getItem(SURVEY_PREFILL_EMAIL_KEY);
     if (cachedEmail) {
       setPostLeadSurveyEmail(cachedEmail);
+    }
+    if (isIndexPostLeadReserveMode()) {
+      setShowReserveDiscountCta(true);
     }
   }, [router.isReady, router.query.source]);
   const { language } = useLanguage();
@@ -397,8 +407,9 @@ export default function Home({ isVip = false }) {
     return `${sourcePrefix}index-popup-${actionName}${expSuffix}${forcedSuffix}`;
   };
 
-  const handleVipLeadSuccess = ({ email: leadEmail }) => {
+  const handleVipLeadSuccess = ({ email: leadEmail, source: leadSource }) => {
     const normalizedEmail = (leadEmail || '').trim().toLowerCase();
+    const normalizedSource = (leadSource || 'pop-modal').toString().trim() || 'pop-modal';
     if (normalizedEmail && typeof window !== 'undefined') {
       sessionStorage.setItem(SURVEY_PREFILL_EMAIL_KEY, normalizedEmail);
       setPostLeadSurveyEmail(normalizedEmail);
@@ -406,6 +417,34 @@ export default function Home({ isVip = false }) {
 
     const experiment = resolvePostLeadExperiment();
     setPostLeadExperiment(experiment);
+
+    if (normalizedEmail) {
+      const postLeadView = experiment.group === 'variant' ? 'popup' : 'reservenow';
+      import('../lib/googleSheets')
+        .then(({ submitEmailToGoogleSheets }) =>
+          submitEmailToGoogleSheets(
+            normalizedEmail,
+            normalizedSource,
+            'reserve-pop-modal',
+            { postLeadView }
+          )
+        )
+        .then((result) => {
+          if (!result?.success) {
+            console.warn('VIP lead submission failed:', result?.message);
+            return;
+          }
+
+          // Track Lead with Session Deduplication
+          if (typeof window !== 'undefined' && !sessionStorage.getItem('lead_tracked_session')) {
+            import('../lib/fbq').then(({ trackLead }) => {
+              trackLead();
+              sessionStorage.setItem('lead_tracked_session', '1');
+            });
+          }
+        })
+        .catch((err) => console.warn('VIP lead submission error:', err));
+    }
 
     if (experiment.group === 'control') {
       const params = new URLSearchParams();
@@ -443,6 +482,8 @@ export default function Home({ isVip = false }) {
 
       const data = await res.json();
       if (data.url) {
+        setShowReserveDiscountCta(true);
+        setIndexPostLeadReserveMode(true);
         window.location.href = data.url;
         return;
       }
@@ -451,12 +492,26 @@ export default function Home({ isVip = false }) {
     } catch (err) {
       console.error('Index post-lead checkout error:', err);
       alert('Connection error. Please try again.');
+      emitIndexPostLeadReserveResult('error');
       setPostLeadCheckoutSource(null);
     }
   };
 
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const onReserveClick = () => {
+      handlePostLeadReserve();
+    };
+    window.addEventListener(INDEX_POSTLEAD_RESERVE_CLICK_EVENT, onReserveClick);
+    return () => {
+      window.removeEventListener(INDEX_POSTLEAD_RESERVE_CLICK_EVENT, onReserveClick);
+    };
+  }, [handlePostLeadReserve]);
+
   const handlePostLeadNoThanks = () => {
     setShowPostLeadOfferModal(false);
+    setShowReserveDiscountCta(true);
+    setIndexPostLeadReserveMode(true);
     setShowPostLeadSurveyModal(true);
   };
 
@@ -713,6 +768,9 @@ export default function Home({ isVip = false }) {
       <BlueTopBar
         showCart={!isVip}
         onVipLeadSuccess={isVip ? handleVipLeadSuccess : undefined}
+        showReserveDiscountCta={showReserveDiscountCta}
+        onReserveDiscount={handlePostLeadReserve}
+        reserveDiscountLoading={!!postLeadCheckoutSource}
       />
 
       <main className="home-root min-h-screen">
@@ -1091,7 +1149,12 @@ export default function Home({ isVip = false }) {
           </div>
         </section>
 
-        <Footer onSubscribe={handleFooterSubmit} />
+        <Footer
+          onSubscribe={handleFooterSubmit}
+          showReserveDiscountCta={showReserveDiscountCta}
+          onReserveDiscount={handlePostLeadReserve}
+          reserveDiscountLoading={!!postLeadCheckoutSource}
+        />
       </main >
 
       <style jsx global>{`

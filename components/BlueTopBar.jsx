@@ -9,7 +9,15 @@ import { useCart } from '../context/CartContext';
 
 const PopModal = dynamic(() => import('./PopModal'), { ssr: false });
 
-export default function BlueTopBar({ onCheckout, isLoading, showCart = true, onVipLeadSuccess }) {
+export default function BlueTopBar({
+  onCheckout,
+  isLoading,
+  showCart = true,
+  onVipLeadSuccess,
+  showReserveDiscountCta = false,
+  onReserveDiscount,
+  reserveDiscountLoading = false,
+}) {
   const router = useRouter();
   const [showModal, setShowModal] = useState(false);
   const [isVip, setIsVip] = useState(false);
@@ -86,9 +94,18 @@ export default function BlueTopBar({ onCheckout, isLoading, showCart = true, onV
           ) : !isReservePage && (
             <button
               className="blue-top-bar-btn"
-              onClick={() => setShowModal(true)}
+              onClick={() => {
+                if (showReserveDiscountCta) {
+                  if (onReserveDiscount) onReserveDiscount();
+                  return;
+                }
+                setShowModal(true);
+              }}
+              disabled={showReserveDiscountCta && reserveDiscountLoading}
             >
-              Unlock VIP Access
+              {showReserveDiscountCta
+                ? (reserveDiscountLoading ? 'Processing...' : 'Reserve Discount')
+                : 'Unlock VIP Access'}
             </button>
           )}
         </div>

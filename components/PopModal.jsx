@@ -115,25 +115,29 @@ export default function PopModal({
     }, 700);
 
     // 后台异步提交（不阻塞）
-    import('../lib/googleSheets').then(({ submitEmailToGoogleSheets }) => {
-      // 使用传递进来的 source 参数，如果未传则默认为 pop-modal (虽然上面prop已有默认值，这里保持原本逻辑兼容性)
-      const finalSource = source || "pop-modal";
-      submitEmailToGoogleSheets(normalizedEmail, finalSource, "reserve-pop-modal")
-        .then(result => {
-          if (!result.success) {
-            console.warn('Email submission failed:', result.message);
-          } else {
-            // Track Lead with Session Deduplication
-            if (typeof window !== 'undefined' && !sessionStorage.getItem('lead_tracked_session')) {
-              import('../lib/fbq').then(({ trackLead }) => {
-                trackLead();
-                sessionStorage.setItem('lead_tracked_session', '1');
-              });
+    // 当 VIP 且由页面提供 onVipLeadSuccess 时，交由页面统一提交（避免重复写入）
+    const shouldDeferToParent = isVip && !!onVipLeadSuccess;
+    if (!shouldDeferToParent) {
+      import('../lib/googleSheets').then(({ submitEmailToGoogleSheets }) => {
+        // 使用传递进来的 source 参数，如果未传则默认为 pop-modal (虽然上面prop已有默认值，这里保持原本逻辑兼容性)
+        const finalSource = source || "pop-modal";
+        submitEmailToGoogleSheets(normalizedEmail, finalSource, "reserve-pop-modal")
+          .then(result => {
+            if (!result.success) {
+              console.warn('Email submission failed:', result.message);
+            } else {
+              // Track Lead with Session Deduplication
+              if (typeof window !== 'undefined' && !sessionStorage.getItem('lead_tracked_session')) {
+                import('../lib/fbq').then(({ trackLead }) => {
+                  trackLead();
+                  sessionStorage.setItem('lead_tracked_session', '1');
+                });
+              }
             }
-          }
-        })
-        .catch(err => console.error('提交错误:', err));
-    });
+          })
+          .catch(err => console.error('提交错误:', err));
+      });
+    }
   };
 
   // 固定按钮文案 (fallback)

@@ -3,7 +3,13 @@ import { useRouter } from 'next/router';
 import { useLanguage } from '../../context/LanguageContext';
 import { clearSavedEmail } from '../../lib/emailStorage';
 
-export default function Footer({ onSubscribe, showEmailInput = true }) {
+export default function Footer({
+  onSubscribe,
+  showEmailInput = true,
+  showReserveDiscountCta = false,
+  onReserveDiscount,
+  reserveDiscountLoading = false,
+}) {
   const router = useRouter();
   const { language } = useLanguage();
   const [footerEmail, setFooterEmail] = useState('');
@@ -64,6 +70,11 @@ export default function Footer({ onSubscribe, showEmailInput = true }) {
   const handleFooterSubmit = async (e) => {
     e.preventDefault();
     setFooterStatus({ message: '', type: '' });
+
+    if (showReserveDiscountCta) {
+      if (onReserveDiscount) onReserveDiscount();
+      return;
+    }
 
     // 防止重复提交
     if (isProcessing) return;
@@ -131,6 +142,7 @@ export default function Footer({ onSubscribe, showEmailInput = true }) {
   };
 
   const footerT = footerTranslations[language === 'zh' ? 'zh' : 'en'];
+  const isReserveDiscountMode = showReserveDiscountCta;
 
   return (
     <footer className="footer-responsive py-8 md:py-12 lg:py-16 relative z-50" style={{ minHeight: 180 }}>
@@ -164,25 +176,33 @@ export default function Footer({ onSubscribe, showEmailInput = true }) {
                     Thank you for Joining! We will notify you when we launch!
                   </p>
                 ) : (
-                  <form onSubmit={handleFooterSubmit} className="footer-email-form flex flex-col md:flex-row md:items-end gap-4 md:gap-0">
-                    <div className="footer-input-wrapper flex-1 w-full md:max-w-[427px] relative">
-                      <input
-                        type="email"
-                        value={footerEmail}
-                        onChange={e => { setFooterEmail(e.target.value); if (footerStatus.message) setFooterStatus({ message: '', type: '' }); }}
-                        placeholder="Enter your email to join"
-                        className="footer-email-input w-full px-0 py-2 border-0 border-b-2 border-gray-300 focus:outline-none focus:border-[#7d9ed4] bg-transparent placeholder-gray-400"
-                        style={{ borderRadius: 0, color: '#54545C', paddingRight: isEmailSaved ? '30px' : '0' }}
-                      />
-                      {isEmailSaved && (
-                        <span className="footer-checkmark">✅</span>
-                      )}
-                    </div>
+                  <form onSubmit={handleFooterSubmit} className={`footer-email-form flex flex-col md:flex-row md:items-end gap-4 md:gap-0 ${isReserveDiscountMode ? 'justify-center md:justify-end' : ''}`}>
+                    {!isReserveDiscountMode && (
+                      <div className="footer-input-wrapper flex-1 w-full md:max-w-[427px] relative">
+                        <input
+                          type="email"
+                          value={footerEmail}
+                          onChange={e => { setFooterEmail(e.target.value); if (footerStatus.message) setFooterStatus({ message: '', type: '' }); }}
+                          placeholder="Enter your email to join"
+                          className="footer-email-input w-full px-0 py-2 border-0 border-b-2 border-gray-300 focus:outline-none focus:border-[#7d9ed4] bg-transparent placeholder-gray-400"
+                          style={{ borderRadius: 0, color: '#54545C', paddingRight: isEmailSaved ? '30px' : '0' }}
+                        />
+                        {isEmailSaved && (
+                          <span className="footer-checkmark">✅</span>
+                        )}
+                      </div>
+                    )}
                     <button
                       type="submit"
-                      disabled={isProcessing}
+                      disabled={showReserveDiscountCta ? reserveDiscountLoading : isProcessing}
                       className="footer-submit-btn relative flex items-center justify-center transition-all self-center md:self-auto"
-                      style={{ background: 'transparent', border: 'none', padding: 0, cursor: isProcessing ? 'not-allowed' : 'pointer', opacity: isProcessing ? 0.7 : 1 }}
+                      style={{
+                        background: 'transparent',
+                        border: 'none',
+                        padding: 0,
+                        cursor: (showReserveDiscountCta ? reserveDiscountLoading : isProcessing) ? 'not-allowed' : 'pointer',
+                        opacity: (showReserveDiscountCta ? reserveDiscountLoading : isProcessing) ? 0.7 : 1,
+                      }}
                     >
                       <img
                         src="/assets/ima/Group 83.svg"
@@ -200,7 +220,9 @@ export default function Footer({ onSubscribe, showEmailInput = true }) {
                           zIndex: 2
                         }}
                       >
-                        {isProcessing ? 'Joining' : 'Unlock VIP Access'}
+                        {showReserveDiscountCta
+                          ? (reserveDiscountLoading ? 'Processing...' : 'Reserve Discount')
+                          : (isProcessing ? 'Joining' : 'Unlock VIP Access')}
                       </span>
                     </button>
                   </form>

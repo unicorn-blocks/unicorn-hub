@@ -34,19 +34,24 @@ export default function PostLeadOfferModal({
               </div>
 
               <div className={styles.mediaBlock}>
-                <div className={styles.previewImageWrap}>
-                  <img
-                    src="/assets/checkout/sparky.webp"
-                    alt="Unicorn Blocks VIP bundle"
-                    className={styles.previewImage}
-                  />
-                </div>
+                <div className={styles.mediaInfoRow}>
+                  <div className={styles.previewImageWrap}>
+                    <img
+                      src="/assets/checkout/sparky.webp"
+                      alt="Unicorn Blocks VIP bundle"
+                      className={styles.previewImage}
+                    />
+                  </div>
 
-                <div className={styles.featureGrid}>
-                  <span>Sparky the Block Body</span>
-                  <span>4 Magical Hands</span>
-                  <span>4 Magical Blocks</span>
-                  <span>and 100+ Universal Blocks</span>
+                  <div className={styles.featureCopy}>
+                    <h3 className={styles.featureTitle}>Unicorn Blocks VIP Bundle</h3>
+                    <ul className={styles.featureList}>
+                      <li>Sparky: Your Block Buddy</li>
+                      <li>4 Magical Hats</li>
+                      <li>4 Magical Blocks</li>
+                      <li>100+ Universal Blocks</li>
+                    </ul>
+                  </div>
                 </div>
               </div>
             </div>

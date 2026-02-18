@@ -1,5 +1,11 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
+import {
+  emitIndexPostLeadReserveClick,
+  INDEX_POSTLEAD_RESERVE_MODE_EVENT,
+  INDEX_POSTLEAD_RESERVE_RESULT_EVENT,
+  isIndexPostLeadReserveMode,
+} from '../lib/postLeadReserve';
 // 不再持久化邮箱
 
 export default function GlobalEmailNotifyBox() {
@@ -10,6 +16,8 @@ export default function GlobalEmailNotifyBox() {
   const [isLoading, setIsLoading] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [isVip, setIsVip] = useState(true); // 默认 VIP 行为
+  const [showReserveDiscountCta, setShowReserveDiscountCta] = useState(false);
+  const [reserveDiscountLoading, setReserveDiscountLoading] = useState(false);
   const router = useRouter();
 
   // 邮箱验证
@@ -38,12 +46,49 @@ export default function GlobalEmailNotifyBox() {
     }
   }, []);
 
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    if (router.pathname !== '/') {
+      setShowReserveDiscountCta(false);
+      setReserveDiscountLoading(false);
+      return;
+    }
+
+    const syncReserveMode = () => {
+      setShowReserveDiscountCta(isIndexPostLeadReserveMode());
+    };
+    const handleReserveResult = (event) => {
+      if (event?.detail?.status === 'error') {
+        setReserveDiscountLoading(false);
+      }
+    };
+
+    syncReserveMode();
+    window.addEventListener(INDEX_POSTLEAD_RESERVE_MODE_EVENT, syncReserveMode);
+    window.addEventListener(INDEX_POSTLEAD_RESERVE_RESULT_EVENT, handleReserveResult);
+
+    return () => {
+      window.removeEventListener(INDEX_POSTLEAD_RESERVE_MODE_EVENT, syncReserveMode);
+      window.removeEventListener(INDEX_POSTLEAD_RESERVE_RESULT_EVENT, handleReserveResult);
+    };
+  }, [router.pathname]);
+
   const handleInputChange = (e) => {
     setEmail(e.target.value);
     if (error) setError('');
   };
   // 乐观更新：先跳转，后台异步提交
   const handleNotify = async () => {
+    if (showReserveDiscountCta && router.pathname === '/') {
+      if (reserveDiscountLoading) return;
+      setReserveDiscountLoading(true);
+      emitIndexPostLeadReserveClick('global-email-box');
+      setTimeout(() => {
+        setReserveDiscountLoading(false);
+      }, 12000);
+      return;
+    }
+
     if (!isValidEmail(email)) {
       setError('Please provide a valid email address');
       return;
@@ -137,6 +182,8 @@ export default function GlobalEmailNotifyBox() {
   const CONTROL_HEIGHT = 44;
   const FONT_SIZE = 14;
   const BTN_FONT_SIZE = 13;
+  const isReserveDiscountMode = showReserveDiscountCta && router.pathname === '/';
+  const buttonLoading = isReserveDiscountMode ? reserveDiscountLoading : isLoading;
 
   return (
     <div
@@ -160,52 +207,56 @@ export default function GlobalEmailNotifyBox() {
         boxShadow: '0 3px 10px 0 rgba(39,40,47,0.3)'
       }}
     >
-      {/* 左侧 12px 间距 */}
-      <div style={{ width: SIDE_PAD, flexShrink: 0, height: BOX_HEIGHT }} />
-      {/* 输入框 */}
-      <div style={{ position: 'relative', flex: 1, minWidth: 0, height: CONTROL_HEIGHT }}>
-        <input
-          type="email"
-          value={email}
-          onChange={handleInputChange}
-          placeholder="Enter your email to join"
-          style={{
-            width: '100%',
-            height: '100%',
-            background: '#fff',
-            borderRadius: INNER_RADIUS,
-            border: 'none',
-            outline: 'none',
-            fontSize: FONT_SIZE,
-            color: email ? '#54545C' : '#A7A7A7',
-            padding: '0 16px',
-            paddingRight: isEmailSaved ? '40px' : '16px',
-            boxSizing: 'border-box',
-          }}
-          className="placeholder:text-[#A7A7A7]"
-        />
-        {isEmailSaved && (
-          <span style={{
-            position: 'absolute',
-            right: '12px',
-            top: '50%',
-            transform: 'translateY(-50%)',
-            fontSize: '16px',
-            color: '#10B981',
-            pointerEvents: 'none'
-          }}>
-            ✅
-          </span>
-        )}
-      </div>
-      {/* 中间gap */}
-      <div style={{ width: GAP, flexShrink: 0 }} />
+      {!isReserveDiscountMode && (
+        <>
+          {/* 左侧 12px 间距 */}
+          <div style={{ width: SIDE_PAD, flexShrink: 0, height: BOX_HEIGHT }} />
+          {/* 输入框 */}
+          <div style={{ position: 'relative', flex: 1, minWidth: 0, height: CONTROL_HEIGHT }}>
+            <input
+              type="email"
+              value={email}
+              onChange={handleInputChange}
+              placeholder="Enter your email to join"
+              style={{
+                width: '100%',
+                height: '100%',
+                background: '#fff',
+                borderRadius: INNER_RADIUS,
+                border: 'none',
+                outline: 'none',
+                fontSize: FONT_SIZE,
+                color: email ? '#54545C' : '#A7A7A7',
+                padding: '0 16px',
+                paddingRight: isEmailSaved ? '40px' : '16px',
+                boxSizing: 'border-box',
+              }}
+              className="placeholder:text-[#A7A7A7]"
+            />
+            {isEmailSaved && (
+              <span style={{
+                position: 'absolute',
+                right: '12px',
+                top: '50%',
+                transform: 'translateY(-50%)',
+                fontSize: '16px',
+                color: '#10B981',
+                pointerEvents: 'none'
+              }}>
+                ✅
+              </span>
+            )}
+          </div>
+          {/* 中间gap */}
+          <div style={{ width: GAP, flexShrink: 0 }} />
+        </>
+      )}
       {/* 按钮 */}
       <button
         onClick={handleNotify}
-        disabled={isLoading}
+        disabled={buttonLoading}
         style={{
-          width: 158,
+          width: isReserveDiscountMode ? 220 : 158,
           flexShrink: 0,
           height: CONTROL_HEIGHT,
           background: '#2F2737',
@@ -214,19 +265,22 @@ export default function GlobalEmailNotifyBox() {
           fontSize: BTN_FONT_SIZE,
           borderRadius: INNER_RADIUS,
           border: 'none',
-          cursor: isLoading ? 'not-allowed' : 'pointer',
+          cursor: buttonLoading ? 'not-allowed' : 'pointer',
           whiteSpace: 'nowrap',
           overflow: 'hidden',
           textOverflow: 'ellipsis',
           padding: 0,
           lineHeight: `${CONTROL_HEIGHT}px`,
-          opacity: isLoading ? 0.7 : 1,
+          opacity: buttonLoading ? 0.7 : 1,
         }}
       >
-        {isLoading ? 'Joining' : 'Unlock VIP Access'}
+        {isReserveDiscountMode
+          ? (reserveDiscountLoading ? 'Processing...' : 'Reserve Discount')
+          : (isLoading ? 'Joining' : 'Unlock VIP Access')}
       </button>
-      {/* 右侧 12px 间距 */}
-      <div style={{ width: 12, flexShrink: 0, height: CONTROL_HEIGHT }} />
+      {!isReserveDiscountMode && (
+        <div style={{ width: 12, flexShrink: 0, height: CONTROL_HEIGHT }} />
+      )}
       {/* 错误提示 */}
       {error && (
         <div

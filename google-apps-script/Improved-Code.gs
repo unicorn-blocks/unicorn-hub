@@ -1,120 +1,166 @@
-// 改进版的Google Apps Script代码
-// 基于你提供的代码进行优化
+// Improved Google Apps Script for UnicornBlocksEmail writes
+// Notes:
+// 1) SPREADSHEET_ID must be accessible by the account executing this web app.
+// 2) You can override SPREADSHEET_ID using Script Properties key: SPREADSHEET_ID.
 
 const SPREADSHEET_ID = "1B6HehcxI3-g_Zq_UQWmnPvHzhylzapfM6tiLWPBVWw";
-const SHEET_NAME = "UnicornBlocksEmail"; // 确保这个工作表存在，或改为"Sheet1"
+const SHEET_NAME = "UnicornBlocksEmail";
+const TIMEZONE = "America/New_York";
+const HEADERS = ["Email", "Source", "Created_at", "Note", "Status", "PostLeadView"];
+
+function textOutput_(value) {
+  return ContentService.createTextOutput(String(value)).setMimeType(ContentService.MimeType.TEXT);
+}
+
+function nowTimestamp_() {
+  return Utilities.formatDate(new Date(), TIMEZONE, "yyyy-MM-dd HH:mm:ss");
+}
+
+function resolveSpreadsheetId_() {
+  const fromProps = (PropertiesService.getScriptProperties().getProperty("SPREADSHEET_ID") || "").trim();
+  if (fromProps) return fromProps;
+  return (SPREADSHEET_ID || "").trim();
+}
+
+function getOrCreateSheet_() {
+  const spreadsheetId = resolveSpreadsheetId_();
+  if (!spreadsheetId) {
+    throw new Error("SPREADSHEET_ID_NOT_SET");
+  }
+
+  let ss;
+  try {
+    ss = SpreadsheetApp.openById(spreadsheetId);
+  } catch (err) {
+    throw new Error(
+      "SPREADSHEET_ACCESS_DENIED: " +
+        spreadsheetId +
+        " (share the sheet with script owner or fix SPREADSHEET_ID). " +
+        err
+    );
+  }
+
+  let sheet = ss.getSheetByName(SHEET_NAME);
+  if (!sheet) {
+    sheet = ss.insertSheet(SHEET_NAME);
+  }
+
+  ensureHeaders_(sheet);
+  return sheet;
+}
+
+function ensureHeaders_(sheet) {
+  const currentCols = Math.max(sheet.getLastColumn(), HEADERS.length);
+  const row = sheet.getRange(1, 1, 1, currentCols).getValues()[0];
+  let changed = false;
+
+  for (let i = 0; i < HEADERS.length; i++) {
+    if (String(row[i] || "").trim() !== HEADERS[i]) {
+      sheet.getRange(1, i + 1).setValue(HEADERS[i]);
+      changed = true;
+    }
+  }
+
+  if (changed) {
+    const headerRange = sheet.getRange(1, 1, 1, HEADERS.length);
+    headerRange.setFontWeight("bold");
+    headerRange.setBackground("#f0f0f0");
+  }
+}
+
+function findEmailRow_(sheet, email) {
+  const lastRow = sheet.getLastRow();
+  if (lastRow < 2) return -1;
+
+  const values = sheet.getRange(2, 1, lastRow - 1, 1).getValues();
+  const target = email.toLowerCase();
+  for (let i = 0; i < values.length; i++) {
+    if (String(values[i][0] || "").toLowerCase() === target) {
+      return i + 2;
+    }
+  }
+  return -1;
+}
 
 function doPost(e) {
   try {
-    // 打开指定的电子表格
-    const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
-    let sheet = ss.getSheetByName(SHEET_NAME);
-    
-    // 如果工作表不存在，创建一个新的
-    if (!sheet) {
-      sheet = ss.insertSheet(SHEET_NAME);
-      // 添加表头
-      sheet.getRange(1, 1, 1, 5).setValues([['Email', 'Source', 'Note', 'Timestamp', 'Status']]);
-      // 设置表头格式
-      const headerRange = sheet.getRange(1, 1, 1, 5);
-      headerRange.setFontWeight('bold');
-      headerRange.setBackground('#f0f0f0');
-    }
-    
-    // 获取POST参数
+    const sheet = getOrCreateSheet_();
     const p = (e && e.parameter) ? e.parameter : {};
-    const email = (p.email || "").toString().trim();
+
+    const email = (p.email || "").toString().trim().toLowerCase();
     const source = (p.source || "unknown").toString().trim();
     const note = (p.note || "").toString().trim();
-    
-    // 验证邮箱
+    const postLeadView = (p.post_lead_view || p.postLeadView || "").toString().trim();
+    const updateMode = (p.update_mode || p.updateMode || "").toString().trim();
+
     if (!email) {
-      return HtmlService.createHtmlOutput("ERROR: No email provided");
+      return textOutput_("ERROR: No email provided");
     }
-    
-    // 检查邮箱格式
+
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      return HtmlService.createHtmlOutput("ERROR: Invalid email format");
+      return textOutput_("ERROR: Invalid email format");
     }
-    
-    // 检查是否已存在该邮箱
-    const data = sheet.getDataRange().getValues();
-    for (let i = 1; i < data.length; i++) { // 从第2行开始（跳过表头）
-      if (data[i][0] && data[i][0].toString().toLowerCase() === email.toLowerCase()) {
-        // 邮箱已存在，更新时间戳和来源
-        sheet.getRange(i + 1, 2).setValue(source + ' (updated)');
-        sheet.getRange(i + 1, 4).setValue(Utilities.formatDate(new Date(), "America/New_York", "yyyy-MM-dd HH:mm:ss"));
-        console.log('邮箱已存在，已更新:', email);
-        return HtmlService.createHtmlOutput("OK");
+
+    const rowIndex = findEmailRow_(sheet, email);
+    const nowTs = nowTimestamp_();
+
+    if (rowIndex > 0) {
+      if (updateMode === "postlead-only") {
+        if (postLeadView) {
+          sheet.getRange(rowIndex, 6).setValue(postLeadView);
+        }
+        sheet.getRange(rowIndex, 3).setValue(nowTs);
+        return textOutput_("OK");
       }
+
+      sheet.getRange(rowIndex, 2).setValue(source + " (updated)");
+      sheet.getRange(rowIndex, 3).setValue(nowTs);
+      if (postLeadView) {
+        sheet.getRange(rowIndex, 6).setValue(postLeadView);
+      }
+      return textOutput_("OK");
     }
-    
-    // 添加新邮箱记录
-    const timestamp = Utilities.formatDate(new Date(), "America/New_York", "yyyy-MM-dd HH:mm:ss");
-    
-    // 根据source确定Note字段的值
+
     let finalNote = note;
-    if (source === 'paid-user-coupon') {
-      // 支付相关的Note字段使用传入的note值（Coupon, Deposit, Product）
+    if (source === "paid-user-coupon") {
       finalNote = note;
-    } else if (source === 'pop-modal') {
-      // VIP预订保持原有逻辑
-      finalNote = 'reserve-pop-modal';
-    } else {
-      // 普通邮箱收集，Note字段为空
-      finalNote = '';
+    } else if (source === "pop-modal") {
+      finalNote = "reserve-pop-modal";
+    } else if (!finalNote) {
+      finalNote = "";
     }
-    
-    sheet.appendRow([email, source, finalNote, timestamp, 'active']);
-    
-    console.log('新邮箱已添加:', email);
-    return HtmlService.createHtmlOutput("OK");
-    
+
+    sheet.appendRow([email, source, nowTs, finalNote, "active", postLeadView || ""]);
+    return textOutput_("OK");
   } catch (err) {
-    console.error('处理POST请求时出错:', err);
-    return HtmlService.createHtmlOutput("ERROR: " + err.toString());
+    return textOutput_("ERROR: " + err);
   }
 }
 
 function doGet(e) {
-  return HtmlService.createHtmlOutput("OK");
+  return textOutput_("OK");
 }
 
-// 测试函数
 function testEmailSubmission() {
   const testEvent = {
     parameter: {
-      email: 'test@example.com',
-      source: 'test',
-      note: 'test-submission'
-    }
+      email: "test@example.com",
+      source: "test",
+      note: "test-submission",
+    },
   };
-  
+
   const result = doPost(testEvent);
-  console.log('测试结果:', result.getContent());
+  Logger.log("Test result: " + result.getContent());
 }
 
-// 获取所有邮箱数据
 function getAllEmails() {
   try {
-    const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
-    const sheet = ss.getSheetByName(SHEET_NAME);
-    
-    if (!sheet) {
-      console.log('工作表不存在:', SHEET_NAME);
-      return [];
-    }
-    
-    const data = sheet.getDataRange().getValues();
-    console.log('所有邮箱数据:');
-    for (let i = 0; i < data.length; i++) {
-      console.log(data[i]);
-    }
-    
-    return data;
+    const sheet = getOrCreateSheet_();
+    return sheet.getDataRange().getValues();
   } catch (error) {
-    console.error('获取邮箱数据时出错:', error);
+    Logger.log("getAllEmails error: " + error);
     return [];
   }
 }
