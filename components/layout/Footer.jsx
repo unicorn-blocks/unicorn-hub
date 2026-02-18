@@ -5,6 +5,7 @@ import { clearSavedEmail } from '../../lib/emailStorage';
 
 export default function Footer({
   onSubscribe,
+  onVipLeadSuccess,
   showEmailInput = true,
   showReserveDiscountCta = false,
   onReserveDiscount,
@@ -30,7 +31,7 @@ export default function Footer({
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const host = window.location.host.toLowerCase().replace(/:\d+$/, '');
-      setIsVip(host === 'vip.unicornblocks.ai');
+      setIsVip(host === 'vip.unicornblocks.ai' || host === 'localhost');
     }
   }, []);
 
@@ -88,12 +89,26 @@ export default function Footer({
     }
 
     setIsProcessing(true);
+    const normalizedEmail = footerEmail.trim().toLowerCase();
+    const shouldDeferToParent = isVip && typeof onVipLeadSuccess === 'function' && router.pathname === '/';
 
     // 显示 700ms 状态后执行
     setTimeout(() => {
       if (isVip) {
-        // VIP站：跳转到新的预定页面并带上来源
-        router.push('/reservenow?source=vip');
+        // VIP站：若页面提供回调，交由页面处理AB分流；否则保持原有跳转
+        if (shouldDeferToParent) {
+          try {
+            onVipLeadSuccess({
+              email: normalizedEmail,
+              source: 'footer',
+            });
+          } catch (err) {
+            console.error('Footer onVipLeadSuccess callback error:', err);
+            router.push('/reservenow?source=vip');
+          }
+        } else {
+          router.push('/reservenow?source=vip');
+        }
       } else {
         // 主站：显示成功消息
         setShowSuccess(true);
@@ -102,23 +117,26 @@ export default function Footer({
     }, 700);
 
     // 后台异步提交（不阻塞）
-    import('../../lib/googleSheets').then(({ submitEmailToGoogleSheets }) => {
-      submitEmailToGoogleSheets(footerEmail, "footer", "")
-        .then(result => {
-          if (!result.success) {
-            console.warn('Footer email submission failed:', result.message);
-          } else {
-            // Track Lead with Session Deduplication
-            if (typeof window !== 'undefined' && !sessionStorage.getItem('lead_tracked_session')) {
-              import('../../lib/fbq').then(({ trackLead }) => {
-                trackLead();
-                sessionStorage.setItem('lead_tracked_session', '1');
-              });
+    // 若交由页面处理VIP回调，避免重复写入（页面会统一提交并带分流信息）
+    if (!shouldDeferToParent) {
+      import('../../lib/googleSheets').then(({ submitEmailToGoogleSheets }) => {
+        submitEmailToGoogleSheets(normalizedEmail, "footer", "")
+          .then(result => {
+            if (!result.success) {
+              console.warn('Footer email submission failed:', result.message);
+            } else {
+              // Track Lead with Session Deduplication
+              if (typeof window !== 'undefined' && !sessionStorage.getItem('lead_tracked_session')) {
+                import('../../lib/fbq').then(({ trackLead }) => {
+                  trackLead();
+                  sessionStorage.setItem('lead_tracked_session', '1');
+                });
+              }
             }
-          }
-        })
-        .catch(err => console.error('Footer邮箱提交错误:', err));
-    });
+          })
+          .catch(err => console.error('Footer邮箱提交错误:', err));
+      });
+    }
   };
 
 

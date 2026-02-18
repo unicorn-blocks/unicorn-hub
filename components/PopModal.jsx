@@ -99,6 +99,7 @@ export default function PopModal({
             onVipLeadSuccess({
               email: normalizedEmail,
               source: source || "pop-modal",
+              note: "reserve-pop-modal",
             });
           } catch (err) {
             console.error('onVipLeadSuccess callback error:', err);

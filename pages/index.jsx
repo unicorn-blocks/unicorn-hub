@@ -12,6 +12,7 @@ import { useLanguage } from '../context/LanguageContext';
 import { trackInitiateCheckout } from '../lib/fbq';
 import {
   INDEX_POSTLEAD_RESERVE_CLICK_EVENT,
+  INDEX_POSTLEAD_VIP_LEAD_EVENT,
   emitIndexPostLeadReserveResult,
   isIndexPostLeadReserveMode,
   setIndexPostLeadReserveMode,
@@ -407,9 +408,10 @@ export default function Home({ isVip = false }) {
     return `${sourcePrefix}index-popup-${actionName}${expSuffix}${forcedSuffix}`;
   };
 
-  const handleVipLeadSuccess = ({ email: leadEmail, source: leadSource }) => {
+  const handleVipLeadSuccess = ({ email: leadEmail, source: leadSource, note: leadNote = '' }) => {
     const normalizedEmail = (leadEmail || '').trim().toLowerCase();
     const normalizedSource = (leadSource || 'pop-modal').toString().trim() || 'pop-modal';
+    const normalizedNote = (leadNote || '').toString();
     if (normalizedEmail && typeof window !== 'undefined') {
       sessionStorage.setItem(SURVEY_PREFILL_EMAIL_KEY, normalizedEmail);
       setPostLeadSurveyEmail(normalizedEmail);
@@ -425,7 +427,7 @@ export default function Home({ isVip = false }) {
           submitEmailToGoogleSheets(
             normalizedEmail,
             normalizedSource,
-            'reserve-pop-modal',
+            normalizedNote,
             { postLeadView }
           )
         )
@@ -507,6 +509,17 @@ export default function Home({ isVip = false }) {
       window.removeEventListener(INDEX_POSTLEAD_RESERVE_CLICK_EVENT, onReserveClick);
     };
   }, [handlePostLeadReserve]);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const onVipLeadFromGlobal = (event) => {
+      handleVipLeadSuccess(event?.detail || {});
+    };
+    window.addEventListener(INDEX_POSTLEAD_VIP_LEAD_EVENT, onVipLeadFromGlobal);
+    return () => {
+      window.removeEventListener(INDEX_POSTLEAD_VIP_LEAD_EVENT, onVipLeadFromGlobal);
+    };
+  }, [handleVipLeadSuccess]);
 
   const handlePostLeadNoThanks = () => {
     setShowPostLeadOfferModal(false);
@@ -1151,6 +1164,7 @@ export default function Home({ isVip = false }) {
 
         <Footer
           onSubscribe={handleFooterSubmit}
+          onVipLeadSuccess={isVip ? handleVipLeadSuccess : undefined}
           showReserveDiscountCta={showReserveDiscountCta}
           onReserveDiscount={handlePostLeadReserve}
           reserveDiscountLoading={!!postLeadCheckoutSource}

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import {
   emitIndexPostLeadReserveClick,
+  emitIndexPostLeadVipLead,
   INDEX_POSTLEAD_RESERVE_MODE_EVENT,
   INDEX_POSTLEAD_RESERVE_RESULT_EVENT,
   isIndexPostLeadReserveMode,
@@ -95,12 +96,23 @@ export default function GlobalEmailNotifyBox() {
     }
 
     setIsLoading(true);
+    const normalizedEmail = email.trim().toLowerCase();
+    const shouldRunAbOnIndex = isVip && router.pathname === '/';
 
     // 显示 700ms "Joining" 状态后执行
     setTimeout(() => {
       if (isVip) {
-        // VIP站：跳转到新的预定页面并带上来源
-        router.push('/reservenow?source=vip');
+        if (shouldRunAbOnIndex) {
+          emitIndexPostLeadVipLead({
+            email: normalizedEmail,
+            source: 'global-notify-bar',
+            note: '',
+          });
+          setIsLoading(false);
+        } else {
+          // VIP站：跳转到新的预定页面并带上来源
+          router.push('/reservenow?source=vip');
+        }
       } else {
         // 主站：显示成功消息
         setShowSuccess(true);
@@ -109,23 +121,26 @@ export default function GlobalEmailNotifyBox() {
     }, 700);
 
     // 后台异步提交（不阻塞）
-    import('../lib/googleSheets').then(({ submitEmailToGoogleSheets }) => {
-      submitEmailToGoogleSheets(email, "global-notify-bar", "")
-        .then(result => {
-          if (!result.success) {
-            console.warn('Global notify bar email submission failed:', result.message);
-          } else {
-            // Track Lead with Session Deduplication
-            if (typeof window !== 'undefined' && !sessionStorage.getItem('lead_tracked_session')) {
-              import('../lib/fbq').then(({ trackLead }) => {
-                trackLead();
-                sessionStorage.setItem('lead_tracked_session', '1');
-              });
+    // index 页由页面统一提交（含AB分流字段），避免重复写入
+    if (!shouldRunAbOnIndex) {
+      import('../lib/googleSheets').then(({ submitEmailToGoogleSheets }) => {
+        submitEmailToGoogleSheets(normalizedEmail, "global-notify-bar", "")
+          .then(result => {
+            if (!result.success) {
+              console.warn('Global notify bar email submission failed:', result.message);
+            } else {
+              // Track Lead with Session Deduplication
+              if (typeof window !== 'undefined' && !sessionStorage.getItem('lead_tracked_session')) {
+                import('../lib/fbq').then(({ trackLead }) => {
+                  trackLead();
+                  sessionStorage.setItem('lead_tracked_session', '1');
+                });
+              }
             }
-          }
-        })
-        .catch(err => console.error('提交错误:', err));
-    });
+          })
+          .catch(err => console.error('提交错误:', err));
+      });
+    }
   };
 
   if (!show) return null;
