@@ -92,6 +92,7 @@ function doPost(e) {
     const note = (p.note || "").toString().trim();
     const postLeadView = (p.post_lead_view || p.postLeadView || "").toString().trim();
     const updateMode = (p.update_mode || p.updateMode || "").toString().trim();
+    const leadAction = (p.lead_action || p.leadAction || "").toString().trim();
 
     if (!email) {
       return textOutput_("ERROR: No email provided");
@@ -106,6 +107,13 @@ function doPost(e) {
     const nowTs = nowTimestamp_();
 
     if (rowIndex > 0) {
+      if (updateMode === "postlead-action-only") {
+        if (leadAction) {
+          sheet.getRange(rowIndex, 3).setValue(leadAction);
+        }
+        return textOutput_("OK");
+      }
+
       if (updateMode === "postlead-only") {
         if (postLeadView) {
           sheet.getRange(rowIndex, 6).setValue(postLeadView);
@@ -120,6 +128,10 @@ function doPost(e) {
         sheet.getRange(rowIndex, 6).setValue(postLeadView);
       }
       return textOutput_("OK");
+    }
+
+    if (updateMode === "postlead-action-only") {
+      return textOutput_("OK_NO_ROW");
     }
 
     let finalNote = note;

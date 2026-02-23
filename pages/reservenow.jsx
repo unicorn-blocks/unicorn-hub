@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useCart } from '../context/CartContext';
 import Head from 'next/head';
 import Link from 'next/link';
@@ -18,6 +18,9 @@ import { useRouter } from 'next/router';
 import SurveyModal from '../components/SurveyModal';
 
 const SURVEY_PREFILL_EMAIL_KEY = 'unicorn_survey_prefill_email';
+const LEAD_ACTION_RESERVED = 'Reserved';
+const LEAD_ACTION_NO_THANKS = 'no thanks';
+const LEAD_ACTION_NO_ACTIONS = 'no actions';
 
 const PRICING_TIERS = {
   early: { vip: 129, retail: 199, label: 'Early Bird', sourcePrefix: 'early-' },
@@ -65,6 +68,7 @@ export default function OrderPage({ initialRemaining }) {
   const [showSurveyModal, setShowSurveyModal] = useState(false);
   const [surveySource, setSurveySource] = useState(''); // 'bottom' or 'pop-modal-time'/'pop-modal-scroll'
   const [prefillSurveyEmail, setPrefillSurveyEmail] = useState('');
+  const reservePageActionTrackedRef = useRef(false);
   const { addToCart } = useCart();
 
 
@@ -122,6 +126,9 @@ export default function OrderPage({ initialRemaining }) {
   const handleFastCheckout = async (source, priceAmount = null) => {
     if (checkoutSource) return;
     setCheckoutSource(source);
+
+    reservePageActionTrackedRef.current = true;
+    await updateLeadActionToEmailSheet(prefillSurveyEmail, LEAD_ACTION_RESERVED);
 
     // Combine traffic source + offer prefix + internal source (e.g., 'vip_early-bottom')
     const sourcePrefix = trafficSource ? trafficSource + '_' : '';
@@ -233,6 +240,51 @@ export default function OrderPage({ initialRemaining }) {
 
   const getAutoPopInternalSource = (triggerType = autoPopTriggerType) =>
     triggerType === 'scroll' ? 'pop-modal-scroll' : 'pop-modal-time';
+
+  const updateLeadActionToEmailSheet = async (email, actionTag) => {
+    const fallbackEmail =
+      typeof window !== 'undefined'
+        ? (sessionStorage.getItem(SURVEY_PREFILL_EMAIL_KEY) || '')
+        : '';
+    const normalizedEmail = (email || fallbackEmail).trim().toLowerCase();
+    const normalizedActionTag = (actionTag || '').trim();
+    if (!normalizedEmail || !normalizedActionTag) return false;
+
+    try {
+      const { submitEmailToGoogleSheets } = await import('../lib/googleSheets');
+      const result = await submitEmailToGoogleSheets(
+        normalizedEmail,
+        'postlead-action-marker',
+        '',
+        {
+          updateMode: 'postlead-action-only',
+          leadAction: normalizedActionTag,
+        }
+      );
+      if (!result?.success) {
+        console.warn('Failed to update reserve popup action:', result?.message);
+        return false;
+      }
+      return true;
+    } catch (err) {
+      console.warn('Reserve popup action update error:', err);
+      return false;
+    }
+  };
+
+  useEffect(() => {
+    if (!router.isReady || reservePageActionTrackedRef.current) return;
+    let cancelled = false;
+    (async () => {
+      const tracked = await updateLeadActionToEmailSheet(prefillSurveyEmail, LEAD_ACTION_NO_ACTIONS);
+      if (!cancelled && tracked) {
+        reservePageActionTrackedRef.current = true;
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [router.isReady, prefillSurveyEmail]);
 
 
 
@@ -675,7 +727,12 @@ export default function OrderPage({ initialRemaining }) {
                       <button
                         className="w-full bg-white text-black font-medium py-2 rounded-xl shadow-sm hover:bg-gray-50 transition-colors text-sm sm:text-base outline-none"
                         style={{ border: '1px solid #D1D5DB' }}
-                        onClick={() => { setSurveySource('bottom'); setShowSurveyModal(true); }}
+                        onClick={() => {
+                          reservePageActionTrackedRef.current = true;
+                          updateLeadActionToEmailSheet(prefillSurveyEmail, LEAD_ACTION_NO_THANKS);
+                          setSurveySource('bottom');
+                          setShowSurveyModal(true);
+                        }}
                       >
                         No Thanks
                       </button>
@@ -2247,6 +2304,11 @@ export default function OrderPage({ initialRemaining }) {
               showSecondaryAction={true}
               secondaryActionText="No Thanks"
               onSecondaryAction={() => {
+                reservePageActionTrackedRef.current = true;
+                updateLeadActionToEmailSheet(
+                  prefillSurveyEmail,
+                  LEAD_ACTION_NO_THANKS
+                );
                 setShowScrollModal(false);
                 setSurveySource(getAutoPopInternalSource());
                 setShowSurveyModal(true);

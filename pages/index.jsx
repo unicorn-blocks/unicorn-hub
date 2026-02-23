@@ -29,6 +29,9 @@ const PostLeadOfferModal = dynamic(() => import('../components/PostLeadOfferModa
 
 const SURVEY_PREFILL_EMAIL_KEY = 'unicorn_survey_prefill_email';
 const POST_LEAD_AB_STORAGE_KEY = 'ub_postlead_flow_v1';
+const LEAD_ACTION_RESERVED = 'Reserved';
+const LEAD_ACTION_NO_THANKS = 'no thanks';
+const LEAD_ACTION_NO_ACTIONS = 'no actions';
 
 
 export default function Home({ isVip = false }) {
@@ -406,11 +409,39 @@ export default function Home({ isVip = false }) {
     return { group: assignedGroup, forced: false };
   };
 
-  const buildIndexPopupSource = (actionName) => {
+  const buildIndexPopupSource = (actionName, experimentOverride = postLeadExperiment) => {
     const sourcePrefix = trafficSource ? `${trafficSource}_` : '';
-    const expSuffix = postLeadExperiment.group ? `_${postLeadExperiment.group}` : '';
-    const forcedSuffix = postLeadExperiment.forced ? '_forced' : '';
+    const expSuffix = experimentOverride?.group ? `_${experimentOverride.group}` : '';
+    const forcedSuffix = experimentOverride?.forced ? '_forced' : '';
     return `${sourcePrefix}index-popup-${actionName}${expSuffix}${forcedSuffix}`;
+  };
+
+  const updateLeadActionToEmailSheet = async (email, actionTag) => {
+    const fallbackEmail =
+      typeof window !== 'undefined'
+        ? (sessionStorage.getItem(SURVEY_PREFILL_EMAIL_KEY) || '')
+        : '';
+    const normalizedEmail = (email || fallbackEmail).trim().toLowerCase();
+    const normalizedActionTag = (actionTag || '').trim();
+    if (!normalizedEmail || !normalizedActionTag) return;
+
+    try {
+      const { submitEmailToGoogleSheets } = await import('../lib/googleSheets');
+      const result = await submitEmailToGoogleSheets(
+        normalizedEmail,
+        'postlead-action-marker',
+        '',
+        {
+          updateMode: 'postlead-action-only',
+          leadAction: normalizedActionTag,
+        }
+      );
+      if (!result?.success) {
+        console.warn('Failed to update lead action:', result?.message);
+      }
+    } catch (err) {
+      console.warn('Lead action update error:', err);
+    }
   };
 
   const handleVipLeadSuccess = ({ email: leadEmail, source: leadSource, note: leadNote = '' }) => {
@@ -442,6 +473,13 @@ export default function Home({ isVip = false }) {
             return;
           }
 
+          if (experiment.group === 'variant') {
+            updateLeadActionToEmailSheet(
+              normalizedEmail,
+              LEAD_ACTION_NO_ACTIONS
+            );
+          }
+
           // Track Lead with Session Deduplication
           if (typeof window !== 'undefined' && !sessionStorage.getItem('lead_tracked_session')) {
             import('../lib/fbq').then(({ trackLead }) => {
@@ -470,6 +508,9 @@ export default function Home({ isVip = false }) {
     if (postLeadCheckoutSource || typeof window === 'undefined') return;
 
     const sourceTag = buildIndexPopupSource('reserve');
+    if (postLeadSurveyEmail) {
+      await updateLeadActionToEmailSheet(postLeadSurveyEmail, LEAD_ACTION_RESERVED);
+    }
     setPostLeadCheckoutSource(sourceTag);
     trackInitiateCheckout({ content_name: sourceTag });
 
@@ -527,6 +568,12 @@ export default function Home({ isVip = false }) {
   }, [handleVipLeadSuccess]);
 
   const handlePostLeadNoThanks = () => {
+    if (postLeadSurveyEmail) {
+      updateLeadActionToEmailSheet(
+        postLeadSurveyEmail,
+        LEAD_ACTION_NO_THANKS
+      );
+    }
     setShowPostLeadOfferModal(false);
     setShowReserveDiscountCta(true);
     setIndexPostLeadReserveMode(true);

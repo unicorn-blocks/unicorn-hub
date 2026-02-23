@@ -53,7 +53,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { email, source, note, postLeadView, updateMode } = req.body;
+    const { email, source, note, postLeadView, updateMode, leadAction } = req.body;
 
     if (!email || !email.includes("@")) {
       return res.status(400).json({ success: false, message: "请提供有效的邮箱地址" });
@@ -77,6 +77,7 @@ export default async function handler(req, res) {
       timestamp: new Date().toISOString(),
       ...(postLeadView ? { post_lead_view: String(postLeadView) } : {}),
       ...(updateMode ? { update_mode: String(updateMode) } : {}),
+      ...(leadAction ? { lead_action: String(leadAction) } : {}),
     }).toString();
 
     const response = await fetch(GOOGLE_SHEET_URL, {
