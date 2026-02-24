@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Head from 'next/head';
 import Image from 'next/image';
 import KitCarousel from '../components/KitCarousel';
@@ -36,6 +36,8 @@ const LEAD_ACTION_NO_ACTIONS = 'no actions';
 
 export default function Home({ isVip = false }) {
   const router = useRouter();
+  const postLeadNoActionsTimerRef = useRef(null);
+  const postLeadTerminalActionRef = useRef(false);
   const [popOpen, setPopOpen] = useState(false);
   const [autoPopSource, setAutoPopSource] = useState('AutoPopModalEvent');
   const [showPostLeadOfferModal, setShowPostLeadOfferModal] = useState(false);
@@ -416,6 +418,13 @@ export default function Home({ isVip = false }) {
     return `${sourcePrefix}index-popup-${actionName}${expSuffix}${forcedSuffix}`;
   };
 
+  const clearPostLeadNoActionsTimer = () => {
+    if (postLeadNoActionsTimerRef.current) {
+      clearTimeout(postLeadNoActionsTimerRef.current);
+      postLeadNoActionsTimerRef.current = null;
+    }
+  };
+
   const updateLeadActionToEmailSheet = async (email, actionTag) => {
     const fallbackEmail =
       typeof window !== 'undefined'
@@ -423,31 +432,61 @@ export default function Home({ isVip = false }) {
         : '';
     const normalizedEmail = (email || fallbackEmail).trim().toLowerCase();
     const normalizedActionTag = (actionTag || '').trim();
-    if (!normalizedEmail || !normalizedActionTag) return;
+    if (!normalizedEmail || !normalizedActionTag) return false;
 
-    try {
-      const { submitEmailToGoogleSheets } = await import('../lib/googleSheets');
-      const result = await submitEmailToGoogleSheets(
-        normalizedEmail,
-        'postlead-action-marker',
-        '',
-        {
-          updateMode: 'postlead-action-only',
-          leadAction: normalizedActionTag,
+    const maxRetries = 5;
+    const retryDelayMs = 300;
+    const { submitEmailToGoogleSheets } = await import('../lib/googleSheets');
+
+    for (let attempt = 0; attempt < maxRetries; attempt++) {
+      try {
+        const result = await submitEmailToGoogleSheets(
+          normalizedEmail,
+          'postlead-action-marker',
+          '',
+          {
+            updateMode: 'postlead-action-only',
+            leadAction: normalizedActionTag,
+          }
+        );
+
+        const message = String(result?.message || '');
+        const rowNotReady = message.includes('OK_NO_ROW');
+
+        if (result?.success && !rowNotReady) {
+          return true;
         }
-      );
-      if (!result?.success) {
-        console.warn('Failed to update lead action:', result?.message);
+
+        if (!rowNotReady) {
+          console.warn('Failed to update lead action:', result?.message);
+          return false;
+        }
+
+        if (attempt < maxRetries - 1) {
+          await new Promise((resolve) => setTimeout(resolve, retryDelayMs));
+          continue;
+        }
+
+        console.warn('Lead action update skipped: row not ready after retries');
+        return false;
+      } catch (err) {
+        if (attempt < maxRetries - 1) {
+          await new Promise((resolve) => setTimeout(resolve, retryDelayMs));
+          continue;
+        }
+        console.warn('Lead action update error:', err);
+        return false;
       }
-    } catch (err) {
-      console.warn('Lead action update error:', err);
     }
+
+    return false;
   };
 
   const handleVipLeadSuccess = ({ email: leadEmail, source: leadSource, note: leadNote = '' }) => {
     const normalizedEmail = (leadEmail || '').trim().toLowerCase();
     const normalizedSource = (leadSource || 'pop-modal').toString().trim() || 'pop-modal';
     const normalizedNote = (leadNote || '').toString();
+    let leadSubmitPromise = Promise.resolve();
     if (normalizedEmail && typeof window !== 'undefined') {
       sessionStorage.setItem(SURVEY_PREFILL_EMAIL_KEY, normalizedEmail);
       setPostLeadSurveyEmail(normalizedEmail);
@@ -458,7 +497,7 @@ export default function Home({ isVip = false }) {
 
     if (normalizedEmail) {
       const postLeadView = experiment.group === 'variant' ? 'popup' : 'reservenow';
-      import('../lib/googleSheets')
+      leadSubmitPromise = import('../lib/googleSheets')
         .then(({ submitEmailToGoogleSheets }) =>
           submitEmailToGoogleSheets(
             normalizedEmail,
@@ -471,13 +510,6 @@ export default function Home({ isVip = false }) {
           if (!result?.success) {
             console.warn('VIP lead submission failed:', result?.message);
             return;
-          }
-
-          if (experiment.group === 'variant') {
-            updateLeadActionToEmailSheet(
-              normalizedEmail,
-              LEAD_ACTION_NO_ACTIONS
-            );
           }
 
           // Track Lead with Session Deduplication
@@ -496,10 +528,13 @@ export default function Home({ isVip = false }) {
       params.set('source', trafficSource || 'vip');
       params.set('postlead_ab', experiment.group);
       if (experiment.forced) params.set('ab_forced', '1');
-      router.push(`/reservenow?${params.toString()}`);
+      leadSubmitPromise.finally(() => {
+        router.push(`/reservenow?${params.toString()}`);
+      });
       return;
     }
 
+    postLeadTerminalActionRef.current = false;
     setPopOpen(false);
     setShowPostLeadOfferModal(true);
   };
@@ -507,10 +542,10 @@ export default function Home({ isVip = false }) {
   const handlePostLeadReserve = async () => {
     if (postLeadCheckoutSource || typeof window === 'undefined') return;
 
+    postLeadTerminalActionRef.current = true;
+    clearPostLeadNoActionsTimer();
     const sourceTag = buildIndexPopupSource('reserve');
-    if (postLeadSurveyEmail) {
-      await updateLeadActionToEmailSheet(postLeadSurveyEmail, LEAD_ACTION_RESERVED);
-    }
+    await updateLeadActionToEmailSheet(postLeadSurveyEmail, LEAD_ACTION_RESERVED);
     setPostLeadCheckoutSource(sourceTag);
     trackInitiateCheckout({ content_name: sourceTag });
 
@@ -568,17 +603,47 @@ export default function Home({ isVip = false }) {
   }, [handleVipLeadSuccess]);
 
   const handlePostLeadNoThanks = () => {
-    if (postLeadSurveyEmail) {
-      updateLeadActionToEmailSheet(
-        postLeadSurveyEmail,
-        LEAD_ACTION_NO_THANKS
-      );
-    }
+    postLeadTerminalActionRef.current = true;
+    clearPostLeadNoActionsTimer();
     setShowPostLeadOfferModal(false);
     setShowReserveDiscountCta(true);
     setIndexPostLeadReserveMode(true);
     setShowPostLeadSurveyModal(true);
+    updateLeadActionToEmailSheet(
+      postLeadSurveyEmail,
+      LEAD_ACTION_NO_THANKS
+    );
   };
+
+  useEffect(() => {
+    if (!showPostLeadOfferModal || postLeadExperiment.group !== 'variant') {
+      clearPostLeadNoActionsTimer();
+      return;
+    }
+
+    clearPostLeadNoActionsTimer();
+    postLeadNoActionsTimerRef.current = setTimeout(() => {
+      if (postLeadTerminalActionRef.current) return;
+      updateLeadActionToEmailSheet(postLeadSurveyEmail, LEAD_ACTION_NO_ACTIONS);
+    }, 1200);
+
+    return () => {
+      clearPostLeadNoActionsTimer();
+    };
+  }, [showPostLeadOfferModal, postLeadExperiment.group, postLeadSurveyEmail]);
+
+  useEffect(() => {
+    return () => {
+      clearPostLeadNoActionsTimer();
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!showPostLeadOfferModal) return;
+    import('../components/SurveyModal').catch(() => {
+      // Ignore preload failures; modal can still lazy-load on demand.
+    });
+  }, [showPostLeadOfferModal]);
 
   const submitIndexPopupSurvey = async (data, sessionId, isPartial) => {
     const payload = {

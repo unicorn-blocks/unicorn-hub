@@ -250,26 +250,52 @@ export default function OrderPage({ initialRemaining }) {
     const normalizedActionTag = (actionTag || '').trim();
     if (!normalizedEmail || !normalizedActionTag) return false;
 
-    try {
-      const { submitEmailToGoogleSheets } = await import('../lib/googleSheets');
-      const result = await submitEmailToGoogleSheets(
-        normalizedEmail,
-        'postlead-action-marker',
-        '',
-        {
-          updateMode: 'postlead-action-only',
-          leadAction: normalizedActionTag,
+    const maxRetries = 5;
+    const retryDelayMs = 300;
+    const { submitEmailToGoogleSheets } = await import('../lib/googleSheets');
+
+    for (let attempt = 0; attempt < maxRetries; attempt++) {
+      try {
+        const result = await submitEmailToGoogleSheets(
+          normalizedEmail,
+          'postlead-action-marker',
+          '',
+          {
+            updateMode: 'postlead-action-only',
+            leadAction: normalizedActionTag,
+          }
+        );
+
+        const message = String(result?.message || '');
+        const rowNotReady = message.includes('OK_NO_ROW');
+
+        if (result?.success && !rowNotReady) {
+          return true;
         }
-      );
-      if (!result?.success) {
-        console.warn('Failed to update reserve popup action:', result?.message);
+
+        if (!rowNotReady) {
+          console.warn('Failed to update reserve popup action:', result?.message);
+          return false;
+        }
+
+        if (attempt < maxRetries - 1) {
+          await new Promise((resolve) => setTimeout(resolve, retryDelayMs));
+          continue;
+        }
+
+        console.warn('Reserve popup action update skipped: row not ready after retries');
+        return false;
+      } catch (err) {
+        if (attempt < maxRetries - 1) {
+          await new Promise((resolve) => setTimeout(resolve, retryDelayMs));
+          continue;
+        }
+        console.warn('Reserve popup action update error:', err);
         return false;
       }
-      return true;
-    } catch (err) {
-      console.warn('Reserve popup action update error:', err);
-      return false;
     }
+
+    return false;
   };
 
   useEffect(() => {

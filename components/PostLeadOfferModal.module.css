@@ -330,3 +330,35 @@
     font-size: 0.86rem;
   }
 }
+
+@media (max-width: 430px) {
+  .trustRow {
+    flex-wrap: nowrap;
+    gap: 6px;
+    justify-content: center;
+  }
+
+  .stripeBadge {
+    padding: 4px 8px;
+    font-size: 0.72rem;
+    white-space: nowrap;
+  }
+
+  .secureText {
+    font-size: 0.8rem;
+    line-height: 1;
+    white-space: nowrap;
+  }
+}
+
+@media (max-width: 390px) {
+  .featureCopy {
+    flex: 1;
+  }
+
+  .featureTitle {
+    white-space: nowrap;
+    font-size: 0.78rem;
+    line-height: 1.05;
+  }
+}
