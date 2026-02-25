@@ -90,24 +90,33 @@ export default function PopModal({
       }
     }
 
+    const shouldDeferToParent = !!onVipLeadSuccess;
+
     // 显示 700ms "Joining" 状态后执行
     setTimeout(() => {
-      if (isVip) {
-        // VIP站：默认跳转 reservenow；若页面提供回调则交由页面自行分流/后续动作
-        if (onVipLeadSuccess) {
-          try {
-            onVipLeadSuccess({
-              email: normalizedEmail,
-              source: source || "pop-modal",
-              note: "reserve-pop-modal",
-            });
-          } catch (err) {
-            console.error('onVipLeadSuccess callback error:', err);
+      // 优先交给父页面回调（用于 index AB 分流和统一写入）
+      if (shouldDeferToParent) {
+        try {
+          onVipLeadSuccess({
+            email: normalizedEmail,
+            source: source || "pop-modal",
+            note: "reserve-pop-modal",
+          });
+        } catch (err) {
+          console.error('onVipLeadSuccess callback error:', err);
+          if (isVip) {
             router.push('/reservenow?source=vip');
+          } else {
+            setShowSuccess(true);
+            setIsProcessing(false);
           }
-        } else {
-          router.push('/reservenow?source=vip');
         }
+        return;
+      }
+
+      if (isVip) {
+        // VIP站：默认跳转 reservenow
+        router.push('/reservenow?source=vip');
       } else {
         // 主站：显示成功视图
         setShowSuccess(true);
@@ -116,8 +125,7 @@ export default function PopModal({
     }, 700);
 
     // 后台异步提交（不阻塞）
-    // 当 VIP 且由页面提供 onVipLeadSuccess 时，交由页面统一提交（避免重复写入）
-    const shouldDeferToParent = isVip && !!onVipLeadSuccess;
+    // 当页面提供 onVipLeadSuccess 时，交由页面统一提交（避免重复写入）
     if (!shouldDeferToParent) {
       import('../lib/googleSheets').then(({ submitEmailToGoogleSheets }) => {
         // 使用传递进来的 source 参数，如果未传则默认为 pop-modal (虽然上面prop已有默认值，这里保持原本逻辑兼容性)
