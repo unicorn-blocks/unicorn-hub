@@ -4,6 +4,15 @@ import { useLanguage } from '../../context/LanguageContext';
 
 export default function ImpactSection({ showSteam = true }) {
   const { language } = useLanguage();
+  const impactGradientTextStyle = {
+    background: 'linear-gradient(90deg, #F7AEBF 0%, #9b90da 100%)',
+    WebkitBackgroundClip: 'text',
+    WebkitTextFillColor: 'transparent',
+    backgroundClip: 'text',
+    color: 'transparent',
+    fontWeight: 700,
+    display: 'inline-block'
+  };
 
   const translations = {
     en: {
@@ -13,16 +22,16 @@ export default function ImpactSection({ showSteam = true }) {
           title: 'Open-Ended Creative Play',
           titleLine1: '3×',
           titleLine2: 'Creativity',
-          description: <span>One system. Endless ideas.</span>,
-          descriptionMobile: <span>One system. Endless ideas.</span>
+          description: <span><strong style={impactGradientTextStyle}>Independent play</strong> with endless ideas.</span>,
+          descriptionMobile: <span><strong style={impactGradientTextStyle}>Independent play</strong> with endless ideas.</span>
         },
         {
           title: '90 Minutes Every Time',
           titleLine1: '90',
           titleLine1Small: 'mins',
           titleLine2: 'Deep Focus',
-          description: <span>Deep Focus - Without Screens.</span>,
-          descriptionMobile: <span>Deep Focus - Without Screens.</span>
+          description: <span>Deep Focus - <strong style={impactGradientTextStyle}>Without Screens</strong>.</span>,
+          descriptionMobile: <span>Deep Focus - <strong style={impactGradientTextStyle}>Without Screens</strong>.</span>
         },
         {
           title: 'STEAM Problem Solving',

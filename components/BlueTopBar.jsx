@@ -8,6 +8,14 @@ import { proceedToCheckout } from '../lib/fbq';
 import { useCart } from '../context/CartContext';
 
 const PopModal = dynamic(() => import('./PopModal'), { ssr: false });
+const INDEX_MANUAL_POPUP_STATE_EVENT = 'ub:index-manual-popup-state';
+
+function emitIndexManualPopupState(open) {
+  if (typeof window === 'undefined') return;
+  window.dispatchEvent(new CustomEvent(INDEX_MANUAL_POPUP_STATE_EVENT, {
+    detail: { open: !!open }
+  }));
+}
 
 export default function BlueTopBar({
   onCheckout,
@@ -32,6 +40,10 @@ export default function BlueTopBar({
       setIsVip(isVipHost(window.location.host));
     }
   }, []);
+
+  useEffect(() => {
+    emitIndexManualPopupState(showModal);
+  }, [showModal]);
 
   const handleCheckoutClick = () => {
     if (onCheckout) {
@@ -99,6 +111,7 @@ export default function BlueTopBar({
                   if (onReserveDiscount) onReserveDiscount();
                   return;
                 }
+                emitIndexManualPopupState(true);
                 setShowModal(true);
               }}
               disabled={showReserveDiscountCta && reserveDiscountLoading}

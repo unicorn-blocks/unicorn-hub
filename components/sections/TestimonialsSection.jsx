@@ -23,8 +23,8 @@ export default function TestimonialsSection() {
     },
     {
       quote:
-        "“I love that Sparky doesn’t ‘correct’ him. If he says it’s a rocket, Sparky sees a rocket. It really protects his imagination.”",
-      author: '—Mom of a 5-year-old who loves pretending everything is a spaceship'
+        '“Sparky protects his imagination — and keeps him playing for 90 minutes every time.”',
+      author: '—Mom of a 5-year-old who loves seeks attention all the time'
     },
     {
       quote:

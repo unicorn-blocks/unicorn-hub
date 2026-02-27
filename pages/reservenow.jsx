@@ -250,8 +250,8 @@ export default function OrderPage({ initialRemaining }) {
     const normalizedActionTag = (actionTag || '').trim();
     if (!normalizedEmail || !normalizedActionTag) return false;
 
-    const maxRetries = 5;
-    const retryDelayMs = 300;
+    const maxRetries = 12;
+    const retryDelayMs = 400;
     const { submitEmailToGoogleSheets } = await import('../lib/googleSheets');
 
     for (let attempt = 0; attempt < maxRetries; attempt++) {

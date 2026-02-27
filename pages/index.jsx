@@ -23,6 +23,7 @@ import BlueTopBar from '../components/BlueTopBar';
 import { isVipHost } from '../lib/domain';
 import KitCategories from '../components/KitCategories';
 import OrderStepsSection from '../components/sections/OrderStepsSection';
+import ImpactSection from '../components/sections/ImpactSection';
 const PopModal = dynamic(() => import('../components/PopModal'), { ssr: false });
 const SurveyModal = dynamic(() => import('../components/SurveyModal'), { ssr: false });
 const PostLeadOfferModal = dynamic(() => import('../components/PostLeadOfferModal'), { ssr: false });
@@ -32,12 +33,14 @@ const POST_LEAD_AB_STORAGE_KEY = 'ub_postlead_flow_v1';
 const LEAD_ACTION_RESERVED = 'Reserved';
 const LEAD_ACTION_NO_THANKS = 'no thanks';
 const LEAD_ACTION_NO_ACTIONS = 'no actions';
+const INDEX_MANUAL_POPUP_STATE_EVENT = 'ub:index-manual-popup-state';
 
 
 export default function Home({ isVip = false }) {
   const router = useRouter();
   const postLeadNoActionsTimerRef = useRef(null);
   const postLeadTerminalActionRef = useRef(false);
+  const postLeadEmailWriteReadyRef = useRef(Promise.resolve(true));
   const [popOpen, setPopOpen] = useState(false);
   const [autoPopSource, setAutoPopSource] = useState('AutoPopModalEvent');
   const [showPostLeadOfferModal, setShowPostLeadOfferModal] = useState(false);
@@ -63,27 +66,41 @@ export default function Home({ isVip = false }) {
     // if (closed) return;
 
     let timerId = null;
+    let globalTimeoutId = null;
     let hasTriggered = false;
+    let autoSuppressedByManualOpen = false;
 
-    function triggerModal(triggerType = 'event') {
-      if (hasTriggered) return;
-      hasTriggered = true;
-      setAutoPopSource(triggerType === 'scroll' ? 'AutoPopModalScroll' : 'AutoPopModalEvent');
-      setPopOpen(true);
-      if (timerId) clearTimeout(timerId);
+    function stopAutoPopupTriggers() {
+      if (timerId) {
+        clearTimeout(timerId);
+        timerId = null;
+      }
+      if (globalTimeoutId) {
+        clearTimeout(globalTimeoutId);
+        globalTimeoutId = null;
+      }
       window.removeEventListener('scroll', handleScroll);
     }
 
+    function triggerModal(triggerType = 'event') {
+      if (hasTriggered || autoSuppressedByManualOpen) return;
+      hasTriggered = true;
+      setAutoPopSource(triggerType === 'scroll' ? 'AutoPopModalScroll' : 'AutoPopModalEvent');
+      setPopOpen(true);
+      stopAutoPopupTriggers();
+    }
+
     function handleScroll() {
-      if (hasTriggered) return;
+      if (hasTriggered || autoSuppressedByManualOpen) return;
 
       const privacySection = document.querySelector('.privacy-section');
       if (!privacySection) return;
       const rect = privacySection.getBoundingClientRect();
       const windowHeight = window.innerHeight;
 
-      // 1. Scroll-to-bottom Logic (Now for Privacy Section)
-      if (rect.bottom <= windowHeight) {
+      // 1. Scroll trigger at 3/4 position of privacy section
+      const quarterThreeY = rect.top + rect.height * 0.75;
+      if (quarterThreeY <= windowHeight) {
         triggerModal('scroll');
         return;
       }
@@ -105,15 +122,24 @@ export default function Home({ isVip = false }) {
       }
     }
 
+    function handleManualPopupState(event) {
+      const isManualPopupOpen = !!event?.detail?.open;
+      if (!isManualPopupOpen) return;
+      autoSuppressedByManualOpen = true;
+      stopAutoPopupTriggers();
+    }
+
     // 3. New Global Logic: 40 seconds residency
-    const globalTimeoutId = setTimeout(() => {
+    globalTimeoutId = setTimeout(() => {
       triggerModal('event');
     }, 40000);
 
+    window.addEventListener(INDEX_MANUAL_POPUP_STATE_EVENT, handleManualPopupState);
     window.addEventListener('scroll', handleScroll);
     handleScroll(); // check initial state
 
     return () => {
+      window.removeEventListener(INDEX_MANUAL_POPUP_STATE_EVENT, handleManualPopupState);
       window.removeEventListener('scroll', handleScroll);
       if (timerId) clearTimeout(timerId);
       if (globalTimeoutId) clearTimeout(globalTimeoutId);
@@ -434,8 +460,8 @@ export default function Home({ isVip = false }) {
     const normalizedActionTag = (actionTag || '').trim();
     if (!normalizedEmail || !normalizedActionTag) return false;
 
-    const maxRetries = 5;
-    const retryDelayMs = 300;
+    const maxRetries = 12;
+    const retryDelayMs = 400;
     const { submitEmailToGoogleSheets } = await import('../lib/googleSheets');
 
     for (let attempt = 0; attempt < maxRetries; attempt++) {
@@ -482,6 +508,15 @@ export default function Home({ isVip = false }) {
     return false;
   };
 
+  const updateLeadActionAfterLeadReady = async (email, actionTag) => {
+    try {
+      await postLeadEmailWriteReadyRef.current;
+    } catch (err) {
+      console.warn('Lead write readiness wait failed:', err);
+    }
+    return updateLeadActionToEmailSheet(email, actionTag);
+  };
+
   const handleVipLeadSuccess = ({ email: leadEmail, source: leadSource, note: leadNote = '' }) => {
     const normalizedEmail = (leadEmail || '').trim().toLowerCase();
     const normalizedSource = (leadSource || 'pop-modal').toString().trim() || 'pop-modal';
@@ -509,7 +544,7 @@ export default function Home({ isVip = false }) {
         .then((result) => {
           if (!result?.success) {
             console.warn('VIP lead submission failed:', result?.message);
-            return;
+            return false;
           }
 
           // Track Lead with Session Deduplication
@@ -519,8 +554,15 @@ export default function Home({ isVip = false }) {
               sessionStorage.setItem('lead_tracked_session', '1');
             });
           }
+          return true;
         })
-        .catch((err) => console.warn('VIP lead submission error:', err));
+        .catch((err) => {
+          console.warn('VIP lead submission error:', err);
+          return false;
+        });
+      postLeadEmailWriteReadyRef.current = leadSubmitPromise;
+    } else {
+      postLeadEmailWriteReadyRef.current = Promise.resolve(false);
     }
 
     if (experiment.group === 'control') {
@@ -528,9 +570,9 @@ export default function Home({ isVip = false }) {
       params.set('source', trafficSource || 'vip');
       params.set('postlead_ab', experiment.group);
       if (experiment.forced) params.set('ab_forced', '1');
-      leadSubmitPromise.finally(() => {
-        router.push(`/reservenow?${params.toString()}`);
-      });
+      // Do not block navigation on email write completion.
+      // Email write continues in background; reserve page action tracking has retry logic.
+      router.push(`/reservenow?${params.toString()}`);
       return;
     }
 
@@ -545,7 +587,7 @@ export default function Home({ isVip = false }) {
     postLeadTerminalActionRef.current = true;
     clearPostLeadNoActionsTimer();
     const sourceTag = buildIndexPopupSource('reserve');
-    await updateLeadActionToEmailSheet(postLeadSurveyEmail, LEAD_ACTION_RESERVED);
+    await updateLeadActionAfterLeadReady(postLeadSurveyEmail, LEAD_ACTION_RESERVED);
     setPostLeadCheckoutSource(sourceTag);
     trackInitiateCheckout({ content_name: sourceTag });
 
@@ -609,7 +651,7 @@ export default function Home({ isVip = false }) {
     setShowReserveDiscountCta(true);
     setIndexPostLeadReserveMode(true);
     setShowPostLeadSurveyModal(true);
-    updateLeadActionToEmailSheet(
+    updateLeadActionAfterLeadReady(
       postLeadSurveyEmail,
       LEAD_ACTION_NO_THANKS
     );
@@ -624,7 +666,7 @@ export default function Home({ isVip = false }) {
     clearPostLeadNoActionsTimer();
     postLeadNoActionsTimerRef.current = setTimeout(() => {
       if (postLeadTerminalActionRef.current) return;
-      updateLeadActionToEmailSheet(postLeadSurveyEmail, LEAD_ACTION_NO_ACTIONS);
+      updateLeadActionAfterLeadReady(postLeadSurveyEmail, LEAD_ACTION_NO_ACTIONS);
     }, 1200);
 
     return () => {
@@ -668,8 +710,8 @@ export default function Home({ isVip = false }) {
     },
     {
       quote:
-        "“I love that Sparky doesn’t ‘correct’ him. If he says it’s a rocket, Sparky sees a rocket. It really protects his imagination.”",
-      author: '—Mom of a 5-year-old who loves pretending everything is a spaceship'
+        '“Sparky protects his imagination — and keeps him playing for 90 minutes every time.”',
+      author: '—Mom of a 5-year-old who loves seeks attention all the time'
     },
     {
       quote:
@@ -734,76 +776,6 @@ export default function Home({ isVip = false }) {
       </>
     );
   };
-
-  // Impact Section 渲染函数（用于在不同位置渲染）
-  const renderImpactSection = () => (
-    <section className="impact-section">
-      <div className="impact-bg-wrapper">
-        <div className="impact-bg-image impact-bg-bottom" aria-hidden="true">
-          <img src="/assets/ima/Vector_17_927.png" alt="" className="impact-bg-image-item" />
-        </div>
-        <div className="impact-bg-image impact-bg-top" aria-hidden="true">
-          <img src="/assets/ima/Vector_17_928.png" alt="" className="impact-bg-image-item" />
-        </div>
-      </div>
-      <div className="content-container">
-        <h2>
-          <span>{copy.impact.heading}</span>
-        </h2>
-        <div className="impact-grid">
-          {copy.impact.stats.map((stat, index) => (
-            <div className="impact-card" key={stat.title}>
-              <div className="impact-icon-wrapper">
-                {/* 移动端图片 */}
-                <Image
-                  src={index === 0 ? '/assets/ima/section6-1.svg' : index === 1 ? '/assets/ima/section6-2.svg' : '/assets/ima/section6-3.svg'}
-                  alt=""
-                  width={64}
-                  height={64}
-                  className="impact-icon md:hidden"
-                />
-                {/* PC端图片 */}
-                <Image
-                  src={index === 0 ? '/assets/ima/svg 5.svg' : index === 1 ? '/assets/ima/svg 6.svg' : '/assets/ima/svg 7.svg'}
-                  alt=""
-                  width={64}
-                  height={64}
-                  className="impact-icon hidden md:block"
-                />
-              </div>
-              {/* PC端标题 */}
-              <h3 className="hidden md:block">{stat.title}</h3>
-              {/* 移动端标题 */}
-              <h3 className="impact-card-title-mobile md:hidden">
-                <span className="impact-title-line1">
-                  {stat.titleLine1}
-                  {stat.titleLine1Small && <span className="impact-title-small">{stat.titleLine1Small}</span>}
-                </span>
-                <span className="impact-title-line2">{stat.titleLine2}</span>
-              </h3>
-              {/* PC端描述 */}
-              <p className="hidden md:block">{stat.description}</p>
-              {/* 移动端描述 */}
-              <p className="md:hidden">
-                {Array.isArray(stat.descriptionMobile)
-                  ? stat.descriptionMobile.map((line, i) => (
-                    <span key={i}>
-                      {line}
-                      {i < stat.descriptionMobile.length - 1 && <br />}
-                    </span>
-                  ))
-                  : stat.descriptionMobile
-                }
-              </p>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-
-
-
 
   return (
     <>
@@ -967,7 +939,7 @@ export default function Home({ isVip = false }) {
         </section>
 
         {/* Impact Section - 主站时显示在这里（第2位） */}
-        {!isVip && renderImpactSection()}
+        {!isVip && <ImpactSection showSteam={false} />}
 
         {/* Steps Section - 仅 VIP 域名显示 */}
         {isVip && <OrderStepsSection style={{ marginTop: 0 }} />}
@@ -1016,6 +988,9 @@ export default function Home({ isVip = false }) {
           </section>
           )
         }
+
+        {/* Impact Section - VIP站放到 Our Family Says 上方 */}
+        {isVip && <ImpactSection showSteam={false} />}
 
         <section className="family-section">
           <div className="family-bg-wrapper">
@@ -1179,9 +1154,6 @@ export default function Home({ isVip = false }) {
             </div>
           </div>
         </section>
-
-        {/* Impact Section - VIP站时显示在这里（原位置） */}
-        {isVip && renderImpactSection()}
 
         {/* Story Section */}
 
