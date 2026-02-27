@@ -8,6 +8,20 @@ import CartSidebar from '../components/CartSidebar';
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import * as fbqLib from '../lib/fbq';
+const ADSET_NAME_STORAGE_KEY = 'ub_meta_adset_name';
+
+function cacheAdsetNameFromUrl(url) {
+  if (typeof window === 'undefined') return;
+  try {
+    const parsed = new URL(url, window.location.origin);
+    const adsetName = (parsed.searchParams.get('adset_name') || '').trim();
+    if (!adsetName) return;
+    sessionStorage.setItem(ADSET_NAME_STORAGE_KEY, adsetName);
+    localStorage.setItem(ADSET_NAME_STORAGE_KEY, adsetName);
+  } catch {
+    // ignore parse/storage errors
+  }
+}
 
 function MyApp({ Component, pageProps }) {
   const router = useRouter();
@@ -16,6 +30,7 @@ function MyApp({ Component, pageProps }) {
     fbqLib.init();
 
     const handleRouteChange = (url) => {
+      cacheAdsetNameFromUrl(url);
       fbqLib.pageview(url);
     };
 
