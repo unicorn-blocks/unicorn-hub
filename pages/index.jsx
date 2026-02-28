@@ -418,23 +418,15 @@ export default function Home({ isVip = false }) {
 
   const resolvePostLeadExperiment = () => {
     if (typeof window === 'undefined') {
-      return { group: 'control', forced: false };
+      return { group: 'variant', forced: false };
     }
 
-    const params = new URLSearchParams(window.location.search);
-    const forcedGroup = params.get('ab_postlead');
-    if (forcedGroup === 'control' || forcedGroup === 'variant') {
-      return { group: forcedGroup, forced: true };
+    try {
+      localStorage.setItem(POST_LEAD_AB_STORAGE_KEY, 'variant');
+    } catch {
+      // Ignore storage failures in private mode or restricted environments.
     }
-
-    const savedGroup = localStorage.getItem(POST_LEAD_AB_STORAGE_KEY);
-    if (savedGroup === 'control' || savedGroup === 'variant') {
-      return { group: savedGroup, forced: false };
-    }
-
-    const assignedGroup = Math.random() < 0.5 ? 'control' : 'variant';
-    localStorage.setItem(POST_LEAD_AB_STORAGE_KEY, assignedGroup);
-    return { group: assignedGroup, forced: false };
+    return { group: 'variant', forced: false };
   };
 
   const buildIndexPopupSource = (actionName, experimentOverride = postLeadExperiment) => {
