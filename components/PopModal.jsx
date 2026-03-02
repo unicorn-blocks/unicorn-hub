@@ -208,7 +208,7 @@ export default function PopModal({
                     to keep your <span style={{ color: '#DC2626', fontWeight: 700 }}>$50</span> VIP discount.
                   </>
                 ) : (
-                  <>Get <span>early updates</span>, and later have the chance to secure <span>VIP pricing</span> with a small, refundable deposit.</>
+                  <>Get <span>early updates</span> and <span>$100 discount</span> — VIP access only.</>
                 )
               )}
             </div>
