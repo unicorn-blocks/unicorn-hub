@@ -25,26 +25,84 @@ function resolveGoogleSheetUrl() {
 
 const GOOGLE_SHEET_URL = resolveGoogleSheetUrl();
 
-function extractAppsScriptError(text = "") {
+function decodeJsEscapes(value = "") {
+  return String(value)
+    .replace(/\\x([0-9a-fA-F]{2})/g, (_, hex) =>
+      String.fromCharCode(parseInt(hex, 16))
+    )
+    .replace(/\\u([0-9a-fA-F]{4})/g, (_, hex) =>
+      String.fromCharCode(parseInt(hex, 16))
+    )
+    .replace(/\\"/g, '"')
+    .replace(/\\\\/g, "\\");
+}
+
+function extractAppsScriptUserHtml(text = "") {
   if (!text) return "";
 
+  const patterns = [
+    /"userHtml"\s*:\s*"([^"]*)"/i,
+    /\\x22userHtml\\x22:\\x22([\s\S]*?)\\x22/i,
+    /\\\\x22userHtml\\\\x22:\\\\x22([\s\S]*?)\\\\x22/i,
+  ];
+
+  for (const pattern of patterns) {
+    const match = text.match(pattern);
+    if (match && match[1]) {
+      return decodeJsEscapes(match[1]).trim();
+    }
+  }
+
+  return "";
+}
+
+function parseAppsScriptResult(text = "") {
+  if (!text) return { ok: true, code: "OK", error: "" };
+
+  const trimmed = String(text).trim();
+  const userHtml = extractAppsScriptUserHtml(text);
+  const isHtmlWrapper = /<!doctype html>|<html[\s>]/i.test(trimmed);
+  const candidates = [];
+  if (userHtml) candidates.push(userHtml);
+  // Only treat full body as payload when it is not an HTML wrapper.
+  if (!isHtmlWrapper) candidates.push(trimmed);
+
+  for (const candidate of candidates) {
+    const normalized = candidate.trim();
+    if (/^OK_NO_ROW$/i.test(normalized)) {
+      return { ok: true, code: "OK_NO_ROW", error: "" };
+    }
+    if (/^OK$/i.test(normalized)) {
+      return { ok: true, code: "OK", error: "" };
+    }
+    if (/^ERROR:/i.test(normalized)) {
+      return { ok: false, code: "", error: normalized };
+    }
+    // Only inspect actual payloads (userHtml / direct text).
+    if (/Exception:|TypeError|ReferenceError/i.test(normalized)) {
+      return { ok: false, code: "", error: `Apps Script runtime exception: ${normalized}` };
+    }
+  }
+
+  // Specific document-access error from Apps Script wrapper.
   const docMissing = text.match(
     /Document\s+([a-zA-Z0-9_-]+)\s+is missing[^<\n"]*/i
   );
   if (docMissing) {
-    return `Spreadsheet access error: ${docMissing[0]}. Check SPREADSHEET_ID and sharing permissions for the Apps Script owner.`;
+    return {
+      ok: false,
+      code: "",
+      error: `Spreadsheet access error: ${docMissing[0]}. Check SPREADSHEET_ID and sharing permissions for the Apps Script owner.`,
+    };
   }
 
   const genericError = text.match(/ERROR:\s*([^<\n"]+)/i);
   if (genericError) {
-    return genericError[0].trim();
+    return { ok: false, code: "", error: genericError[0].trim() };
   }
 
-  if (/Exception:|TypeError|ReferenceError/i.test(text)) {
-    return "Apps Script runtime exception";
-  }
-
-  return "";
+  // Unknown HTML wrapper but no explicit error marker: treat as success.
+  return { ok: true, code: "OK", error: "" };
 }
 
 export default async function handler(req, res) {
@@ -97,17 +155,19 @@ export default async function handler(req, res) {
       throw new Error(`HTTP ${response.status}: ${text}`);
     }
 
-    const appsScriptError = extractAppsScriptError(text);
-    if (!appsScriptError) {
+    const parsed = parseAppsScriptResult(text);
+    if (parsed.ok) {
+      const successMessage =
+        parsed.code === "OK_NO_ROW" ? "OK_NO_ROW" : "您已成功加入我们的通知列表！🎉";
       return res.status(200).json({
         success: true,
-        message: "您已成功加入我们的通知列表！🎉",
+        message: successMessage,
       });
     }
 
     return res.status(400).json({
       success: false,
-      message: `提交失败: ${appsScriptError}`,
+      message: `提交失败: ${parsed.error || "Apps Script error"}`,
     });
   } catch (error) {
     return res.status(500).json({
