@@ -17,9 +17,9 @@ export default function PostLeadOfferModal({
           <div className={styles.content}>
             <div className={styles.topLayout}>
               <div className={styles.infoBlock}>
-                <h2 className={styles.title}>Secure your $149 VIP launch price</h2>
+                <h2 className={styles.title}>Want to lock your $149 VIP price?</h2>
                 <p className={styles.subtitle}>
-                  Place a fully refundable $2 deposit today to lock the lowest launch price.
+                  Pay a fully refundable $2 deposit to reserve your $100 VIP discount.
                 </p>
 
                 <div className={styles.priceRow}>
@@ -61,7 +61,7 @@ export default function PostLeadOfferModal({
               onClick={onReserve}
               disabled={isLoading}
             >
-              {isLoading ? 'Processing...' : 'Reserve Discount for $2'}
+              {isLoading ? 'Processing...' : 'Lock My $149 Price'}
             </button>
 
             <button
@@ -69,7 +69,7 @@ export default function PostLeadOfferModal({
               onClick={onNoThanks}
               disabled={isLoading}
             >
-              No Thanks
+              Maybe Later
             </button>
           </div>
         </div>

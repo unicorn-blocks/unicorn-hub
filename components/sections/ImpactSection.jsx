@@ -19,6 +19,13 @@ export default function ImpactSection({ showSteam = true }) {
       heading: 'Why parents are Choosing us',
       stats: [
         {
+          image: {
+            src: '/assets/ima/impact-creativity.webp',
+            width: 400,
+            height: 400,
+            large: true,
+          },
+          oneLineTitle: true,
           title: 'Open-Ended Creative Play',
           titleLine1: '3×',
           titleLine2: 'Creativity',
@@ -26,6 +33,12 @@ export default function ImpactSection({ showSteam = true }) {
           descriptionMobile: <span><strong style={impactGradientTextStyle}>Independent play</strong> with endless ideas.</span>
         },
         {
+          image: {
+            src: '/assets/ima/impact-focus.webp',
+            width: 400,
+            height: 400,
+            large: true,
+          },
           title: '90 Minutes Every Time',
           titleLine1: '90',
           titleLine1Small: 'mins',
@@ -34,11 +47,29 @@ export default function ImpactSection({ showSteam = true }) {
           descriptionMobile: <span>Deep Focus - <strong style={impactGradientTextStyle}>Without Screens</strong>.</span>
         },
         {
+          image: {
+            src: '/assets/ima/section6-3.svg',
+            width: 64,
+            height: 64,
+            large: false,
+          },
           title: 'STEAM Problem Solving',
           titleLine1: 'STEAM',
           titleLine2: 'Problem Solving',
           description: <span>Kids learn by <strong className="text-black font-bold">trying, fixing, and building</strong> — not by watching another screen.</span>,
           descriptionMobile: <span>Kids learn by <strong className="text-black font-bold">trying, fixing, and building</strong> — not by watching another screen.</span>
+        },
+        {
+          image: {
+            src: '/assets/ima/responds.webp',
+            width: 400,
+            height: 400,
+            large: true,
+          },
+          oneLineTitle: true,
+          title: 'Interactive problem-solving',
+          description: <span>Play that <strong style={impactGradientTextStyle}>responds back</strong>.</span>,
+          descriptionMobile: <span>Play that <strong style={impactGradientTextStyle}>responds back</strong>.</span>
         }
       ]
     },
@@ -46,6 +77,12 @@ export default function ImpactSection({ showSteam = true }) {
       heading: '创造力、专注力与真实思考',
       stats: [
         {
+          image: {
+            src: '/assets/ima/impact-creativity.webp',
+            width: 400,
+            height: 400,
+            large: true,
+          },
           title: '3倍创造力',
           titleLine1: '3倍',
           titleLine2: '创造力',
@@ -53,6 +90,12 @@ export default function ImpactSection({ showSteam = true }) {
           descriptionMobile: '更大胆的造型，更丰富的色彩，更复杂的搭建。'
         },
         {
+          image: {
+            src: '/assets/ima/impact-focus.webp',
+            width: 400,
+            height: 400,
+            large: true,
+          },
           title: '90分钟深度专注',
           titleLine1: '90',
           titleLine1Small: '分钟',
@@ -61,11 +104,29 @@ export default function ImpactSection({ showSteam = true }) {
           descriptionMobile: '孩子专注玩耍，家长享受真正的咖啡时间。'
         },
         {
+          image: {
+            src: '/assets/ima/section6-3.svg',
+            width: 64,
+            height: 64,
+            large: false,
+          },
           title: 'STEAM 解决问题',
           titleLine1: 'STEAM',
           titleLine2: '解决问题',
           description: '孩子在搭建和玩耍中学习工程思维。',
           descriptionMobile: '孩子在搭建和玩耍中学习工程思维。'
+        },
+        {
+          image: {
+            src: '/assets/ima/responds.webp',
+            width: 400,
+            height: 400,
+            large: true,
+          },
+          oneLineTitle: true,
+          title: 'Interactive problem-solving',
+          description: <span>Play that <strong style={impactGradientTextStyle}>responds back</strong>.</span>,
+          descriptionMobile: <span>Play that <strong style={impactGradientTextStyle}>responds back</strong>.</span>
         }
       ]
     }
@@ -89,21 +150,21 @@ export default function ImpactSection({ showSteam = true }) {
           <span>{copy.heading}</span>
         </h2>
         <div className="impact-grid">
-          {displayStats.map((stat, index) => (
+          {displayStats.map((stat) => (
             <div className="impact-card" key={stat.title}>
-              <div className={`impact-icon-wrapper ${index < 2 ? 'impact-image-wrapper' : ''}`}>
+              <div className={`impact-icon-wrapper ${stat.image?.large ? 'impact-image-wrapper' : ''}`}>
                 <Image
-                  src={index === 0 ? '/assets/ima/impact-creativity.webp' : index === 1 ? '/assets/ima/impact-focus.webp' : '/assets/ima/section6-3.svg'}
+                  src={stat.image?.src || '/logo.png'}
                   alt=""
-                  width={index < 2 ? 400 : 64}
-                  height={index < 2 ? 400 : 64}
-                  className={`impact-icon ${index < 2 ? 'impact-image-large' : ''}`}
+                  width={stat.image?.width || 64}
+                  height={stat.image?.height || 64}
+                  className={`impact-icon ${stat.image?.large ? 'impact-image-large' : ''}`}
                 />
               </div>
               {/* PC端标题 */}
-              <h3 className="hidden md:block">{stat.title}</h3>
+              <h3 className={`hidden md:block ${stat.oneLineTitle ? 'impact-title-single-line' : ''}`}>{stat.title}</h3>
               {/* 移动端标题 */}
-              <h3 className="impact-card-title-mobile md:hidden">{stat.title}</h3>
+              <h3 className={`impact-card-title-mobile md:hidden ${stat.oneLineTitle ? 'impact-title-single-line-mobile' : ''}`}>{stat.title}</h3>
               {/* PC端描述 */}
               <p className="hidden md:block">{stat.description}</p>
               {/* 移动端描述 */}
@@ -302,6 +363,12 @@ export default function ImpactSection({ showSteam = true }) {
             -webkit-text-fill-color: unset;
             background-clip: unset;
           }
+
+          .impact-card h3.impact-title-single-line {
+            font-size: 1.22rem;
+            line-height: 1.2;
+            white-space: nowrap;
+          }
         }
 
         .impact-card p {
@@ -332,6 +399,12 @@ export default function ImpactSection({ showSteam = true }) {
             color: transparent;
             margin-bottom: 12px;
             display: block;
+          }
+
+          .impact-card-title-mobile.impact-title-single-line-mobile {
+            font-size: 24px;
+            line-height: 1.15;
+            white-space: nowrap;
           }
         }
       `}</style>

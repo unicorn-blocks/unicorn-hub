@@ -28,8 +28,8 @@ export default function OrderStepsSection({ className = '', style = {} }) {
 
   const translations = {
     en: {
-      heading: 'Stories guide kids to',
-      headingLine2: 'create-step by step',
+      heading: 'How Sparky’s Stories',
+      headingLine2: 'Keep Kids Creating',
       subheading: 'With Sparky, Kids Create, Parents Relax.',
     },
     zh: {
@@ -43,17 +43,17 @@ export default function OrderStepsSection({ className = '', style = {} }) {
 
   // Step data with images
   const steps = [
-    { image: '/assets/steps/Step1.webp', title: '1. Pick To Start', desc: 'Pick a Magic Hat Snap to unlock the world.' },
-    { image: '/assets/steps/Step2.webp', title: '2. Story Sparks Creation', desc: 'Every Build is part of a Story.' },
-    { image: '/assets/steps/Step3.webp', title: '3. Create & Understand', desc: 'Build and show your creation to Sparky.' },
-    { image: '/assets/steps/Step4.webp', title: '4. The Adventure Continues', desc: 'The Magic Hat and Blocks light up to celebrate success!' },
+    { image: '/assets/steps/Step1.webp', title: '1. Choose a story world', desc: 'Pick a Magic Hat Snap to unlock the world.' },
+    { image: '/assets/steps/Step2.webp', title: '2. Sparky tells the story', desc: 'Every Build is part of a Story.' },
+    { image: '/assets/steps/Step3.webp', title: '3. Kids build and shows Sparky', desc: 'Build and show your creation to Sparky.' },
+    { image: '/assets/steps/Step4.webp', title: '4. Sparky Responds and Adds More', desc: 'The Magic Hat and Blocks light up to celebrate success!' },
   ];
 
   return (
     <section className={`order-steps-section ${className}`} style={style}>
       <div className="content-container">
         <div className="section-heading text-center">
-          <h2 style={{ textAlign: 'center', margin: '0 auto', width: '100%' }}>
+          <h2>
             <span className="steps-heading-line1">{copy.heading}</span>
             <span className="steps-heading-line2">{copy.headingLine2}</span>
           </h2>
@@ -107,7 +107,7 @@ export default function OrderStepsSection({ className = '', style = {} }) {
         <div className="video-section">
           <div className="video-wrapper">
             <div className="video-text">
-              <h3>How kids are building with stories</h3>
+              <h3>What real play looks like</h3>
             </div>
             <div className="video-frame" onClick={togglePlay}>
               <video
@@ -176,18 +176,30 @@ export default function OrderStepsSection({ className = '', style = {} }) {
         }
 
         .section-heading h2 {
-          font-size: clamp(1.5rem, 6.5vw, 3rem); /* Larger mobile font, scales with viewport */
+          display: inline-flex;
+          flex-direction: column;
+          align-items: center;
+          font-size: clamp(2rem, 3vw, 3rem);
           margin-bottom: 12px;
           color: #0F192A;
           font-weight: 700;
           text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff;
           line-height: 1.2;
+          text-align: center;
+          margin-left: auto;
+          margin-right: auto;
+        }
+
+        .section-heading {
+          width: 100%;
+          display: flex;
+          justify-content: center;
         }
 
         @media (min-width: 768px) {
           .section-heading h2 {
             color: #000000;
-            font-size: clamp(2rem, 3vw, 3rem); /* Larger on desktop */
+            font-size: clamp(2rem, 3vw, 3rem);
           }
         }
 
@@ -212,12 +224,6 @@ export default function OrderStepsSection({ className = '', style = {} }) {
              width: 100%;
              white-space: normal; 
              text-align: center;
-          }
-          .steps-heading-line1 {
-            display: inline;
-          }
-          .steps-heading-line2 {
-            display: inline; 
           }
         }
 
@@ -275,7 +281,7 @@ export default function OrderStepsSection({ className = '', style = {} }) {
         /* PC Styles */
         .step-pc-content {
           display: grid;
-          grid-template-rows: 45px 1fr; /* Reduced height for title only */
+          grid-template-rows: 42px 1fr;
           align-items: start;
           width: 100%;
           height: 100%;
@@ -296,7 +302,7 @@ export default function OrderStepsSection({ className = '', style = {} }) {
            aspect-ratio: 16 / 9;
            border: 4px solid #FFFFFF;
            border-radius: 20px;
-           margin-top: 10px;
+           margin-top: 5px;
            box-shadow: 0 4px 12px rgba(0,0,0,0.05); 
            overflow: hidden;
            background: #fff;
@@ -308,15 +314,23 @@ export default function OrderStepsSection({ className = '', style = {} }) {
         }
 
         .step-pc-text {
+           display: flex;
+           align-items: center;
+           justify-content: center;
            text-align: center;
-           overflow: hidden; /* Hide any text that exceeds the fixed row height */
+           overflow: visible;
         }
 
         .step-pc-text h3 {
-           font-size: 1.3rem;
+           font-size: clamp(1.02rem, 1.65vw, 1.22rem);
            font-weight: 700;
            color: #13234d;
-           margin-bottom: 0;
+           margin: 0 auto;
+           text-align: center;
+           width: auto;
+           max-width: none;
+           line-height: 1.12;
+           white-space: nowrap;
         }
 
         .step-pc-text p {
@@ -378,15 +392,21 @@ export default function OrderStepsSection({ className = '', style = {} }) {
           width: 100%;
           text-align: center;
           padding: 0 4px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
         }
 
         .step-mobile-text h3 {
           color: #13234d;
-          font-size: 20px;
+          font-size: clamp(1rem, 4.2vw, 1.2rem);
           font-weight: 800;
-          margin-bottom: 8px;
-          line-height: 1.2;
+          margin: 0 auto 8px;
+          line-height: 1.12;
           white-space: nowrap;
+          text-align: center;
+          width: auto;
+          max-width: none;
         }
 
         .step-mobile-text p {

@@ -174,16 +174,17 @@ export default function Home({ isVip = false }) {
       },
       hero: {
         title: {
-          primary: 'Not Just Stacking',
-          accent: 'Creating!'
+          primary: 'Stories spark',
+          accent: 'creativity'
         },
         description:
-          'Meet Sparky：The magical block buddy',
+          'Meet Sparky, the interactive block buddy who tells stories to inspire creative building.',
         descriptionLine2:
-          'who turns every build into a story',
+          '',
         badges: [
-          { label: 'Compatible with LEGO®', icon: '/assets/image/Vector_17_1381.png' },
-          { label: "For Age 3-8", icon: '/assets/image/Vector_17_1385.png' }
+          { label: 'Trusted by 400+ families', icon: '/assets/image/Vector_17_1385.png', iconTone: 'lavender' },
+          { label: 'Compatible with LEGO®', icon: '/assets/image/Vector_17_1385.png' },
+          { label: "For Age 3-8", icon: '/assets/image/Vector_17_1381.png' }
         ],
         speechBubble: "Hi! I'm Sparky!"
       },
@@ -227,7 +228,7 @@ export default function Home({ isVip = false }) {
         ]
       },
       family: {
-        heading: 'Our Family Says',
+        heading: 'What parents noticed right away',
         testimonials: [
           {
             quote: '"So much better than watching TV."',
@@ -509,6 +510,44 @@ export default function Home({ isVip = false }) {
     return updateLeadActionToEmailSheet(email, actionTag);
   };
 
+  const queuePostLeadActionWrite = (email, actionTag) => {
+    if (typeof window === 'undefined') return false;
+
+    const fallbackEmail = sessionStorage.getItem(SURVEY_PREFILL_EMAIL_KEY) || '';
+    const normalizedEmail = (email || fallbackEmail).trim().toLowerCase();
+    const normalizedActionTag = (actionTag || '').trim();
+
+    if (!normalizedEmail || !normalizedActionTag) return false;
+
+    const payload = JSON.stringify({
+      email: normalizedEmail,
+      actionTag: normalizedActionTag,
+    });
+
+    try {
+      if (typeof navigator !== 'undefined' && typeof navigator.sendBeacon === 'function') {
+        const queued = navigator.sendBeacon(
+          '/api/postlead/track-action',
+          new Blob([payload], { type: 'application/json' })
+        );
+        if (queued) return true;
+      }
+    } catch (err) {
+      console.warn('Post-lead action beacon failed:', err);
+    }
+
+    fetch('/api/postlead/track-action', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: payload,
+      keepalive: true,
+    }).catch((err) => {
+      console.warn('Post-lead action request failed:', err);
+    });
+
+    return true;
+  };
+
   const handleVipLeadSuccess = ({ email: leadEmail, source: leadSource, note: leadNote = '' }) => {
     const normalizedEmail = (leadEmail || '').trim().toLowerCase();
     const normalizedSource = (leadSource || 'pop-modal').toString().trim() || 'pop-modal';
@@ -579,8 +618,8 @@ export default function Home({ isVip = false }) {
     postLeadTerminalActionRef.current = true;
     clearPostLeadNoActionsTimer();
     const sourceTag = buildIndexPopupSource('reserve');
-    await updateLeadActionAfterLeadReady(postLeadSurveyEmail, LEAD_ACTION_RESERVED);
     setPostLeadCheckoutSource(sourceTag);
+    queuePostLeadActionWrite(postLeadSurveyEmail, LEAD_ACTION_RESERVED);
     trackInitiateCheckout({ content_name: sourceTag });
 
     const leadId = `${sourceTag}_order_${Date.now()}`;
@@ -697,30 +736,36 @@ export default function Home({ isVip = false }) {
 
   const TESTIMONIALS_DATA = [
     {
-      quote: '"So much better than watching TV."',
-      author: '—Dad of a 3-year-old who usually asks for a screen after dinner'
+      tag: 'Stayed focused longer',
+      quote: 'No screen battle after dinner tonight.',
+      author: 'Mom of a 4-year-old who usually asks for cartoons after dinner'
     },
     {
+      tag: 'Asked to keep playing',
       quote:
-        '“Sparky protects his imagination — and keeps him playing for 90 minutes every time.”',
-      author: '—Mom of a 5-year-old who loves seeks attention all the time'
+        'He usually moves on after 10 minutes. This time he kept building.',
+      author: 'Mom of a 6-year-old who normally switches toys every 10 minutes'
     },
     {
+      tag: 'Wanted to show every build',
       quote:
-        '“Pleeease, just five more minutes! I have to light up all the lights on Sparky’s hat!”',
-      author: '—Our Little Builder, 6\nStill playing after 90 minutes'
+        'She wanted Sparky to see every new thing she made.',
+      author: 'Mom of a 5-year-old who usually moves on quickly'
     },
     {
-      quote: '“Sparky, I added a swimming pool next to my house.”',
-      author: '—Our Little Builder, 7\nCreated a different swimming pool each time'
+      tag: 'Wanted to know what comes next',
+      quote: 'He kept asking what would happen next in the story.',
+      author: 'Dad of a 5-year-old who normally needs help staying with one toy'
     },
     {
-      quote: '“I am amazed. He sat there and built for over an hour straight. No screens, just pure focus.”',
-      author: '—Mom of a 6-year-old who normally switches toys every 10 minutes'
+      tag: 'Started playing fast',
+      quote: 'We thought we would need to explain it. He just started building.',
+      author: 'Mom of a 4-year-old who usually loses interest during setup'
     },
     {
-      quote: '“I want to try the Unicorn Hat next time!”',
-      author: '—Our Little Builder, 4\nAlready thinking about the next build'
+      tag: 'Came back to show more',
+      quote: 'She pulled me back twice to show me the next thing Sparky should see.',
+      author: 'Mom of a 6-year-old who usually plays alone for short bursts'
     }
   ];
 
@@ -908,7 +953,7 @@ export default function Home({ isVip = false }) {
                       alt=""
                       width={20}
                       height={20}
-                      className="hero-badge-icon"
+                      className={`hero-badge-icon ${badge.iconTone ? `hero-badge-icon-${badge.iconTone}` : ''}`}
                     />
                     <span className="hero-badge-text">
                       {badge.label.includes('LEGO') ? (
@@ -935,6 +980,9 @@ export default function Home({ isVip = false }) {
 
         {/* Steps Section - 仅 VIP 域名显示 */}
         {isVip && <OrderStepsSection style={{ marginTop: 0 }} />}
+
+        {/* Impact Section - VIP站放到 Our Family Says 上方 */}
+        {isVip && <ImpactSection showSteam={false} />}
 
         {/* Kit Section - 仅 VIP 域名显示 */}
         {
@@ -981,9 +1029,6 @@ export default function Home({ isVip = false }) {
           )
         }
 
-        {/* Impact Section - VIP站放到 Our Family Says 上方 */}
-        {isVip && <ImpactSection showSteam={false} />}
-
         <section className="family-section">
           <div className="family-bg-wrapper">
             <div className="family-bg-image family-bg-top" aria-hidden="true">
@@ -1008,6 +1053,7 @@ export default function Home({ isVip = false }) {
                         <img src="/assets/ima/逗号.svg" alt="quote" className="quote-icon" />
                       </div>
                       <div className="family-quote">
+                        {block.tag && <div className="family-proof-tag">{block.tag}</div>}
                         <p>{block.quote}</p>
                         <span>{block.author}</span>
                       </div>
@@ -1385,16 +1431,17 @@ export default function Home({ isVip = false }) {
 
         .hero-heading h1 {
           margin: 0 0 clamp(6px, 1vw, 10px);
-          font-size: clamp(2.2rem, 4vw, 4.2rem);
+          font-size: clamp(1.8rem, 5vw, 4.2rem);
           line-height: 1.1;
+          white-space: nowrap;
         }
 
         .hero-title-primary {
-          display: block;
+          display: inline;
           color: var(--color-primary-dark);  /* 移动端：#0F192A */
           font-weight: 800;
           text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff;
-          font-size: clamp(1.8rem, 4.5vw, 4rem); /* 缩小移动端字体以防止换行 */
+          font-size: inherit;
         }
 
         @media (min-width: 768px) {
@@ -1405,19 +1452,19 @@ export default function Home({ isVip = false }) {
         }
 
         .hero-title-accent {
-          display: block;
+          display: inline;
           color: #f7ad3b;
           font-weight: 800;
           text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff;
-          font-size: clamp(1.8rem, 4.5vw, 4rem); /* 保持与Not Just Stacking一致 */
-          margin-top: 5px; /* 增加移动端行间距 */
+          font-size: inherit;
+          margin-left: 0.25em;
         }
 
         
         @media (min-width: 768px) {
            .hero-title-accent {
-             margin-top: 0; 
-             font-size: clamp(2.2rem, 4vw, 3.5rem);
+             margin-left: 0.25em; 
+             font-size: inherit;
            }
         }
 
@@ -1505,6 +1552,11 @@ export default function Home({ isVip = false }) {
           height: 20px;
           object-fit: contain;
         }
+
+        .hero-badge-icon-lavender {
+          filter: brightness(0) saturate(100%) invert(85%) sepia(13%) saturate(477%) hue-rotate(252deg) brightness(91%) contrast(86%);
+        }
+
 
 
 
@@ -1771,7 +1823,7 @@ export default function Home({ isVip = false }) {
         }
 
         .family-header {
-          max-width: 540px;
+          max-width: 720px;
           position: relative;
           z-index: 2;
           text-align: center;
@@ -1863,18 +1915,7 @@ export default function Home({ isVip = false }) {
         }
 
         .family-quote-icon {
-          position: absolute;
-          top: -35px;  /* 增加向上偏移，确保完全显示 */
-          left: 50%;
-          transform: translateX(-50%);
-          width: 54px;
-          height: 54px;
-          background: transparent !important;
-          border-radius: 0;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          z-index: 10;  /* 增加 z-index 确保不被遮盖 */
+          display: none;
         }
 
         .quote-icon {
@@ -1937,6 +1978,21 @@ export default function Home({ isVip = false }) {
           flex-direction: column;
           justify-content: space-between;
           height: 100%;
+          gap: 12px;
+        }
+
+        .family-proof-tag {
+          display: inline-flex;
+          align-self: flex-start;
+          padding: 7px 12px;
+          border-radius: 999px;
+          background: linear-gradient(90deg, rgba(247, 174, 191, 0.18) 0%, rgba(155, 144, 218, 0.18) 100%);
+          color: #5b4f95;
+          font-size: 0.76rem;
+          line-height: 1;
+          font-weight: 700;
+          letter-spacing: 0.04em;
+          text-transform: uppercase;
         }
 
         .family-quote p {
