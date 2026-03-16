@@ -9,9 +9,9 @@ const QUESTIONS = [
         text: 'What stopped you from reserving Unicorn Blocks today?*',
         type: 'radio',
         options: [
-            { label: 'Price', value: 'A' },
-            { label: 'Not enough information available', value: 'B' },
             { label: 'Product availability (Don\'t like waiting)', value: 'C' },
+            { label: 'Not enough information available', value: 'B' },
+            { label: 'Price', value: 'A' },
             { label: 'Security/Trust', value: 'D' },
             { label: 'Other', value: 'E', hasOtherInput: true, placeholder: 'Please tell us more...' },
         ]
