@@ -24,6 +24,8 @@ function resolveGoogleSheetUrl() {
 }
 
 const GOOGLE_SHEET_URL = resolveGoogleSheetUrl();
+const ADSET_NAME_STORAGE_KEY = "ub_meta_adset_name";
+const ADSET_QUERY_KEYS = ["adset_name", "adsetName", "adset", "utm_content"];
 
 function decodeJsEscapes(value = "") {
   return String(value)
@@ -105,6 +107,38 @@ function parseAppsScriptResult(text = "") {
   return { ok: true, code: "OK", error: "" };
 }
 
+function normalizeAdsetName(value = "") {
+  const normalized = String(value || "").trim();
+  return normalized || "none";
+}
+
+function extractAdsetNameFromUrl(rawUrl = "") {
+  if (!rawUrl) return "";
+  try {
+    const parsed = new URL(rawUrl, "http://localhost");
+    for (const key of ADSET_QUERY_KEYS) {
+      const value = (parsed.searchParams.get(key) || "").trim();
+      if (value) return value;
+    }
+  } catch {}
+  return "";
+}
+
+function resolveAdsetNameFromRequest(req, bodyValue) {
+  const explicit = normalizeAdsetName(bodyValue);
+  if (explicit !== "none") return explicit;
+
+  const fromReferer = extractAdsetNameFromUrl(req.headers.referer || req.headers.referrer || "");
+  if (fromReferer) return normalizeAdsetName(fromReferer);
+
+  const fromCookie = req.cookies?.[ADSET_NAME_STORAGE_KEY] || "";
+  if (fromCookie && String(fromCookie).trim()) {
+    return normalizeAdsetName(decodeURIComponent(String(fromCookie)));
+  }
+
+  return "none";
+}
+
 export default async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({ success: false, message: "Method not allowed" });
@@ -112,7 +146,7 @@ export default async function handler(req, res) {
 
   try {
     const { email, source, note, postLeadView, updateMode, leadAction, adsetName, adset_name } = req.body;
-    const resolvedAdsetName = String(adset_name || adsetName || "none").trim() || "none";
+    const resolvedAdsetName = resolveAdsetNameFromRequest(req, adset_name || adsetName);
 
     if (!email || !email.includes("@")) {
       return res.status(400).json({ success: false, message: "请提供有效的邮箱地址" });

@@ -9,18 +9,41 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import * as fbqLib from '../lib/fbq';
 const ADSET_NAME_STORAGE_KEY = 'ub_meta_adset_name';
+const ADSET_QUERY_KEYS = ['adset_name', 'adsetName', 'adset', 'utm_content'];
+
+function readAdsetNameFromUrl(url) {
+  if (typeof window === 'undefined') return '';
+  try {
+    const parsed = new URL(url, window.location.origin);
+    for (const key of ADSET_QUERY_KEYS) {
+      const value = (parsed.searchParams.get(key) || '').trim();
+      if (value) return value;
+    }
+  } catch {
+    // ignore parse errors
+  }
+  return '';
+}
+
+function cacheAdsetName(value) {
+  if (typeof window === 'undefined') return;
+  if (!value) return;
+  try {
+    sessionStorage.setItem(ADSET_NAME_STORAGE_KEY, value);
+  } catch {}
+  try {
+    localStorage.setItem(ADSET_NAME_STORAGE_KEY, value);
+  } catch {}
+  try {
+    document.cookie = `${ADSET_NAME_STORAGE_KEY}=${encodeURIComponent(value)}; path=/; max-age=2592000; SameSite=Lax`;
+  } catch {}
+}
 
 function cacheAdsetNameFromUrl(url) {
   if (typeof window === 'undefined') return;
-  try {
-    const parsed = new URL(url, window.location.origin);
-    const adsetName = (parsed.searchParams.get('adset_name') || '').trim();
-    if (!adsetName) return;
-    sessionStorage.setItem(ADSET_NAME_STORAGE_KEY, adsetName);
-    localStorage.setItem(ADSET_NAME_STORAGE_KEY, adsetName);
-  } catch {
-    // ignore parse/storage errors
-  }
+  const adsetName = readAdsetNameFromUrl(url);
+  if (!adsetName) return;
+  cacheAdsetName(adsetName);
 }
 
 function MyApp({ Component, pageProps }) {

@@ -682,10 +682,7 @@ export default function Home({ isVip = false }) {
     setShowReserveDiscountCta(true);
     setIndexPostLeadReserveMode(true);
     setShowPostLeadSurveyModal(true);
-    updateLeadActionAfterLeadReady(
-      postLeadSurveyEmail,
-      LEAD_ACTION_NO_THANKS
-    );
+    queuePostLeadActionWrite(postLeadSurveyEmail, LEAD_ACTION_NO_THANKS);
   };
 
   useEffect(() => {
@@ -697,7 +694,7 @@ export default function Home({ isVip = false }) {
     clearPostLeadNoActionsTimer();
     postLeadNoActionsTimerRef.current = setTimeout(() => {
       if (postLeadTerminalActionRef.current) return;
-      updateLeadActionAfterLeadReady(postLeadSurveyEmail, LEAD_ACTION_NO_ACTIONS);
+      queuePostLeadActionWrite(postLeadSurveyEmail, LEAD_ACTION_NO_ACTIONS);
     }, 1200);
 
     return () => {
@@ -710,6 +707,24 @@ export default function Home({ isVip = false }) {
       clearPostLeadNoActionsTimer();
     };
   }, []);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const flushNoActionsOnLeave = () => {
+      if (!showPostLeadOfferModal) return;
+      if (postLeadTerminalActionRef.current) return;
+      queuePostLeadActionWrite(postLeadSurveyEmail, LEAD_ACTION_NO_ACTIONS);
+    };
+
+    window.addEventListener('pagehide', flushNoActionsOnLeave);
+    window.addEventListener('beforeunload', flushNoActionsOnLeave);
+
+    return () => {
+      window.removeEventListener('pagehide', flushNoActionsOnLeave);
+      window.removeEventListener('beforeunload', flushNoActionsOnLeave);
+    };
+  }, [showPostLeadOfferModal, postLeadSurveyEmail]);
 
   useEffect(() => {
     if (!showPostLeadOfferModal) return;
@@ -730,7 +745,7 @@ export default function Home({ isVip = false }) {
     await fetch('/api/submit-survey', {
       method: 'POST',
       body: JSON.stringify(payload),
-      ...(isPartial ? { keepalive: true } : {}),
+      keepalive: true,
     });
   };
 
