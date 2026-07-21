@@ -45,7 +45,7 @@ export default function Footer({
         faq: 'FAQ',
         enterEmail: 'Enter your email here',
         productOf: 'A product of',
-        allRightsReserved: '© 深圳市星尘回响科技有限公司',
+        allRightsReserved: '© 2026 Stardust Echo, LLC. All rights reserved',
         emailError: 'Please provide a valid email address'
         //emailError: '❌'
       },
@@ -56,7 +56,7 @@ export default function Footer({
         faq: '常见问题',
         enterEmail: '在此输入您的邮箱',
         productOf: '产品由',
-        allRightsReserved: '© 深圳市星尘回响科技有限公司',
+        allRightsReserved: '© 2026 Stardust Echo, LLC. All rights reserved',
         emailError: '请提供有效的电子邮箱地址'
       }
     }
